@@ -35,6 +35,7 @@ const emeris = {
     });
     queuedRequests.set(requestId, { resolver });
     window.postMessage(fullRequest, window.location.origin);
+    
     return await response;
   },
 };

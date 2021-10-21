@@ -1,8 +1,18 @@
-import { createStore } from "vuex";
+import { createStore } from 'vuex';
 
-export default createStore({
-  state: {},
-  mutations: {},
-  actions: {},
-  modules: {},
+import { ExtensionStore, ExtensionState, store as extension } from '@/store/extension';
+
+export type RootState = {
+  extension: ExtensionState;
+};
+export type Store = ExtensionStore<Pick<RootState, 'extension'>>;
+export const store = createStore({
+  modules: {
+    extension,
+  },
 });
+
+
+export function useStore() {
+  return store;
+}

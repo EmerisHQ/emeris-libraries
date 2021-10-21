@@ -11,6 +11,7 @@ const injected = browser.runtime.getURL('/js/inject-emeris.js');
 injectScript(injected);
 
 const sendMessage = async (msg: unknown) => {
+  
   return await browser.runtime.sendMessage(msg);
 };
 
@@ -22,7 +23,7 @@ const validateMsg = (data) => {
 window.addEventListener('message', async (event: MessageEvent) => {
   // We only accept messages from ourselves
 
-  console.log(event);
+  
   if (event.source != window) {
     return;
   }

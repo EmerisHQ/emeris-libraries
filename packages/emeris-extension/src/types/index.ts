@@ -7,3 +7,7 @@ export type EmerisWallet = {
   walletMnemonic: string;
   lastUsedChain?: string;
 };
+export type ExtensionRequest = {
+  id: string;
+  [key: string]: unknown;
+};

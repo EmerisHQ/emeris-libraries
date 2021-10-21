@@ -1,15 +1,23 @@
 <template>
-  <hello-world />
+  <router-view></router-view>
 </template>
 
 <script lang="ts">
-import { defineComponent } from "vue";
+import { defineComponent,onMounted } from "vue";
 
-import HelloWorld from "@/components/HelloWorld.vue";
+import EmerisApp from "@/components/EmerisApp.vue";
+import { useStore } from "@/store";
+import { GlobalActionTypes } from "@/store/extension/action-types";
 
 export default defineComponent({
   name: "App",
-  components: { HelloWorld },
+  components: { EmerisApp },
+  setup() {
+    const store=useStore();
+    onMounted(()=> {
+      store.dispatch(GlobalActionTypes.GET_PENDING);
+    });
+  }
 });
 </script>
 
