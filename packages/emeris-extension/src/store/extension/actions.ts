@@ -1,25 +1,26 @@
 import { ActionTypes, GlobalActionTypes } from "./action-types";
 import { ActionContext, ActionTree } from 'vuex';
-import { ExtensionState } from "./state";
+import { State } from "./state";
 import { RootState } from "..";
 import { ExtensionRequest } from "@/types/index";
 import { MutationTypes } from "./mutation-types";
-
+type Namespaced<T, N extends string> = {
+  [P in keyof T & string as `${N}/${P}`]: T[P]
+}
 
 export interface Actions {
   // Cross-chain endpoint actions
   [ActionTypes.GET_PENDING](
-    { commit, getters }: ActionContext<ExtensionState, RootState>
+    { commit, getters }: ActionContext<State, RootState>
   ): Promise<ExtensionRequest[]>;
+  [ActionTypes.COMPLETE_REQUEST](
+    { commit }: ActionContext<State, RootState>,
+    { requestId: number } 
+  ): Promise<boolean>;
 }
-export interface GlobalActions {
-  // Cross-chain endpoint actions
-  [GlobalActionTypes.GET_PENDING](
-    ...args: Parameters<Actions[ActionTypes.GET_PENDING]>
-  ): ReturnType<Actions[ActionTypes.GET_PENDING]>;
-}
+export type GlobalActions = Namespaced<Actions,'extension'>;
 
-export const actions: ActionTree<ExtensionState, RootState> & Actions = {
+export const actions: ActionTree<State, RootState> & Actions  = {
   async [ActionTypes.GET_PENDING]({ commit, getters }) {
     try {
 			const latestPending = await browser.runtime.sendMessage({ type: 'fromPopup', data: { action: 'getPending' } });
@@ -32,4 +33,12 @@ export const actions: ActionTree<ExtensionState, RootState> & Actions = {
     }
     return getters['getPending'];
   },
+  async [ActionTypes.COMPLETE_REQUEST]({commit},{requestId}) {
+    try {
+      commit(MutationTypes.REMOVE_REQUEST,requestId);
+      return true;
+    }catch(e){
+      return false;
+    }
+  }
 };

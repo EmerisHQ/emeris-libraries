@@ -1,18 +1,19 @@
 import { createStore } from 'vuex';
 
-import { ExtensionStore, ExtensionState, store as extension } from '@/store/extension';
+import { ExtensionStore, State, store as extension } from '@/store/extension';
 
 export type RootState = {
-  extension: ExtensionState;
+  extension: State;
+  [key: string]:unknown;
 };
-export type Store = ExtensionStore<Pick<RootState, 'extension'>>;
-export const store = createStore({
+export type TypedExtensionStore = ExtensionStore<Pick<RootState, 'extension'>>;
+export const rootstore = createStore<RootState>({
   modules: {
     extension,
   },
 });
 
 
-export function useStore() {
-  return store;
+export function useExtensionStore():TypedExtensionStore {
+  return rootstore as TypedExtensionStore;
 }

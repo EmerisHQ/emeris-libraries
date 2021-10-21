@@ -1,6 +1,5 @@
 import { Emeris } from "@/shims-vue";
 
-export function init(emeris: Emeris): void {
-	console.log('Here');
+export function init(emeris: Emeris): void {	
   window.emeris = emeris;
 }

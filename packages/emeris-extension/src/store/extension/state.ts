@@ -1,9 +1,9 @@
 import { ExtensionRequest } from "@/types";
 
-export type ExtensionState = {
+export type State = {
   pending: Array<ExtensionRequest>;
 };
-export function getDefaultState(): ExtensionState {
+export function getDefaultState(): State {
 	return {
 		pending: []
   };
