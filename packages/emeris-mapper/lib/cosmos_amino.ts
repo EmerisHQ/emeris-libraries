@@ -47,7 +47,6 @@ export default class CosmosAminoMessageMapper extends EmerisMessageMapper {
                 swap_type_id: transaction.pool.type_id,
                 offer_coin: { amount: transaction.from.amount, denom: transaction.from.denom },
                 demand_coin_denom: transaction.to.denom,
-                // offer_coin_dee: { amount: String(Math.trunc(+transaction.from.amount * (transaction.swapFeeRate / 2))), denom: transaction.from.denom },
                 offer_coin_dee: transaction.offerFee,
                 order_price: transaction.orderPrice
             }
