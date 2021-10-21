@@ -5,22 +5,68 @@
   "author": "Clockwork <alex@clockwork.gr>",
   "homepage": "https://github.com/allinbits/emeris-libraries#readme",
   "license": "ISC",
-  "main": "lib/emeris-extension.js",
   "directories": {
     "lib": "lib",
     "test": "__tests__"
   },
-  "files": [
-    "lib"
-  ],
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/allinbits/emeris-libraries.git"
-  },
+    "url": "git+https://github.com/allinbits/emeris-libraries.git",
   "scripts": {
-    "test": "echo \"Error: run tests from root\" && exit 1"
+    "serve": "vue-cli-service build --mode development --watch",
+    "build": "vue-cli-service build",
+    "test:unit": "vue-cli-service test:unit",
+    "lint": "vue-cli-service lint"
+  },
+  "dependencies": {
+    "core-js": "^3.18.3",
+    "crypto-js": "^4.1.1",
+    "uuid": "^8.3.2",
+    "vue": "^3.0.0",
+    "vue-router": "^4.0.0-0",
+    "vuex": "^4.0.0-0"
+  },
+  "devDependencies": {
+    "@types/crypto-js": "^4.0.2",
+    "@types/firefox-webext-browser": "^94.0.0",
+    "@types/jest": "^27.0.2",
+    "@types/uuid": "^8.3.1",
+    "@typescript-eslint/eslint-plugin": "^4.28.3",
+    "@typescript-eslint/parser": "^4.28.3",
+    "@vue/cli-plugin-babel": "^4.5.14",
+    "@vue/cli-plugin-eslint": "^4.5.14",
+    "@vue/cli-plugin-router": "^4.5.14",
+    "@vue/cli-plugin-typescript": "^4.5.14",
+    "@vue/cli-plugin-unit-jest": "^4.5.14",
+    "@vue/cli-plugin-vuex": "^4.5.14",
+    "@vue/cli-service": "^4.5.14",
+    "@vue/compiler-sfc": "^3.2.20",
+    "@vue/eslint-config-prettier": "^6.0.0",
+    "@vue/eslint-config-typescript": "^7.0.0",
+    "@vue/test-utils": "^2.0.0-0",
+    "eslint": "^6.7.2",
+    "eslint-config-prettier": "^6.0.0",
+    "eslint-plugin-prettier": "^3.4.1",
+    "eslint-plugin-simple-import-sort": "^7.0.0",
+    "eslint-plugin-vue": "^7.14.0",
+    "lint-staged": "^11.2.3",
+    "prettier": "^2.4.1",
+    "sass": "^1.43.2",
+    "sass-loader": "^10.0.5",
+    "typescript": "^4.4.4",
+    "vue-cli-plugin-browser-extension": "~0.25.2",
+    "vue-jest": "^5.0.0-0"
+  },
+  "gitHooks": {
+    "pre-commit": "lint-staged"
   },
   "bugs": {
     "url": "https://github.com/allinbits/emeris-libraries/issues"
+  },
+  "lint-staged": {
+    "*.{js,jsx,vue,ts,tsx}": [
+      "vue-cli-service lint",
+      "git add"
+    ]
   }
 }
