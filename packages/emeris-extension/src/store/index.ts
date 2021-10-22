@@ -4,7 +4,7 @@ import { ExtensionStore, State, store as extension } from '@/store/extension';
 
 export type RootState = {
   extension: State;
-  [key: string]:unknown;
+  [key: string]: unknown;
 };
 export type TypedExtensionStore = ExtensionStore<Pick<RootState, 'extension'>>;
 export const rootstore = createStore<RootState>({
@@ -13,7 +13,6 @@ export const rootstore = createStore<RootState>({
   },
 });
 
-
-export function useExtensionStore():TypedExtensionStore {
+export function useExtensionStore(): TypedExtensionStore {
   return rootstore as TypedExtensionStore;
 }

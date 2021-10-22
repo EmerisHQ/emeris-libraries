@@ -3,26 +3,23 @@
 </template>
 
 <script lang="ts">
-import { defineComponent,onMounted } from "vue";
-
-import EmerisApp from "@/components/EmerisApp.vue";
-import { useExtensionStore } from "@/store";
-import { GlobalActionTypes } from "@/store/extension/action-types";
+import { defineComponent, onMounted } from 'vue';
+import { useExtensionStore } from '@/store';
+import { GlobalActionTypes } from '@/store/extension/action-types';
 
 export default defineComponent({
-  name: "App",
-  components: { EmerisApp },
+  name: 'App',
   setup() {
-    const store=useExtensionStore();
-    onMounted(()=> {
+    const store = useExtensionStore();
+    onMounted(() => {
       store.dispatch(GlobalActionTypes.GET_PENDING);
-      browser.runtime.onMessage.addListener((message,sender)=> {
-         if (message.type == 'toPopup' && message.data.action=='update') {
-           store.dispatch(GlobalActionTypes.GET_PENDING);
-         }
+      browser.runtime.onMessage.addListener((message) => {
+        if (message.type == 'toPopup' && message.data.action == 'update') {
+          store.dispatch(GlobalActionTypes.GET_PENDING);
+        }
       });
     });
-  }
+  },
 });
 </script>
 

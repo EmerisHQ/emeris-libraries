@@ -1,31 +1,31 @@
 export default class Queue<T> {
-	private items:Array<T>
+  private items: Array<T>;
   constructor() {
     this.items = [];
   }
-  enqueue(item) {
-    this.items.unshift(item);
+  enqueue(item: T): number {
+    return this.items.unshift(item);
   }
-  dequeue() {
+  dequeue(): T {
     return this.items.pop();
   }
-  head() {
+  head(): Τ {
     return this.items[this.items.length - 1];
   }
-  tail() {
+  tail(): T {
     return this.items[0];
   }
-  isEmpty() {
+  isEmpty(): boolean {
     if (this.items.length == 0) {
       return true;
     } else {
       return false;
     }
   }
-  advanceQueue(item) {
-    this.items.push(item);
+  advanceQueue(item: T): number {
+    return this.items.push(item);
   }
-  size() {
+  size(): number {
     return this.items.length;
   }
 }

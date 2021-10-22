@@ -4,7 +4,7 @@ import { GetterTypes, GlobalGetterTypes } from './getter-types';
 import { State } from './state';
 import { RootState } from '..';
 export interface Getters {
-	[GetterTypes.getPending](state: State): ExtensionRequest[]
+  [GetterTypes.getPending](state: State): ExtensionRequest[];
 }
 
 export interface GlobalGetters {

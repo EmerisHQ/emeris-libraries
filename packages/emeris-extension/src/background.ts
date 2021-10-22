@@ -1,26 +1,16 @@
+import { Emeris } from './lib/Emeris';
 import EmerisStorage from './lib/EmerisStorage';
 
 const storage = new EmerisStorage();
-let wallet;
+const emeris = new Emeris(storage);
+async function init() {
+
+}
 let popup = null;
 
 const queuedRequests = new Map();
 const pending = [];
-const init = async () => {
-  try {
-    await storage.loadLocal();
-  } catch (e) {
-    console.log('No local wallets');
-    try {
-      await storage.loadSync();
-    } catch (e) {
-      console.log('No sync wallets');
-    }
-  } finally {
-    wallet = storage.getLastWallet();
-  }
-};
-init();
+
 async function launchPopup() {
   return (
     await browser.windows.create({ width: 400, height: 600, type: 'popup', url: browser.runtime.getURL('/popup.html') })
@@ -46,9 +36,21 @@ async function ensurePopup() {
   }
 }
 
-const pageHandler = async(request,sender) => {
-  
+const pageHandler = async (request) => {
   if (request.id) {
+    if (request.action == 'init') {
+      try {
+        await emeris.init();
+        return { id: request.id, data: true };
+      } catch (e) {
+        return { id: request.id, data: false };
+      }
+    }
+    if (!emeris.loaded) {
+      return { id: request.id, data: false };
+    }
+    return { id: request.id, data: await emeris[request.action](request.data) };
+    /*
     let resolver;
     const response = new Promise((resolve) => {
       resolver = resolve;
@@ -56,38 +58,35 @@ const pageHandler = async(request,sender) => {
     queuedRequests.set(request.id, { resolver });
     pending.push(request);
     ensurePopup();
-    let resp = await response;
+    const resp = await response;
     console.log(resp);
     return resp;
+    */
   }
 };
-const popupHandler = async (message, sender) => {
-  console.log(message);
+const popupHandler = async (message) => {
+  let request;
   switch (message?.data.action) {
     case 'getPending':
       return pending.splice(0);
-      
+
     case 'setResponse':
-      const request = queuedRequests.get(message.data.data.id);
+      request = queuedRequests.get(message.data.data.id);
       console.log(request);
-      if (!request) {        
+      if (!request) {
         return;
       }
       request.resolver(message.data.data);
       queuedRequests.delete(message.data.data.id);
       return true;
-      
   }
 };
-const messageHandler = async (request, sender) => {
-
+const messageHandler = async (request) => {
   console.log(request);
-  
+
   if (request.type == 'fromPopup') {
-    return await popupHandler(request, sender);
+    return await popupHandler(request);
   }
-  return await pageHandler(request, sender);
-  
-  
+  return await pageHandler(request);
 };
 browser.runtime.onMessage.addListener(messageHandler);
