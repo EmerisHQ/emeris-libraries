@@ -1,3 +1,3 @@
 export enum ClientLibrary {
-	COSMJS = 'CosmJS'
+  COSMJS = 'CosmJS',
 }

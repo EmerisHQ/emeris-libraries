@@ -1,9 +1,7 @@
-import { ProxyEmeris } from "@/lib/ProxyEmeris";
+import { ProxyEmeris } from '@/lib/ProxyEmeris';
 
-
-export async function init(emeris:ProxyEmeris):Promise<void> {
-  
-  let status = await emeris.init();
+export async function init(emeris: ProxyEmeris): Promise<void> {
+  const status = await emeris.init();
   if (status) {
     const {
       loaded,
@@ -12,8 +10,8 @@ export async function init(emeris:ProxyEmeris):Promise<void> {
       isHWWallet,
       supportedChains,
       getWalletName,
-      hasWallet,      
-      //signTransaction,
+      hasWallet,
+      signTransaction,
       //signAndBroadcastTransaction,
     } = emeris;
     window.emeris = {
@@ -24,7 +22,7 @@ export async function init(emeris:ProxyEmeris):Promise<void> {
       supportedChains: supportedChains.bind(emeris),
       getWalletName: getWalletName.bind(emeris),
       hasWallet: hasWallet.bind(emeris),
-      //signTransaction,
+      signTransaction: signTransaction.bind(emeris),
       //signAndBroadcastTransaction,
     };
   } else {

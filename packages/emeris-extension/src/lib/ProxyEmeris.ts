@@ -12,14 +12,14 @@ export class ProxyEmeris implements IEmeris {
     this.queuedRequests = new Map();
 
     window.addEventListener('message', this.responseHandler.bind(this));
-	}
-	async init(): Promise<boolean> {
-		const request = {
+  }
+  async init(): Promise<boolean> {
+    const request = {      
       action: 'init',
     };
     const response = await this.sendRequest(request);
     return response.data as boolean;
-	}
+  }
   private async responseHandler(event) {
     // We only accept messages from ourselves
     if (event.source != window) {
@@ -51,7 +51,7 @@ export class ProxyEmeris implements IEmeris {
     });
 
     this.queuedRequests.set(requestId, { resolver });
-
+    console.log(fullRequest);
     window.postMessage(fullRequest, window.location.origin);
 
     return await response;
@@ -99,9 +99,9 @@ export class ProxyEmeris implements IEmeris {
     };
     const response = await this.sendRequest(request);
     return response.data as boolean;
-	}
-	/*
-  async signTransaction(tx: any, chainId: string): Promise<Uint8Array> {
+  }
+  
+  async signTransaction({ tx, chainId}): Promise<Uint8Array> {
     const request = {
       action: 'signTransaction',
       data: { tx, chainId },
@@ -109,6 +109,7 @@ export class ProxyEmeris implements IEmeris {
     const response = await this.sendRequest(request);
     return response.data as Uint8Array;
   }
+  /*
   async signAndBroadcastTransaction(tx: any, chainId: string): Promise<boolean> {
     const request = {
       action: 'signAndBroadcastTransaction',

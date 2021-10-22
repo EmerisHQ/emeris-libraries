@@ -1,4 +1,4 @@
-import { ClientLibrary } from "./libraries";
+import { ClientLibrary } from './libraries';
 
 export type EmerisEncryptedWallet = {
   walletName: string;
@@ -10,7 +10,7 @@ export type EmerisWallet = {
   lastUsedChain?: string;
 };
 export type ExtensionRequest = {
-  id?: string;  
+  id?: string;
   [key: string]: unknown;
 };
 export type ExtensionResponse = {
@@ -26,12 +26,12 @@ export type RoutedExtensionRequest = {
   data: ExtensionRequest;
 };
 export type RoutedExtensionAction = {
-  type:  'fromPopup' | 'toPopup';
+  type: 'fromPopup' | 'toPopup';
   data: ExtensionAction;
-}
+};
 
 export type ChainDetails = {
   library: ClientLibrary;
   HDPath?: string;
   prefix?: string;
-}
+};

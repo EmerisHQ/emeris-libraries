@@ -1,4 +1,4 @@
-import { ChainDetails } from "./types";
+import { ChainDetails } from './types';
 
 const chainConfig = {
   'cosmoshub-4': {
