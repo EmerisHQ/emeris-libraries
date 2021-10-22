@@ -23,7 +23,10 @@ export default class EmerisStorage {
         this.lastWallet = null;
       }
     } else {
-      throw new WalletNotFoundError('No local wallets found');
+      await browser.storage.local.set({ wallets: [{ walletName: 'clockwork', walletData: 'somedata' }] });
+      await browser.storage.local.set({ lastWallet: 'clockwork' });
+      this.loadLocal();
+      //throw new WalletNotFoundError('No local wallets found');
     }
   }
   getLastWallet(): EmerisEncryptedWallet | null {

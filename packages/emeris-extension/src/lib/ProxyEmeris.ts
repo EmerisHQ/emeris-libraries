@@ -14,7 +14,7 @@ export class ProxyEmeris implements IEmeris {
     window.addEventListener('message', this.responseHandler.bind(this));
   }
   async init(): Promise<boolean> {
-    const request = {      
+    const request = {
       action: 'init',
     };
     const response = await this.sendRequest(request);
@@ -100,8 +100,8 @@ export class ProxyEmeris implements IEmeris {
     const response = await this.sendRequest(request);
     return response.data as boolean;
   }
-  
-  async signTransaction({ tx, chainId}): Promise<Uint8Array> {
+
+  async signTransaction({ tx, chainId }): Promise<Uint8Array> {
     const request = {
       action: 'signTransaction',
       data: { tx, chainId },

@@ -12,6 +12,8 @@ export default defineComponent({
   setup() {
     const store = useExtensionStore();
     onMounted(() => {
+
+      store.dispatch(GlobalActionTypes.GET_WALLET);
       store.dispatch(GlobalActionTypes.GET_PENDING);
       browser.runtime.onMessage.addListener((message) => {
         if (message.type == 'toPopup' && message.data.action == 'update') {

@@ -1,5 +1,6 @@
 <template>
   <div>
+    {{wallet}}
     <p
       v-for="item in pending"
       :key="item.id"
@@ -29,6 +30,9 @@ export default defineComponent({
     const pending = computed<ExtensionRequest[]>(() => {
       return store.getters[GlobalGetterTypes.getPending];
     });
+    const wallet = computed<ExtensionRequest[]>(() => {
+      return store.getters[GlobalGetterTypes.getWallet];
+    });
     const respond = (id) => {
       browser.runtime.sendMessage({
         type: 'fromPopup',
@@ -36,7 +40,7 @@ export default defineComponent({
       });
       store.dispatch(GlobalActionTypes.COMPLETE_REQUEST, { requestId: id });
     };
-    return { pending, respond };
+    return { pending, respond,wallet };
   },
 });
 </script>

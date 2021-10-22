@@ -4,7 +4,6 @@ import EmerisStorage from './lib/EmerisStorage';
 const storage = new EmerisStorage();
 const emeris = new Emeris(storage);
 
-
 const pageHandler = async (request) => {
   if (request.id) {
     if (request.action == 'init') {
@@ -19,7 +18,6 @@ const pageHandler = async (request) => {
       return { id: request.id, data: false };
     }
     return { id: request.id, data: await emeris[request.action](request.data) };
-    
   }
 };
 const messageHandler = async (request) => {

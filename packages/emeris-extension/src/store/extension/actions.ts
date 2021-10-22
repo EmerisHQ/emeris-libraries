@@ -2,7 +2,7 @@ import { ActionTypes } from './action-types';
 import { ActionContext, ActionTree } from 'vuex';
 import { State } from './state';
 import { RootState } from '..';
-import { ExtensionRequest } from '@/types/index';
+import { EmerisWallet, ExtensionRequest } from '@/types/index';
 import { MutationTypes } from './mutation-types';
 type Namespaced<T, N extends string> = {
   [P in keyof T & string as `${N}/${P}`]: T[P];
@@ -11,6 +11,7 @@ type Namespaced<T, N extends string> = {
 export interface Actions {
   // Cross-chain endpoint actions
   [ActionTypes.GET_PENDING]({ commit, getters }: ActionContext<State, RootState>): Promise<ExtensionRequest[]>;
+  [ActionTypes.GET_WALLET]({ commit, getters }: ActionContext<State, RootState>): Promise<EmerisWallet>;
   [ActionTypes.COMPLETE_REQUEST]({ commit }: ActionContext<State, RootState>, { requestId: number }): Promise<boolean>;
 }
 export type GlobalActions = Namespaced<Actions, 'extension'>;
@@ -27,6 +28,17 @@ export const actions: ActionTree<State, RootState> & Actions = {
       throw new Error('Extension:GetPendingRequests failed');
     }
     return getters['getPending'];
+  },
+  async [ActionTypes.GET_WALLET]({ commit, getters }) {
+    try {
+      const wallet = await browser.runtime.sendMessage({ type: 'fromPopup', data: { action: 'getWallet' } });      
+      if (wallet) {
+        commit(MutationTypes.SET_WALLET, wallet as EmerisWallet);
+      }
+    } catch (e) {
+      throw new Error('Extension:GetWallet failed');
+    }
+    return getters['getWallet'];
   },
   async [ActionTypes.COMPLETE_REQUEST]({ commit }, { requestId }) {
     try {

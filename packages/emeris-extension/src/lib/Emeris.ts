@@ -26,6 +26,7 @@ export class Emeris implements IEmeris {
     try {
       await this.storage.loadLocal();
     } catch (e) {
+      console.log(e);
       console.log('No local wallets');
       try {
         await this.storage.loadSync();
@@ -63,9 +64,10 @@ export class Emeris implements IEmeris {
     switch (message?.data.action) {
       case 'getPending':
         return this.pending.splice(0);
-
+      case 'getWallet':
+        return this.wallet;
       case 'setResponse':
-        request = this.queuedRequests.get(message.data.data.id);        
+        request = this.queuedRequests.get(message.data.data.id);
         if (!request) {
           return;
         }
@@ -73,7 +75,7 @@ export class Emeris implements IEmeris {
         this.queuedRequests.delete(message.data.data.id);
         return true;
     }
-  };
+  }
   async ensurePopup(): Promise<void> {
     if (!this.popup) {
       this.popup = await this.launchPopup();
