@@ -1,5 +1,5 @@
-import { IEmeris } from '@/shims-vue';
-import { EmerisEncryptedWallet, ExtensionRequest, ExtensionResponse } from '@/types';
+import { IEmeris } from '@@/shims-vue';
+import { EmerisEncryptedWallet, ExtensionRequest, ExtensionResponse } from '@@/types';
 import { v4 as uuidv4 } from 'uuid';
 import EmerisStorage from './EmerisStorage';
 import config from '../chain-config';

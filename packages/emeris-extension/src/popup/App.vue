@@ -4,8 +4,8 @@
 
 <script lang="ts">
 import { defineComponent, onMounted } from 'vue';
-import { useExtensionStore } from '@/store';
-import { GlobalActionTypes } from '@/store/extension/action-types';
+import { useExtensionStore } from '@@/store';
+import { GlobalActionTypes } from '@@/store/extension/action-types';
 import { useRouter } from 'vue-router';
 
 export default defineComponent({
@@ -14,10 +14,9 @@ export default defineComponent({
     const store = useExtensionStore();
     const router = useRouter();
     onMounted(async () => {
-
       const wallet = await store.dispatch(GlobalActionTypes.GET_WALLET);
       if (!wallet) {
-        router.push('/create')
+        router.push('/create');
       }
       store.dispatch(GlobalActionTypes.GET_PENDING);
       browser.runtime.onMessage.addListener((message) => {

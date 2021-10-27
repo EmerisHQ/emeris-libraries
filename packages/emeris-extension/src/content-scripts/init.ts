@@ -1,4 +1,4 @@
-import { ProxyEmeris } from '@/lib/ProxyEmeris';
+import { ProxyEmeris } from '@@/lib/ProxyEmeris';
 
 export async function init(emeris: ProxyEmeris): Promise<void> {
   const status = await emeris.init();

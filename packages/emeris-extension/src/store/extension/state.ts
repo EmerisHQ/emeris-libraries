@@ -1,4 +1,4 @@
-import { EmerisWallet, ExtensionRequest } from '@/types';
+import { EmerisWallet, ExtensionRequest } from '@@/types';
 
 export type State = {
   pending: Array<ExtensionRequest>;

@@ -1,4 +1,4 @@
-import { EmerisWallet, ExtensionRequest } from '@/types/index';
+import { EmerisWallet, ExtensionRequest } from '@@/types/index';
 import { GetterTree } from 'vuex';
 import { GetterTypes, GlobalGetterTypes } from './getter-types';
 import { State } from './state';

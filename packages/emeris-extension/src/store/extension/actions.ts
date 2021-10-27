@@ -2,7 +2,7 @@ import { ActionTypes } from './action-types';
 import { ActionContext, ActionTree } from 'vuex';
 import { State } from './state';
 import { RootState } from '..';
-import { EmerisEncryptedWallet, EmerisWallet, ExtensionRequest } from '@/types/index';
+import { EmerisEncryptedWallet, EmerisWallet, ExtensionRequest } from '@@/types/index';
 import { MutationTypes } from './mutation-types';
 type Namespaced<T, N extends string> = {
   [P in keyof T & string as `${N}/${P}`]: T[P];
@@ -18,8 +18,8 @@ export interface Actions {
   ): Promise<boolean>;
   [ActionTypes.CREATE_WALLET](
     { commit }: ActionContext<State, RootState>,
-    { wallet,password }:
-    { wallet: EmerisWallet, password:string },
+    { wallet, password }:
+      { wallet: EmerisWallet, password: string },
   ): Promise<void>;
 }
 export type GlobalActions = Namespaced<Actions, 'extension'>;
@@ -37,13 +37,13 @@ export const actions: ActionTree<State, RootState> & Actions = {
     }
     return getters['getPending'];
   },
-  async [ActionTypes.CREATE_WALLET]({ commit }, {wallet,password}: {wallet:EmerisWallet, password: string}) {
-    const response = await browser.runtime.sendMessage({ type: 'fromPopup', data: { action: 'createWallet', data: { wallet } } });    
+  async [ActionTypes.CREATE_WALLET]({ commit }, { wallet, password }: { wallet: EmerisWallet, password: string }) {
+    const response = await browser.runtime.sendMessage({ type: 'fromPopup', data: { action: 'createWallet', data: { wallet } } });
     commit(MutationTypes.SET_WALLET, wallet as EmerisWallet);
   },
   async [ActionTypes.GET_WALLET]({ commit, getters }) {
     try {
-      const wallet = await browser.runtime.sendMessage({ type: 'fromPopup', data: { action: 'getWallet' } });      
+      const wallet = await browser.runtime.sendMessage({ type: 'fromPopup', data: { action: 'getWallet' } });
       if (wallet) {
         commit(MutationTypes.SET_WALLET, wallet as EmerisWallet);
       }

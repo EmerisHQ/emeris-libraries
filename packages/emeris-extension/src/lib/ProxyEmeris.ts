@@ -1,5 +1,5 @@
-import { IEmeris } from '@/shims-vue';
-import { ExtensionRequest, ExtensionResponse, RoutedExtensionRequest } from '@/types';
+import { IEmeris } from '@@/shims-vue';
+import { ExtensionRequest, ExtensionResponse, RoutedExtensionRequest } from '@@/types';
 import { v4 as uuidv4 } from 'uuid';
 export class ProxyEmeris implements IEmeris {
   loaded: boolean;
@@ -118,5 +118,5 @@ export class ProxyEmeris implements IEmeris {
     const response = await this.sendRequest(request);
     return response.data as boolean;
   }
-	*/
+  */
 }

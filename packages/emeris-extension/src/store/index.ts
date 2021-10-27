@@ -1,6 +1,6 @@
 import { createStore } from 'vuex';
 
-import { ExtensionStore, State, store as extension } from '@/store/extension';
+import { ExtensionStore, State, store as extension } from '@@/store/extension';
 
 export type RootState = {
   extension: State;
