@@ -1,3 +1,5 @@
+const path = require('path')
+
 module.exports = {
   lintOnSave: true,
   pages: {
@@ -41,5 +43,9 @@ module.exports = {
       .entry("inject-emeris")
       .add("./src/content-scripts/inject-emeris.ts")
       .end();
+    config.resolve
+      .alias
+      .set('@', path.resolve(__dirname, 'demeris/src'))
+      .set('@@', path.resolve(__dirname, 'src'));
   },
 };

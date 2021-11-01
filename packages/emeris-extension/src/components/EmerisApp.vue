@@ -1,6 +1,7 @@
 <template>
   <div>
-    {{wallet}}
+    <Brandmark />
+    {{ wallet }}
     <p
       v-for="item in pending"
       :key="item.id"
@@ -16,14 +17,18 @@
 </template>
 
 <script lang="ts">
-import { useExtensionStore } from '@/store';
-import { GlobalActionTypes } from '@/store/extension/action-types';
-import { GlobalGetterTypes } from '@/store/extension/getter-types';
-import { ExtensionRequest } from '@/types';
+import { useExtensionStore } from '@@/store';
+import { GlobalActionTypes } from '@@/store/extension/action-types';
+import { GlobalGetterTypes } from '@@/store/extension/getter-types';
+import { ExtensionRequest } from '@@/types';
 import { defineComponent, computed } from 'vue';
+import Brandmark from '@/components/common/Brandmark.vue';
 
 export default defineComponent({
   name: 'EmerisApp',
+  components: {
+    Brandmark,
+  },
   setup() {
     const store = useExtensionStore();
 
@@ -40,7 +45,7 @@ export default defineComponent({
       });
       store.dispatch(GlobalActionTypes.COMPLETE_REQUEST, { requestId: id });
     };
-    return { pending, respond,wallet };
+    return { pending, respond, wallet };
   },
 });
 </script>

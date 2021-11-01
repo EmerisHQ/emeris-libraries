@@ -1,4 +1,4 @@
-import { EmerisWallet, ExtensionRequest } from '@/types/index';
+import { EmerisWallet, ExtensionRequest } from '@@/types/index';
 import { MutationTypes } from './mutation-types';
 import { State } from './state';
 import { MutationTree } from 'vuex';

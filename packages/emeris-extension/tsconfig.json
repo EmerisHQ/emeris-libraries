@@ -23,8 +23,11 @@
       "firefox-webext-browser"
     ],
     "paths": {
-      "@/*": [
+      "@@/*": [
         "src/*"
+      ],
+      "@/*": [
+        "demeris/src/*"
       ]
     },
     "lib": [

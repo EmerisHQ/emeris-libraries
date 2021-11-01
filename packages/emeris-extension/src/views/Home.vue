@@ -6,7 +6,7 @@
 
 <script lang="ts">
 import { defineComponent } from 'vue';
-import EmerisApp from '@/components/EmerisApp.vue';
+import EmerisApp from '@@/components/EmerisApp.vue';
 
 export default defineComponent({
   name: 'Home',

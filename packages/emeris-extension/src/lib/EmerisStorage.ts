@@ -1,7 +1,7 @@
 import CryptoJS from 'crypto-js';
 
-import { SaveWalletError, UnlockWalletError, WalletNotFoundError } from '@/errors';
-import { EmerisEncryptedWallet, EmerisWallet } from '@/types';
+import { SaveWalletError, UnlockWalletError, WalletNotFoundError } from '@@/errors';
+import { EmerisEncryptedWallet, EmerisWallet } from '@@/types';
 
 export default class EmerisStorage {
   private wallets: EmerisEncryptedWallet[] = [];
