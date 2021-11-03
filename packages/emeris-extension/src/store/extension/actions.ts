@@ -12,14 +12,18 @@ export interface Actions {
   // Cross-chain endpoint actions
   [ActionTypes.GET_PENDING]({ commit, getters }: ActionContext<State, RootState>): Promise<ExtensionRequest[]>;
   [ActionTypes.GET_WALLET]({ commit, getters }: ActionContext<State, RootState>): Promise<EmerisWallet>;
+  [ActionTypes.GET_WALLETS]({ commit, getters }: ActionContext<State, RootState>): Promise<EmerisEncryptedWallet[]>;
   [ActionTypes.COMPLETE_REQUEST](
     { commit }: ActionContext<State, RootState>,
     { requestId }: { requestId: number },
   ): Promise<boolean>;
   [ActionTypes.CREATE_WALLET](
     { commit }: ActionContext<State, RootState>,
-    { wallet, password }:
-      { wallet: EmerisWallet, password: string },
+    { wallet, password }: { wallet: EmerisWallet; password: string },
+  ): Promise<void>;
+  [ActionTypes.UNLOCK_WALLET](
+    { commit }: ActionContext<State, RootState>,
+    { walletName, password }: { walletName: string; password: string },
   ): Promise<void>;
 }
 export type GlobalActions = Namespaced<Actions, 'extension'>;
@@ -37,8 +41,11 @@ export const actions: ActionTree<State, RootState> & Actions = {
     }
     return getters['getPending'];
   },
-  async [ActionTypes.CREATE_WALLET]({ commit }, { wallet, password }: { wallet: EmerisWallet, password: string }) {
-    const response = await browser.runtime.sendMessage({ type: 'fromPopup', data: { action: 'createWallet', data: { wallet } } });
+  async [ActionTypes.CREATE_WALLET]({ commit }, { wallet, password }: { wallet: EmerisWallet; password: string }) {
+    const response = await browser.runtime.sendMessage({
+      type: 'fromPopup',
+      data: { action: 'createWallet', data: { wallet, password } },
+    });
     commit(MutationTypes.SET_WALLET, wallet as EmerisWallet);
   },
   async [ActionTypes.GET_WALLET]({ commit, getters }) {
@@ -51,6 +58,28 @@ export const actions: ActionTree<State, RootState> & Actions = {
       throw new Error('Extension:GetWallet failed');
     }
     return getters['getWallet'];
+  },
+  async [ActionTypes.UNLOCK_WALLET]({ commit, getters }, { walletName, password }: { walletName: string; password: string }) {
+    try {
+      const wallet = await browser.runtime.sendMessage({ type: 'fromPopup', data: { action: 'unlockWallet', data: { walletName, password} } });
+      if (wallet) {
+        commit(MutationTypes.SET_WALLET, wallet as EmerisWallet);
+      }
+    } catch (e) {
+      throw new Error('Extension:UnlockWallet failed');
+    }
+    return getters['getWallet'];
+  },
+  async [ActionTypes.GET_WALLETS]({ commit, getters }) {
+    try {
+      const wallets = await browser.runtime.sendMessage({ type: 'fromPopup', data: { action: 'getWallets' } });
+      if (wallets) {
+        commit(MutationTypes.SET_WALLETS, wallets as EmerisEncryptedWallet[]);
+      }
+    } catch (e) {
+      throw new Error('Extension:GetWallets failed');
+    }
+    return getters['getWallets'];
   },
   async [ActionTypes.COMPLETE_REQUEST]({ commit }, { requestId }) {
     try {

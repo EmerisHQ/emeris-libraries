@@ -29,7 +29,10 @@ export default defineComponent({
     const createWallet = () => {
       if (validatePassword()) {
         mnemonic.value = bip39.generateMnemonic(256);
-        store.dispatch(GlobalActionTypes.GET_PENDING);
+        store.dispatch(GlobalActionTypes.CREATE_WALLET, {
+          wallet: { walletMnemonic: mnemonic.value, walletName: walletName.value },
+          password: password.value,
+        });
       }
     };
     return { walletName, password, confirmPassword, createWallet, mnemonic };

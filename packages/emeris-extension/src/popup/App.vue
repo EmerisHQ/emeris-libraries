@@ -15,8 +15,12 @@ export default defineComponent({
     const router = useRouter();
     onMounted(async () => {
       const wallet = await store.dispatch(GlobalActionTypes.GET_WALLET);
-      if (!wallet) {
+      const wallets = await store.dispatch(GlobalActionTypes.GET_WALLETS);
+      if (!wallet && wallets.length==0) {
         router.push('/create');
+      }
+      if (!wallet && wallets.length>0) {
+        router.push('/unlock');
       }
       store.dispatch(GlobalActionTypes.GET_PENDING);
       browser.runtime.onMessage.addListener((message) => {

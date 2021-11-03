@@ -1,33 +1,35 @@
-import CryptoJS from 'crypto-js';
+import * as CryptoJS from 'crypto-js';
 
 import { SaveWalletError, UnlockWalletError, WalletNotFoundError } from '@@/errors';
 import { EmerisEncryptedWallet, EmerisWallet } from '@@/types';
-
+export enum EmerisStorageMode {
+  SYNC = 'sync',
+  LOCAL = 'local'
+}
 export default class EmerisStorage {
+  
   private wallets: EmerisEncryptedWallet[] = [];
-  private storageMode: 'sync' | 'local';
+  private storageMode: EmerisStorageMode;
   private lastWallet: string | null;
 
-  constructor() {
-    this.storageMode = 'sync';
+  constructor(storageMode: EmerisStorageMode) {
+    this.storageMode = storageMode;
   }
-  async loadLocal(): Promise<void> {
-    const result = await browser.storage.local.get('wallets');
+  async loadWallets(): Promise<void> {
+    const result = await browser.storage[this.storageMode].get('wallets');
     if (result.wallets) {
       this.wallets = result.wallets;
-      this.storageMode = 'local';
-      const res = await browser.storage.local.get('lastWallet');
-      if (res.lastWallet) {
-        this.lastWallet = res.lastWallet;
-      } else {
-        this.lastWallet = null;
-      }
-    } else {
-      await browser.storage.local.set({ wallets: [{ walletName: 'clockwork', walletData: 'somedata' }] });
-      await browser.storage.local.set({ lastWallet: 'clockwork' });
-      this.loadLocal();
-      //throw new WalletNotFoundError('No local wallets found');
     }
+    const res = await browser.storage.local.get('lastWallet');
+    if (res.lastWallet) {
+      this.lastWallet = res.lastWallet;
+    } else {
+      this.lastWallet = null;
+    }
+  }
+  async getWallets() {
+    await this.loadWallets();
+    return this.wallets;
   }
   getLastWallet(): EmerisEncryptedWallet | null {
     if (this.lastWallet) {
@@ -36,29 +38,15 @@ export default class EmerisStorage {
       return this.wallets.length > 0 ? this.wallets[0] : null;
     }
   }
-  async loadSync(): Promise<void> {
-    const result = await browser.storage.sync.get('wallets');
-    if (result.wallets) {
-      this.wallets = result.wallets;
-      this.storageMode = 'sync';
-      const res = await browser.storage.sync.get('lastWallet');
-      if (res.lastWallet) {
-        this.lastWallet = res.lastWallet;
-      } else {
-        this.lastWallet = null;
-      }
-    } else {
-      throw new WalletNotFoundError('No sync wallets found');
-    }
+  async setLastWallet(walletName: string):Promise<void> {
+    await browser.storage[this.storageMode].set({ lastWallet: walletName });
+    this.lastWallet = walletName;
   }
   async saveWallet(wallet: EmerisWallet, password: string): Promise<boolean> {
     try {
       const encryptedWallet = CryptoJS.AES.encrypt(JSON.stringify(wallet), password).toString();
       if (!this.wallets) {
         this.wallets = [];
-      }
-      if (!this.storageMode) {
-        this.storageMode = 'local';
       }
       this.wallets.push({ walletName: wallet.walletName, walletData: encryptedWallet });
       await browser.storage[this.storageMode].set({ wallets: this.wallets });

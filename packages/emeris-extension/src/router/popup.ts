@@ -1,7 +1,8 @@
 import { createRouter, createWebHashHistory, RouteRecordRaw } from 'vue-router';
 
 import Home from '../views/Home.vue';
-import Wallet from '../views/Wallet.vue';
+import Create from '../views/Create.vue';
+import Unlock from '../views/Unlock.vue';
 
 const routes: Array<RouteRecordRaw> = [
   {
@@ -12,7 +13,12 @@ const routes: Array<RouteRecordRaw> = [
   {
     path: '/create',
     name: 'Create Wallet',
-    component: Wallet,
+    component: Create,
+  },
+  {
+    path: '/unlock',
+    name: 'Unlock Wallet',
+    component: Unlock,
   },
 ];
 

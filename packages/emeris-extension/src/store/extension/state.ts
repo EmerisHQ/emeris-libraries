@@ -1,12 +1,14 @@
-import { EmerisWallet, ExtensionRequest } from '@@/types';
+import { EmerisEncryptedWallet, EmerisWallet, ExtensionRequest } from '@@/types';
 
 export type State = {
   pending: Array<ExtensionRequest>;
-  wallet: EmerisWallet
+  wallet: EmerisWallet;
+  wallets: EmerisEncryptedWallet[];
 };
 export function getDefaultState(): State {
   return {
     pending: [],
-    wallet: null
+    wallet: null,
+    wallets: []
   };
 }

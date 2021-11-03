@@ -1,7 +1,7 @@
 import { Emeris } from './lib/Emeris';
-import EmerisStorage from './lib/EmerisStorage';
+import EmerisStorage, { EmerisStorageMode } from './lib/EmerisStorage';
 
-const storage = new EmerisStorage();
+const storage = new EmerisStorage(EmerisStorageMode.LOCAL);
 const emeris = new Emeris(storage);
 
 const pageHandler = async (request) => {
@@ -20,8 +20,8 @@ const pageHandler = async (request) => {
     return { id: request.id, data: await emeris[request.action](request.data) };
   }
 };
-const messageHandler = async (request) => {
-  console.log(request);
+const messageHandler = async (request) => {  
+  await emeris.init();
   if (request.type == 'fromPopup') {
     return await emeris.popupHandler(request);
   }

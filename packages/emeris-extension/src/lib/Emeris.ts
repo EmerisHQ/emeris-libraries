@@ -1,20 +1,24 @@
 import { IEmeris } from '@@/shims-vue';
-import { EmerisEncryptedWallet, ExtensionRequest, ExtensionResponse } from '@@/types';
+import { EmerisEncryptedWallet, ExtensionRequest, EmerisWallet } from '@@/types';
 import { v4 as uuidv4 } from 'uuid';
 import EmerisStorage from './EmerisStorage';
 import config from '../chain-config';
 import libs from './libraries';
-
+import { UnlockWalletError } from '@@/errors';
+import * as CryptoJS from 'crypto-js';
 export class Emeris implements IEmeris {
   public loaded: boolean;
   private storage: EmerisStorage;
-  private wallet: EmerisEncryptedWallet;
+  private wallet: EmerisWallet;
+  private lastWallet: EmerisEncryptedWallet;
+  private wallets: EmerisEncryptedWallet[];
   private popup: number;
   private queuedRequests: Map<
     string,
     Record<'resolver', (value: ExtensionRequest | PromiseLike<ExtensionRequest>) => void>
   >;
   private pending: ExtensionRequest[] = [];
+  private timeoutLock: ReturnType<typeof setTimeout>;
 
   constructor(storage: EmerisStorage) {
     this.loaded = true;
@@ -24,20 +28,47 @@ export class Emeris implements IEmeris {
   }
   async init(): Promise<void> {
     try {
-      await this.storage.loadLocal();
+      this.wallets = await this.storage.getWallets();
+      this.lastWallet = this.storage.getLastWallet();
     } catch (e) {
-      console.log(e);
-      console.log('No local wallets');
-      try {
-        await this.storage.loadSync();
-      } catch (e) {
-        console.log('No sync wallets');
-      }
-    } finally {
-      this.wallet = this.storage.getLastWallet();
+      throw new Error('Could not load wallets');
     }
   }
-
+  reset(): void {
+    if (this.timeoutLock) {
+      console.log('reset?');
+      clearTimeout(this.timeoutLock);
+      this.timeoutLock = setTimeout(() => {
+        this.lock();
+      }, 120000);
+    }
+  }
+  lock(): void{
+    console.log('here');
+    console.log(this.wallet);
+    clearTimeout(this.timeoutLock);
+    this.timeoutLock = null;
+    this.wallet = null;
+    console.log(this.wallet);
+  }
+  async unlockWallet(walletName:string, password: string): Promise<EmerisWallet> {
+    try {
+      const encryptedWallet = this.wallets.find(x => x.walletName == walletName);
+      if (encryptedWallet) {
+        this.wallet = JSON.parse(CryptoJS.AES.decrypt(encryptedWallet.walletData, password).toString(CryptoJS.enc.Utf8));
+        await this.storage.setLastWallet(this.wallet.walletName);
+        this.timeoutLock = setTimeout(() => { this.lock(); }, 120000);
+        console.log(this.wallet);
+        return this.wallet;
+      } else {
+        console.log('?')
+        throw new UnlockWalletError('Wallet not found');  
+      }
+    } catch (e) {
+      console.log(e);
+      throw new UnlockWalletError('Could not unlock wallet: ' + e);
+    }
+  }
   async launchPopup(): Promise<number> {
     return (
       await browser.windows.create({
@@ -61,11 +92,21 @@ export class Emeris implements IEmeris {
   }
   async popupHandler(message) {
     let request;
+    console.log(request);
+    this.reset();
     switch (message?.data.action) {
       case 'getPending':
         return this.pending.splice(0);
+      case 'createWallet':
+        await this.storage.saveWallet(message.data.data.wallet, message.data.data.password);
+        await this.init();
       case 'getWallet':
         return this.wallet;
+      case 'unlockWallet':
+        this.wallet = await this.unlockWallet(message.data.data.walletName, message.data.data.password);
+        return this.wallet;
+      case 'getWallets':
+        return this.wallets;
       case 'setResponse':
         request = this.queuedRequests.get(message.data.data.id);
         if (!request) {
