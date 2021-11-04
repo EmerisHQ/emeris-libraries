@@ -13,6 +13,7 @@
     >
       {{ item }}
     </p>
+    <button v-on:click="logLedger">Ledger</button>
   </div>
 </template>
 
@@ -23,6 +24,7 @@ import { GlobalGetterTypes } from '@@/store/extension/getter-types';
 import { ExtensionRequest } from '@@/types';
 import { defineComponent, computed } from 'vue';
 import Brandmark from '@/components/common/Brandmark.vue';
+import TransportWebUSB from "@ledgerhq/hw-transport-webusb";
 
 export default defineComponent({
   name: 'EmerisApp',
@@ -45,7 +47,13 @@ export default defineComponent({
       });
       store.dispatch(GlobalActionTypes.COMPLETE_REQUEST, { requestId: id });
     };
-    return { pending, respond, wallet };
+    const logLedger = () => {
+      
+      TransportWebUSB.request();
+      TransportWebUSB.create(10000).then(transport => { console.log(transport)});
+    }
+
+    return { pending, respond, wallet, logLedger };
   },
 });
 </script>

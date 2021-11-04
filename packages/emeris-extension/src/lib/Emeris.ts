@@ -6,6 +6,7 @@ import config from '../chain-config';
 import libs from './libraries';
 import { UnlockWalletError } from '@@/errors';
 import * as CryptoJS from 'crypto-js';
+import useButtonVue from '@/composables/useButton.vue';
 export class Emeris implements IEmeris {
   public loaded: boolean;
   private storage: EmerisStorage;
@@ -43,7 +44,7 @@ export class Emeris implements IEmeris {
       }, 120000);
     }
   }
-  lock(): void{
+  lock(): void {
     console.log('here');
     console.log(this.wallet);
     clearTimeout(this.timeoutLock);
@@ -51,18 +52,22 @@ export class Emeris implements IEmeris {
     this.wallet = null;
     console.log(this.wallet);
   }
-  async unlockWallet(walletName:string, password: string): Promise<EmerisWallet> {
+  async unlockWallet(walletName: string, password: string): Promise<EmerisWallet> {
     try {
-      const encryptedWallet = this.wallets.find(x => x.walletName == walletName);
+      const encryptedWallet = this.wallets.find((x) => x.walletName == walletName);
       if (encryptedWallet) {
-        this.wallet = JSON.parse(CryptoJS.AES.decrypt(encryptedWallet.walletData, password).toString(CryptoJS.enc.Utf8));
+        this.wallet = JSON.parse(
+          CryptoJS.AES.decrypt(encryptedWallet.walletData, password).toString(CryptoJS.enc.Utf8),
+        );
         await this.storage.setLastWallet(this.wallet.walletName);
-        this.timeoutLock = setTimeout(() => { this.lock(); }, 120000);
+        this.timeoutLock = setTimeout(() => {
+          this.lock();
+        }, 120000);
         console.log(this.wallet);
         return this.wallet;
       } else {
-        console.log('?')
-        throw new UnlockWalletError('Wallet not found');  
+        console.log('?');
+        throw new UnlockWalletError('Wallet not found');
       }
     } catch (e) {
       console.log(e);
@@ -98,8 +103,13 @@ export class Emeris implements IEmeris {
       case 'getPending':
         return this.pending.splice(0);
       case 'createWallet':
+        if (message.data.data.wallet.walletMnemonic=='ledger') {
+          await navigator['usb'].requestDevice({ filters: []});
+        }
         await this.storage.saveWallet(message.data.data.wallet, message.data.data.password);
         await this.init();
+        this.wallet = message.data.data.wallet;
+        return this.wallet;
       case 'getWallet':
         return this.wallet;
       case 'unlockWallet':

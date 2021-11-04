@@ -9,6 +9,6 @@ export function getDefaultState(): State {
   return {
     pending: [],
     wallet: null,
-    wallets: []
+    wallets: [],
   };
 }

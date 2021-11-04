@@ -1,8 +1,10 @@
+import TransportWebUSB from '@ledgerhq/hw-transport-webusb';
 import { Emeris } from './lib/Emeris';
 import EmerisStorage, { EmerisStorageMode } from './lib/EmerisStorage';
 
 const storage = new EmerisStorage(EmerisStorageMode.LOCAL);
 const emeris = new Emeris(storage);
+
 
 const pageHandler = async (request) => {
   if (request.id) {
@@ -20,7 +22,7 @@ const pageHandler = async (request) => {
     return { id: request.id, data: await emeris[request.action](request.data) };
   }
 };
-const messageHandler = async (request) => {  
+const messageHandler = async (request) => {
   await emeris.init();
   if (request.type == 'fromPopup') {
     return await emeris.popupHandler(request);

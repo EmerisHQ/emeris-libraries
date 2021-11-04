@@ -4,10 +4,9 @@ import { SaveWalletError, UnlockWalletError, WalletNotFoundError } from '@@/erro
 import { EmerisEncryptedWallet, EmerisWallet } from '@@/types';
 export enum EmerisStorageMode {
   SYNC = 'sync',
-  LOCAL = 'local'
+  LOCAL = 'local',
 }
 export default class EmerisStorage {
-  
   private wallets: EmerisEncryptedWallet[] = [];
   private storageMode: EmerisStorageMode;
   private lastWallet: string | null;
@@ -38,7 +37,7 @@ export default class EmerisStorage {
       return this.wallets.length > 0 ? this.wallets[0] : null;
     }
   }
-  async setLastWallet(walletName: string):Promise<void> {
+  async setLastWallet(walletName: string): Promise<void> {
     await browser.storage[this.storageMode].set({ lastWallet: walletName });
     this.lastWallet = walletName;
   }

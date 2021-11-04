@@ -16,10 +16,10 @@ export default defineComponent({
     onMounted(async () => {
       const wallet = await store.dispatch(GlobalActionTypes.GET_WALLET);
       const wallets = await store.dispatch(GlobalActionTypes.GET_WALLETS);
-      if (!wallet && wallets.length==0) {
+      if (!wallet && wallets.length == 0) {
         router.push('/create');
       }
-      if (!wallet && wallets.length>0) {
+      if (!wallet && wallets.length > 0) {
         router.push('/unlock');
       }
       store.dispatch(GlobalActionTypes.GET_PENDING);

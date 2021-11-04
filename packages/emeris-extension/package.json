@@ -23,6 +23,7 @@
   "dependencies": {
     "@cosmjs/crypto": "^0.26.2",
     "@cosmjs/proto-signing": "^0.26.2",
+    "@ledgerhq/hw-transport-webusb": "^6.11.2",
     "bip39": "^3.0.4",
     "core-js": "^3.18.3",
     "crypto-js": "^4.1.1",

@@ -4,7 +4,7 @@ export enum ActionTypes {
   GET_WALLET = 'GET_WALLET',
   GET_WALLETS = 'GET_WALLETS',
   CREATE_WALLET = 'CREATE_WALLET',
-  UNLOCK_WALLET = 'UNLOCK_WALLET'
+  UNLOCK_WALLET = 'UNLOCK_WALLET',
 }
 export enum GlobalActionTypes {
   GET_PENDING = 'extension/GET_PENDING',
@@ -12,5 +12,5 @@ export enum GlobalActionTypes {
   GET_WALLET = 'extension/GET_WALLET',
   GET_WALLETS = 'extension/GET_WALLETS',
   CREATE_WALLET = 'extension/CREATE_WALLET',
-  UNLOCK_WALLET = 'extension/UNLOCK_WALLET'
+  UNLOCK_WALLET = 'extension/UNLOCK_WALLET',
 }

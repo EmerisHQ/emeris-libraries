@@ -59,9 +59,15 @@ export const actions: ActionTree<State, RootState> & Actions = {
     }
     return getters['getWallet'];
   },
-  async [ActionTypes.UNLOCK_WALLET]({ commit, getters }, { walletName, password }: { walletName: string; password: string }) {
+  async [ActionTypes.UNLOCK_WALLET](
+    { commit, getters },
+    { walletName, password }: { walletName: string; password: string },
+  ) {
     try {
-      const wallet = await browser.runtime.sendMessage({ type: 'fromPopup', data: { action: 'unlockWallet', data: { walletName, password} } });
+      const wallet = await browser.runtime.sendMessage({
+        type: 'fromPopup',
+        data: { action: 'unlockWallet', data: { walletName, password } },
+      });
       if (wallet) {
         commit(MutationTypes.SET_WALLET, wallet as EmerisWallet);
       }
