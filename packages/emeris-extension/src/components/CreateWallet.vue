@@ -30,7 +30,7 @@ export default defineComponent({
       if (validatePassword()) {
         mnemonic.value = bip39.generateMnemonic(256);
         store.dispatch(GlobalActionTypes.CREATE_WALLET, {
-          wallet: { walletMnemonic: 'ledger', walletName: walletName.value },
+          wallet: { walletMnemonic: mnemonic.value, walletName: walletName.value },
           password: password.value,
         });
       }

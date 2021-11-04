@@ -6,7 +6,6 @@ import config from '../chain-config';
 import libs from './libraries';
 import { UnlockWalletError } from '@@/errors';
 import * as CryptoJS from 'crypto-js';
-import useButtonVue from '@/composables/useButton.vue';
 export class Emeris implements IEmeris {
   public loaded: boolean;
   private storage: EmerisStorage;
@@ -103,8 +102,13 @@ export class Emeris implements IEmeris {
       case 'getPending':
         return this.pending.splice(0);
       case 'createWallet':
-        if (message.data.data.wallet.walletMnemonic=='ledger') {
-          await navigator['usb'].requestDevice({ filters: []});
+        if (message.data.data.wallet.walletMnemonic == 'ledger') {
+          try {
+            
+            await navigator['usb'].requestDevice({ filters: [] });
+          } catch (e) {
+            console.log(e);
+          }
         }
         await this.storage.saveWallet(message.data.data.wallet, message.data.data.password);
         await this.init();

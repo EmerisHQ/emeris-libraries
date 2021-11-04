@@ -48,8 +48,6 @@ export default defineComponent({
       store.dispatch(GlobalActionTypes.COMPLETE_REQUEST, { requestId: id });
     };
     const logLedger = () => {
-      
-      TransportWebUSB.request();
       TransportWebUSB.create(10000).then(transport => { console.log(transport)});
     }
 
