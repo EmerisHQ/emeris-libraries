@@ -10,7 +10,7 @@ export default class EmerisStorage {
   private wallets: EmerisEncryptedWallet[] = [];
   private storageMode: EmerisStorageMode;
   private lastWallet: string | null;
-
+  private permissions: EmerisPermission[] = [];
   constructor(storageMode: EmerisStorageMode) {
     this.storageMode = storageMode;
   }
@@ -19,11 +19,17 @@ export default class EmerisStorage {
     if (result.wallets) {
       this.wallets = result.wallets;
     }
-    const res = await browser.storage.local.get('lastWallet');
+    const res = await browser.storage[this.storageMode].get('lastWallet');
     if (res.lastWallet) {
       this.lastWallet = res.lastWallet;
     } else {
       this.lastWallet = null;
+    }
+  }
+  async loadPermissions(): Promise<void> {
+    const result = await browser.storage[this.storageMode].get('permissions');
+    if (result.permissions) {
+      this.permissions = result.permissions;
     }
   }
   async getWallets() {
