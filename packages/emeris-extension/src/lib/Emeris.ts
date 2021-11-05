@@ -26,14 +26,6 @@ export class Emeris implements IEmeris {
     this.popup = null;
     this.queuedRequests = new Map();
   }
-  async init(): Promise<void> {
-    try {
-      this.wallets = await this.storage.getWallets();
-      this.lastWallet = this.storage.getLastWallet();
-    } catch (e) {
-      throw new Error('Could not load wallets');
-    }
-  }
   reset(): void {
     if (this.timeoutLock) {
       console.log('reset?');
@@ -104,14 +96,12 @@ export class Emeris implements IEmeris {
       case 'createWallet':
         if (message.data.data.wallet.walletMnemonic == 'ledger') {
           try {
-            
             await navigator['usb'].requestDevice({ filters: [] });
           } catch (e) {
             console.log(e);
           }
         }
         await this.storage.saveWallet(message.data.data.wallet, message.data.data.password);
-        await this.init();
         this.wallet = message.data.data.wallet;
         return this.wallet;
       case 'getWallet':
@@ -120,7 +110,7 @@ export class Emeris implements IEmeris {
         this.wallet = await this.unlockWallet(message.data.data.walletName, message.data.data.password);
         return this.wallet;
       case 'getWallets':
-        return this.wallets;
+        return await this.storage.getWallets();
       case 'setResponse':
         request = this.queuedRequests.get(message.data.data.id);
         if (!request) {
@@ -194,6 +184,11 @@ export class Emeris implements IEmeris {
   async signTransaction(request: ExtensionRequest): Promise<Uint8Array> {
     request.id = uuidv4();
     return (await this.forwardToPopup(request)) as Uint8Array;
+  }
+  async enable(request: ExtensionRequest): Promise<boolean> {
+    request.id = uuidv4();
+    //request.type =
+    return (await this.forwardToPopup(request)) as boolean;
   }
   /*
   signAndBroadcastTransaction: (tx: any, chainId: string) => Promise<any>;

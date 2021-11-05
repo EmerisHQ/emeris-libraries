@@ -13,13 +13,6 @@ export class ProxyEmeris implements IEmeris {
 
     window.addEventListener('message', this.responseHandler.bind(this));
   }
-  async init(): Promise<boolean> {
-    const request = {
-      action: 'init',
-    };
-    const response = await this.sendRequest(request);
-    return response.data as boolean;
-  }
   private async responseHandler(event) {
     // We only accept messages from ourselves
     if (event.source != window) {
@@ -108,6 +101,13 @@ export class ProxyEmeris implements IEmeris {
     };
     const response = await this.sendRequest(request);
     return response.data as Uint8Array;
+  }
+  async enable(): Promise<boolean> {    
+    const request = {
+      action: 'enable',      
+    };
+    const response = await this.sendRequest(request);
+    return response.data as boolean;
   }
   /*
   async signAndBroadcastTransaction(tx: any, chainId: string): Promise<boolean> {

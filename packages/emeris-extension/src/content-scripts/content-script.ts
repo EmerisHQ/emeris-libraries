@@ -15,7 +15,7 @@ const sendMessage = async (msg: unknown) => {
 };
 
 const validateMsg = (data) => {
-  //TODO: Check msg for validity
+
   return true || data;
 };
 
@@ -33,6 +33,7 @@ window.addEventListener('message', async (event: MessageEvent) => {
   if (!validateMsg(event.data.data)) {
     return;
   }
+  event.data.data._origin = event.origin
   const response = await sendMessage(event.data.data);
 
   window.postMessage({ type: 'fromEmerisExtension', data: response }, event.origin);

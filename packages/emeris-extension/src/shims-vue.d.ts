@@ -10,10 +10,11 @@ export interface IEmeris {
   getPublicKey?: (chainId: string) => Promise<Uint8Array>;
   isHWWallet?: () => Promise<boolean>;
   supportedChains?: () => Promise<string[]>;
-  getWalletName?: () => Promise<string>
+  getWalletName?: () => Promise<string>;
   hasWallet?: () => Promise<boolean>;
-  signTransaction?:(tx: AbstractTx, chainId: string) => Promise<Uint8Array>;
-  signAndBroadcastTransaction?:(tx: AbstractTx, chainId: string) => Promise<AbstractTxResult>;
+  enable?: () => Promise<boolean>;
+  signTransaction?: (tx: AbstractTx, chainId: string) => Promise<Uint8Array>;
+  signAndBroadcastTransaction?: (tx: AbstractTx, chainId: string) => Promise<AbstractTxResult>;
 }
 export type EmerisWindow = {
   emeris: IEmeris;

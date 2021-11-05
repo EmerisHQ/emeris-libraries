@@ -1,8 +1,7 @@
 import { ProxyEmeris } from '@@/lib/ProxyEmeris';
 
 export async function init(emeris: ProxyEmeris): Promise<void> {
-  const status = await emeris.init();
-  if (status) {
+  
     const {
       loaded,
       getAddress,
@@ -25,7 +24,5 @@ export async function init(emeris: ProxyEmeris): Promise<void> {
       signTransaction: signTransaction.bind(emeris),
       //signAndBroadcastTransaction,
     };
-  } else {
-    window.emeris = { loaded: false };
-  }
+  
 }
