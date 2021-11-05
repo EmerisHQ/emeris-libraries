@@ -1,6 +1,20 @@
-import { IEmeris } from '@@/shims-vue';
-import { ExtensionRequest, ExtensionResponse, RoutedExtensionRequest } from '@@/types';
+import { IEmeris } from '@@/types/emeris';
+import {
+  ExtensionRequest,
+  ExtensionResponse,
+  GetAddressRequest,
+  GetPublicKeyRequest,
+  GetWalletNameRequest,
+  HasWalletRequest,
+  IsHWWalletRequest,
+  RoutedExtensionRequest,
+  SignTransactionRequest,
+  SupportedChainsRequest,
+  ApproveOriginRequest,
+  SignAndBroadcastTransactionRequest,
+} from '@@/types/api';
 import { v4 as uuidv4 } from 'uuid';
+import { AbstractTx, AbstractTxResult } from '@@/types/transactions';
 export class ProxyEmeris implements IEmeris {
   loaded: boolean;
   private queuedRequests: Map<
@@ -49,12 +63,12 @@ export class ProxyEmeris implements IEmeris {
 
     return await response;
   }
-  async getAddress(chainId: string): Promise<string> {
+  async getAddress(chainId): Promise<string> {
     const request = {
       action: 'getAddress',
       data: { chainId },
     };
-    const response = await this.sendRequest(request);
+    const response = await this.sendRequest(request as GetAddressRequest);
     return response.data as string;
   }
   async getPublicKey(chainId: string): Promise<Uint8Array> {
@@ -62,61 +76,65 @@ export class ProxyEmeris implements IEmeris {
       action: 'getPublicKey',
       data: { chainId },
     };
-    const response = await this.sendRequest(request);
+    const response = await this.sendRequest(request as GetPublicKeyRequest);
     return response.data as Uint8Array;
   }
   async isHWWallet(): Promise<boolean> {
     const request = {
       action: 'isHWWallet',
+      data: {}
     };
-    const response = await this.sendRequest(request);
+    const response = await this.sendRequest(request as IsHWWalletRequest);
     return response.data as boolean;
   }
   async supportedChains(): Promise<string[]> {
     const request = {
       action: 'supportedChains',
+      data: {}
     };
-    const response = await this.sendRequest(request);
+    const response = await this.sendRequest(request as SupportedChainsRequest);
     return response.data as string[];
   }
   async getWalletName(): Promise<string> {
     const request = {
       action: 'getWalletName',
+      data: {}
     };
-    const response = await this.sendRequest(request);
+    const response = await this.sendRequest(request as GetWalletNameRequest);
     return response.data as string;
   }
   async hasWallet(): Promise<boolean> {
     const request = {
       action: 'hasWallet',
+      data: {}
     };
-    const response = await this.sendRequest(request);
+    const response = await this.sendRequest(request as HasWalletRequest);
     return response.data as boolean;
   }
 
-  async signTransaction({ tx, chainId }): Promise<Uint8Array> {
+  async signTransaction({ tx, chainId }: { tx: AbstractTx; chainId: string }): Promise<Uint8Array> {
     const request = {
       action: 'signTransaction',
       data: { tx, chainId },
     };
-    const response = await this.sendRequest(request);
+    const response = await this.sendRequest(request as SignTransactionRequest);
     return response.data as Uint8Array;
   }
-  async enable(): Promise<boolean> {    
+  async enable(): Promise<boolean> {
     const request = {
-      action: 'enable',      
+      action: 'enable',
+      data: {}
     };
-    const response = await this.sendRequest(request);
+    const response = await this.sendRequest(request as ApproveOriginRequest);
     return response.data as boolean;
   }
-  /*
-  async signAndBroadcastTransaction(tx: any, chainId: string): Promise<boolean> {
+
+  async signAndBroadcastTransaction({ tx, chainId }: { tx: AbstractTx; chainId: string }): Promise<AbstractTxResult> {
     const request = {
       action: 'signAndBroadcastTransaction',
       data: { tx, chainId },
     };
-    const response = await this.sendRequest(request);
-    return response.data as boolean;
+    const response = await this.sendRequest(request as SignAndBroadcastTransactionRequest);
+    return response.data as AbstractTxResult;
   }
-  */
 }

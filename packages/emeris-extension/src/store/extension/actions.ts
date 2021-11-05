@@ -33,9 +33,9 @@ export const actions: ActionTree<State, RootState> & Actions = {
     try {
       const latestPending = await browser.runtime.sendMessage({ type: 'fromPopup', data: { action: 'getPending' } });
       console.log(latestPending);
-      if (latestPending.length > 0) {
+      
         commit(MutationTypes.ADD_PENDING, latestPending);
-      }
+      
     } catch (e) {
       throw new Error('Extension:GetPendingRequests failed');
     }
@@ -72,6 +72,7 @@ export const actions: ActionTree<State, RootState> & Actions = {
         commit(MutationTypes.SET_WALLET, wallet as EmerisWallet);
       }
     } catch (e) {
+      console.log(e);
       throw new Error('Extension:UnlockWallet failed');
     }
     return getters['getWallet'];

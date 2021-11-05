@@ -1,6 +1,6 @@
 <template>
   <div class="modal">
-    <ApproveOrigin v-if="request.type=='approveOrigin'" v-on:response="respond"/>
+    <ApproveOrigin v-if="request.action=='enable'" v-on:response="respond" :request="request"/>
     
   </div>
 </template>
@@ -23,7 +23,7 @@ export default defineComponent({
   setup(props) {    
     const request = ref(props.request);
     const respond = (data) => {
-      browser.runtime.sendMessage({ type: 'fromPopup', data: { action: 'setResponse', data: {id: props.request.id, ...data} } });
+      browser.runtime.sendMessage({ type: 'fromPopup', data: { action: 'setResponse', data: {id: props.request.id, data} } });
     }
     return { respond, request };
   },

@@ -75,10 +75,12 @@ export default class EmerisStorage {
   }
   async unlockWallet(encryptedWallet: EmerisEncryptedWallet, password: string): Promise<EmerisWallet> {
     try {
+      console.log(encryptedWallet);
       const wallet = JSON.parse(CryptoJS.AES.decrypt(encryptedWallet.walletData, password).toString(CryptoJS.enc.Utf8));
       await browser.storage[this.storageMode].set({ lastWallet: wallet.walletName });
       return wallet;
     } catch (e) {
+      console.log(e);
       throw new UnlockWalletError('Could not unlock wallet: ' + e);
     }
   }

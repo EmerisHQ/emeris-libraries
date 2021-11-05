@@ -1,11 +1,23 @@
-import { IEmeris } from '@@/shims-vue';
-import { EmerisEncryptedWallet, ExtensionRequest, EmerisWallet } from '@@/types';
+import { IEmeris } from '@@/types/emeris';
+import { EmerisEncryptedWallet, ExtensionRequest, EmerisWallet, ExtensionResponse } from '@@/types';
 import { v4 as uuidv4 } from 'uuid';
 import EmerisStorage from './EmerisStorage';
 import config from '../chain-config';
 import libs from './libraries';
 import { UnlockWalletError } from '@@/errors';
 import * as CryptoJS from 'crypto-js';
+import {
+  GetAddressRequest,
+  GetPublicKeyRequest,
+  GetWalletNameRequest,
+  HasWalletRequest,
+  IsHWWalletRequest,
+  SignTransactionRequest,
+  SupportedChainsRequest,
+  ApproveOriginRequest,
+  SignAndBroadcastTransactionRequest,
+} from '@@/types/api';
+import { AbstractTxResult } from '@@/types/transactions';
 export class Emeris implements IEmeris {
   public loaded: boolean;
   private storage: EmerisStorage;
@@ -45,7 +57,8 @@ export class Emeris implements IEmeris {
   }
   async unlockWallet(walletName: string, password: string): Promise<EmerisWallet> {
     try {
-      const encryptedWallet = this.wallets.find((x) => x.walletName == walletName);
+      const wallets=await this.storage.getWallets();
+      const encryptedWallet = wallets.find((x) => x.walletName == walletName);
       if (encryptedWallet) {
         this.wallet = JSON.parse(
           CryptoJS.AES.decrypt(encryptedWallet.walletData, password).toString(CryptoJS.enc.Utf8),
@@ -75,9 +88,9 @@ export class Emeris implements IEmeris {
       })
     ).id;
   }
-  async forwardToPopup(request) {
+  async forwardToPopup(request): Promise<ExtensionResponse> {
     let resolver;
-    const response = new Promise((resolve) => {
+    const response: Promise<ExtensionResponse> = new Promise((resolve) => {
       resolver = resolve;
     });
     this.queuedRequests.set(request.id, { resolver });
@@ -88,11 +101,11 @@ export class Emeris implements IEmeris {
   }
   async popupHandler(message) {
     let request;
-    console.log(request);
+    console.log(message);
     this.reset();
     switch (message?.data.action) {
       case 'getPending':
-        return this.pending.splice(0);
+        return this.pending;
       case 'createWallet':
         if (message.data.data.wallet.walletMnemonic == 'ledger') {
           try {
@@ -118,6 +131,8 @@ export class Emeris implements IEmeris {
         }
         request.resolver(message.data.data);
         this.queuedRequests.delete(message.data.data.id);
+        this.pending.splice(this.pending.findIndex(req => req.id==message.data.data.id),1);
+        browser.runtime.sendMessage({ type: 'toPopup', data: { action: 'update' } });
         return true;
     }
   }
@@ -140,57 +155,57 @@ export class Emeris implements IEmeris {
       });
     }
   }
-  async getAddress(chainId: string): Promise<string> {
+  async getAddress(req: GetAddressRequest): Promise<string> {
     if (!this.wallet) {
       throw new Error('No wallet configured');
     }
-    const chain = config[chainId];
+    const chain = config[req.data.chainId];
     if (!chain) {
-      throw new Error('Chain not supported: ' + chainId);
+      throw new Error('Chain not supported: ' + req.data.chainId);
     }
     const mnemonic = '';
     return await libs[chain.library].getAddress(mnemonic, chain);
   }
 
-  async getPublicKey(chainId: string): Promise<Uint8Array> {
+  async getPublicKey(req: GetPublicKeyRequest): Promise<Uint8Array> {
     if (!this.wallet) {
       throw new Error('No wallet configured');
     }
-    const chain = config[chainId];
+    const chain = config[req.data.chainId];
     if (!chain) {
-      throw new Error('Chain not supported: ' + chainId);
+      throw new Error('Chain not supported: ' + req.data.chainId);
     }
     const mnemonic = '';
     return await libs[chain.library].getPublicKey(mnemonic, chain);
   }
 
-  async isHWWallet(): Promise<boolean> {
+  async isHWWallet(req: IsHWWalletRequest): Promise<boolean> {
     return false;
   }
-  async supportedChains(): Promise<string[]> {
+  async supportedChains(req: SupportedChainsRequest): Promise<string[]> {
     return Object.keys(config);
   }
-  async getWalletName(): Promise<string> {
+  async getWalletName(req: GetWalletNameRequest): Promise<string> {
     if (!this.wallet) {
       return null;
     } else {
       return this.wallet.walletName;
     }
   }
-  async hasWallet(): Promise<boolean> {
+  async hasWallet(req: HasWalletRequest): Promise<boolean> {
     return !!this.wallet;
   }
 
-  async signTransaction(request: ExtensionRequest): Promise<Uint8Array> {
+  async signTransaction(request: SignTransactionRequest): Promise<Uint8Array> {
     request.id = uuidv4();
-    return (await this.forwardToPopup(request)) as Uint8Array;
+    return (await this.forwardToPopup(request)).data as Uint8Array;
   }
-  async enable(request: ExtensionRequest): Promise<boolean> {
+  async signAndBroadcastTransaction(request: SignAndBroadcastTransactionRequest): Promise<AbstractTxResult> {
     request.id = uuidv4();
-    //request.type =
-    return (await this.forwardToPopup(request)) as boolean;
+    return (await this.forwardToPopup(request)).data as AbstractTxResult;
   }
-  /*
-  signAndBroadcastTransaction: (tx: any, chainId: string) => Promise<any>;
-  */
+  async enable(request: ApproveOriginRequest): Promise<boolean> {
+    request.id = uuidv4();
+    return (await this.forwardToPopup(request)).data as boolean;
+  }
 }

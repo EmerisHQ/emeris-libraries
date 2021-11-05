@@ -15,7 +15,9 @@ export default defineComponent({
     const router = useRouter();
     onMounted(async () => {
       const wallet = await store.dispatch(GlobalActionTypes.GET_WALLET);
+      console.log(wallet);
       const wallets = await store.dispatch(GlobalActionTypes.GET_WALLETS);
+      
       if (!wallet && wallets.length == 0) {
         router.push('/create');
       }

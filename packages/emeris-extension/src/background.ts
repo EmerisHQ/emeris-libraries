@@ -11,7 +11,7 @@ const pageHandler = async (request) => {
     if (!emeris.loaded) {
       return { id: request.id, data: false };
     }
-    return { id: request.id, data: await emeris[request.action](request.data) };
+    return { id: request.id, data: await emeris[request.action](request) };
   }
 };
 const messageHandler = async (request) => {  
