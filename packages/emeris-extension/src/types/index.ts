@@ -11,7 +11,7 @@ export type EmerisWallet = {
 };
 export type EmerisPermission = {
   origin: string;
-}
+};
 export type ExtensionRequest = {
   id?: string;
   [key: string]: unknown;

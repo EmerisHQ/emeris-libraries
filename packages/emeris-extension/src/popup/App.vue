@@ -6,18 +6,19 @@
 import { defineComponent, onMounted } from 'vue';
 import { useExtensionStore } from '@@/store';
 import { GlobalActionTypes } from '@@/store/extension/action-types';
-import { useRouter } from 'vue-router';
+import { useRoute, useRouter } from 'vue-router';
 
 export default defineComponent({
   name: 'App',
   setup() {
     const store = useExtensionStore();
     const router = useRouter();
+    const route = useRoute();
     onMounted(async () => {
       const wallet = await store.dispatch(GlobalActionTypes.GET_WALLET);
-      console.log(wallet);
+      console.log(route.query);
       const wallets = await store.dispatch(GlobalActionTypes.GET_WALLETS);
-      
+
       if (!wallet && wallets.length == 0) {
         router.push('/create');
       }

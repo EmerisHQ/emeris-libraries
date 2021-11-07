@@ -63,7 +63,7 @@ export class ProxyEmeris implements IEmeris {
 
     return await response;
   }
-  async getAddress(chainId): Promise<string> {
+  async getAddress(chainId: string): Promise<string> {
     const request = {
       action: 'getAddress',
       data: { chainId },
@@ -82,7 +82,7 @@ export class ProxyEmeris implements IEmeris {
   async isHWWallet(): Promise<boolean> {
     const request = {
       action: 'isHWWallet',
-      data: {}
+      data: {},
     };
     const response = await this.sendRequest(request as IsHWWalletRequest);
     return response.data as boolean;
@@ -90,7 +90,7 @@ export class ProxyEmeris implements IEmeris {
   async supportedChains(): Promise<string[]> {
     const request = {
       action: 'supportedChains',
-      data: {}
+      data: {},
     };
     const response = await this.sendRequest(request as SupportedChainsRequest);
     return response.data as string[];
@@ -98,7 +98,7 @@ export class ProxyEmeris implements IEmeris {
   async getWalletName(): Promise<string> {
     const request = {
       action: 'getWalletName',
-      data: {}
+      data: {},
     };
     const response = await this.sendRequest(request as GetWalletNameRequest);
     return response.data as string;
@@ -106,7 +106,7 @@ export class ProxyEmeris implements IEmeris {
   async hasWallet(): Promise<boolean> {
     const request = {
       action: 'hasWallet',
-      data: {}
+      data: {},
     };
     const response = await this.sendRequest(request as HasWalletRequest);
     return response.data as boolean;
@@ -123,7 +123,7 @@ export class ProxyEmeris implements IEmeris {
   async enable(): Promise<boolean> {
     const request = {
       action: 'enable',
-      data: {}
+      data: {},
     };
     const response = await this.sendRequest(request as ApproveOriginRequest);
     return response.data as boolean;

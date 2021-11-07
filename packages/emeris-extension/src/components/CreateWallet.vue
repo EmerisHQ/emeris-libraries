@@ -9,10 +9,12 @@
 </template>
 
 <script lang="ts">
+import router from '@@/router';
 import { useExtensionStore } from '@@/store';
 import { GlobalActionTypes } from '@@/store/extension/action-types';
 import * as bip39 from 'bip39';
 import { defineComponent, ref } from 'vue';
+import { useRouter } from 'vue-router';
 
 export default defineComponent({
   name: 'CreateWallet',
@@ -22,17 +24,20 @@ export default defineComponent({
     const confirmPassword = ref('');
     const mnemonic = ref('');
     const store = useExtensionStore();
-
+    const router = useRouter();
     const validatePassword = () => {
       return password.value == confirmPassword.value;
     };
-    const createWallet = () => {
+    const createWallet = async () => {
       if (validatePassword()) {
         mnemonic.value = bip39.generateMnemonic(256);
-        store.dispatch(GlobalActionTypes.CREATE_WALLET, {
+        const wallet = await store.dispatch(GlobalActionTypes.CREATE_WALLET, {
           wallet: { walletMnemonic: mnemonic.value, walletName: walletName.value },
           password: password.value,
         });
+        if (wallet) {
+          router.push('/');
+        }
       }
     };
     return { walletName, password, confirmPassword, createWallet, mnemonic };

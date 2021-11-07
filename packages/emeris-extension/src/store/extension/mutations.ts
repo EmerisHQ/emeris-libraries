@@ -12,7 +12,7 @@ export type Mutations<S = State> = {
 
 export const mutations: MutationTree<State> & Mutations = {
   [MutationTypes.ADD_PENDING](state: State, payload: ExtensionRequest[]) {
-    state.pending = [ ...payload];
+    state.pending = [...payload];
   },
   [MutationTypes.REMOVE_REQUEST](state: State, requestId: string) {
     state.pending = [...state.pending.filter((request) => request.id != requestId)];

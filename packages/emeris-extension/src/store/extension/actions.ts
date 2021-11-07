@@ -20,11 +20,11 @@ export interface Actions {
   [ActionTypes.CREATE_WALLET](
     { commit }: ActionContext<State, RootState>,
     { wallet, password }: { wallet: EmerisWallet; password: string },
-  ): Promise<void>;
+  ): Promise<EmerisWallet>;
   [ActionTypes.UNLOCK_WALLET](
     { commit }: ActionContext<State, RootState>,
     { walletName, password }: { walletName: string; password: string },
-  ): Promise<void>;
+  ): Promise<EmerisWallet>;
 }
 export type GlobalActions = Namespaced<Actions, 'extension'>;
 
@@ -33,20 +33,23 @@ export const actions: ActionTree<State, RootState> & Actions = {
     try {
       const latestPending = await browser.runtime.sendMessage({ type: 'fromPopup', data: { action: 'getPending' } });
       console.log(latestPending);
-      
-        commit(MutationTypes.ADD_PENDING, latestPending);
-      
+
+      commit(MutationTypes.ADD_PENDING, latestPending);
     } catch (e) {
       throw new Error('Extension:GetPendingRequests failed');
     }
     return getters['getPending'];
   },
-  async [ActionTypes.CREATE_WALLET]({ commit }, { wallet, password }: { wallet: EmerisWallet; password: string }) {
+  async [ActionTypes.CREATE_WALLET](
+    { commit, getters },
+    { wallet, password }: { wallet: EmerisWallet; password: string },
+  ) {
     const response = await browser.runtime.sendMessage({
       type: 'fromPopup',
       data: { action: 'createWallet', data: { wallet, password } },
     });
-    commit(MutationTypes.SET_WALLET, wallet as EmerisWallet);
+    commit(MutationTypes.SET_WALLET, response as EmerisWallet);
+    return getters['getWallet'];
   },
   async [ActionTypes.GET_WALLET]({ commit, getters }) {
     try {

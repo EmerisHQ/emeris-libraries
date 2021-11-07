@@ -1,6 +1,6 @@
 import * as CryptoJS from 'crypto-js';
 
-import { SaveWalletError, UnlockWalletError, WalletNotFoundError } from '@@/errors';
+import { SaveWalletError, UnlockWalletError } from '@@/errors';
 import { EmerisEncryptedWallet, EmerisPermission, EmerisWallet } from '@@/types';
 export enum EmerisStorageMode {
   SYNC = 'sync',
@@ -13,11 +13,10 @@ export default class EmerisStorage {
     this.storageMode = storageMode;
   }
   async isPermitted(origin: string): Promise<boolean> {
-    
     const result = await browser.storage[this.storageMode].get('permissions');
     if (!result.permissions) {
       return false;
-    } else {      
+    } else {
       const hasPermission = result.permissions.find((permission) => permission.origin == origin);
       return !!hasPermission;
     }
@@ -30,12 +29,12 @@ export default class EmerisStorage {
       }
       result.permissions.push({ origin });
       await browser.storage[this.storageMode].set({ permissions: result.permissions });
-      return true
+      return true;
     } catch (e) {
       return false;
     }
   }
-  async getWallets() {
+  async getWallets(): Promise<EmerisEncryptedWallet[]> {
     const result = await browser.storage[this.storageMode].get('wallets');
     if (result.wallets) {
       return result.wallets;
@@ -44,7 +43,6 @@ export default class EmerisStorage {
     }
   }
   async getLastWallet(): Promise<EmerisEncryptedWallet | null> {
-
     const result = await browser.storage[this.storageMode].get('wallets');
     if (result.wallets) {
       const res = await browser.storage[this.storageMode].get('lastWallet');
@@ -54,7 +52,7 @@ export default class EmerisStorage {
     }
   }
   async setLastWallet(walletName: string): Promise<void> {
-    await browser.storage[this.storageMode].set({ lastWallet: walletName });    
+    await browser.storage[this.storageMode].set({ lastWallet: walletName });
   }
   async saveWallet(wallet: EmerisWallet, password: string): Promise<boolean> {
     try {
@@ -75,7 +73,6 @@ export default class EmerisStorage {
   }
   async unlockWallet(encryptedWallet: EmerisEncryptedWallet, password: string): Promise<EmerisWallet> {
     try {
-      console.log(encryptedWallet);
       const wallet = JSON.parse(CryptoJS.AES.decrypt(encryptedWallet.walletData, password).toString(CryptoJS.enc.Utf8));
       await browser.storage[this.storageMode].set({ lastWallet: wallet.walletName });
       return wallet;

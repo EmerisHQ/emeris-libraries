@@ -1,4 +1,4 @@
-import { IEmeris } from "./types/emeris";
+import { IEmeris } from './types/emeris';
 
 /* eslint-disable */
 declare module '*.vue' {

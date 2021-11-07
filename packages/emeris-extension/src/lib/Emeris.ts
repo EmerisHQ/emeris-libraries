@@ -1,5 +1,5 @@
 import { IEmeris } from '@@/types/emeris';
-import { EmerisEncryptedWallet, ExtensionRequest, EmerisWallet, ExtensionResponse } from '@@/types';
+import { ExtensionRequest, EmerisWallet, ExtensionResponse } from '@@/types';
 import { v4 as uuidv4 } from 'uuid';
 import EmerisStorage from './EmerisStorage';
 import config from '../chain-config';
@@ -22,8 +22,6 @@ export class Emeris implements IEmeris {
   public loaded: boolean;
   private storage: EmerisStorage;
   private wallet: EmerisWallet;
-  private lastWallet: EmerisEncryptedWallet;
-  private wallets: EmerisEncryptedWallet[];
   private popup: number;
   private queuedRequests: Map<
     string,
@@ -57,7 +55,7 @@ export class Emeris implements IEmeris {
   }
   async unlockWallet(walletName: string, password: string): Promise<EmerisWallet> {
     try {
-      const wallets=await this.storage.getWallets();
+      const wallets = await this.storage.getWallets();
       const encryptedWallet = wallets.find((x) => x.walletName == walletName);
       if (encryptedWallet) {
         this.wallet = JSON.parse(
@@ -131,7 +129,10 @@ export class Emeris implements IEmeris {
         }
         request.resolver(message.data.data);
         this.queuedRequests.delete(message.data.data.id);
-        this.pending.splice(this.pending.findIndex(req => req.id==message.data.data.id),1);
+        this.pending.splice(
+          this.pending.findIndex((req) => req.id == message.data.data.id),
+          1,
+        );
         browser.runtime.sendMessage({ type: 'toPopup', data: { action: 'update' } });
         return true;
     }
@@ -178,7 +179,9 @@ export class Emeris implements IEmeris {
     const mnemonic = '';
     return await libs[chain.library].getPublicKey(mnemonic, chain);
   }
-
+  async isPermitted(origin: string): Promise<boolean> {
+    return await this.storage.isPermitted(origin);
+  }
   async isHWWallet(req: IsHWWalletRequest): Promise<boolean> {
     return false;
   }
@@ -192,7 +195,7 @@ export class Emeris implements IEmeris {
       return this.wallet.walletName;
     }
   }
-  async hasWallet(req: HasWalletRequest): Promise<boolean> {
+  async hasWallet(_: HasWalletRequest): Promise<boolean> {
     return !!this.wallet;
   }
 
@@ -206,6 +209,10 @@ export class Emeris implements IEmeris {
   }
   async enable(request: ApproveOriginRequest): Promise<boolean> {
     request.id = uuidv4();
-    return (await this.forwardToPopup(request)).data as boolean;
+    const enabled = (await this.forwardToPopup(request)).data as boolean;
+    if (enabled) {
+      await this.storage.addPermission(request.data.origin);
+    }
+    return enabled;
   }
 }
