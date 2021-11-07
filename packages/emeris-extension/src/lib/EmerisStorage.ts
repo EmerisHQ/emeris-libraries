@@ -1,7 +1,7 @@
 import * as CryptoJS from 'crypto-js';
 
 import { SaveWalletError, UnlockWalletError } from '@@/errors';
-import { EmerisEncryptedWallet, EmerisPermission, EmerisWallet } from '@@/types';
+import { EmerisEncryptedWallet, EmerisWallet } from '@@/types';
 export enum EmerisStorageMode {
   SYNC = 'sync',
   LOCAL = 'local',

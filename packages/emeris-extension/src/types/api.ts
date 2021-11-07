@@ -1,3 +1,5 @@
+import { EmerisWallet } from '.';
+
 export interface Request {
   id?: string;
   action?: string;
@@ -63,6 +65,35 @@ export type HasWalletRequest = Request & {
     origin?: string;
   };
 };
+export type GetPendingRequest = Request & {
+  action: 'getPending';
+};
+export type GetWalletRequest = Request & {
+  action: 'getWallet';
+};
+export type GetWalletsRequest = Request & {
+  action: 'getWallets';
+};
+export type CreateWalletRequest = Request & {
+  action: 'createWallet';
+  data: {
+    wallet: EmerisWallet;
+    password: string;
+  };
+};
+export type UnlockWalletRequest = Request & {
+  action: 'unlockWallet';
+  data: {
+    walletName: string;
+    password: string;
+  };
+};
+export type SetResponseRequest = Request & {
+  action: 'setResponse';
+  data: {
+    id: string;
+  };
+};
 export type ExtensionRequest =
   | ApproveOriginRequest
   | SignTransactionRequest
@@ -73,10 +104,22 @@ export type ExtensionRequest =
   | SupportedChainsRequest
   | GetWalletNameRequest
   | HasWalletRequest;
-export type RoutedExtensionRequest = {
+export type PopupRequest =
+  | GetPendingRequest
+  | CreateWalletRequest
+  | UnlockWalletRequest
+  | GetWalletRequest
+  | GetWalletsRequest
+  | SetResponseRequest;
+export type RoutedExternalRequest = {
   type: 'toEmerisExtension' | 'toPopup';
   data: ExtensionRequest;
 };
+export type RoutedInternalRequest = {
+  type: 'fromPopup';
+  data: PopupRequest;
+};
+export type RoutedExtensionRequest = RoutedExternalRequest | RoutedInternalRequest;
 export type ExtensionResponse = {
   id: string;
   [key: string]: unknown;

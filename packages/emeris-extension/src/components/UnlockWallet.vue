@@ -12,12 +12,10 @@
 </template>
 
 <script lang="ts">
-import router from '@@/router';
 import { useExtensionStore } from '@@/store';
 import { GlobalActionTypes } from '@@/store/extension/action-types';
 import { GlobalGetterTypes } from '@@/store/extension/getter-types';
 import { EmerisEncryptedWallet } from '@@/types';
-import * as bip39 from 'bip39';
 import { defineComponent, ref, computed } from 'vue';
 import { useRouter } from 'vue-router';
 

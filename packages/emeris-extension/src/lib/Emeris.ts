@@ -1,5 +1,5 @@
 import { IEmeris } from '@@/types/emeris';
-import { ExtensionRequest, EmerisWallet, ExtensionResponse } from '@@/types';
+import { EmerisWallet } from '@@/types';
 import { v4 as uuidv4 } from 'uuid';
 import EmerisStorage from './EmerisStorage';
 import config from '../chain-config';
@@ -16,6 +16,9 @@ import {
   SupportedChainsRequest,
   ApproveOriginRequest,
   SignAndBroadcastTransactionRequest,
+  ExtensionRequest,
+  ExtensionResponse,
+  RoutedInternalRequest,
 } from '@@/types/api';
 import { AbstractTxResult } from '@@/types/transactions';
 export class Emeris implements IEmeris {
@@ -86,7 +89,7 @@ export class Emeris implements IEmeris {
       })
     ).id;
   }
-  async forwardToPopup(request): Promise<ExtensionResponse> {
+  async forwardToPopup(request: ExtensionRequest): Promise<ExtensionResponse> {
     let resolver;
     const response: Promise<ExtensionResponse> = new Promise((resolve) => {
       resolver = resolve;
@@ -97,7 +100,7 @@ export class Emeris implements IEmeris {
     const resp = await response;
     return resp;
   }
-  async popupHandler(message) {
+  async popupHandler(message: RoutedInternalRequest): Promise<unknown> {
     let request;
     console.log(message);
     this.reset();
@@ -182,20 +185,20 @@ export class Emeris implements IEmeris {
   async isPermitted(origin: string): Promise<boolean> {
     return await this.storage.isPermitted(origin);
   }
-  async isHWWallet(req: IsHWWalletRequest): Promise<boolean> {
+  async isHWWallet(_req: IsHWWalletRequest): Promise<boolean> {
     return false;
   }
-  async supportedChains(req: SupportedChainsRequest): Promise<string[]> {
+  async supportedChains(_req: SupportedChainsRequest): Promise<string[]> {
     return Object.keys(config);
   }
-  async getWalletName(req: GetWalletNameRequest): Promise<string> {
+  async getWalletName(_req: GetWalletNameRequest): Promise<string> {
     if (!this.wallet) {
       return null;
     } else {
       return this.wallet.walletName;
     }
   }
-  async hasWallet(_: HasWalletRequest): Promise<boolean> {
+  async hasWallet(_req: HasWalletRequest): Promise<boolean> {
     return !!this.wallet;
   }
 

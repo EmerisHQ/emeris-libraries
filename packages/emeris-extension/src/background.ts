@@ -1,4 +1,3 @@
-import TransportWebUSB from '@ledgerhq/hw-transport-webusb';
 import { Emeris } from './lib/Emeris';
 import EmerisStorage, { EmerisStorageMode } from './lib/EmerisStorage';
 

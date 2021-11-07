@@ -9,7 +9,6 @@
 </template>
 
 <script lang="ts">
-import router from '@@/router';
 import { useExtensionStore } from '@@/store';
 import { GlobalActionTypes } from '@@/store/extension/action-types';
 import * as bip39 from 'bip39';
