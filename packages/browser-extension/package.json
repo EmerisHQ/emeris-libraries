@@ -1,8 +1,8 @@
 {
-  "name": "emeris-extension",
+  "name": "@emeris/browser-extension",
   "version": "0.0.1",
-  "description": "> TODO: description",
-  "author": "Clockwork <alex@clockwork.gr>",
+  "description": "Emeris Browser Extension",
+  "author": "Tendermint, Inc <hello@tendermint.com>",
   "homepage": "https://github.com/allinbits/emeris-libraries#readme",
   "license": "ISC",
   "directories": {
@@ -33,10 +33,11 @@
     "vuex": "^4.0.0-0"
   },
   "devDependencies": {
+    "@emeris/types": "^0.0.1",
     "@types/crypto-js": "^4.0.2",
     "@types/firefox-webext-browser": "^94.0.0",
     "@types/jest": "^27.0.2",
-    "@types/uuid": "^8.3.1",
+    "@types/uuid": "^8.3.1",    
     "@typescript-eslint/eslint-plugin": "^4.28.3",
     "@typescript-eslint/parser": "^4.28.3",
     "@vue/cli-plugin-babel": "^4.5.14",

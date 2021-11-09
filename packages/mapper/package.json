@@ -1,8 +1,8 @@
 {
-  "name": "emeris-mapper",
+  "name": "@emeris/mapper",
   "version": "0.0.1",
-  "description": "> TODO: description",
-  "author": "Clockwork <alex@clockwork.gr>",
+  "description": "Emeris Tx-mapping Library",
+  "author": "Tendermint, Inc <hello@tendermint.com>",
   "homepage": "https://github.com/allinbits/emeris-libraries#readme",
   "license": "ISC",
   "main": "lib/index.js",

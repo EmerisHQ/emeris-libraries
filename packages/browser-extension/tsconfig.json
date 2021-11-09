@@ -15,12 +15,8 @@
     "resolveJsonModule": true,
     "baseUrl": ".",
     "typeRoots": [
-      "./node_modules/@types"
-    ],
-    "types": [
-      "webpack-env",
-      "jest",
-      "firefox-webext-browser"
+      "./node_modules/@types",
+      "./node_modules/@emeris/types"
     ],
     "paths": {
       "@@/*": [

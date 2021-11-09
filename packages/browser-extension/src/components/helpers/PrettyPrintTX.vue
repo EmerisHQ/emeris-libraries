@@ -4,8 +4,9 @@
 
 <script lang="ts">
 import { SignAndBroadcastTransactionRequest, SignTransactionRequest } from '@@/types/api';
+import { TransferData } from 'EmerisTransactions';
 import { defineComponent, PropType, ref } from 'vue';
-import { TransferData } from '../../../../types/EmerisTransactions';
+
 
 export default defineComponent({
   name: 'PrettyPrintTX',
