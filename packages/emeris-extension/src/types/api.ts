@@ -1,4 +1,6 @@
 import { EmerisWallet } from '.';
+import { TransactionSignRequest } from '../../../types/EmerisTransactions';
+
 
 export interface Request {
   id?: string;
@@ -14,16 +16,14 @@ export type ApproveOriginRequest = Request & {
 export type SignTransactionRequest = Request & {
   action: 'signTransaction';
   data: {
-    tx: unknown;
-    chainId: string;
+    tx: TransactionSignRequest;
     origin?: string;
   };
 };
 export type SignAndBroadcastTransactionRequest = Request & {
   action: 'signAndBroadcastTransaction';
   data: {
-    tx: unknown;
-    chainId: string;
+    tx: TransactionSignRequest;
     origin?: string;
   };
 };
