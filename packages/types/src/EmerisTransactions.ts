@@ -56,8 +56,8 @@ export type WithdrawLiquidityData = {
 };
 export type Transaction<TransactionType> = {
     type: 'ibcTransfer' | 'swap' | 'transfer' | 'addliquidity' | 'withdrawliquidity' | 'createpool';
-    addFee?: boolean;
-    feeToAdd?: FeeWDenom[];
+    chainId: string,
+    protocol: string,
     data: TransactionType
 };
 export type TransactionData =
@@ -68,8 +68,6 @@ export type TransactionData =
     | WithdrawLiquidityData
     | CreatePoolData
 export type TransactionSignRequest = {
-    chain_id: string,
-    protocol: string,
     signing_address: string,
     chain_tx_data: any,
     transaction: Transaction<TransactionData>
