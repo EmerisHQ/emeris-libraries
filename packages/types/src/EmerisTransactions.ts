@@ -1,8 +1,8 @@
-import * as API from './api';
-import * as Base from './base';
+import * as API from './EmerisAPI';
+import * as Base from './EmerisBase';
 
 export type FeeWDenom = {
-    amount: API.Fee;
+    amount: API.APIGasPrice;
     denom: string;
     chain_name: string;
 };
@@ -68,7 +68,7 @@ export type TransactionData =
     | WithdrawLiquidityData
     | CreatePoolData
 export type TransactionSignRequest = {
-    signing_address: string,
-    chain_tx_data: any,
+    signingAddress: string,
+    chainTxData: any,
     transaction: Transaction<TransactionData>
 };

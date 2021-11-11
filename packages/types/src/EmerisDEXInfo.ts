@@ -19,6 +19,7 @@ export type Pool = {
 	protocol: DEX;
 	denomA: Denom;
 	denomB: Denom;
+	poolPrice: string;
 }
 
 export type Pools = Pool[];
