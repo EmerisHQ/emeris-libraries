@@ -1,4 +1,4 @@
-import { AddLiquidityData, CreatePoolData, IBCData, SwapData, TransferData, WithdrawLiquidityData } from "../../types/EmerisTransactions";
+import { AddLiquidityData, CreatePoolData, IBCData, SwapData, TransferData, WithdrawLiquidityData } from "../../types/src/EmerisTransactions";
 import { EmerisMessageMapper } from "./base";
 import * as Long from "long";
 
