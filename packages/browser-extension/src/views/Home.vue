@@ -13,16 +13,3 @@ export default defineComponent({
   components: { EmerisApp },
 });
 </script>
-<style>
-body,
-#app {
-  height: 100%;
-  width: 100%;
-  margin: 0;
-}
-
-@font-face {
-  font-family: Inter;
-  src: url('~@@/fonts/Inter.ttf') format('font-truetype');
-}
-</style>

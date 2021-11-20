@@ -1,20 +1,28 @@
 <template>
   <div
     :style="{
-      'background-image': 'url(' + require(`@@/assets/WelcomeBG.png`) + ')',
       height: '100%',
-      position: 'absolute',
       width: '100%',
+      display: 'flex',
+      flexDirection: 'column',
     }"
   >
+    <img
+      :src="require(`@@/assets/WelcomeBG.png`)"
+      :style="{
+        position: 'fixed',
+        zIndex: -1,
+        // accounting for padding
+        top: '-24px',
+        left: '-24px',
+      }"
+    />
     <img class="wordmark" :src="require(`@@/assets/EmerisWordmark.svg`)" />
     <h1>Experience the power of cross-chain DeFi</h1>
 
     <div
       :style="{
-        position: 'absolute',
-        width: '100%',
-        bottom: '24px',
+        marginTop: 'auto',
       }"
       class="buttons"
     >
@@ -45,17 +53,16 @@ export default defineComponent({
 </script>
 <style scoped>
 .wordmark {
-  margin-top: 24px;
   margin-left: auto;
   margin-right: auto;
   display: block;
 }
+
 h1 {
   position: relative;
   display: block;
   width: 327px;
   height: 72px;
-  left: 24px;
   top: 32px;
 
   /* 📕title/2 bold */
@@ -77,16 +84,11 @@ h1 {
   /* Inside Auto Layout */
 
   flex: none;
-  order: 1;
   align-self: stretch;
   flex-grow: 0;
   margin: 0px 0px;
 }
 
-.buttons {
-  padding-left: 24px;
-  padding-right: 24px;
-}
 .buttons > *:not(:last-child) {
   margin-bottom: 16px;
   display: block;
