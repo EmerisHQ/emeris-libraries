@@ -1,12 +1,11 @@
 <template>
-{{ prettyText}}
+  {{ prettyText }}
 </template>
 
 <script lang="ts">
 import { SignAndBroadcastTransactionRequest, SignTransactionRequest } from '@@/types/api';
 import { TransferData } from 'EmerisTransactions';
 import { defineComponent, PropType, ref } from 'vue';
-
 
 export default defineComponent({
   name: 'PrettyPrintTX',
@@ -16,15 +15,19 @@ export default defineComponent({
     },
   },
   setup(props) {
-    const prettyText=ref('');
+    const prettyText = ref('');
+    // eslint-disable-next-line
     const tx = props.request.data.tx;
-		switch (tx.transaction.type) {
+    switch (tx.transaction.type) {
       case 'transfer':
-        prettyText.value = `Send ${(tx.transaction.data as TransferData).amount.amount} ${(tx.transaction.data as TransferData).amount.denom} to ${(tx.transaction.data as TransferData).to_address} on ${(tx.transaction.data as TransferData).chain_name}`
+        prettyText.value = `Send ${(tx.transaction.data as TransferData).amount.amount} ${
+          (tx.transaction.data as TransferData).amount.denom
+        } to ${(tx.transaction.data as TransferData).to_address} on ${
+          (tx.transaction.data as TransferData).chain_name
+        }`;
         break;
-
     }
-    return { prettyText}
-	}
+    return { prettyText };
+  },
 });
 </script>
