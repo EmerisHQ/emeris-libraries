@@ -14,7 +14,7 @@
     "url": "git+https://github.com/allinbits/emeris-libraries.git"
   },
   "scripts": {
-    "serve": "vue-cli-service build --mode development --watch",
+    "serve": "vue-cli-service build --mode development --watch --no-clean",
     "build": "vue-cli-service build",
     "test:unit": "vue-cli-service test:unit",
     "lint": "vue-cli-service lint",
