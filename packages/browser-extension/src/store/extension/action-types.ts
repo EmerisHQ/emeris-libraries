@@ -5,6 +5,7 @@ export enum ActionTypes {
   GET_WALLETS = 'GET_WALLETS',
   CREATE_WALLET = 'CREATE_WALLET',
   UNLOCK_WALLET = 'UNLOCK_WALLET',
+  HAS_PASSWORD = 'HAS_PASSWORD',
 }
 export enum GlobalActionTypes {
   GET_PENDING = 'extension/GET_PENDING',
@@ -13,4 +14,5 @@ export enum GlobalActionTypes {
   GET_WALLETS = 'extension/GET_WALLETS',
   CREATE_WALLET = 'extension/CREATE_WALLET',
   UNLOCK_WALLET = 'extension/UNLOCK_WALLET',
+  HAS_PASSWORD = 'extension/HAS_PASSWORD',
 }

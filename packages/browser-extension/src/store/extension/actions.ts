@@ -25,6 +25,10 @@ export interface Actions {
     { commit }: ActionContext<State, RootState>,
     { walletName, password }: { walletName: string; password: string },
   ): Promise<EmerisWallet>;
+  [ActionTypes.HAS_PASSWORD](
+    { getters }: ActionContext<State, RootState>,
+    { },
+  ): Promise<boolean>;
 }
 export type GlobalActions = Namespaced<Actions, 'extension'>;
 
@@ -98,5 +102,8 @@ export const actions: ActionTree<State, RootState> & Actions = {
     } catch (e) {
       return false;
     }
+  },
+  async [ActionTypes.HAS_PASSWORD]() {
+    return true; // TODO
   },
 };

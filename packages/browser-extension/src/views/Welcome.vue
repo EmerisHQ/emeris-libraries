@@ -29,7 +29,7 @@
       <router-link :to="{ name: 'Create Wallet' }">
         <Button name="Create Account" @click="goTo('/create')" />
       </router-link>
-      <Button name="Import Account" variant="secondary" />
+      <Button name="Import Account" variant="secondary" @click="goTo('/accountImport')" />
       <Button name="Import Ledger" variant="link" />
     </div>
   </div>
@@ -46,7 +46,7 @@ export default defineComponent({
   },
   methods: {
     goTo(route) {
-      this.router.push(route);
+      this.$router.push(route);
     },
   },
 });

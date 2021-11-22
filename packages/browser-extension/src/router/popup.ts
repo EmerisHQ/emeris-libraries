@@ -1,9 +1,11 @@
 import { createRouter, createWebHashHistory, RouteRecordRaw } from 'vue-router';
 
 import Home from '../views/Home.vue';
-import Create from '../views/Create.vue';
+import AccountCreate from '../views/AccountCreate.vue';
 import Unlock from '../views/Unlock.vue';
 import Welcome from '../views/Welcome.vue';
+import PasswordCreate from '../views/PasswordCreate.vue';
+import AccountImport from '../views/AccountImport.vue';
 
 const routes: Array<RouteRecordRaw> = [
   {
@@ -14,7 +16,7 @@ const routes: Array<RouteRecordRaw> = [
   {
     path: '/create',
     name: 'Create Wallet',
-    component: Create,
+    component: AccountCreate,
   },
   {
     path: '/unlock',
@@ -25,6 +27,21 @@ const routes: Array<RouteRecordRaw> = [
     path: '/welcome',
     name: 'Welcome',
     component: Welcome,
+  },
+  {
+    path: '/passwordCreate',
+    name: 'Choose Password',
+    component: PasswordCreate,
+  },
+  {
+    path: '/accountCreate',
+    name: 'Account Create',
+    component: AccountCreate,
+  },
+  {
+    path: '/accountImport',
+    name: 'Account Import',
+    component: AccountImport,
   },
 ];
 
