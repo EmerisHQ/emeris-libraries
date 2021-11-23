@@ -51,3 +51,41 @@ input {
     background: #171717 !important;
   }
 }
+
+.error, .success {
+  .input {
+    .focus-border {
+      display: none;
+    }
+  }
+}
+
+.error {
+  .input {
+    input {
+      border: 1px solid #FF6072;
+    }
+  }
+}
+
+.success {
+  .input {
+    input {
+      border: 1px solid #42ED05;
+    }
+  }
+}
+
+
+.form-info {
+  font-size: 13px;
+}
+
+.form-info {
+  &.error {
+    color: #ff6072;
+  }
+  &.success {
+    color: #89ff9b;
+  }
+}

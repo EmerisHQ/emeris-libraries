@@ -30,7 +30,10 @@
       }"
       class="buttons"
     >
-      <Input type="password" v-model="password" placeholder="Enter Password" />
+      <div :class="{ error: error }">
+        <Input type="password" v-model="password" placeholder="Enter Password" />
+      </div>
+      <span class="form-info error" v-if="error">Wrong Password</span>
       <Button name="Unlock" @click="checkPassword" />
       <Button name="Forgot Password" variant="link" />
     </div>

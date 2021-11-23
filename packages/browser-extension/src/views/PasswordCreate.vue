@@ -11,10 +11,22 @@
     <span style="opacity: 67%; margin-top: 16px; margin-bottom: 24px"
       >You will need this password to unlock the extension</span
     >
-    <div style="margin-bottom: 16px">
+    <div
+      style="margin-bottom: 16px"
+      :class="{
+        error: password && (!length || !upperCaseChar || !symbolChar || !digitChar),
+        success: password && length && upperCaseChar && symbolChar && digitChar,
+      }"
+    >
       <Input v-model="password" placeholder="Enter a Password" />
     </div>
-    <div style="margin-bottom: 24px">
+    <div
+      style="margin-bottom: 24px"
+      :class="{
+        error: passwordRepeated && !match,
+        success: passwordRepeated && match,
+      }"
+    >
       <Input v-model="passwordRepeated" placeholder="Confirm Password" />
     </div>
     <span class="form-info" :class="{ error: password && !length, success: password && length }"
@@ -108,21 +120,11 @@ export default defineComponent({
 });
 </script>
 <style lang="scss" scoped>
-.form-info,
 .terms-of-use {
   font-size: 13px;
 }
 
 .terms-of-use {
   opacity: 67%;
-}
-
-.form-info {
-  &.error {
-    color: #ff6072;
-  }
-  &.success {
-    color: #89ff9b;
-  }
 }
 </style>
