@@ -14,7 +14,7 @@
 
     <!--modal content-->
     <div class="shadow-lg rounded-md" style="z-index: 1; margin-left: 24px; margin-right: 24px; background: #262626">
-      <div class="text-center" style="padding: 19px 16px 11px 16px">
+      <div class="text-center" style="padding-top: 19px">
         <h3 style="font-size: 16px; font-weight: 700; line-height: 21px; letter-spacing: 0em; text-align: center">
           {{ title }}
         </h3>
@@ -32,7 +32,7 @@
         >
           {{ description }}
         </p>
-        <div class="items-center px-4 py-3" @click="close" style="cursor: pointer">
+        <div class="items-center px-4 py-3" @click="close" style="cursor: pointer; border-top: 0.5px solid #ffffff17">
           <a> OK </a>
         </div>
       </div>
