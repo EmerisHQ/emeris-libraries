@@ -16,7 +16,7 @@
         <slot name="start" />
       </div>
       <div
-        style="min-height: 98px; display: inline-block"
+        style="min-height: 98px; display: inline-block; color: #ffffff70"
         contentEditable="true"
         @input="update"
         class="
