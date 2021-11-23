@@ -53,7 +53,6 @@ export default defineComponent({
     const hasPasswod = await this.$store.dispatch(GlobalActionTypes.HAS_PASSWORD);
     this.wallets = (await this.$store.dispatch(GlobalActionTypes.GET_WALLETS)) || [];
     this.name = 'Account ' + (this.wallets.length + 1);
-
     if (!hasPasswod) {
       this.$router.push('/passwordCreate');
     }

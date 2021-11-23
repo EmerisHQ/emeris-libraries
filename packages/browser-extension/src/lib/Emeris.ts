@@ -125,6 +125,12 @@ export class Emeris implements IEmeris {
         return this.wallet;
       case 'getWallets':
         return await this.storage.getWallets();
+      case 'setPassword':
+        return await this.storage.setPassword(message.data.data.password);
+      case 'checkPassword':
+        return await this.storage.checkPassword(message.data.data.password);
+      case 'hasPassword':
+        return await this.storage.hasPassword();
       case 'setResponse':
         request = this.queuedRequests.get(message.data.data.id);
         if (!request) {

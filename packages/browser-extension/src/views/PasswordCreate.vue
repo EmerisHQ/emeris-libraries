@@ -56,6 +56,7 @@ import { defineComponent, reactive } from 'vue';
 import Button from '@/components/ui/Button.vue';
 import Input from '@/components/ui/Input.vue';
 import Header from '@@/components/Header.vue';
+import { GlobalActionTypes } from '@@/store/extension/action-types';
 
 export default defineComponent({
   name: 'Welcome',
@@ -75,9 +76,10 @@ export default defineComponent({
     match: false,
   }),
   methods: {
-    submit() {
+    async submit() {
       if (this.length && this.upperCaseChar && this.symbolChar && this.digitChar && this.match) {
-        this.router.push('/create');
+        await this.$store.dispatch(GlobalActionTypes.SET_PASSWORD, this.password);
+        this.$router.push('/create');
       }
     },
   },

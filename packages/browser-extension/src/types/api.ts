@@ -88,6 +88,21 @@ export type UnlockWalletRequest = Request & {
     password: string;
   };
 };
+export type SetPasswordRequest = Request & {
+  action: 'setPassword';
+  data: {
+    password: string;
+  };
+};
+export type CheckPasswordRequest = Request & {
+  action: 'checkPassword';
+  data: {
+    password: string;
+  };
+};
+export type HasPasswordRequest = Request & {
+  action: 'hasPassword';
+};
 export type SetResponseRequest = Request & {
   action: 'setResponse';
   data: {
@@ -110,6 +125,9 @@ export type PopupRequest =
   | UnlockWalletRequest
   | GetWalletRequest
   | GetWalletsRequest
+  | SetPasswordRequest
+  | CheckPasswordRequest
+  | HasPasswordRequest
   | SetResponseRequest;
 export type RoutedExternalRequest = {
   type: 'toEmerisExtension' | 'toPopup';

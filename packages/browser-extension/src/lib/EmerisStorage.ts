@@ -81,4 +81,15 @@ export default class EmerisStorage {
       throw new UnlockWalletError('Could not unlock wallet: ' + e);
     }
   }
+  async setPassword(password: String) {
+    await browser.storage[this.storageMode].set({ 'password': password });
+  }
+  async checkPassword(password: String): Promise<Boolean> {
+    const { password: storedPassword } = await browser.storage[this.storageMode].get('password');
+    return storedPassword === password
+  }
+  async hasPassword(): Promise<Boolean> {
+    const { password } = await browser.storage[this.storageMode].get('password');
+    return !!password
+  }
 }

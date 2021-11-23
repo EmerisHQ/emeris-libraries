@@ -103,7 +103,14 @@ export const actions: ActionTree<State, RootState> & Actions = {
       return false;
     }
   },
+  async [ActionTypes.SET_PASSWORD]({ }, password) {
+    await browser.runtime.sendMessage({ type: 'fromPopup', data: { action: 'setPassword', data: { password } } });
+  },
+  async [ActionTypes.CHECK_PASSWORD]({ }, password) {
+    return await browser.runtime.sendMessage({ type: 'fromPopup', data: { action: 'checkPassword', data: { password } } });
+  },
   async [ActionTypes.HAS_PASSWORD]() {
-    return true; // TODO
+    return await browser.runtime.sendMessage({ type: 'fromPopup', data: { action: 'hasPassword' } });
   },
 };
+
