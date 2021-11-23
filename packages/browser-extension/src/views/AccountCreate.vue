@@ -21,7 +21,10 @@
     >
       <div style="margin-bottom: 32px; display: flex" class="terms-of-use">
         <Icon name="InformationIcon" style="margin-right: 9px" icon-size="1" />
-        <span>By continuing you agree to <a>Terms of Use</a> & <a>Privacy Policy</a> of Emeris wallet</span>
+        <span
+          >By continuing you agree to <a href="/">Terms of Use</a> &
+          <a href="https://emeris.com/privacy">Privacy Policy</a> of Emeris wallet</span
+        >
       </div>
       <Button name="Continue" :disabled="!name" @click="submit" />
     </div>
