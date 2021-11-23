@@ -31,6 +31,7 @@
     >
     <span
       class="form-info"
+      v-if="passwordRepeated"
       :class="{ error: password && passwordRepeated && !match, success: password && passwordRepeated && match }"
       >Passwords don’t match</span
     >
