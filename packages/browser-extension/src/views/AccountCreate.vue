@@ -12,15 +12,16 @@
       >If you have multiple accounts this will help you to find the right one</span
     >
     <div style="margin-bottom: 16px">
-      <Input v-model="name" style="height: 98px" />
+      <Input v-model="name" />
     </div>
     <div
       :style="{
         marginTop: 'auto',
       }"
     >
-      <div style="margin-bottom: 32px">
-        <span class="terms-of-use">By continuing you agree to Terms of Use & Privacy Policy of Emeris wallet</span>
+      <div style="margin-bottom: 32px; display: flex" class="terms-of-use">
+        <Icon name="InformationIcon" style="margin-right: 9px" icon-size="1" />
+        <span>By continuing you agree to <a>Terms of Use</a> & <a>Privacy Policy</a> of Emeris wallet</span>
       </div>
       <Button name="Continue" :disabled="!name" @click="submit" />
     </div>
@@ -31,16 +32,17 @@
 import { defineComponent } from 'vue';
 import * as bip39 from 'bip39';
 
-import Brandmark from '@/components/common/Brandmark.vue';
 import CreateWallet from '@@/components/CreateWallet.vue';
 import Input from '@/components/ui/Input.vue';
 import Header from '@@/components/Header.vue';
+import Button from '@/components/ui/Button.vue';
+import Icon from '@/components/ui/Icon.vue';
 
 import { GlobalActionTypes } from '@@/store/extension/action-types';
 
 export default defineComponent({
   name: 'Create Account',
-  components: { CreateWallet, Brandmark, Input, Header },
+  components: { CreateWallet, Button, Input, Header, Icon },
   props: {
     seed: { type: String, required: false, default: bip39.generateMnemonic(256) },
   },
@@ -69,3 +71,12 @@ export default defineComponent({
   },
 });
 </script>
+<style scoped>
+.terms-of-use {
+  font-size: 13px;
+}
+
+.terms-of-use {
+  opacity: 67%;
+}
+</style>
