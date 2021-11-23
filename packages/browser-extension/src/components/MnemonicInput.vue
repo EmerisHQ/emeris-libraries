@@ -15,9 +15,10 @@
       <div v-if="hasStartSlot" class="input__icon absolute z-20 top-0 left-0 p-4 pointer-events-none">
         <slot name="start" />
       </div>
-      <textarea
-        style="height: 98px"
-        v-model="model"
+      <div
+        style="min-height: 98px; display: inline-block"
+        contentEditable="true"
+        @input="update"
         class="
           relative
           z-10
@@ -38,7 +39,10 @@
         "
         :class="[hasStartSlot ? 'pl-10' : 'pl-4', hasEndSlot ? 'pr-10' : 'pr-4']"
         v-bind="$attrs"
-      />
+        ref="textarea"
+      >
+        {{ model }}
+      </div>
       <div v-if="hasEndSlot" class="input__icon absolute z-20 top-0 right-0 p-4 pointer-events-none">
         <slot name="end" />
       </div>
@@ -93,6 +97,12 @@ export default defineComponent({
     const hasEndSlot = computed(() => !!slots.end);
 
     return { model, hasStartSlot, hasEndSlot };
+  },
+
+  methods: {
+    update(evt) {
+      this.model = evt.currentTarget.innerText;
+    },
   },
 });
 </script>
