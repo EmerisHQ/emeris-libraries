@@ -16,6 +16,7 @@ export default defineComponent({
     const route = useRoute();
     onMounted(async () => {
       const wallet = await store.dispatch(GlobalActionTypes.GET_WALLET);
+      const hasPassword = await store.dispatch(GlobalActionTypes.HAS_PASSWORD);
       console.log(route.query);
       const wallets = await store.dispatch(GlobalActionTypes.GET_WALLETS);
 
@@ -25,6 +26,10 @@ export default defineComponent({
       if (!wallet && wallets.length > 0) {
         router.push('/unlock');
       }
+      if (hasPassword) {
+        router.push('/welcomeBack');
+      }
+
       store.dispatch(GlobalActionTypes.GET_PENDING);
       browser.runtime.onMessage.addListener((message) => {
         if (message.type == 'toPopup' && message.data.action == 'update') {

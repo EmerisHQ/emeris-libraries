@@ -41,3 +41,13 @@ button:disabled {
 a {
   color: #4EF2E4;
 }
+
+// inputs
+
+input {
+  background: #262626 !important; // TODO
+
+  &:focus {
+    background: #171717 !important;
+  }
+}
