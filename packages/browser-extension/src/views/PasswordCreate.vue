@@ -52,7 +52,8 @@
         marginTop: 'auto',
       }"
     >
-      <div style="margin-bottom: 32px">
+      <div style="margin-bottom: 32px; display: flex">
+        <Icon name="InformationIcon" style="margin-right: 9px" icon-size="1" />
         <span class="terms-of-use">By continuing you agree to Terms of Use & Privacy Policy of Emeris wallet</span>
       </div>
       <Button

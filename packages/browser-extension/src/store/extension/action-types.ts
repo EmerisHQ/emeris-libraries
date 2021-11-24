@@ -8,6 +8,7 @@ export enum ActionTypes {
   HAS_PASSWORD = 'HAS_PASSWORD',
   CHECK_PASSWORD = 'CHECK_PASSWORD',
   SET_PASSWORD = 'SET_PASSWORD',
+  EXTENSION_RESET = 'EXTENSION_RESET',
 }
 export enum GlobalActionTypes {
   GET_PENDING = 'extension/GET_PENDING',
@@ -19,4 +20,5 @@ export enum GlobalActionTypes {
   HAS_PASSWORD = 'extension/HAS_PASSWORD',
   CHECK_PASSWORD = 'extension/CHECK_PASSWORD',
   SET_PASSWORD = 'extension/SET_PASSWORD',
+  EXTENSION_RESET = 'extension/EXTENSION_RESET',
 }

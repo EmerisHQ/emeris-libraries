@@ -103,6 +103,9 @@ export type CheckPasswordRequest = Request & {
 export type HasPasswordRequest = Request & {
   action: 'hasPassword';
 };
+export type ExtensionResetRequest = Request & {
+  action: 'extensionReset';
+};
 export type SetResponseRequest = Request & {
   action: 'setResponse';
   data: {
@@ -128,6 +131,7 @@ export type PopupRequest =
   | SetPasswordRequest
   | CheckPasswordRequest
   | HasPasswordRequest
+  | ExtensionResetRequest
   | SetResponseRequest;
 export type RoutedExternalRequest = {
   type: 'toEmerisExtension' | 'toPopup';

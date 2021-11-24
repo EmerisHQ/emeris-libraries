@@ -92,4 +92,8 @@ export default class EmerisStorage {
     const { password } = await browser.storage[this.storageMode].get('password');
     return !!password
   }
+  async extensionReset() {
+    debugger
+    await browser.storage[this.storageMode].set({ password: null, wallets: null, lastWallet: null, permissions: null });
+  }
 }

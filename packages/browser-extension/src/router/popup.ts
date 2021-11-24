@@ -7,6 +7,8 @@ import Welcome from '../views/Welcome.vue';
 import WelcomeBack from '../views/WelcomeBack.vue';
 import PasswordCreate from '../views/PasswordCreate.vue';
 import AccountImport from '../views/AccountImport.vue';
+import ExtensionReset from '../views/ExtensionReset.vue';
+import ExtensionResetConfirm from '../views/ExtensionResetConfirm.vue';
 
 const routes: Array<RouteRecordRaw> = [
   {
@@ -48,6 +50,16 @@ const routes: Array<RouteRecordRaw> = [
     path: '/accountImport',
     name: 'Account Import',
     component: AccountImport,
+  },
+  {
+    path: '/extensionReset',
+    name: 'Forgot Password',
+    component: ExtensionReset,
+  },
+  {
+    path: '/extensionReset/confirm',
+    name: 'Extension Reset',
+    component: ExtensionResetConfirm,
   },
 ];
 

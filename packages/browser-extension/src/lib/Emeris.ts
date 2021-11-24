@@ -131,6 +131,8 @@ export class Emeris implements IEmeris {
         return await this.storage.checkPassword(message.data.data.password);
       case 'hasPassword':
         return await this.storage.hasPassword();
+      case 'extensionReset':
+        return await this.storage.extensionReset();
       case 'setResponse':
         request = this.queuedRequests.get(message.data.data.id);
         if (!request) {

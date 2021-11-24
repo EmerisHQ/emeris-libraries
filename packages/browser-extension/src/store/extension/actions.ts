@@ -112,5 +112,8 @@ export const actions: ActionTree<State, RootState> & Actions = {
   async [ActionTypes.HAS_PASSWORD]() {
     return await browser.runtime.sendMessage({ type: 'fromPopup', data: { action: 'hasPassword' } });
   },
+  async [ActionTypes.EXTENSION_RESET]() {
+    return await browser.runtime.sendMessage({ type: 'fromPopup', data: { action: 'extensionReset' } });
+  },
 };
 

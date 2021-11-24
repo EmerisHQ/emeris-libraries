@@ -32,6 +32,7 @@ body,
 
 .button-link {
     color: #FFFFFF;
+    height: 48px;
 }
 
 button:disabled {
@@ -40,6 +41,11 @@ button:disabled {
 
 a {
   color: #4EF2E4;
+}
+
+.buttons > *:not(:last-child) {
+  margin-bottom: 16px;
+  display: block;
 }
 
 // inputs
@@ -88,4 +94,37 @@ input {
   &.success {
     color: #89ff9b;
   }
+}
+
+// typography
+
+h1 {
+  position: relative;
+  display: block;
+  width: 327px;
+  height: 72px;
+  top: 32px;
+
+  /* 📕title/2 bold */
+
+  font-family: Inter;
+  font-style: normal;
+  font-weight: bold;
+  font-size: 28px;
+  line-height: 127%;
+  /* or 36px */
+
+  text-align: center;
+  letter-spacing: -0.02em;
+
+  /* dark/text */
+
+  color: #ffffff;
+
+  /* Inside Auto Layout */
+
+  flex: none;
+  align-self: stretch;
+  flex-grow: 0;
+  margin: 0px 0px;
 }

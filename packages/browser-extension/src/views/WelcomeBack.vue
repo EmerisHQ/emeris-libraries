@@ -35,7 +35,9 @@
       </div>
       <span class="form-info error" v-if="error">Wrong Password</span>
       <Button name="Unlock" @click="checkPassword" />
-      <Button name="Forgot Password" variant="link" />
+      <router-link to="/extensionReset">
+        <Button name="Forgot Password" variant="link" />
+      </router-link>
     </div>
   </div>
 </template>
@@ -74,45 +76,5 @@ export default defineComponent({
   margin-left: auto;
   margin-right: auto;
   display: block;
-}
-
-h1 {
-  position: relative;
-  display: block;
-  width: 327px;
-  height: 72px;
-  top: 32px;
-
-  /* 📕title/2 bold */
-
-  font-family: Inter;
-  font-style: normal;
-  font-weight: bold;
-  font-size: 28px;
-  line-height: 127%;
-  /* or 36px */
-
-  text-align: center;
-  letter-spacing: -0.02em;
-
-  /* dark/text */
-
-  color: #ffffff;
-
-  /* Inside Auto Layout */
-
-  flex: none;
-  align-self: stretch;
-  flex-grow: 0;
-  margin: 0px 0px;
-}
-
-.buttons > *:not(:last-child) {
-  margin-bottom: 16px;
-  display: block;
-}
-
-:deep(.button-link) {
-  height: 48px;
 }
 </style>
