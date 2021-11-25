@@ -1,12 +1,5 @@
 <template>
-  <div
-    :style="{
-      height: '100%',
-      width: '100%',
-      display: 'flex',
-      flexDirection: 'column',
-    }"
-  >
+  <div class="page">
     <Header title="Reset Wallet" />
     <div style="margin-top: 100px">
       <Icon name="InformationIcon" icon-size="2" />
@@ -50,7 +43,7 @@ export default defineComponent({
 });
 </script>
 <style lang="scss" scoped>
-:deep.reset-btn button {
+:deep(.reset-btn button) {
   background: #ff3d56 !important;
 }
 </style>

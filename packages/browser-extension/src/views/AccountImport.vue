@@ -1,12 +1,5 @@
 <template>
-  <div
-    :style="{
-      height: '100%',
-      width: '100%',
-      display: 'flex',
-      flexDirection: 'column',
-    }"
-  >
+  <div class="page">
     <Header title="Import account">
       <!-- <router-link to="/accountImport/advanced">
         <a>Advanced</a>
@@ -14,7 +7,7 @@
     </Header>
     <span style="margin-top: 16px; margin-bottom: 16px">Enter your recovery phrase</span>
     <div style="margin-bottom: 16px">
-      <MnemonicInput v-model="seed" placeholder="Your recovery phrase" />
+      <MnemonicInput v-model="mnemonic" placeholder="Your recovery phrase" />
     </div>
     <span class="form-info error" v-if="invalidChar">Invalid character used</span>
     <a href="">What’s a recovery phrase?</a>
@@ -23,7 +16,7 @@
         marginTop: 'auto',
       }"
     >
-      <Button name="Import" :disabled="!seed" @click="submit" />
+      <Button name="Import" :disabled="!mnemonic" @click="submit" />
     </div>
     <Modal
       title="Invalid recovery phrase"
@@ -43,19 +36,20 @@ import MnemonicInput from '@@/components/MnemonicInput.vue';
 import Header from '@@/components/Header.vue';
 import Modal from '@@/components/Modal.vue';
 
+import { MutationTypes } from '@@/store/extension/mutation-types';
 import { GlobalActionTypes } from '@@/store/extension/action-types';
 
 export default defineComponent({
   name: 'Create Account',
   components: { CreateWallet, MnemonicInput, Header, Button, Modal },
   data: () => ({
-    seed: undefined,
+    mnemonic: undefined,
     invalidRecoveryPhraseWarning: false,
   }),
   watch: {
-    seed(seed) {
-      console.log(seed);
-      this.invalidChar = !/^[a-z ]*$/.test(seed);
+    mnemonic(mnemonic) {
+      console.log(mnemonic);
+      this.invalidChar = !/^[a-z ]*$/.test(mnemonic);
     },
   },
   async mounted() {
@@ -67,7 +61,11 @@ export default defineComponent({
   },
   methods: {
     submit() {
-      this.$router.push({ path: '/passwordCreate', props: { seed: this.seed } });
+      this.$store.commit(MutationTypes.SET_WALLET, {
+        walletName: 'new',
+        walletMnemonic: this.mnemonic,
+      });
+      this.$router.push({ path: '/accountCreate' });
     },
   },
 });

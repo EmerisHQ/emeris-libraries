@@ -1,14 +1,7 @@
 <template>
-  <div
-    :style="{
-      height: '100%',
-      width: '100%',
-      display: 'flex',
-      flexDirection: 'column',
-    }"
-  >
+  <div class="page">
     <Header title="Forgot Password" />
-    <span style="opacity: 67%; margin-top: 16px; margin-bottom: 24px"
+    <span class="secondary-text" style="margin-top: 16px; margin-bottom: 24px"
       >There is no way to recover your lost or forgotten password<br /><br />If you have backed up the recovery phrase
       for your accounts, you can import them again by resetting this wallet</span
     >

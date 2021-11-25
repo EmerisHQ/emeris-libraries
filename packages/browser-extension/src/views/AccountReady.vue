@@ -1,46 +1,35 @@
 <template>
   <div class="page">
     <img
-      :src="require(`@@/assets/WelcomeBG.png`)"
+      :src="require(`@@/assets/UnlockBG.png`)"
       :style="{
         position: 'fixed',
         zIndex: -1,
-        // accounting for padding
-        top: '-24px',
-        left: '-24px',
+        top: 0,
+        left: 0,
       }"
     />
-    <img class="wordmark" :src="require(`@@/assets/EmerisWordmark.svg`)" />
-    <h1>Experience the power of cross-chain DeFi</h1>
-
-    <div
-      :style="{
-        marginTop: 'auto',
-      }"
-      class="buttons"
-    >
-      <router-link :to="{ name: 'Create Wallet' }">
-        <Button name="Create Account" @click="goTo('/create')" />
-      </router-link>
-      <Button name="Import Account" variant="secondary" @click="goTo('/accountImport')" />
-      <Button name="Import Ledger" variant="link" />
+    <Icon style="color: #89ff9b; margin-top: 156px" name="InformationIcon" :icon-size="2" />
+    <h1 style="margin-bottom: 20px" name>You’re all set</h1>
+    <div class="secondary-text" style="text-align: center; margin-bottom: 24px">
+      You have successfully created and backed up your new wallet. Enjoy exploring the new era of DeFi with Emeris.
     </div>
+    <router-link to="/">
+      <Button name="Go to portfolio" />
+    </router-link>
   </div>
 </template>
 
 <script lang="ts">
 import { defineComponent } from 'vue';
 import Button from '@/components/ui/Button.vue';
+import Icon from '@/components/ui/Icon.vue';
 
 export default defineComponent({
-  name: 'Welcome',
+  name: 'Account Ready',
   components: {
     Button,
-  },
-  methods: {
-    goTo(route) {
-      this.$router.push(route);
-    },
+    Icon,
   },
 });
 </script>

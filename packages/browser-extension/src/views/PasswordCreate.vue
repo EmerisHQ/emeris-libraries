@@ -1,14 +1,7 @@
 <template>
-  <div
-    :style="{
-      height: '100%',
-      width: '100%',
-      display: 'flex',
-      flexDirection: 'column',
-    }"
-  >
+  <div class="page">
     <Header title="Choose Password" />
-    <span style="opacity: 67%; margin-top: 16px; margin-bottom: 24px"
+    <span class="secondary-text" style="margin-top: 16px; margin-bottom: 24px"
       >You will need this password to unlock the extension</span
     >
     <div
@@ -54,7 +47,9 @@
     >
       <div style="margin-bottom: 32px; display: flex">
         <Icon name="InformationIcon" style="margin-right: 9px" icon-size="1" />
-        <span class="terms-of-use">By continuing you agree to Terms of Use & Privacy Policy of Emeris wallet</span>
+        <span class="terms-of-use secondary-text"
+          >By continuing you agree to Terms of Use & Privacy Policy of Emeris wallet</span
+        >
       </div>
       <Button
         name="Continue"
@@ -66,7 +61,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, reactive } from 'vue';
+import { defineComponent } from 'vue';
 import Button from '@/components/ui/Button.vue';
 import Input from '@/components/ui/Input.vue';
 import Header from '@@/components/Header.vue';
@@ -123,9 +118,5 @@ export default defineComponent({
 <style lang="scss" scoped>
 .terms-of-use {
   font-size: 13px;
-}
-
-.terms-of-use {
-  opacity: 67%;
 }
 </style>

@@ -9,6 +9,10 @@ import PasswordCreate from '../views/PasswordCreate.vue';
 import AccountImport from '../views/AccountImport.vue';
 import ExtensionReset from '../views/ExtensionReset.vue';
 import ExtensionResetConfirm from '../views/ExtensionResetConfirm.vue';
+import AccountBackup from '../views/AccountBackup.vue';
+import MnemonicShow from '../views/MnemonicShow.vue';
+import MnemonicConfirm from '../views/MnemonicConfirm.vue';
+import AccountReady from '../views/AccountReady.vue';
 
 const routes: Array<RouteRecordRaw> = [
   {
@@ -60,6 +64,26 @@ const routes: Array<RouteRecordRaw> = [
     path: '/extensionReset/confirm',
     name: 'Extension Reset',
     component: ExtensionResetConfirm,
+  },
+  {
+    path: '/backup',
+    name: 'Account Backup',
+    component: AccountBackup,
+  },
+  {
+    path: '/backup/show',
+    name: 'Recovery Phrase',
+    component: MnemonicShow,
+  },
+  {
+    path: '/backup/confirm',
+    name: 'Recovery Confirm',
+    component: MnemonicConfirm,
+  },
+  {
+    path: '/accountReady',
+    name: 'Account Ready',
+    component: AccountReady,
   },
 ];
 

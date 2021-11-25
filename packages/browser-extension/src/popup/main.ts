@@ -13,4 +13,3 @@ import { rootstore } from '../store/index';
 const app = createApp(App);
 
 app.use(rootstore).use(router).use(VueTippy).mount('#app');
-

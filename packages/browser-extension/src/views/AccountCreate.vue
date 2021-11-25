@@ -1,14 +1,7 @@
 <template>
-  <div
-    :style="{
-      height: '100%',
-      width: '100%',
-      display: 'flex',
-      flexDirection: 'column',
-    }"
-  >
+  <div class="page">
     <Header title="Account Name" />
-    <span style="opacity: 67%; margin-top: 16px; margin-bottom: 24px"
+    <span class="secondary-text" style="margin-top: 16px; margin-bottom: 24px"
       >If you have multiple accounts this will help you to find the right one</span
     >
     <div style="margin-bottom: 16px">
@@ -19,7 +12,7 @@
         marginTop: 'auto',
       }"
     >
-      <div style="margin-bottom: 32px; display: flex" class="terms-of-use">
+      <div style="margin-bottom: 32px; display: flex" class="terms-of-use secondary-text">
         <Icon name="InformationIcon" style="margin-right: 9px" icon-size="1" />
         <span
           >By continuing you agree to <a href="/">Terms of Use</a> &
@@ -33,22 +26,21 @@
 
 <script lang="ts">
 import { defineComponent } from 'vue';
+import { mapState } from 'vuex';
 import * as bip39 from 'bip39';
 
-import CreateWallet from '@@/components/CreateWallet.vue';
 import Input from '@/components/ui/Input.vue';
 import Header from '@@/components/Header.vue';
 import Button from '@/components/ui/Button.vue';
 import Icon from '@/components/ui/Icon.vue';
 
 import { GlobalActionTypes } from '@@/store/extension/action-types';
+import { MutationTypes } from '@@/store/extension/mutation-types';
 
 export default defineComponent({
   name: 'Create Account',
-  components: { CreateWallet, Button, Input, Header, Icon },
-  props: {
-    seed: { type: String, required: false, default: bip39.generateMnemonic(256) },
-  },
+  components: { Button, Input, Header, Icon },
+  computed: mapState(['wallet']),
   data: () => ({
     name: 'Account X',
   }),
@@ -59,11 +51,20 @@ export default defineComponent({
     if (!hasPasswod) {
       this.$router.push('/passwordCreate');
     }
+
+    // if it is an import we have the seed in the store
+    // if it is a new wallet we create a seed
+    if (!this.wallet) {
+      this.$store.commit(MutationTypes.SET_WALLET, {
+        walletName: 'new',
+        walletMnemonic: bip39.generateMnemonic(256),
+      });
+    }
   },
   methods: {
     async submit() {
       const wallet = await this.$store.dispatch(GlobalActionTypes.CREATE_WALLET, {
-        wallet: { walletMnemonic: this.seed, walletName: this.name },
+        wallet: { ...this.wallet, walletName: this.name },
         password: '', // TOOD needed?
       });
       if (wallet) {
@@ -76,9 +77,5 @@ export default defineComponent({
 <style scoped>
 .terms-of-use {
   font-size: 13px;
-}
-
-.terms-of-use {
-  opacity: 67%;
 }
 </style>

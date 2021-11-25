@@ -1,12 +1,5 @@
 <template>
-  <div
-    :style="{
-      height: '100%',
-      width: '100%',
-      display: 'flex',
-      flexDirection: 'column',
-    }"
-  >
+  <div class="page">
     <img
       :src="require(`@@/assets/UnlockBG.png`)"
       style="max-width: 200%"
