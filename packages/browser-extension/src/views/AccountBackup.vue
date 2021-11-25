@@ -27,7 +27,7 @@
       <Button name="Back up later" variant="link" @click="() => (backUpLater = true)" />
     </div>
 
-    <div class="slideout" :class="{ open: backUpLater }">
+    <Slideout :open="backUpLater">
       <h1 style="margin-bottom: 16px">Back up later</h1>
       <div class="secondary-text" style="margin-bottom: 24px; text-align: center">
         You may not be able to recover your account if you have not backed up your recovery phrase.
@@ -43,7 +43,7 @@
         <Button name="Continue" :disabled="!checked" @click="() => $router.push('/accountReady')" />
         <Button name="Go back" variant="link" @click="() => (backUpLater = false)" />
       </div>
-    </div>
+    </Slideout>
   </div>
 </template>
 
@@ -51,6 +51,7 @@
 import { defineComponent } from 'vue';
 import Button from '@/components/ui/Button.vue';
 import ListCard from '@@/components/ListCard.vue';
+import Slideout from '@@/components/Slideout.vue';
 import Header from '@@/components/Header.vue';
 import Checkbox from '@/components/ui/Checkbox.vue';
 import { MutationTypes } from '@@/store/extension/mutation-types';
@@ -66,6 +67,7 @@ export default defineComponent({
     ListCard,
     Header,
     Checkbox,
+    Slideout,
   },
   methods: {
     goToShowMnemonic() {
@@ -81,19 +83,3 @@ export default defineComponent({
   },
 });
 </script>
-<style lang="scss" scoped>
-.slideout {
-  background: #171717;
-  border-radius: 16px 16px 0px 0px;
-  position: fixed;
-  bottom: -467px;
-  width: 100%;
-  left: 0;
-  padding: 24px;
-  transition: 0.6s;
-
-  &.open {
-    bottom: 0;
-  }
-}
-</style>
