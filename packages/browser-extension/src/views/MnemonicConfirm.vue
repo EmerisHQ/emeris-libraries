@@ -3,7 +3,7 @@
     <Header title="Confirm recovery phrase" />
     <img :src="require('@@/assets/Stepper.png')" style="margin-bottom: 34px" />
     <span class="secondary-text" style="margin-bottom: 48px"
-      >Select the {{ positionWord }} word in your recovery phrase</span
+      >Select the <b>{{ positionWord }}</b> word in your recovery phrase</span
     >
     <div style="display: flex; flex-wrap: wrap; justify-content: space-between; height: 192px">
       <Button
