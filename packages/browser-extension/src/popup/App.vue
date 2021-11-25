@@ -30,6 +30,8 @@ export default defineComponent({
         router.push('/welcomeBack');
       }
 
+      router.push('/welcome');
+
       store.dispatch(GlobalActionTypes.GET_PENDING);
       browser.runtime.onMessage.addListener((message) => {
         if (message.type == 'toPopup' && message.data.action == 'update') {

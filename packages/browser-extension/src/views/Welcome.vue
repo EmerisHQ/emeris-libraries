@@ -23,7 +23,7 @@
         <Button name="Create Account" @click="goTo('/create')" />
       </router-link>
       <Button name="Import Account" variant="secondary" @click="goTo('/accountImport')" />
-      <Button name="Import Ledger" variant="link" />
+      <Button name="Import Ledger" variant="link" @click="goTo('/ledger')" />
     </div>
   </div>
 </template>
