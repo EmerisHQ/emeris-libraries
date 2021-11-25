@@ -10,7 +10,10 @@
         <span>{{ word }}</span>
       </div>
     </div>
-    <a style="margin-bottom: 38px; font-size: 13px">Click to copy</a>
+    <a style="margin-bottom: 38px; font-size: 13px; color: #89ff9b" v-if="copied" @click="copy">
+      <Icon name="InformationIcon" :icon-size="0.5" style="margin-right: 8px" />Copied for 2 minutes</a
+    >
+    <a style="margin-bottom: 38px; font-size: 13px" v-else @click="copy">Click to copy</a>
 
     <div
       :style="{
@@ -33,6 +36,7 @@ import { defineComponent } from 'vue';
 import Button from '@/components/ui/Button.vue';
 import Header from '@@/components/Header.vue';
 import Checkbox from '@/components/ui/Checkbox.vue';
+import Icon from '@/components/ui/Icon.vue';
 import { mapState } from 'vuex';
 import { RootState } from '@@/store';
 
@@ -46,15 +50,27 @@ export default defineComponent({
   name: 'Mnemonic Show',
   data: () => ({
     checked: false,
+    copied: null,
   }),
   components: {
     Button,
     Header,
     Checkbox,
+    Icon,
   },
   methods: {
     submit() {
       this.$router.push('/backup/confirm');
+    },
+    copy() {
+      navigator.clipboard.writeText(this.wallet.walletMnemonic);
+      if (this.copied) {
+        clearTimeout(this.copied);
+      }
+      this.copied = setTimeout(() => {
+        navigator.clipboard.writeText('');
+        this.copied = null;
+      }, 1000 * 120);
     },
   },
 });
