@@ -10,7 +10,7 @@
       <MnemonicInput v-model="mnemonic" placeholder="Your recovery phrase" />
     </div>
     <span class="form-info error" v-if="invalidChar">Invalid character used</span>
-    <a href="">What’s a recovery phrase?</a>
+    <a @click="infoOpen = true">What’s a recovery phrase?</a>
     <div
       :style="{
         marginTop: 'auto',
@@ -24,6 +24,15 @@
       :open="invalidRecoveryPhraseWarning"
       @close="invalidRecoveryPhraseWarning = false"
     ></Modal>
+    <Slideout :open="infoOpen">
+      <h1 style="margin-bottom: 16px">What’s a recovery phrase?</h1>
+      <div class="secondary-text" style="margin-bottom: 24px">
+        These phrases are usually 12 or 24 words long. Each word in the phrase tends to be unrelated to another. Wallet
+        providers will usually provide you a mnemonic phrase when you open a new account, this phrase will help you to
+        import your wallet.
+      </div>
+      <Button name="I understand" @click="() => (infoOpen = false)" />
+    </Slideout>
   </div>
 </template>
 
@@ -35,16 +44,18 @@ import CreateWallet from '@@/components/CreateWallet.vue';
 import MnemonicInput from '@@/components/MnemonicInput.vue';
 import Header from '@@/components/Header.vue';
 import Modal from '@@/components/Modal.vue';
+import Slideout from '@@/components/Slideout.vue';
 
 import { MutationTypes } from '@@/store/extension/mutation-types';
 import { GlobalActionTypes } from '@@/store/extension/action-types';
 
 export default defineComponent({
   name: 'Create Account',
-  components: { CreateWallet, MnemonicInput, Header, Button, Modal },
+  components: { CreateWallet, MnemonicInput, Header, Button, Modal, Slideout },
   data: () => ({
     mnemonic: undefined,
     invalidRecoveryPhraseWarning: false,
+    infoOpen: false,
   }),
   watch: {
     mnemonic(mnemonic) {
