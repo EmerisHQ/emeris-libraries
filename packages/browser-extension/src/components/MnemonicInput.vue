@@ -123,4 +123,9 @@ input:focus ~ .focus-border {
 .input__hint {
   font-size: 1.5rem;
 }
+
+[placeholder]:empty::before {
+  content: attr(placeholder);
+  color: #555;
+}
 </style>
