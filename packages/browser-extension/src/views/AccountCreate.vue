@@ -68,7 +68,7 @@ export default defineComponent({
         password: '', // TOOD needed?
       });
       if (wallet) {
-        this.$router.push('/');
+        this.$router.push('/backup');
       }
     },
   },
