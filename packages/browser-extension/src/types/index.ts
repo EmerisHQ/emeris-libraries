@@ -8,6 +8,7 @@ export type EmerisWallet = {
   walletName: string;
   walletMnemonic: string;
   lastUsedChain?: string;
+  backedUp?: boolean
 };
 export type EmerisPermission = {
   origin: string;

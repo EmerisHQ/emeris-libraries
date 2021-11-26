@@ -15,6 +15,7 @@ import MnemonicConfirm from '../views/MnemonicConfirm.vue';
 import AccountReady from '../views/AccountReady.vue';
 import AccountImportLedger from '../views/AccountImportLedger.vue';
 import AccountImportLedgerConnect from '../views/AccountImportLedgerConnect.vue';
+import Account from '../views/Account.vue';
 
 const routes: Array<RouteRecordRaw> = [
   {
@@ -96,6 +97,11 @@ const routes: Array<RouteRecordRaw> = [
     path: '/ledger/connect',
     name: 'Connect Ledger',
     component: AccountImportLedgerConnect,
+  },
+  {
+    path: '/account',
+    name: 'Account',
+    component: Account,
   },
 ];
 
