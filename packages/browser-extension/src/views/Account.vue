@@ -11,7 +11,6 @@
     <div class="list-card-container" style="margin-bottom: 16px">
       <h2>Back up your wallet</h2>
       <span class="secondary-text" v-if="!wallets[0].backedUp">Your wallet is currently not secured</span>
-      <span class="secondary-text" v-else>Backup your wallet again</span>
       <Icon name="ChevronRightIcon" :icon-size="1" />
     </div>
     <div class="list-card-container">
