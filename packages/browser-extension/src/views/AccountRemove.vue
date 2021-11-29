@@ -29,8 +29,14 @@ export default defineComponent({
   name: 'Account Remove',
   computed: {
     ...mapState({
-      wallet: (state: RootState) => state.extension.wallet,
+      wallets: (state: RootState) => state.extension.wallets,
     }),
+    wallet() {
+      return this.wallets[this.index];
+    },
+  },
+  props: {
+    index: { type: String, required: true },
   },
   components: {
     Button,

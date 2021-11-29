@@ -41,6 +41,11 @@ export default defineComponent({
     ...mapState({
       wallets: (state: RootState) => state.extension.wallets,
     }),
+    editWalletIndex() {
+      return this.editWallet
+        ? this.wallets.findIndex((wallet) => wallet.walletName === this.editWallet.walletName)
+        : undefined;
+    },
   },
   data: () => ({
     editWallet: undefined,
@@ -56,12 +61,12 @@ export default defineComponent({
       this.$router.push('/accountAddAdditional');
     },
     removeAccount() {
-      this.$store.commit('extension/' + MutationTypes.SET_WALLET, this.editWallet); // TODO sets active wallet, which is unexpected UX? better go via route?
-      this.$router.push('/accountRemove');
+      this.$store.commit('extension/' + MutationTypes.SET_WALLET, this.editWallet);
+      this.$router.push('/accountRemove/' + this.editWalletIndex);
     },
     renameAccount() {
-      this.$store.commit('extension/' + MutationTypes.SET_WALLET, this.editWallet); // TODO sets active wallet, which is unexpected UX? better go via route?
-      this.$router.push('/accountRename');
+      this.$store.commit('extension/' + MutationTypes.SET_WALLET, this.editWallet);
+      this.$router.push('/accountRename/' + this.editWalletIndex);
     },
   },
 });

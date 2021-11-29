@@ -58,14 +58,16 @@ const routes: Array<RouteRecordRaw> = [
     component: AccountCreate,
   },
   {
-    path: '/accountRemove',
+    path: '/accountRemove/:index',
     name: 'Account Remove',
-    component: AccountRemove
+    component: AccountRemove,
+    props: true
   },
   {
-    path: '/accountRename',
+    path: '/accountRename/:index',
     name: 'Account Rename',
-    component: AccountRename
+    component: AccountRename,
+    props: true
   },
   {
     path: '/accountAddAdditional',

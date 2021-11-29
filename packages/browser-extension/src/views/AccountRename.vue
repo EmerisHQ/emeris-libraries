@@ -20,7 +20,6 @@
 <script lang="ts">
 import { defineComponent } from 'vue';
 import { mapState } from 'vuex';
-import * as bip39 from 'bip39';
 
 import Input from '@/components/ui/Input.vue';
 import Header from '@@/components/Header.vue';
@@ -35,8 +34,14 @@ export default defineComponent({
   components: { Button, Input, Header },
   computed: {
     ...mapState({
-      wallet: (state: RootState) => state.extension.wallet,
+      wallets: (state: RootState) => state.extension.wallets,
     }),
+    wallet() {
+      return this.wallets[this.index];
+    },
+  },
+  props: {
+    index: { type: String, required: true },
   },
   methods: {
     async submit() {
