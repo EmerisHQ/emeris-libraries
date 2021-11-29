@@ -1,6 +1,6 @@
 <template>
   <div>
-    <div v-if="open"></div>
+    <div class="backdrop" v-if="open"></div>
     <div class="slideout" ref="slideout" :class="{ open: open }">
       <slot></slot>
     </div>
