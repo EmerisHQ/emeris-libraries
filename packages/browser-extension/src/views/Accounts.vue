@@ -1,16 +1,26 @@
 <template>
   <div class="page">
-    <Header title="Accounts" />
-    <div v-for="wallet in wallets" :key="wallet.walletName" class="wallet">
+    <Header title="Accounts">
+      <a @click="edit = true" v-if="!edit">Edit</a>
+      <a @click="edit = false" v-else>Done</a>
+    </Header>
+    <div v-for="account in wallets" :key="account.walletName" class="wallet">
       <img :src="require('@@/assets/Avatar.svg')" />
       <div>
-        <h2 style="font-weight: 600">{{ wallet.walletName }}</h2>
-        <span class="secondary-text" v-if="wallet.backedUp">$12,345.67</span>
+        <h2 style="font-weight: 600">{{ account.walletName }}</h2>
+        <span class="secondary-text" v-if="account.backedUp">$12,345.67</span>
         <span class="secondary-text" style="color: #ff6072; opacity: 1; font-size: 13px" v-else
           >$12,345.67 - Not backed up</span
         >
       </div>
-      <Icon style="margin-left: auto" name="ThreeDotsIcon" :icon-size="1.5" @click="editWallet = wallet" />
+      <Icon
+        style="margin-left: auto; cursor: pointer"
+        name="ThreeDotsIcon"
+        :icon-size="1.5"
+        @click="editWallet = account"
+        v-if="edit"
+      />
+      <div style="margin-left: auto; line-height: 48px" v-else-if="account">✓</div>
     </div>
     <div style="margin-top: auto">
       <Button name="Add account" @click="addAccount" />
@@ -40,6 +50,7 @@ export default defineComponent({
   computed: {
     ...mapState({
       wallets: (state: RootState) => state.extension.wallets,
+      wallet: (state: RootState) => state.extension.wallet,
     }),
     editWalletIndex() {
       return this.editWallet
@@ -49,6 +60,7 @@ export default defineComponent({
   },
   data: () => ({
     editWallet: undefined,
+    edit: false,
   }),
   components: {
     Button,
