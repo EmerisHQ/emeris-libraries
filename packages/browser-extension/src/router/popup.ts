@@ -2,7 +2,7 @@ import { createRouter, createWebHashHistory, RouteRecordRaw } from 'vue-router';
 
 import Home from '../views/Home.vue';
 import AccountCreate from '../views/AccountCreate.vue';
-import Unlock from '../views/Unlock.vue';
+// import Unlock from '../views/Unlock.vue';
 import Welcome from '../views/Welcome.vue';
 import WelcomeBack from '../views/WelcomeBack.vue';
 import PasswordCreate from '../views/PasswordCreate.vue';
@@ -13,9 +13,13 @@ import AccountBackup from '../views/AccountBackup.vue';
 import MnemonicShow from '../views/MnemonicShow.vue';
 import MnemonicConfirm from '../views/MnemonicConfirm.vue';
 import AccountReady from '../views/AccountReady.vue';
+import AccountRemove from '../views/AccountRemove.vue';
+import AccountRename from '../views/AccountRename.vue';
+import AccountAddAdditional from '../views/AccountAddAdditional.vue';
 import AccountImportLedger from '../views/AccountImportLedger.vue';
 import AccountImportLedgerConnect from '../views/AccountImportLedgerConnect.vue';
 import Account from '../views/Account.vue';
+import Accounts from '../views/Accounts.vue';
 
 const routes: Array<RouteRecordRaw> = [
   {
@@ -28,11 +32,11 @@ const routes: Array<RouteRecordRaw> = [
     name: 'Create Wallet',
     component: AccountCreate,
   },
-  {
-    path: '/unlock',
-    name: 'Unlock Wallet',
-    component: Unlock,
-  },
+  // {
+  //   path: '/unlock',
+  //   name: 'Unlock Wallet',
+  //   component: Unlock,
+  // },
   {
     path: '/welcome',
     name: 'Welcome',
@@ -52,6 +56,21 @@ const routes: Array<RouteRecordRaw> = [
     path: '/accountCreate',
     name: 'Account Create',
     component: AccountCreate,
+  },
+  {
+    path: '/accountRemove',
+    name: 'Account Remove',
+    component: AccountRemove
+  },
+  {
+    path: '/accountRename',
+    name: 'Account Rename',
+    component: AccountRename
+  },
+  {
+    path: '/accountAddAdditional',
+    name: 'Account Add Additional',
+    component: AccountAddAdditional
   },
   {
     path: '/accountImport',
@@ -102,6 +121,11 @@ const routes: Array<RouteRecordRaw> = [
     path: '/account',
     name: 'Account',
     component: Account,
+  },
+  {
+    path: '/accounts',
+    name: 'Accounts',
+    component: Accounts,
   },
 ];
 

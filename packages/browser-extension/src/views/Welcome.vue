@@ -17,13 +17,8 @@
       :style="{
         marginTop: 'auto',
       }"
-      class="buttons"
     >
-      <router-link :to="{ name: 'Create Wallet' }">
-        <Button name="Create Account" @click="goTo('/create')" />
-      </router-link>
-      <Button name="Import Account" variant="secondary" @click="goTo('/accountImport')" />
-      <Button name="Import Ledger" variant="link" @click="goTo('/ledger')" />
+      <AccountCreateSection />
     </div>
   </div>
 </template>
@@ -31,11 +26,13 @@
 <script lang="ts">
 import { defineComponent } from 'vue';
 import Button from '@/components/ui/Button.vue';
+import AccountCreateSection from '@@/views/AccountCreateSection.vue';
 
 export default defineComponent({
   name: 'Welcome',
   components: {
     Button,
+    AccountCreateSection,
   },
   methods: {
     goTo(route) {
@@ -80,11 +77,6 @@ h1 {
   align-self: stretch;
   flex-grow: 0;
   margin: 0px 0px;
-}
-
-.buttons > *:not(:last-child) {
-  margin-bottom: 16px;
-  display: block;
 }
 
 :deep(.button-link) {

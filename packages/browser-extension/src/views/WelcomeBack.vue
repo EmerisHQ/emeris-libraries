@@ -1,22 +1,5 @@
 <template>
-  <div class="page">
-    <img
-      :src="require(`@@/assets/UnlockBG.png`)"
-      style="max-width: 200%"
-      :style="{
-        position: 'fixed',
-        zIndex: -1,
-        // accounting for padding
-        top: '-24px',
-        left: '-24px',
-        width: 'calc(100% + 24px)',
-      }"
-    />
-    <Brandmark class="wordmark" />
-
-    <h1 style="margin-top: 100px; margin-bottom: 16px">Welcome back</h1>
-    <span style="color: #ffffffaa">Experience the power of cross-chain DeFi</span>
-
+  <ConfirmationScreen title="Welcome back" subtitle="Experience the power of cross-chain DeFi">
     <div
       :style="{
         marginTop: 'auto',
@@ -32,13 +15,13 @@
         <Button name="Forgot Password" variant="link" />
       </router-link>
     </div>
-  </div>
+  </ConfirmationScreen>
 </template>
 
 <script lang="ts">
 import { defineComponent } from 'vue';
 import Button from '@/components/ui/Button.vue';
-import Brandmark from '@/components/common/Brandmark.vue';
+import ConfirmationScreen from '@@/views/ConfirmationScreen.vue';
 import Input from '@/components/ui/Input.vue';
 import { GlobalActionTypes } from '@@/store/extension/action-types';
 
@@ -49,8 +32,8 @@ export default defineComponent({
   }),
   components: {
     Button,
-    Brandmark,
     Input,
+    ConfirmationScreen,
   },
   methods: {
     async checkPassword() {

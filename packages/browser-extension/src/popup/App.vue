@@ -23,14 +23,15 @@ export default defineComponent({
       if (!wallet && wallets.length == 0) {
         router.push('/welcome');
       }
-      if (!wallet && wallets.length > 0) {
-        router.push('/unlock');
-      }
+      // if (!wallet && wallets.length > 0) {
+      //   router.push('/unlock');
+      // }
+      // TODO check if already unlocked
       if (hasPassword) {
         router.push('/welcomeBack');
       }
 
-      router.push('/welcome');
+      router.push('/accounts');
 
       store.dispatch(GlobalActionTypes.GET_PENDING);
       browser.runtime.onMessage.addListener((message) => {
