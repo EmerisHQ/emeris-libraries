@@ -13,7 +13,8 @@ export default class EmerisStorage {
     this.storageMode = storageMode;
   }
   async isPermitted(origin: string): Promise<boolean> {
-    const result = await browser.storage[this.storageMode].get('permissions');
+    const result = await browser.storage[this.
+      Mode].get('permissions');
     if (!result.permissions) {
       return false;
     } else {
@@ -85,6 +86,7 @@ export default class EmerisStorage {
     await browser.storage[this.storageMode].set({ 'password': password });
   }
   async checkPassword(password: String): Promise<Boolean> {
+    // TODO this is not how it should be stored
     const { password: storedPassword } = await browser.storage[this.storageMode].get('password');
     return storedPassword === password
   }
