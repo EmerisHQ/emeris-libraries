@@ -4,7 +4,7 @@
       <a @click="edit = true" v-if="!edit">Edit</a>
       <a @click="edit = false" v-else>Done</a>
     </Header>
-    <div v-for="account in wallets" :key="account.walletName" class="wallet">
+    <div v-for="account in wallets" :key="account.walletName" class="wallet" @click="goToAccount(wallet)">
       <img :src="require('@@/assets/Avatar.svg')" />
       <div>
         <h2 style="font-weight: 600">{{ account.walletName }}</h2>
@@ -79,6 +79,10 @@ export default defineComponent({
     renameAccount() {
       this.$store.commit('extension/' + MutationTypes.SET_WALLET, this.editWallet);
       this.$router.push('/accountRename/' + this.editWalletIndex);
+    },
+    goToAccount(wallet) {
+      this.$store.commit('extension/' + MutationTypes.SET_WALLET, wallet);
+      this.$router.push('/account');
     },
   },
 });

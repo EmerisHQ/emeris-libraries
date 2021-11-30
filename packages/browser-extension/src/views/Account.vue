@@ -2,10 +2,13 @@
   <div class="page">
     <Header title="" />
     <img
-      style="height: 72px; width: 72px; margin-top: 56px; margin-left: auto; margin-right: auto"
+      style="height: 72px; width: 72px; margin-top: 40px; margin-left: auto; margin-right: auto"
       :src="require('@@/assets/Avatar.svg')"
     />
-    <span class="secondary-text account-selector" style="text-align: center; margin-bottom: 56px"
+    <span
+      class="secondary-text account-selector"
+      style="text-align: center; margin-bottom: 32px; cursor: pointer"
+      @click="$router.push('/accounts')"
       >{{ wallets[0].walletName }} <Icon name="ChevronRightIcon" :icon-size="1"
     /></span>
     <div class="list-card-container" style="margin-bottom: 16px">
@@ -13,10 +16,15 @@
       <span class="secondary-text" v-if="!wallets[0].backedUp">Your wallet is currently not secured</span>
       <Icon name="ChevronRightIcon" :icon-size="1" />
     </div>
-    <div class="list-card-container">
+    <div class="list-card-container" style="margin-bottom: 16px">
       <h2>Swap</h2>
       <span class="secondary-text">Swap assets wih Emeris</span>
       <img :src="require('@@/assets/SwapListItemGraphic.svg')" />
+    </div>
+    <div class="list-card-container">
+      <h2>Add liquidity to a pool</h2>
+      <span class="secondary-text">Browse our pool on Emeris</span>
+      <img :src="require('@@/assets/LiquidityListItemGraphic.svg')" />
     </div>
   </div>
 </template>
