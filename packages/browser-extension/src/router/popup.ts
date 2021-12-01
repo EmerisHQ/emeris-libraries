@@ -15,6 +15,7 @@ import MnemonicConfirm from '../views/MnemonicConfirm.vue';
 import AccountReady from '../views/AccountReady.vue';
 import AccountRemove from '../views/AccountRemove.vue';
 import AccountRename from '../views/AccountRename.vue';
+import AccountCreationResume from '../views/AccountCreationResume.vue';
 import AccountAddAdditional from '../views/AccountAddAdditional.vue';
 import AccountImportLedger from '../views/AccountImportLedger.vue';
 import AccountImportLedgerConnect from '../views/AccountImportLedgerConnect.vue';
@@ -78,6 +79,11 @@ const routes: Array<RouteRecordRaw> = [
     path: '/accountImport',
     name: 'Account Import',
     component: AccountImport,
+  },
+  {
+    path: '/accountCreationResume',
+    name: 'Account Creation Resume',
+    component: AccountCreationResume,
   },
   {
     path: '/extensionReset',

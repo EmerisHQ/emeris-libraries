@@ -118,6 +118,11 @@ export class Emeris implements IEmeris {
         await this.storage.saveWallet(message.data.data.wallet, message.data.data.password);
         this.wallet = message.data.data.wallet;
         return this.wallet;
+      case 'setPartialAccountCreation':
+        await this.storage.setPartialAccountCreation(message.data.data.wallet, message.data.data.route);
+        return
+      case 'getPartialAccountCreation':
+        return await this.storage.getPartialAccountCreation();
       case 'getWallet':
         return this.wallet;
       case 'unlockWallet':

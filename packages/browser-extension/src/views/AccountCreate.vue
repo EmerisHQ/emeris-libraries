@@ -36,14 +36,40 @@ import Icon from '@/components/ui/Icon.vue';
 
 import { GlobalActionTypes } from '@@/store/extension/action-types';
 import { MutationTypes } from '@@/store/extension/mutation-types';
+import { RootState } from '@@/store';
 
 export default defineComponent({
   name: 'Create Account',
   components: { Button, Input, Header, Icon },
-  computed: mapState(['wallet']),
+  computed: {
+    ...mapState({
+      wallet: (state: RootState) => state.extension.wallet,
+    }),
+  },
   data: () => ({
     name: 'Account X',
   }),
+  watch: {
+    wallet(wallet) {
+      this.$store.dispatch(GlobalActionTypes.SET_PARTIAL_ACCOUNT_CREATION, {
+        wallet: {
+          walletName: this.name,
+          walletMnemonic: wallet.walletMnemonic,
+        },
+        route: this.$route,
+      });
+    },
+    name(name) {
+      if (!this.wallet) return;
+      this.$store.dispatch(GlobalActionTypes.SET_PARTIAL_ACCOUNT_CREATION, {
+        wallet: {
+          walletName: name,
+          walletMnemonic: this.wallet.walletMnemonic,
+        },
+        route: this.$route,
+      });
+    },
+  },
   async mounted() {
     const hasPasswod = await this.$store.dispatch(GlobalActionTypes.HAS_PASSWORD);
     this.wallets = (await this.$store.dispatch(GlobalActionTypes.GET_WALLETS)) || [];
@@ -55,9 +81,22 @@ export default defineComponent({
     // if it is an import we have the seed in the store
     // if it is a new wallet we create a seed
     if (!this.wallet) {
-      this.$store.commit(MutationTypes.SET_WALLET, {
+      this.$store.commit('extension/' + MutationTypes.SET_WALLET, {
         walletName: 'new',
         walletMnemonic: bip39.generateMnemonic(256),
+      });
+    } else {
+      const partialAccountCreation = await this.$store.dispatch(GlobalActionTypes.GET_PARTIAL_ACCOUNT_CREATION);
+      if (partialAccountCreation && partialAccountCreation.wallet.walletName) {
+        this.name = partialAccountCreation.wallet.walletName;
+      }
+
+      this.$store.dispatch(GlobalActionTypes.SET_PARTIAL_ACCOUNT_CREATION, {
+        wallet: {
+          walletName: this.name,
+          walletMnemonic: this.wallet.walletMnemonic,
+        },
+        route: this.$route,
       });
     }
   },

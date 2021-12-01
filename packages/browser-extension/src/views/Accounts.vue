@@ -85,6 +85,9 @@ export default defineComponent({
       this.$router.push('/account');
     },
   },
+  mounted() {
+    if (this.wallets.length === 0) this.$router.push('/welcome');
+  },
 });
 </script>
 <style lang="scss" scoped>

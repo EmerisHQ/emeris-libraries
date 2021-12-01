@@ -29,6 +29,14 @@ export interface Actions {
     { getters }: ActionContext<State, RootState>,
     { },
   ): Promise<boolean>;
+  [ActionTypes.GET_PARTIAL_ACCOUNT_CREATION](
+    { getters }: ActionContext<State, RootState>,
+    { },
+  ): Promise<{ wallet: EmerisWallet, route: string }>;
+  [ActionTypes.SET_PARTIAL_ACCOUNT_CREATION](
+    { getters }: ActionContext<State, RootState>,
+    { wallet: EmerisWallet, route: string },
+  ): Promise<void>;
 }
 export type GlobalActions = Namespaced<Actions, 'extension'>;
 
@@ -43,6 +51,12 @@ export const actions: ActionTree<State, RootState> & Actions = {
       throw new Error('Extension:GetPendingRequests failed');
     }
     return getters['getPending'];
+  },
+  async [ActionTypes.SET_PARTIAL_ACCOUNT_CREATION]({ }, { wallet, route }) {
+    await browser.runtime.sendMessage({ type: 'fromPopup', data: { action: 'setPartialAccountCreation', data: { wallet, route } } });
+  },
+  async [ActionTypes.GET_PARTIAL_ACCOUNT_CREATION]({ }) {
+    return await browser.runtime.sendMessage({ type: 'fromPopup', data: { action: 'getPartialAccountCreation' } });
   },
   async [ActionTypes.CREATE_WALLET](
     { commit, getters },

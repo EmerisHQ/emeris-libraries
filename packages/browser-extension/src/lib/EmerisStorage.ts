@@ -13,8 +13,7 @@ export default class EmerisStorage {
     this.storageMode = storageMode;
   }
   async isPermitted(origin: string): Promise<boolean> {
-    const result = await browser.storage[this.
-      Mode].get('permissions');
+    const result = await browser.storage[this.storageMode].get('permissions');
     if (!result.permissions) {
       return false;
     } else {
@@ -81,6 +80,17 @@ export default class EmerisStorage {
       console.log(e);
       throw new UnlockWalletError('Could not unlock wallet: ' + e);
     }
+  }
+  async setPartialAccountCreation(wallet: EmerisWallet, route: string) {
+    if (!wallet) {
+      await browser.storage[this.storageMode].set({ 'partialAccount': null });
+    } else {
+      await browser.storage[this.storageMode].set({ 'partialAccount': { wallet, route } });
+    }
+  }
+  async getPartialAccountCreation() {
+    const { partialAccount } = await browser.storage[this.storageMode].get('partialAccount');
+    return partialAccount
   }
   async setPassword(password: String) {
     await browser.storage[this.storageMode].set({ 'password': password });

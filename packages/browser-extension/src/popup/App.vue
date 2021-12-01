@@ -20,9 +20,16 @@ export default defineComponent({
       console.log(route.query);
       const wallets = await store.dispatch(GlobalActionTypes.GET_WALLETS);
 
+      const partialAccountCreation = await store.dispatch(GlobalActionTypes.GET_PARTIAL_ACCOUNT_CREATION);
+      if (partialAccountCreation) {
+        router.push('/accountCreationResume');
+        return;
+      }
+
       if (!wallet && wallets.length == 0) {
         router.push('/welcome');
       }
+
       // if (!wallet && wallets.length > 0) {
       //   router.push('/unlock');
       // }

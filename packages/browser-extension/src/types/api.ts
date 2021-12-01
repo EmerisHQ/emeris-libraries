@@ -74,6 +74,16 @@ export type GetWalletRequest = Request & {
 export type GetWalletsRequest = Request & {
   action: 'getWallets';
 };
+export type SetPartialAccountCreationRequest = Request & {
+  action: 'setPartialAccountCreation';
+  data: {
+    wallet: EmerisWallet;
+    route: string;
+  };
+};
+export type GetPartialAccountCreationRequest = Request & {
+  action: 'getPartialAccountCreation';
+};
 export type CreateWalletRequest = Request & {
   action: 'createWallet';
   data: {
@@ -124,6 +134,8 @@ export type ExtensionRequest =
   | HasWalletRequest;
 export type PopupRequest =
   | GetPendingRequest
+  | SetPartialAccountCreationRequest
+  | GetPartialAccountCreationRequest
   | CreateWalletRequest
   | UnlockWalletRequest
   | GetWalletRequest

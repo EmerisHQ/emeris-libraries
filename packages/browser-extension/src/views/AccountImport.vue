@@ -40,7 +40,6 @@
 import { defineComponent } from 'vue';
 
 import Button from '@/components/ui/Button.vue';
-import CreateWallet from '@@/components/CreateWallet.vue';
 import MnemonicInput from '@@/components/MnemonicInput.vue';
 import Header from '@@/components/Header.vue';
 import Modal from '@@/components/Modal.vue';
@@ -51,7 +50,7 @@ import { GlobalActionTypes } from '@@/store/extension/action-types';
 
 export default defineComponent({
   name: 'Create Account',
-  components: { CreateWallet, MnemonicInput, Header, Button, Modal, Slideout },
+  components: { MnemonicInput, Header, Button, Modal, Slideout },
   data: () => ({
     mnemonic: undefined,
     invalidRecoveryPhraseWarning: false,
@@ -59,8 +58,14 @@ export default defineComponent({
   }),
   watch: {
     mnemonic(mnemonic) {
-      console.log(mnemonic);
       this.invalidChar = !/^[a-z ]*$/.test(mnemonic);
+
+      this.$store.dispatch(GlobalActionTypes.SET_PARTIAL_ACCOUNT_CREATION, {
+        wallet: {
+          walletMnemonic: this.mnemonic,
+        },
+        route: this.$route,
+      });
     },
   },
   async mounted() {
@@ -69,10 +74,15 @@ export default defineComponent({
     if (!hasPasswod) {
       this.$router.push('/passwordCreate');
     }
+
+    const partialAccountCreation = await this.$store.dispatch(GlobalActionTypes.GET_PARTIAL_ACCOUNT_CREATION);
+    if (partialAccountCreation) {
+      this.mnemonic = partialAccountCreation.wallet.walletMnemonic;
+    }
   },
   methods: {
     submit() {
-      this.$store.commit(MutationTypes.SET_WALLET, {
+      this.$store.commit('extension/' + MutationTypes.SET_WALLET, {
         walletName: 'new',
         walletMnemonic: this.mnemonic,
       });
