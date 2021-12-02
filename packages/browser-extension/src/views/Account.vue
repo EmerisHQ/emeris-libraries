@@ -11,7 +11,7 @@
       @click="$router.push('/accounts')"
       >{{ wallets[0].walletName }} <Icon name="ChevronRightIcon" :icon-size="1"
     /></span>
-    <div class="list-card-container" style="margin-bottom: 16px">
+    <div class="list-card-container" style="margin-bottom: 16px" @click="$router.push('/backup')">
       <h2>Back up your wallet</h2>
       <span class="secondary-text" v-if="!wallets[0].backedUp">Your wallet is currently not secured</span>
       <Icon name="ChevronRightIcon" :icon-size="1" />
