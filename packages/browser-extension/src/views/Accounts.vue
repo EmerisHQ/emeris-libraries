@@ -4,7 +4,7 @@
       <a @click="edit = true" v-if="!edit">Edit</a>
       <a @click="edit = false" v-else>Done</a>
     </Header>
-    <div v-for="account in wallets" :key="account.walletName" class="wallet" @click="goToAccount(wallet)">
+    <div v-for="account in wallets" :key="account.walletName" class="wallet" @click="goToAccount(account)">
       <img :src="require('@@/assets/Avatar.svg')" />
       <div>
         <h2 style="font-weight: 600">{{ account.walletName }}</h2>
@@ -20,7 +20,7 @@
         @click="editWallet = account"
         v-if="edit"
       />
-      <div style="margin-left: auto; line-height: 48px" v-else-if="account">✓</div>
+      <div style="margin-left: auto; line-height: 48px" v-else-if="account.walletName === wallet.walletName">✓</div>
     </div>
     <div style="margin-top: auto">
       <Button name="Add account" @click="addAccount" />
