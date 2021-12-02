@@ -82,7 +82,7 @@ export default defineComponent({
     },
     goToAccount(wallet) {
       this.$store.commit('extension/' + MutationTypes.SET_WALLET, wallet);
-      this.$router.push('/account');
+      this.$router.push('/portfolio');
     },
   },
   mounted() {

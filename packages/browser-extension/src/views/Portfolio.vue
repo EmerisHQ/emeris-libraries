@@ -11,7 +11,11 @@
       }"
     />
     <div style="display: flex; position: relative; margin-bottom: 36px">
-      <img style="height: 24px; width: 24px; position: absolute" :src="require('@@/assets/Avatar.svg')" />
+      <img
+        style="height: 24px; width: 24px; position: absolute"
+        :src="require('@@/assets/Avatar.svg')"
+        @click="$router.push('/account')"
+      />
       <img class="wordmark" :src="require(`@@/assets/EmerisWordmark.svg`)" />
     </div>
 
