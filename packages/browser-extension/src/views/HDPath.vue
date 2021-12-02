@@ -109,6 +109,14 @@ export default defineComponent({
     if (partialAccountCreation && partialAccountCreation.wallet.hdPath) {
       [this.account, this.change, this.addressIndex] = partialAccountCreation.wallet.hdPath;
     }
+
+    this.$store.dispatch(GlobalActionTypes.SET_PARTIAL_ACCOUNT_CREATION, {
+      wallet: {
+        ...this.wallet,
+        hdPath: [this.account, this.change, this.addressIndex],
+      },
+      route: this.$route,
+    });
   },
   methods: {
     submit() {
