@@ -34,12 +34,7 @@
     <span class="form-info" :class="{ error: password && !digitChar, success: password && digitChar }"
       >At least one digit</span
     >
-    <span
-      class="form-info"
-      v-if="passwordRepeated"
-      :class="{ error: password && passwordRepeated && !match, success: password && passwordRepeated && match }"
-      >Passwords don’t match</span
-    >
+    <span class="form-info error" v-if="passwordRepeated && !match">Passwords don’t match</span>
     <div
       :style="{
         marginTop: 'auto',
