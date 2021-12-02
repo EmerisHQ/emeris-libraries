@@ -107,6 +107,10 @@ export default defineComponent({
         password: '', // TOOD needed?
       });
       if (wallet) {
+        this.$store.dispatch(GlobalActionTypes.SET_PARTIAL_ACCOUNT_CREATION, {
+          wallet: undefined,
+        });
+
         this.$router.push('/backup');
       }
     },
