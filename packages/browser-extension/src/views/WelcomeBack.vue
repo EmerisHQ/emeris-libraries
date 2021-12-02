@@ -39,7 +39,7 @@ export default defineComponent({
     async checkPassword() {
       const result = await this.$store.dispatch(GlobalActionTypes.CHECK_PASSWORD, this.password);
       if (result) {
-        this.$router.push('/');
+        this.$router.push('/portfolio');
       } else {
         this.error = true;
       }

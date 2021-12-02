@@ -6,6 +6,7 @@
 import { defineComponent, onMounted } from 'vue';
 import { useExtensionStore } from '@@/store';
 import { GlobalActionTypes } from '@@/store/extension/action-types';
+import { MutationTypes } from '@@/store/extension/mutation-types';
 import { useRoute, useRouter } from 'vue-router';
 
 export default defineComponent({
@@ -15,10 +16,12 @@ export default defineComponent({
     const router = useRouter();
     const route = useRoute();
     onMounted(async () => {
-      const wallet = await store.dispatch(GlobalActionTypes.GET_WALLET);
       const hasPassword = await store.dispatch(GlobalActionTypes.HAS_PASSWORD);
-      console.log(route.query);
-      const wallets = await store.dispatch(GlobalActionTypes.GET_WALLETS);
+      // TODO check if already unlocked
+      // if (hasPassword) {
+      //   router.push('/welcomeBack');
+      //   return;
+      // }
 
       const partialAccountCreation = await store.dispatch(GlobalActionTypes.GET_PARTIAL_ACCOUNT_CREATION);
       if (partialAccountCreation) {
@@ -26,19 +29,15 @@ export default defineComponent({
         return;
       }
 
-      if (!wallet && wallets.length == 0) {
+      const wallets = await store.dispatch(GlobalActionTypes.GET_WALLETS);
+      if (wallets.length === 0) {
         router.push('/welcome');
+        return;
       }
 
-      // if (!wallet && wallets.length > 0) {
-      //   router.push('/unlock');
-      // }
-      // TODO check if already unlocked
-      if (hasPassword) {
-        router.push('/welcomeBack');
-      }
-
-      router.push('/accounts');
+      // TODO get last wallet
+      store.commit('extension/' + MutationTypes.SET_WALLET, wallets[0]);
+      router.push('/portfolio');
 
       store.dispatch(GlobalActionTypes.GET_PENDING);
       browser.runtime.onMessage.addListener((message) => {

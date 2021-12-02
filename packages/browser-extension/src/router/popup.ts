@@ -22,12 +22,18 @@ import AccountImportLedger from '../views/AccountImportLedger.vue';
 import AccountImportLedgerConnect from '../views/AccountImportLedgerConnect.vue';
 import Account from '../views/Account.vue';
 import Accounts from '../views/Accounts.vue';
+import Portfolio from '../views/Portfolio.vue';
 
 const routes: Array<RouteRecordRaw> = [
   {
     path: '/',
     name: 'Home',
     component: Home,
+  },
+  {
+    path: '/portfolio',
+    name: 'Portfolio',
+    component: Portfolio,
   },
   {
     path: '/create',
