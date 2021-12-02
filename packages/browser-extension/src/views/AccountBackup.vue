@@ -36,8 +36,7 @@
       <Checkbox
         style="margin-bottom: 24px"
         v-model="checked"
-        label="I have backed up my recovery phrase, I understand that if I loose my recovery phrase, I will loose my
-          fund"
+        label="I understand if I don’t back up my account, or if I lost my recovery phrase, I will lose access to my account."
       />
       <div class="buttons">
         <Button name="Continue" :disabled="!checked" @click="() => $router.push('/accountReady')" />
