@@ -7,6 +7,7 @@ import Welcome from '../views/Welcome.vue';
 import WelcomeBack from '../views/WelcomeBack.vue';
 import PasswordCreate from '../views/PasswordCreate.vue';
 import AccountImport from '../views/AccountImport.vue';
+import HdPath from '../views/HDPath.vue';
 import ExtensionReset from '../views/ExtensionReset.vue';
 import ExtensionResetConfirm from '../views/ExtensionResetConfirm.vue';
 import AccountBackup from '../views/AccountBackup.vue';
@@ -79,6 +80,11 @@ const routes: Array<RouteRecordRaw> = [
     path: '/accountImport',
     name: 'Account Import',
     component: AccountImport,
+  },
+  {
+    path: '/accountImportHdPath',
+    name: 'HD Path',
+    component: HdPath,
   },
   {
     path: '/accountCreationResume',

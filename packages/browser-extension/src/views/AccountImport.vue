@@ -1,9 +1,9 @@
 <template>
   <div class="page">
     <Header title="Import account">
-      <!-- <router-link to="/accountImport/advanced">
+      <router-link to="/accountImportHdPath">
         <a>Advanced</a>
-      </router-link> -->
+      </router-link>
     </Header>
     <span style="margin-top: 16px; margin-bottom: 16px">Enter your recovery phrase</span>
     <div style="margin-bottom: 16px">
@@ -31,7 +31,7 @@
         providers will usually provide you a mnemonic phrase when you open a new account, this phrase will help you to
         import your wallet.
       </div>
-      <Button name="I understand" @click="() => (infoOpen = false)" />
+      <Button name="Ok" @click="() => (infoOpen = false)" />
     </Slideout>
   </div>
 </template>
@@ -48,6 +48,9 @@ import Slideout from '@@/components/Slideout.vue';
 import { MutationTypes } from '@@/store/extension/mutation-types';
 import { GlobalActionTypes } from '@@/store/extension/action-types';
 
+// bring input in standard format
+const mnemonicFormat = (mnemonic) => mnemonic.trim().replace(/\s/, ' ');
+
 export default defineComponent({
   name: 'Create Account',
   components: { MnemonicInput, Header, Button, Modal, Slideout },
@@ -55,14 +58,15 @@ export default defineComponent({
     mnemonic: undefined,
     invalidRecoveryPhraseWarning: false,
     infoOpen: false,
+    invalidChar: false,
   }),
   watch: {
     mnemonic(mnemonic) {
-      this.invalidChar = !/^[a-z ]*$/.test(mnemonic);
+      this.invalidChar = !/^[a-z\s]*$/.test(mnemonic);
 
       this.$store.dispatch(GlobalActionTypes.SET_PARTIAL_ACCOUNT_CREATION, {
         wallet: {
-          walletMnemonic: this.mnemonic,
+          walletMnemonic: mnemonicFormat(this.mnemonic),
         },
         route: this.$route,
       });
@@ -83,8 +87,7 @@ export default defineComponent({
   methods: {
     submit() {
       this.$store.commit('extension/' + MutationTypes.SET_WALLET, {
-        walletName: 'new',
-        walletMnemonic: this.mnemonic,
+        walletMnemonic: mnemonicFormat(this.mnemonic),
       });
       this.$router.push({ path: '/accountCreate' });
     },
