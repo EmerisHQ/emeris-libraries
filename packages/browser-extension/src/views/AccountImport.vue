@@ -1,15 +1,22 @@
 <template>
   <div class="page">
     <Header title="Import account">
-      <router-link to="/accountImportHdPath">
-        <a>Advanced</a>
-      </router-link>
+      <a
+        :style="{
+          opacity: invalidChar || unknownWords.length > 0 ? 0.6 : 1,
+        }"
+        @click="!invalidChar && unknownWords.length === 0 && $router.push('/accountImportHdPath')"
+        >Advanced</a
+      >
     </Header>
     <span style="margin-top: 16px; margin-bottom: 16px">Enter your recovery phrase</span>
     <div style="margin-bottom: 16px">
       <MnemonicInput v-model="mnemonic" placeholder="Your recovery phrase" />
     </div>
     <span class="form-info error" v-if="invalidChar">Invalid character used</span>
+    <span class="form-info error" v-if="unknownWords.length > 0"
+      >Unknown words found: {{ unknownWords.join(', ') }}</span
+    >
     <a @click="infoOpen = true">What’s a recovery phrase?</a>
     <div
       :style="{
@@ -37,6 +44,7 @@
 </template>
 
 <script lang="ts">
+import * as bip39 from 'bip39';
 import { defineComponent } from 'vue';
 
 import Button from '@/components/ui/Button.vue';
@@ -59,10 +67,14 @@ export default defineComponent({
     invalidRecoveryPhraseWarning: false,
     infoOpen: false,
     invalidChar: false,
+    unknownWords: [],
   }),
   watch: {
     mnemonic(mnemonic) {
       this.invalidChar = !/^[a-z\s]*$/.test(mnemonic);
+
+      const wordList = mnemonicFormat(this.mnemonic).split(' ');
+      this.unknownWords = wordList.filter((word) => !bip39.wordlists.english.includes(word));
 
       this.$store.dispatch(GlobalActionTypes.SET_PARTIAL_ACCOUNT_CREATION, {
         wallet: {
