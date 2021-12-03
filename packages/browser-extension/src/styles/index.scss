@@ -1,0 +1,33 @@
+// pages
+
+body,
+#app {
+  height: 100%;
+  width: 100%;
+  margin: 0;
+}
+
+#app {
+    padding: 24px;
+}
+
+@font-face {
+  font-family: Inter;
+  src: url('~@@/fonts/Inter.ttf') format('font-truetype');
+}
+
+// buttons
+
+.button-secondary {
+    /* light/surface */
+    border: 2px solid #FFFFFF;
+    box-sizing: border-box;
+    border-radius: 10px;
+
+    color: #FFFFFF;
+    background: black;
+}
+
+.button-link {
+    color: #FFFFFF;
+}

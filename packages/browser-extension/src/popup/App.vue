@@ -20,7 +20,7 @@ export default defineComponent({
       const wallets = await store.dispatch(GlobalActionTypes.GET_WALLETS);
 
       if (!wallet && wallets.length == 0) {
-        router.push('/create');
+        router.push('/welcome');
       }
       if (!wallet && wallets.length > 0) {
         router.push('/unlock');

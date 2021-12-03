@@ -3,6 +3,7 @@ import { createRouter, createWebHashHistory, RouteRecordRaw } from 'vue-router';
 import Home from '../views/Home.vue';
 import Create from '../views/Create.vue';
 import Unlock from '../views/Unlock.vue';
+import Welcome from '../views/Welcome.vue';
 
 const routes: Array<RouteRecordRaw> = [
   {
@@ -19,6 +20,11 @@ const routes: Array<RouteRecordRaw> = [
     path: '/unlock',
     name: 'Unlock Wallet',
     component: Unlock,
+  },
+  {
+    path: '/welcome',
+    name: 'Welcome',
+    component: Welcome,
   },
 ];
 
