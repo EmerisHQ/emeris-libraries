@@ -1,29 +1,36 @@
-export type Denom = {
-	name: string;
-	displayName: string;
-	denom: string;
-	baseDenom: string;
-	precision: number;
-}
-
+import { Static, Type } from "@sinclair/typebox";
+export  const Denom = Type.Object({
+	name: Type.String(),
+	displayName: Type.String(),
+	denom: Type.String(),
+	baseDenom: Type.String(),
+	precision: Type.Number()
+});
 export enum DEX {
 	Gravity = 'gravity',
 	Osmosis = 'osmosis',
 	Sifchain = 'sifchain'
 }
-
-export type Pool = {
-	name: string;
-	id: string;
-	chainId: string;
-	protocol: DEX;
-	denomA: Denom;
-	denomB: Denom;
-	poolPrice: string;
+export enum SwapType {
+	Pool = 'pool',
+	Swap = 'swap'
 }
+export  const Swap = Type.Object({
+	name: Type.String(),
+	id: Type.String(),
+	chainId: Type.String(),
+	protocol: Type.Enum(DEX),
+	denomA: Denom,
+	denomB: Denom,
+	swapPrice: Type.String(),
+	swapType: Type.Enum(SwapType)
+});
+export  const Swaps = Type.Array(Swap);
 
-export type Pools = Pool[];
-
-export type PoolsResponse = {
-	pools: Pools;
-}
+export const SwapsResponse = Type.Object({
+  swaps: Swaps
+});
+export type Denom = Static<typeof Denom>;
+export type Swap = Static<typeof Swap>;
+export type Swaps = Static<typeof Swaps>;
+export type SwapsResponse = Static<typeof SwapsResponse>;
