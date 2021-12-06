@@ -11,6 +11,7 @@
 <script lang="ts">
 import { useExtensionStore } from '@@/store';
 import { GlobalActionTypes } from '@@/store/extension/action-types';
+import { WalletCreateStates } from '@@/types';
 import * as bip39 from 'bip39';
 import { defineComponent, ref } from 'vue';
 import { useRouter } from 'vue-router';
@@ -31,7 +32,7 @@ export default defineComponent({
       if (validatePassword()) {
         mnemonic.value = bip39.generateMnemonic(256);
         const wallet = await store.dispatch(GlobalActionTypes.CREATE_WALLET, {
-          wallet: { walletMnemonic: mnemonic.value, walletName: walletName.value },
+          wallet: { walletMnemonic: mnemonic.value, walletName: walletName.value, setupState: WalletCreateStates.CREATED },
           password: password.value,
         });
         if (wallet) {

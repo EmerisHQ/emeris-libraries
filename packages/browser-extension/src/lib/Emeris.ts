@@ -118,6 +118,17 @@ export class Emeris implements IEmeris {
         await this.storage.saveWallet(message.data.data.wallet, message.data.data.password);
         this.wallet = message.data.data.wallet;
         return this.wallet;
+      case 'updateWallet':
+        if (message.data.data.wallet.walletMnemonic == 'ledger') {
+          try {
+            await navigator['usb'].requestDevice({ filters: [] });
+          } catch (e) {
+            console.log(e);
+          }
+        }
+        await this.storage.updateWallet(message.data.data.wallet, message.data.data.password);
+        this.wallet = message.data.data.wallet;
+        return this.wallet;
       case 'getWallet':
         return this.wallet;
       case 'unlockWallet':

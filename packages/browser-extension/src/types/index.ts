@@ -4,10 +4,16 @@ export type EmerisEncryptedWallet = {
   walletName: string;
   walletData: string;
 };
+export enum WalletCreateStates {
+  CREATED = 0, // Mnemonic saved
+  CONFIRMED = 1, // Mnemonic re-entered
+  COMPLETE = 2 // All steps complete
+}
 export type EmerisWallet = {
   walletName: string;
   walletMnemonic: string;
   lastUsedChain?: string;
+  setupState: WalletCreateStates;
 };
 export type EmerisPermission = {
   origin: string;

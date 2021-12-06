@@ -54,6 +54,24 @@ export default class EmerisStorage {
   async setLastWallet(walletName: string): Promise<void> {
     await browser.storage[this.storageMode].set({ lastWallet: walletName });
   }
+  async updateWallet(wallet: EmerisWallet, password: string): Promise<boolean> {
+    try {
+      const encryptedWallet = CryptoJS.AES.encrypt(JSON.stringify(wallet), password).toString();
+
+      const result = await browser.storage[this.storageMode].get('wallets');
+      if (!result.wallets) {
+        result.wallets = [];
+      }
+      const wallets = result.wallets.filter(x => x.walletName != wallet.walletName);
+      wallets.push({ walletName: wallet.walletName, walletData: encryptedWallet });
+      await browser.storage[this.storageMode].set({ wallets: result.wallets });
+      await browser.storage[this.storageMode].set({ lastWallet: wallet.walletName });
+      return true;
+    } catch (e) {
+      console.log(e);
+      throw new SaveWalletError('Could not save wallet: ' + e);
+    }
+  }
   async saveWallet(wallet: EmerisWallet, password: string): Promise<boolean> {
     try {
       const encryptedWallet = CryptoJS.AES.encrypt(JSON.stringify(wallet), password).toString();

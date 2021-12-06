@@ -21,6 +21,10 @@ export interface Actions {
     { commit }: ActionContext<State, RootState>,
     { wallet, password }: { wallet: EmerisWallet; password: string },
   ): Promise<EmerisWallet>;
+  [ActionTypes.UPDATE_WALLET](
+    { commit }: ActionContext<State, RootState>,
+    { wallet, password }: { wallet: EmerisWallet; password: string },
+  ): Promise<EmerisWallet>;
   [ActionTypes.UNLOCK_WALLET](
     { commit }: ActionContext<State, RootState>,
     { walletName, password }: { walletName: string; password: string },
@@ -47,6 +51,17 @@ export const actions: ActionTree<State, RootState> & Actions = {
     const response = await browser.runtime.sendMessage({
       type: 'fromPopup',
       data: { action: 'createWallet', data: { wallet, password } },
+    });
+    commit(MutationTypes.SET_WALLET, response as EmerisWallet);
+    return getters['getWallet'];
+  },
+  async [ActionTypes.UPDATE_WALLET](
+    { commit, getters },
+    { wallet, password }: { wallet: EmerisWallet; password: string },
+  ) {
+    const response = await browser.runtime.sendMessage({
+      type: 'fromPopup',
+      data: { action: 'updateWallet', data: { wallet, password } },
     });
     commit(MutationTypes.SET_WALLET, response as EmerisWallet);
     return getters['getWallet'];

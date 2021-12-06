@@ -81,6 +81,13 @@ export type CreateWalletRequest = Request & {
     password: string;
   };
 };
+export type UpdateWalletRequest = Request & {
+  action: 'updateWallet';
+  data: {
+    wallet: EmerisWallet;
+    password: string;
+  };
+};
 export type UnlockWalletRequest = Request & {
   action: 'unlockWallet';
   data: {
@@ -107,6 +114,7 @@ export type ExtensionRequest =
 export type PopupRequest =
   | GetPendingRequest
   | CreateWalletRequest
+  | UpdateWalletRequest
   | UnlockWalletRequest
   | GetWalletRequest
   | GetWalletsRequest
