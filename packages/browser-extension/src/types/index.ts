@@ -9,7 +9,8 @@ export type EmerisWallet = {
   walletMnemonic: string;
   lastUsedChain?: string;
   backedUp?: boolean;
-  hdPath?: string
+  hdPath?: string;
+  keyHash: string
 };
 export type EmerisPermission = {
   origin: string;

@@ -1,7 +1,7 @@
 <template>
   <div class="page">
     <img
-      :src="require(`@@/assets/WelcomeBG.png`)"
+      :src="require(`@@/assets/PortfolioBG.png`)"
       :style="{
         position: 'fixed',
         zIndex: -1,
@@ -32,16 +32,26 @@
     </div>
 
     <h1 style="font-size: 21px; text-align: left; margin-top: 56px; margin-bottom: 24px">Assets</h1>
-    <div class="list-card-container" style="margin-bottom: 16px">
-      <h2>Purchase crypto</h2>
-      <span class="secondary-text">Powered by Moonpay</span>
-      <img :src="require('@@/assets/MoonpayListItemGraphic.svg')" />
-    </div>
-    <div class="list-card-container">
-      <h2>Deposit assets</h2>
-      <span class="secondary-text">From another wallet</span>
-      <img :src="require('@@/assets/DepositListItemGraphic.svg')" />
-    </div>
+    <AssetsTable
+      v-if="balances && balances.length > 0 && verifiedDenoms"
+      :balances="balances"
+      :hide-zero-assets="true"
+      variant="balance"
+      :show-headers="false"
+      :limit-rows="4"
+    />
+    <template v-else>
+      <div class="list-card-container" style="margin-bottom: 16px">
+        <h2>Purchase crypto</h2>
+        <span class="secondary-text">Powered by Moonpay</span>
+        <img :src="require('@@/assets/MoonpayListItemGraphic.svg')" />
+      </div>
+      <div class="list-card-container">
+        <h2>Deposit assets</h2>
+        <span class="secondary-text">From another wallet</span>
+        <img :src="require('@@/assets/DepositListItemGraphic.svg')" />
+      </div>
+    </template>
   </div>
 </template>
 
@@ -49,8 +59,10 @@
 import { defineComponent } from 'vue';
 import Button from '@/components/ui/Button.vue';
 import Icon from '@/components/ui/Icon.vue';
+import AssetsTable from '@/components/assets/AssetsTable/AssetsTable.vue';
 import { mapState } from 'vuex';
 import { RootState } from '@@/store';
+import { GlobalGetterTypes } from '@@/store/extension/getter-types';
 
 export default defineComponent({
   name: 'Portfolio',
@@ -58,10 +70,17 @@ export default defineComponent({
     ...mapState({
       wallet: (state: RootState) => state.extension.wallet,
     }),
+    balances() {
+      return this.$store.getters[GlobalGetterTypes.getAllBalances];
+    },
+    verifiedDenoms() {
+      return this.$store.getters['demeris/getVerifiedDenoms'];
+    },
   },
   components: {
     Button,
     Icon,
+    AssetsTable,
   },
   methods: {},
 });
@@ -86,6 +105,7 @@ export default defineComponent({
   align-items: flex-start;
   padding: 24px;
   height: 90px;
+  cursor: pointer;
 
   background: linear-gradient(0deg, #171717 0%, #040404 100%);
 

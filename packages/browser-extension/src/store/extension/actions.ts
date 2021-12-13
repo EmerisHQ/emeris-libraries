@@ -4,6 +4,11 @@ import { State } from './state';
 import { RootState } from '..';
 import { EmerisEncryptedWallet, EmerisWallet, ExtensionRequest } from '@@/types/index';
 import { MutationTypes } from './mutation-types';
+import { keyHashfromAddress } from '@/utils/basic';
+import { Secp256k1HdWallet } from "@cosmjs/amino";
+import { DemerisActionTypes, GlobalDemerisActionTypes } from '@/store/demeris/action-types';
+import { DemerisMutationTypes } from '@/store/demeris/mutation-types';
+
 type Namespaced<T, N extends string> = {
   [P in keyof T & string as `${N}/${P}`]: T[P];
 };
@@ -81,7 +86,7 @@ export const actions: ActionTree<State, RootState> & Actions = {
     return getters['getWallet'];
   },
   async [ActionTypes.UNLOCK_WALLET](
-    { commit, getters },
+    { commit, getters, dispatch },
     { walletName, password }: { walletName: string; password: string },
   ) {
     try {
@@ -91,6 +96,19 @@ export const actions: ActionTree<State, RootState> & Actions = {
       });
       if (wallet) {
         commit(MutationTypes.SET_WALLET, wallet as EmerisWallet);
+
+        // TODO refactor into actions
+
+        commit("demeris/" + DemerisMutationTypes.INIT, { endpoint: process.env.VUE_APP_EMERIS_ENDPOINT }, { root: true })
+
+
+        // HACK to demo
+
+        // const hdWallet = await Secp256k1HdWallet.fromMnemonic(wallet.walletMnemonic, /* config for hdPath and prefix go here */)
+        // const [{ address }] = await hdWallet.getAccounts()
+        // const keyHash = keyHashfromAddress(address)
+        const keyHash = "7ee143fd1d91345128da542f27ccd8d0e3d78fc0"
+        await dispatch(GlobalDemerisActionTypes.GET_BALANCES, { subscribe: true, params: { address: keyHash } }, { root: true })
       }
     } catch (e) {
       console.log(e);
@@ -98,11 +116,14 @@ export const actions: ActionTree<State, RootState> & Actions = {
     }
     return getters['getWallet'];
   },
-  async [ActionTypes.GET_WALLETS]({ commit, getters }) {
+  async [ActionTypes.GET_WALLETS]({ commit, dispatch, getters }) {
     try {
       const wallets = await browser.runtime.sendMessage({ type: 'fromPopup', data: { action: 'getWallets' } });
       if (wallets) {
         commit(MutationTypes.SET_WALLETS, wallets as EmerisEncryptedWallet[]);
+
+        // HACK
+        await dispatch(ActionTypes.UNLOCK_WALLET, { walletName: wallets[0].walletName, password: '' })
       }
     } catch (e) {
       throw new Error('Extension:GetWallets failed');

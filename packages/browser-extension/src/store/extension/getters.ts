@@ -3,6 +3,7 @@ import { GetterTree } from 'vuex';
 import { GetterTypes, GlobalGetterTypes } from './getter-types';
 import { State } from './state';
 import { RootState } from '..';
+import { parseCoins } from '@/utils/basic';
 export interface Getters {
   [GetterTypes.getPending](state: State): ExtensionRequest[];
   [GetterTypes.getWallet](state: State): EmerisWallet;
@@ -30,5 +31,14 @@ export const getters: GetterTree<State, RootState> & Getters = {
   },
   [GetterTypes.getWallets]: (state) => {
     return state.wallets;
+  },
+  // accessing rootState doesn't allow for isolating each module, but this way we don't need to change the demeris module
+  [GetterTypes.getAllBalances]: (state, getters, rootState) => {
+    const balances = Object.values(rootState.demeris.balances)
+      .filter((balance) => balance !== null)
+      .flat()
+      .filter((balance) => state.wallet.keyHash === balance.address)
+      .filter((balance) => parseCoins(balance.amount)[0].amount != '0');
+    return balances.length > 0 ? balances : null;
   },
 };
