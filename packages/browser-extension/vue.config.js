@@ -47,5 +47,11 @@ module.exports = {
       .alias
       .set('@', path.resolve(__dirname, 'demeris/src'))
       .set('@@', path.resolve(__dirname, 'src'));
+
+    config.resolve.symlinks(false)
+    config.resolve.alias.set('vue', path.resolve('./node_modules/vue'))
   },
+  transpileDependencies: [
+    '@starport/tendermint-liquidity-js',
+  ]
 };
