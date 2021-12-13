@@ -25,7 +25,9 @@
       @click="$router.push('/accounts')"
       >{{ wallet.walletName }} <Icon name="ChevronRightIcon" :icon-size="1"
     /></span>
-    <h1 style="font-size: 38px; text-align: left; margin-bottom: 24px">{{ '$0.00' }}</h1>
+    <h1 style="font-size: 38px; text-align: left; margin-bottom: 24px">
+      <TotalPrice :balances="balances" small-decimals />
+    </h1>
     <div style="display: flex">
       <Button name="Receive" style="margin-right: 12px; flex: 1" />
       <Button name="Send" variant="secondary" style="flex: 1" />
@@ -60,6 +62,7 @@ import { defineComponent } from 'vue';
 import Button from '@/components/ui/Button.vue';
 import Icon from '@/components/ui/Icon.vue';
 import AssetsTable from '@/components/assets/AssetsTable/AssetsTable.vue';
+import TotalPrice from '@/components/common/TotalPrice';
 import { mapState } from 'vuex';
 import { RootState } from '@@/store';
 import { GlobalGetterTypes } from '@@/store/extension/getter-types';
@@ -81,6 +84,7 @@ export default defineComponent({
     Button,
     Icon,
     AssetsTable,
+    TotalPrice,
   },
   methods: {},
 });
@@ -131,4 +135,22 @@ export default defineComponent({
     font-size: 13px;
   }
 }
+
+// :deep(.assets-table__row) {
+//   position: relative;
+
+//   & > :nth-child(2) {
+//     position: relative;
+//     right: 52px;
+//     opacity: 0.6;
+//     top: 29px;
+//     display: block;
+//     text-align: left;
+//   }
+
+//   & > :nth-child(1) > div > :nth-child(2) {
+//     position: relative;
+//     top: -10px;
+//   }
+// }
 </style>
