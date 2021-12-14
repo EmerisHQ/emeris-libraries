@@ -1,5 +1,5 @@
 import { IEmeris } from '@@/types/emeris';
-import { EmerisWallet } from '@@/types';
+import { EmerisAccount, EmerisWallet } from '@@/types';
 import { v4 as uuidv4 } from 'uuid';
 import EmerisStorage from './EmerisStorage';
 import config from '../chain-config';
@@ -9,7 +9,7 @@ import * as CryptoJS from 'crypto-js';
 import {
   GetAddressRequest,
   GetPublicKeyRequest,
-  GetWalletNameRequest,
+  GetAccountNameRequest,
   HasWalletRequest,
   IsHWWalletRequest,
   SignTransactionRequest,
@@ -25,6 +25,7 @@ export class Emeris implements IEmeris {
   public loaded: boolean;
   private storage: EmerisStorage;
   private wallet: EmerisWallet;
+  private selectedAccount: string;
   private popup: number;
   private queuedRequests: Map<
     string,
@@ -41,7 +42,6 @@ export class Emeris implements IEmeris {
   }
   reset(): void {
     if (this.timeoutLock) {
-      console.log('reset?');
       clearTimeout(this.timeoutLock);
       this.timeoutLock = setTimeout(() => {
         this.lock();
@@ -49,29 +49,23 @@ export class Emeris implements IEmeris {
     }
   }
   lock(): void {
-    console.log('here');
-    console.log(this.wallet);
     clearTimeout(this.timeoutLock);
     this.timeoutLock = null;
     this.wallet = null;
-    console.log(this.wallet);
+    this.selectedAccount=null;
   }
-  async unlockWallet(walletName: string, password: string): Promise<EmerisWallet> {
-    try {
-      const wallets = await this.storage.getWallets();
-      const encryptedWallet = wallets.find((x) => x.walletName == walletName);
+  async unlockWallet(password: string): Promise<EmerisWallet> {
+    try {      
+      const encryptedWallet = await this.storage.getWallet();
       if (encryptedWallet) {
         this.wallet = JSON.parse(
           CryptoJS.AES.decrypt(encryptedWallet.walletData, password).toString(CryptoJS.enc.Utf8),
         );
-        await this.storage.setLastWallet(this.wallet.walletName);
         this.timeoutLock = setTimeout(() => {
           this.lock();
         }, 120000);
-        console.log(this.wallet);
         return this.wallet;
       } else {
-        console.log('?');
         throw new UnlockWalletError('Wallet not found');
       }
     } catch (e) {
@@ -100,6 +94,9 @@ export class Emeris implements IEmeris {
     const resp = await response;
     return resp;
   }
+  getAccount() {
+    return this.wallet.find(x => x.accountName==this.selectedAccount);
+  }
   async popupHandler(message: RoutedInternalRequest): Promise<unknown> {
     let request;
     console.log(message);
@@ -107,35 +104,40 @@ export class Emeris implements IEmeris {
     switch (message?.data.action) {
       case 'getPending':
         return this.pending;
-      case 'createWallet':
-        if (message.data.data.wallet.walletMnemonic == 'ledger') {
+      case 'setLastAccount':
+        if (message.data.data.accountName) {
+          try {
+            await this.storage.setLastAccount(message.data.data.accountName);
+          }catch(e) {
+            console.log(e);
+          }
+        }
+        break;
+      case 'createAccount':
+        await this.storage.saveAccount(message.data.data.account, message.data.data.password);
+        if (message.data.data.account.accountMnemonic == 'ledger') {
           try {
             await navigator['usb'].requestDevice({ filters: [] });
           } catch (e) {
             console.log(e);
+            break;
           }
         }
-        await this.storage.saveWallet(message.data.data.wallet, message.data.data.password);
-        this.wallet = message.data.data.wallet;
-        return this.wallet;
-      case 'updateWallet':
-        if (message.data.data.wallet.walletMnemonic == 'ledger') {
-          try {
-            await navigator['usb'].requestDevice({ filters: [] });
-          } catch (e) {
-            console.log(e);
-          }
-        }
-        await this.storage.updateWallet(message.data.data.wallet, message.data.data.password);
-        this.wallet = message.data.data.wallet;
-        return this.wallet;
+        this.wallet = await this.unlockWallet(message.data.data.password);
+        this.selectedAccount = message.data.data.account.accountName;
+        return this.getAccount();
+      case 'updateAccount':
+        await this.storage.updateAccount(message.data.data.account, message.data.data.password);
+        this.wallet = await this.unlockWallet(message.data.data.password);
+        this.selectedAccount = message.data.data.account.accountName;
+        return this.getAccount();
       case 'getWallet':
         return this.wallet;
       case 'unlockWallet':
-        this.wallet = await this.unlockWallet(message.data.data.walletName, message.data.data.password);
+        this.wallet = await this.unlockWallet(message.data.data.password);
         return this.wallet;
-      case 'getWallets':
-        return await this.storage.getWallets();
+      case 'getAccounts':
+        return await this.wallet;
       case 'setResponse':
         request = this.queuedRequests.get(message.data.data.id);
         if (!request) {
@@ -202,12 +204,10 @@ export class Emeris implements IEmeris {
   async supportedChains(_req: SupportedChainsRequest): Promise<string[]> {
     return Object.keys(config);
   }
-  async getWalletName(_req: GetWalletNameRequest): Promise<string> {
-    if (!this.wallet) {
-      return null;
-    } else {
-      return this.wallet.walletName;
-    }
+  async getAccountName(_req: GetAccountNameRequest): Promise<string> {
+    
+      return this.selectedAccount;
+    
   }
   async hasWallet(_req: HasWalletRequest): Promise<boolean> {
     return !!this.wallet;

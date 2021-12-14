@@ -2,7 +2,7 @@ import {
   SignTransactionRequest,
   SignAndBroadcastTransactionRequest,
   GetPublicKeyRequest,
-  GetWalletNameRequest,
+  GetAccountNameRequest,
   IsHWWalletRequest,
   SupportedChainsRequest,
   GetAddressRequest,
@@ -17,7 +17,7 @@ export interface IEmeris {
   getPublicKey?: (arg: string | GetPublicKeyRequest) => Promise<Uint8Array>;
   isHWWallet?: (arg?: IsHWWalletRequest) => Promise<boolean>;
   supportedChains?: (arg?: SupportedChainsRequest) => Promise<string[]>;
-  getWalletName?: (arg?: GetWalletNameRequest) => Promise<string>;
+  getAccountName?: (arg?: GetAccountNameRequest) => Promise<string>;
   hasWallet?: (arg?: HasWalletRequest) => Promise<boolean>;
   enable?: (arg?: ApproveOriginRequest) => Promise<boolean>;
   signTransaction?: (arg: { tx: AbstractTx; chainId: string } | SignTransactionRequest) => Promise<Uint8Array>;
