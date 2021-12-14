@@ -4,10 +4,10 @@
         "allowSyntheticDefaultImports": false,
         "baseUrl": "./",
         "paths": {
-            "@/*": [
+            "@@/*": [
                 "src/*"
             ],
-            "@@/*": [
+            "@/*": [
                 "demeris/src/*"
             ],
         }
