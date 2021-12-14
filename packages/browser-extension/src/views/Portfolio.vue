@@ -23,7 +23,7 @@
       class="secondary-text account-selector"
       style="margin-bottom: 8px; cursor: pointer"
       @click="$router.push('/accounts')"
-      >{{ wallet.walletName }} <Icon name="ChevronRightIcon" :icon-size="1"
+      >{{ wallet ? wallet.walletName : 'Loading...' }} <Icon name="ChevronRightIcon" :icon-size="1"
     /></span>
     <h1 style="font-size: 38px; text-align: left; margin-bottom: 24px">
       <TotalPrice :balances="balances" small-decimals />
@@ -62,7 +62,7 @@ import { defineComponent } from 'vue';
 import Button from '@/components/ui/Button.vue';
 import Icon from '@/components/ui/Icon.vue';
 import AssetsTable from '@/components/assets/AssetsTable/AssetsTable.vue';
-import TotalPrice from '@/components/common/TotalPrice';
+import TotalPrice from '@/components/common/TotalPrice.vue';
 import { mapState } from 'vuex';
 import { RootState } from '@@/store';
 import { GlobalGetterTypes } from '@@/store/extension/getter-types';
