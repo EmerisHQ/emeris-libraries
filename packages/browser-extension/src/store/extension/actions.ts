@@ -6,8 +6,8 @@ import { EmerisEncryptedWallet, EmerisWallet, ExtensionRequest } from '@@/types/
 import { MutationTypes } from './mutation-types';
 import { keyHashfromAddress } from '@/utils/basic';
 import { Secp256k1HdWallet } from "@cosmjs/amino";
-import { DemerisActionTypes, GlobalDemerisActionTypes } from '@/store/demeris/action-types';
-import { DemerisMutationTypes } from '@/store/demeris/mutation-types';
+import { GlobalDemerisActionTypes } from '@/store/demeris-api/action-types';
+import { DemerisMutationTypes } from '@/store/demeris-api/mutation-types';
 
 type Namespaced<T, N extends string> = {
   [P in keyof T & string as `${N}/${P}`]: T[P];
@@ -99,7 +99,7 @@ export const actions: ActionTree<State, RootState> & Actions = {
 
         // TODO refactor into actions
 
-        commit("demeris/" + DemerisMutationTypes.INIT, { endpoint: process.env.VUE_APP_EMERIS_ENDPOINT }, { root: true })
+        commit("demerisAPI/" + DemerisMutationTypes.INIT, { endpoint: process.env.VUE_APP_EMERIS_ENDPOINT }, { root: true })
 
 
         // HACK to demo
