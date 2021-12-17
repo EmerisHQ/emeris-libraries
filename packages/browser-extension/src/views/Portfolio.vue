@@ -65,7 +65,7 @@ import AssetsTable from '@/components/assets/AssetsTable/AssetsTable.vue';
 import TotalPrice from '@/components/common/TotalPrice.vue';
 import { mapState } from 'vuex';
 import { RootState } from '@@/store';
-import { GlobalGetterTypes } from '@@/store/extension/getter-types';
+import { GlobalDemerisGetterTypes } from '@/store';
 
 export default defineComponent({
   name: 'Portfolio',
@@ -74,10 +74,10 @@ export default defineComponent({
       wallet: (state: RootState) => state.extension.wallet,
     }),
     balances() {
-      return this.$store.getters[GlobalGetterTypes.getAllBalances];
+      return this.$store.getters[GlobalDemerisGetterTypes.API.getAllBalances];
     },
     verifiedDenoms() {
-      return this.$store.getters['demeris/getVerifiedDenoms'];
+      return this.$store.getters[GlobalDemerisGetterTypes.API.getVerifiedDenoms];
     },
   },
   components: {
