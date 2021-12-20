@@ -4,4 +4,3 @@ import * as EmerisDEXInfo from './EmerisDEXInfo';
 import * as EmerisFees from './EmerisFees';
 import * as EmerisTransactions from './EmerisTransactions';
 export { EmerisAPI, EmerisBase, EmerisDEXInfo, EmerisFees, EmerisTransactions };
-//# sourceMappingURL=index.d.ts.map
