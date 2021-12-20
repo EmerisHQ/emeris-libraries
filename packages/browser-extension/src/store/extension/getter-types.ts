@@ -1,10 +1,10 @@
 export enum GetterTypes {
   getPending = 'getPending',
   getWallet = 'getWallet',
-  getWallets = 'getWallets',
+  getLastAccount = 'getLastAccount',
 }
 export enum GlobalGetterTypes {
   getPending = 'extension/getPending',
   getWallet = 'extension/getWallet',
-  getWallets = 'extension/getWallets',
+  getLastAccount = 'extension/getLastAccount',
 }

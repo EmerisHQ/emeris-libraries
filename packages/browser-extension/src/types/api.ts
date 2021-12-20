@@ -71,14 +71,14 @@ export type GetPendingRequest = Request & {
 export type GetWalletRequest = Request & {
   action: 'getWallet';
 };
-export type GetAccountsRequest = Request & {
-  action: 'getAccounts';
-};
 export type SetLastAccountRequest =  Request & {
   action: 'setLastAccount';
   data: {
     accountName: string;
   };
+};
+export type GetLastAccountRequest = Request & {
+  action: 'getLastAccount';
 };
 export type CreateAccountRequest = Request & {
   action: 'createAccount';
@@ -123,7 +123,7 @@ export type PopupRequest =
   | SetLastAccountRequest
   | UnlockWalletRequest
   | GetWalletRequest
-  | GetAccountsRequest
+  | GetLastAccountRequest
   | SetResponseRequest;
 export type RoutedExternalRequest = {
   type: 'toEmerisExtension' | 'toPopup';

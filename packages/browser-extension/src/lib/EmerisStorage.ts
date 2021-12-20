@@ -34,7 +34,17 @@ export default class EmerisStorage {
       return false;
     }
   }
-  async getWallet(): Promise<EmerisEncryptedWallet> {
+  async deletePermission(origin: string): Promise<boolean> {
+    try {
+      const result = await browser.storage[this.storageMode].get('permissions');
+      const newPermissions = result.permissions.filter((permission => permission.origin != origin));
+      await browser.storage[this.storageMode].set({ permissions: newPermissions });
+      return true;
+    } catch (e) {
+      return false;
+    }
+  }
+  private async getWallet(): Promise<EmerisEncryptedWallet> {
     const result = await browser.storage[this.storageMode].get('wallet');
     if (result.wallet) {
       return result.wallet;
@@ -42,30 +52,24 @@ export default class EmerisStorage {
       return null;
     }
   }
-  async getLastAccount(): Promise<EmerisEncryptedWallet | null> {
-    const result = await browser.storage[this.storageMode].get('wallets');
-    if (result.wallets) {
-      const res = await browser.storage[this.storageMode].get('lastAccount');
-      return result.wallets.find((wallet) => wallet.walletName == res.lastWallet) ?? result.wallets[0];
-    } else {
-      return null;
-    }
+  async getLastAccount(): Promise<string | null> {   
+    
+    const res = await browser.storage[this.storageMode].get('lastAccount');
+    return res.lastAccount ?? null;
+    
   }
   async setLastAccount(accountName: string): Promise<void> {
+
     await browser.storage[this.storageMode].set({ lastAccount: accountName });
+
   }
   async updateAccount(account: EmerisAccount, password: string): Promise<boolean> {
     try {
-      
-      const wallet = await this.unlockWallet(await this.getWallet(),password);
-      
-      const accounts = wallet.filter(x => x.accountName != account.accountName);
-
+      const wallet = await this.unlockWallet(password);
+      const accounts = wallet.filter((x) => x.accountName != account.accountName);
       accounts.push(account);
-      const encryptedWallet = CryptoJS.AES.encrypt(JSON.stringify(accounts), password).toString();
-
-      await browser.storage[this.storageMode].set({ wallet: {walletData: encryptedWallet} });
-      await browser.storage[this.storageMode].set({ lastAccount: account.accountName });
+      await this.saveWallet(accounts, password);
+      await this.setLastAccount(account.accountName);
       return true;
     } catch (e) {
       console.log(e);
@@ -74,36 +78,35 @@ export default class EmerisStorage {
   }
   async saveAccount(account: EmerisAccount, password: string): Promise<boolean> {
     try {
-      const wallet = await this.unlockWallet(await this.getWallet(),password);
+      const wallet = await this.unlockWallet(password);
       wallet.push(account);
-      const encryptedWallet = CryptoJS.AES.encrypt(JSON.stringify(wallet), password).toString();
-
-      
-      await browser.storage[this.storageMode].set({ wallet: {walletData: encryptedWallet}});
-      await browser.storage[this.storageMode].set({ lastAccount: account.accountName });
+      await this.saveWallet(wallet, password);
+      await this.setLastAccount(account.accountName);
       return true;
     } catch (e) {
       console.log(e);
       throw new SaveWalletError('Could not save wallet: ' + e);
     }
   }
-  async saveWallet(wallet: EmerisWallet, password: string): Promise<boolean> {
+  private async saveWallet(wallet: EmerisWallet, password: string): Promise<boolean> {
     try {
       const encryptedWallet = CryptoJS.AES.encrypt(JSON.stringify(wallet), password).toString();
-
-      await browser.storage[this.storageMode].set({ wallet: {walletData: encryptedWallet} });      
+      await browser.storage[this.storageMode].set({ wallet: { walletData: encryptedWallet } });
       return true;
     } catch (e) {
       console.log(e);
       throw new SaveWalletError('Could not save wallet: ' + e);
     }
   }
-  async unlockWallet(encryptedWallet: EmerisEncryptedWallet, password: string): Promise<EmerisWallet> {
+  async unlockWallet(password: string): Promise<EmerisWallet> {
     try {
-      const wallet = JSON.parse(CryptoJS.AES.decrypt(encryptedWallet.walletData, password).toString(CryptoJS.enc.Utf8));      
+      const encWallet = await this.getWallet();
+      if (!encWallet) {
+        return [];
+      }
+      const wallet = JSON.parse(CryptoJS.AES.decrypt(encWallet.walletData, password).toString(CryptoJS.enc.Utf8));
       return wallet;
     } catch (e) {
-      console.log(e);
       throw new UnlockWalletError('Could not unlock wallet: ' + e);
     }
   }
