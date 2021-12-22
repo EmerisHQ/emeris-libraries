@@ -136,21 +136,41 @@ export default defineComponent({
   }
 }
 
-// :deep(.assets-table__row) {
-//   position: relative;
+// HACK should be incorporated in demeris component
+:deep(.assets-table__row) {
+  position: relative;
+  display: flex;
+  width: 100%;
 
-//   & > :nth-child(2) {
-//     position: relative;
-//     right: 52px;
-//     opacity: 0.6;
-//     top: 29px;
-//     display: block;
-//     text-align: left;
-//   }
+  td:nth-child(2) {
+    position: absolute;
+    left: 70px;
+    top: 18px;
+    text-align: left;
+    opacity: 0.67;
+    width: 1px;
+    font-size: 13px;
+  }
 
-//   & > :nth-child(1) > div > :nth-child(2) {
-//     position: relative;
-//     top: -10px;
-//   }
-// }
+  td:nth-child(1) {
+    width: 175px;
+  }
+
+  td:nth-child(1) > div > :nth-child(2) {
+    position: relative;
+    top: -10px;
+  }
+
+  td:nth-child(3) {
+    width: 125px;
+  }
+
+  td:nth-child(4) {
+    display: flex;
+
+    span:nth-child(2) {
+      display: none;
+    }
+  }
+}
 </style>
