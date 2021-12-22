@@ -1,6 +1,11 @@
 <template>
   <div class="page">
-    <Header title="" />
+    <Header title="">
+      <template v-slot:backButton>
+        <!-- TODO add icon to Demeris -->
+        <img :src="require('@@/assets/CoqIcon.svg')" @click="$router.push('/settings')" />
+      </template>
+    </Header>
     <img
       style="height: 72px; width: 72px; margin-top: 40px; margin-left: auto; margin-right: auto"
       :src="require('@@/assets/Avatar.svg')"
@@ -65,6 +70,7 @@ export default defineComponent({
   align-items: flex-start;
   padding: 24px;
   height: 90px;
+  cursor: pointer;
 
   background: linear-gradient(0deg, #171717 0%, #040404 100%);
 
