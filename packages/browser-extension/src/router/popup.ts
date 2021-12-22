@@ -26,6 +26,9 @@ import Portfolio from '../views/Portfolio.vue';
 import Settings from '../views/Settings.vue';
 import WhitelistedPages from '../views/WhitelistedPages.vue';
 import WhitelistedPageRemove from '../views/WhitelistedPageRemove.vue';
+import Security from '../views/Security.vue';
+import PasswordChangeOld from '../views/PasswordChangeOld.vue';
+import PasswordChangeNew from '../views/PasswordChangeNew.vue';
 
 const routes: Array<RouteRecordRaw> = [
   {
@@ -165,6 +168,21 @@ const routes: Array<RouteRecordRaw> = [
     name: 'Whitelisted Page Remove',
     component: WhitelistedPageRemove,
     props: true
+  },
+  {
+    path: '/security',
+    name: 'Security',
+    component: Security,
+  },
+  {
+    path: '/passwordChange/old',
+    name: 'Password Change Old',
+    component: PasswordChangeOld,
+  },
+  {
+    path: '/passwordChange/new',
+    name: 'Password Change New',
+    component: PasswordChangeNew,
   },
 ];
 

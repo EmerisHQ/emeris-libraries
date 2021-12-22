@@ -1,0 +1,116 @@
+<template>
+  <span class="secondary-text" style="margin-top: 16px; margin-bottom: 24px"
+    >You will need this password to unlock the extension</span
+  >
+  <div
+    style="margin-bottom: 16px"
+    :class="{
+      error: password && (!length || !upperCaseChar || !symbolChar || !digitChar),
+      success: password && length && upperCaseChar && symbolChar && digitChar,
+    }"
+  >
+    <Input v-model="password" placeholder="Enter a Password" />
+  </div>
+  <div
+    style="margin-bottom: 24px"
+    :class="{
+      error: passwordRepeated && !match,
+      success: passwordRepeated && match,
+    }"
+  >
+    <Input v-model="passwordRepeated" placeholder="Confirm Password" />
+  </div>
+  <span class="form-info" :class="{ error: password && !length, success: password && length }"
+    >Minimum 8 characters</span
+  >
+  <span class="form-info" :class="{ error: password && !upperCaseChar, success: password && upperCaseChar }"
+    >At least one upper case</span
+  >
+  <span class="form-info" :class="{ error: password && !symbolChar, success: password && symbolChar }"
+    >At least one symbol</span
+  >
+  <span class="form-info" :class="{ error: password && !digitChar, success: password && digitChar }"
+    >At least one digit</span
+  >
+  <span class="form-info error" v-if="passwordRepeated && !match">Passwords don’t match</span>
+  <div
+    :style="{
+      marginTop: 'auto',
+    }"
+  >
+    <div style="margin-bottom: 32px; display: flex">
+      <Icon name="InformationIcon" style="margin-right: 9px" icon-size="1" />
+      <span class="terms-of-use secondary-text"
+        >By continuing you agree to Terms of Use & Privacy Policy of Emeris wallet</span
+      >
+    </div>
+    <Button
+      name="Continue"
+      :disabled="!length || !upperCaseChar || !symbolChar || !digitChar || !match"
+      @click="submit"
+    />
+  </div>
+</template>
+
+<script lang="ts">
+import { defineComponent } from 'vue';
+import Button from '@/components/ui/Button.vue';
+import Input from '@/components/ui/Input.vue';
+import { GlobalActionTypes } from '@@/store/extension/action-types';
+
+export default defineComponent({
+  name: 'Password Create Form',
+  components: {
+    Button,
+    Input,
+  },
+  data: () => ({
+    password: '',
+    passwordRepeated: '',
+
+    length: false,
+    upperCaseChar: false,
+    symbolChar: false,
+    digitChar: false,
+    match: false,
+  }),
+  props: {
+    onContinue: { type: Function, required: true },
+  },
+  methods: {
+    async submit() {
+      if (this.length && this.upperCaseChar && this.symbolChar && this.digitChar && this.match) {
+        await this.$store.dispatch(GlobalActionTypes.SET_PASSWORD, this.password);
+        // this.$router.push('/create');
+        this.onContinue();
+      }
+    },
+  },
+  watch: {
+    password(password) {
+      if (password.length >= 8) {
+        this.length = true;
+      }
+      if (/[A-Z]/g.test(password)) {
+        this.upperCaseChar = true;
+      }
+      if (/[$-/:-?{-~!"^_`[\]]/g.test(password)) {
+        this.symbolChar = true;
+      }
+      if (/[0-9]/g.test(password)) {
+        this.digitChar = true;
+      }
+    },
+    passwordRepeated(password) {
+      if (password === this.password) {
+        this.match = true;
+      }
+    },
+  },
+});
+</script>
+<style lang="scss" scoped>
+.terms-of-use {
+  font-size: 13px;
+}
+</style>

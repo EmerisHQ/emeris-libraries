@@ -1,7 +1,7 @@
 <template>
   <div class="page">
-    <Header title="Choose Password" />
-    <PasswordCreateForm :onContinue="() => $router.push('/create')" />
+    <Header title="Choose a new password" />
+    <PasswordCreateForm :onContinue="() => $router.push('/security')" />
   </div>
 </template>
 
@@ -12,7 +12,7 @@ import Header from '@@/components/Header.vue';
 import PasswordCreateForm from '@@/views/PasswordCreateForm.vue';
 
 export default defineComponent({
-  name: 'Password Create',
+  name: 'Password Change New',
   components: {
     Button,
     Header,

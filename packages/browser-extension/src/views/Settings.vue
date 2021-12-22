@@ -6,7 +6,7 @@
       <Icon v-if="!wallet.backedUp" name="WarningTriangleIcon" :icon-size="1" class="text-negative" />
     </div>
     <div class="menu-item" @click="$router.push('/whitelisted')">Manage connected sites</div>
-    <div class="menu-item">Security</div>
+    <div class="menu-item" @click="$router.push('/security')">Security</div>
     <!-- <div class="menu-item">Currency</div> -->
     <!-- <div class="menu-item">Networks</div> -->
     <!-- <div class="menu-item">Theme</div> -->
