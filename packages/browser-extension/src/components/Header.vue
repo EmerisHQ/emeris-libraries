@@ -1,8 +1,10 @@
 <template>
   <div class="header-container">
-    <div class="back-button" @click="goBack">
-      <Icon name="CaretLeftIcon" :icon-size="1" class="ml-2" />
-    </div>
+    <slot name="backButton">
+      <div class="back-button" @click="goBack">
+        <Icon name="CaretLeftIcon" :icon-size="1" class="ml-2" />
+      </div>
+    </slot>
     <span class="title">{{ title }}</span>
     <div class="additional-button">
       <slot></slot>

@@ -23,6 +23,9 @@ import AccountImportLedgerConnect from '../views/AccountImportLedgerConnect.vue'
 import Account from '../views/Account.vue';
 import Accounts from '../views/Accounts.vue';
 import Portfolio from '../views/Portfolio.vue';
+import Settings from '../views/Settings.vue';
+import WhitelistedPages from '../views/WhitelistedPages.vue';
+import WhitelistedPageRemove from '../views/WhitelistedPageRemove.vue';
 
 const routes: Array<RouteRecordRaw> = [
   {
@@ -146,6 +149,22 @@ const routes: Array<RouteRecordRaw> = [
     path: '/accounts',
     name: 'Accounts',
     component: Accounts,
+  },
+  {
+    path: '/settings',
+    name: 'Settings',
+    component: Settings,
+  },
+  {
+    path: '/whitelisted',
+    name: 'Whitelisted Pages',
+    component: WhitelistedPages,
+  },
+  {
+    path: '/whitelisted/remove/:url',
+    name: 'Whitelisted Page Remove',
+    component: WhitelistedPageRemove,
+    props: true
   },
 ];
 
