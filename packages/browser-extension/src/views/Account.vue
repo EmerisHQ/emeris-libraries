@@ -5,6 +5,7 @@
         <!-- TODO add icon to Demeris -->
         <img :src="require('@@/assets/CoqIcon.svg')" @click="$router.push('/settings')" />
       </template>
+      <Icon name="ChevronRightIcon" @click="$router.go(-1)" />
     </Header>
     <img
       style="height: 72px; width: 72px; margin-top: 40px; margin-left: auto; margin-right: auto"
