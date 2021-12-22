@@ -7,9 +7,7 @@
       class="buttons"
     >
       <Button name="Remove" />
-      <router-link to="/whitelisted">
-        <Button name="Cancel" variant="link" />
-      </router-link>
+      <Button name="Cancel" variant="link" @click="$router.go(-1)" />
     </div>
   </ConfirmationScreen>
 </template>
