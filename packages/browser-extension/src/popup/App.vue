@@ -7,7 +7,7 @@ import { defineComponent, onMounted } from 'vue';
 import { GlobalActionTypes } from '@@/store/extension/action-types';
 import { MutationTypes } from '@@/store/extension/mutation-types';
 import { useRoute, useRouter } from 'vue-router';
-import { setStore } from '@/utils/useStore';
+// import { setStore } from 'vuex';
 import { useStore } from 'vuex';
 import { GlobalDemerisActionTypes } from '../../demeris/src/store/demeris/action-types';
 
@@ -18,7 +18,7 @@ export default defineComponent({
     const router = useRouter();
     const route = useRoute();
 
-    setStore(store);
+    // setStore(store);
 
     onMounted(async () => {
       const hasPassword = await store.dispatch(GlobalActionTypes.HAS_PASSWORD);
