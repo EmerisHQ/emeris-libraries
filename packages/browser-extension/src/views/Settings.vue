@@ -12,9 +12,9 @@
     <!-- <div class="menu-item">Theme</div> -->
 
     <div class="bottom secondary-text">
-      <div class="menu-item">Join the telegram community</div>
-      <div class="menu-item">Twitter</div>
-      <div class="menu-item">Support</div>
+      <div class="menu-item" @click="$router.push({ path: '/support', query: { url: 'http://app.emeris.com' }})">Join the telegram community</div>
+      <div class="menu-item" @click="$router.push({ path: '/support', query: { url: 'http://app.emeris.com' }})">Twitter</div>
+      <div class="menu-item" @click="$router.push({ path: '/support', query: { url: 'http://app.emeris.com' }})">Support</div>
     </div>
   </div>
 </template>

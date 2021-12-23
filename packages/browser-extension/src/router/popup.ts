@@ -29,6 +29,7 @@ import WhitelistedPageRemove from '../views/WhitelistedPageRemove.vue';
 import Security from '../views/Security.vue';
 import PasswordChangeOld from '../views/PasswordChangeOld.vue';
 import PasswordChangeNew from '../views/PasswordChangeNew.vue';
+import SupportWarning from '../views/SupportWarning.vue';
 
 const routes: Array<RouteRecordRaw> = [
   {
@@ -183,6 +184,11 @@ const routes: Array<RouteRecordRaw> = [
     path: '/passwordChange/new',
     name: 'Password Change New',
     component: PasswordChangeNew,
+  },
+  {
+    path: '/support',
+    name: 'Support Warning',
+    component: SupportWarning,
   },
 ];
 
