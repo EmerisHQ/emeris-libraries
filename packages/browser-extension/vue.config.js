@@ -41,6 +41,11 @@ module.exports = {
   chainWebpack: (config) => {
     config.optimization.splitChunks({
       cacheGroups: {
+        demeris: {
+          test: path.resolve('./demeris'),
+          name: 'demeris',
+          // chunks: 'all'
+        },
       },
     });
     config
