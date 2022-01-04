@@ -1,7 +1,7 @@
 <template>
   <div class="page">
     <Header title="Choose a new password" />
-    <PasswordCreateForm :onContinue="() => $router.push('/security')" />
+    <PasswordCreateForm :onContinue="() => $router.push('/passwordChange/success')" />
   </div>
 </template>
 
