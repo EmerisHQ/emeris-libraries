@@ -18,9 +18,6 @@ module.exports = {
     devtool: "inline-source-map",
   },
   pluginOptions: {
-    webpackBundleAnalyzer: {
-      openAnalyzer: true
-    },
     browserExtension: {
       components: {
         background: true,
