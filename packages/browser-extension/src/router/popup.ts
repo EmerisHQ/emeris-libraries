@@ -30,6 +30,7 @@ import Security from '../views/Security.vue';
 import PasswordChangeOld from '../views/PasswordChangeOld.vue';
 import PasswordChangeNew from '../views/PasswordChangeNew.vue';
 import SupportWarning from '../views/SupportWarning.vue';
+import ReceiveDenom from '../views/ReceiveDenom.vue';
 
 const routes: Array<RouteRecordRaw> = [
   {
@@ -190,6 +191,16 @@ const routes: Array<RouteRecordRaw> = [
     name: 'Support Warning',
     component: SupportWarning,
   },
+  {
+    path: '/receive',
+    name: 'Receive Denom',
+    component: ReceiveDenom,
+  },
+  // {
+  //   path: '/receive/:denom',
+  //   name: 'Receive Address',
+  //   component: ReceiveAddress,
+  // },
 ];
 
 const router = createRouter({
