@@ -15,7 +15,7 @@ module.exports = {
     },
   },
   configureWebpack: {
-    devtool: "source-map",
+    devtool: "inline-source-map",
   },
   pluginOptions: {
     browserExtension: {
@@ -37,7 +37,13 @@ module.exports = {
   },
   chainWebpack: (config) => {
     config.optimization.splitChunks({
-      cacheGroups: {},
+      cacheGroups: {
+        demeris: {
+          test: path.resolve('./demeris'),
+          name: 'demeris',
+          chunks: 'all'
+        },
+      },
     });
     config
       .entry("inject-emeris")
