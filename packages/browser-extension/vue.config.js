@@ -18,6 +18,9 @@ module.exports = {
     devtool: "inline-source-map",
   },
   pluginOptions: {
+    webpackBundleAnalyzer: {
+      openAnalyzer: true
+    },
     browserExtension: {
       components: {
         background: true,
@@ -38,11 +41,6 @@ module.exports = {
   chainWebpack: (config) => {
     config.optimization.splitChunks({
       cacheGroups: {
-        demeris: {
-          test: path.resolve('./demeris'),
-          name: 'demeris',
-          chunks: 'all'
-        },
       },
     });
     config
