@@ -77,6 +77,13 @@ export type SetLastAccountRequest =  Request & {
     accountName: string;
   };
 };
+export type GetMnemonicRequest = Request & {
+  action: 'getMnemonic';
+  data: {
+    accountName: string;
+    password: string;
+  };
+};
 export type GetLastAccountRequest = Request & {
   action: 'getLastAccount';
 };
@@ -121,6 +128,7 @@ export type PopupRequest =
   | CreateAccountRequest
   | UpdateAccountRequest
   | SetLastAccountRequest
+  | GetMnemonicRequest
   | UnlockWalletRequest
   | GetWalletRequest
   | GetLastAccountRequest

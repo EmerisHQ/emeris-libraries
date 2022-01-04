@@ -110,12 +110,12 @@ export class Emeris implements IEmeris {
         }
         break;
       case 'getLastAccount':
-          try {
-            const accountName = await this.storage.getLastAccount();
-            return accountName;
-          } catch (e) {
-            console.log(e);
-          }
+        try {
+          const accountName = await this.storage.getLastAccount();
+          return accountName;
+        } catch (e) {
+          console.log(e);
+        }
         break;
       case 'createAccount':
         await this.storage.saveAccount(message.data.data.account, message.data.data.password);
@@ -134,8 +134,10 @@ export class Emeris implements IEmeris {
         await this.storage.updateAccount(message.data.data.account, message.data.data.password);
         this.wallet = await this.unlockWallet(message.data.data.password);
         this.selectedAccount = message.data.data.account.accountName;
-        return this.wallet;;
+        return this.wallet;
       case 'getWallet':
+        return this.wallet;
+      case 'getMnemonic':
         return this.wallet;
       case 'unlockWallet':
         this.wallet = await this.unlockWallet(message.data.data.password);
