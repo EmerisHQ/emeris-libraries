@@ -32,6 +32,7 @@ import PasswordChangeNew from '../views/PasswordChangeNew.vue';
 import PasswordChanged from '../views/PasswordChanged.vue';
 import SupportWarning from '../views/SupportWarning.vue';
 import ReceiveDenom from '../views/ReceiveDenom.vue';
+import Whitelist from '../views/Whitelist.vue';
 
 const routes: Array<RouteRecordRaw> = [
   {
@@ -207,6 +208,11 @@ const routes: Array<RouteRecordRaw> = [
   //   name: 'Receive Address',
   //   component: ReceiveAddress,
   // },
+  {
+    path: '/whitelist',
+    name: 'Whitelist',
+    component: Whitelist,
+  },
 ];
 
 const router = createRouter({
