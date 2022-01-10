@@ -1,14 +1,6 @@
 <template>
   <div class="page">
-    <img
-      :src="require(`@@/assets/UnlockBG.png`)"
-      :style="{
-        position: 'fixed',
-        zIndex: -1,
-        top: 0,
-        left: 0,
-      }"
-    />
+    <img :src="require(`@@/assets/UnlockBG.png`)" class="background" />
     <Icon style="color: #89ff9b; margin-top: 156px" name="InformationIcon" :icon-size="2" />
     <h1 style="margin-bottom: 20px" name>You’re all set</h1>
     <div class="secondary-text" style="text-align: center; margin-bottom: 24px">

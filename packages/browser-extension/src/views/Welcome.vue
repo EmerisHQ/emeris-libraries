@@ -1,15 +1,6 @@
 <template>
   <div class="page">
-    <img
-      :src="require(`@@/assets/WelcomeBG.png`)"
-      :style="{
-        position: 'fixed',
-        zIndex: -1,
-        // accounting for padding
-        top: '-24px',
-        left: '-24px',
-      }"
-    />
+    <img :src="require(`@@/assets/WelcomeBG.png`)" class="background" />
     <img class="wordmark" :src="require(`@@/assets/EmerisWordmark.svg`)" />
     <h1>Experience the power of cross-chain DeFi</h1>
 

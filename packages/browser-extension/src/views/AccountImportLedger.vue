@@ -5,15 +5,7 @@
         <a>Advanced</a>
       </router-link> -->
     </Header>
-    <img
-      :src="require(`@@/assets/ImportLedgerBG.png`)"
-      :style="{
-        position: 'fixed',
-        zIndex: -1,
-        top: 0,
-        left: 0,
-      }"
-    />
+    <img :src="require(`@@/assets/ImportLedgerBG.png`)" class="background" />
     <div
       style="margin-bottom: 56px; margin-top: 72px; margin-left auto; margin-right: auto; display: block; margin-left: auto;"
     >

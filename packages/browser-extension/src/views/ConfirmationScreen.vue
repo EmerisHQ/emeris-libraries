@@ -1,17 +1,6 @@
 <template>
   <div class="page">
-    <img
-      :src="require(`@@/assets/UnlockBG.png`)"
-      style="max-width: 200%"
-      :style="{
-        position: 'fixed',
-        zIndex: -1,
-        // accounting for padding
-        top: '-24px',
-        left: '-24px',
-        width: 'calc(100% + 24px)',
-      }"
-    />
+    <img :src="require(`@@/assets/UnlockBG.png`)" class="background" />
     <Brandmark class="wordmark" />
 
     <h1 style="margin-top: 100px; margin-bottom: 16px">{{ title }}</h1>

@@ -27,6 +27,15 @@ body,
   flex-direction: column;
 }
 
+.background {
+  position: fixed; 
+  z-index: -1; 
+  top: -24px; 
+  left: -24px; 
+  width: calc(100% + 24px); 
+  max-width: inherit;
+}
+
 // buttons
 
 .button-secondary {
