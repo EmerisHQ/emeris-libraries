@@ -127,20 +127,37 @@ export class Emeris implements IEmeris {
             break;
           }
         }
-        this.wallet = await this.unlockWallet(message.data.data.password);
-        this.selectedAccount = message.data.data.account.accountName;
+        try {
+          this.wallet = await this.unlockWallet(message.data.data.password);
+          this.selectedAccount = message.data.data.account.accountName;
+        } catch (e) {
+          console.log(e);
+        }
         return this.wallet;
       case 'updateAccount':
-        await this.storage.updateAccount(message.data.data.account, message.data.data.password);
-        this.wallet = await this.unlockWallet(message.data.data.password);
-        this.selectedAccount = message.data.data.account.accountName;
+        try {
+          await this.storage.updateAccount(message.data.data.account, message.data.data.password);
+          this.wallet = await this.unlockWallet(message.data.data.password);
+          this.selectedAccount = message.data.data.account.accountName;
+        } catch (e) {
+          console.log(e);
+        }
         return this.wallet;
       case 'getWallet':
         return this.wallet;
       case 'getMnemonic':
-        return this.wallet;
+        try {
+          this.wallet = await this.unlockWallet(message.data.data.password);
+        } catch (e) {
+          console.log(e);
+        }
+        return this.wallet.find((x) => x.accountName == message.data.data.accountName);
       case 'unlockWallet':
-        this.wallet = await this.unlockWallet(message.data.data.password);
+        try {
+          this.wallet = await this.unlockWallet(message.data.data.password);
+        } catch (e) {
+          console.log(e);
+        }
         return this.wallet;
       case 'setResponse':
         request = this.queuedRequests.get(message.data.data.id);
