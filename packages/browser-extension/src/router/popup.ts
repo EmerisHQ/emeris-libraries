@@ -32,6 +32,7 @@ import PasswordChangeNew from '../views/PasswordChangeNew.vue';
 import PasswordChanged from '../views/PasswordChanged.vue';
 import SupportWarning from '../views/SupportWarning.vue';
 import ReceiveDenom from '../views/ReceiveDenom.vue';
+import ReceiveQR from '../views/ReceiveQR.vue';
 import Whitelist from '../views/Whitelist.vue';
 
 const routes: Array<RouteRecordRaw> = [
@@ -203,11 +204,12 @@ const routes: Array<RouteRecordRaw> = [
     name: 'Receive Denom',
     component: ReceiveDenom,
   },
-  // {
-  //   path: '/receive/:denom',
-  //   name: 'Receive Address',
-  //   component: ReceiveAddress,
-  // },
+  {
+    path: '/receive/:denom',
+    name: 'Receive QR',
+    component: ReceiveQR,
+    props: true
+  },
   {
     path: '/whitelist',
     name: 'Whitelist',

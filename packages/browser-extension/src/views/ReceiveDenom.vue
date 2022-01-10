@@ -52,7 +52,6 @@ export default {
     async assetsList(assetsList) {
       this.displayNameAddedList = await Promise.all(
         assetsList.map(async (asset) => {
-          debugger;
           return {
             ...asset,
             display_name: await getDisplayName(asset.base_denom, this.$store.getters['demeris/getDexChain']),
@@ -75,7 +74,7 @@ export default {
 };
 </script>
 
-<style>
+<style lang="scss" scoped>
 :deep(.scroll-container > div > div) {
   margin: 0;
 }

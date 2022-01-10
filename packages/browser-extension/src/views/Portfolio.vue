@@ -1,15 +1,6 @@
 <template>
-  <div class="page">
-    <img
-      :src="require(`@@/assets/PortfolioBG.png`)"
-      :style="{
-        position: 'fixed',
-        zIndex: -1,
-        // accounting for padding
-        top: '-24px',
-        left: '-24px',
-      }"
-    />
+  <div class="page" v-if="balances && balances.length > 0 && verifiedDenoms">
+    <img :src="require(`@@/assets/PortfolioBG.png`)" class="background" />
     <div style="display: flex; position: relative; margin-bottom: 36px">
       <img
         style="height: 24px; width: 24px; position: absolute"
@@ -29,12 +20,13 @@
       <TotalPrice :balances="balances" small-decimals />
     </h1>
     <div style="display: flex">
-      <Button name="Receive" style="margin-right: 12px; flex: 1" />
+      <Button name="Receive" style="margin-right: 12px; flex: 1" @click="$router.push('/receive')" />
       <Button name="Send" variant="secondary" style="flex: 1" />
     </div>
 
     <h1 style="font-size: 21px; text-align: left; margin-top: 56px; margin-bottom: 24px">Assets</h1>
     <AssetsTable
+      style="margin-bottom: 24px"
       v-if="balances && balances.length > 0 && verifiedDenoms"
       :balances="balances"
       :hide-zero-assets="true"
@@ -42,18 +34,16 @@
       :show-headers="false"
       :limit-rows="4"
     />
-    <template v-else>
-      <div class="list-card-container" style="margin-bottom: 16px">
-        <h2>Purchase crypto</h2>
-        <span class="secondary-text">Powered by Moonpay</span>
-        <img :src="require('@@/assets/MoonpayListItemGraphic.svg')" />
-      </div>
-      <div class="list-card-container">
-        <h2>Deposit assets</h2>
-        <span class="secondary-text">From another wallet</span>
-        <img :src="require('@@/assets/DepositListItemGraphic.svg')" />
-      </div>
-    </template>
+  </div>
+  <div class="page" v-else>
+    <img :src="require(`@@/assets/EmptyPortfolioBG.png`)" class="background" />
+    <div style="margin-top: auto">
+      <h1>Get started by funding your wallet</h1>
+      <p class="secondary-text" style="margin-bottom: 32px; margin-top: 16px; text-align: center">
+        Send your assets from an exchange or another wallet.
+      </p>
+      <Button name="Receive assets" @click="() => $router.push('/receive')" />
+    </div>
   </div>
 </template>
 
