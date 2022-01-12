@@ -2,7 +2,7 @@ import { ActionTypes } from './action-types';
 import { ActionContext, ActionTree } from 'vuex';
 import { State } from './state';
 import { RootState } from '..';
-import { EmerisAccount, EmerisEncryptedWallet, EmerisWallet, ExtensionRequest } from '@@/types/index';
+import { EmerisAccount, EmerisWallet, ExtensionRequest } from '@@/types/index';
 import { MutationTypes } from './mutation-types';
 type Namespaced<T, N extends string> = {
   [P in keyof T & string as `${N}/${P}`]: T[P];
@@ -19,11 +19,15 @@ export interface Actions {
   [ActionTypes.HAS_WALLET]({ commit, getters }: ActionContext<State, RootState>): Promise<boolean>;
   [ActionTypes.CREATE_ACCOUNT](
     { commit }: ActionContext<State, RootState>,
-    { account, password }: { account: EmerisAccount; password: string },
+    { account }: { account: EmerisAccount },
   ): Promise<EmerisWallet>;
   [ActionTypes.UPDATE_ACCOUNT](
     { commit }: ActionContext<State, RootState>,
-    { account, password }: { account: EmerisAccount; password: string },
+    { account }: { account: EmerisAccount },
+  ): Promise<EmerisWallet>;
+  [ActionTypes.CREATE_WALLET](
+    { commit }: ActionContext<State, RootState>,
+    { password }: { password: string },
   ): Promise<EmerisWallet>;
   [ActionTypes.UNLOCK_WALLET](
     { commit }: ActionContext<State, RootState>,
@@ -36,7 +40,7 @@ export interface Actions {
   ): Promise<void>;
   [ActionTypes.GET_MNEMONIC](
     { commit }: ActionContext<State, RootState>,
-    { accountName, password }: { accountName: string, password:string },
+    { accountName, password }: { accountName: string; password: string },
   ): Promise<string>;
 }
 export type GlobalActions = Namespaced<Actions, 'extension'>;
@@ -83,24 +87,35 @@ export const actions: ActionTree<State, RootState> & Actions = {
       throw new Error('Extension:HasWallet failed');
     }
   },
-  async [ActionTypes.CREATE_ACCOUNT](
+  async [ActionTypes.CREATE_WALLET](
     { commit, getters },
-    { account, password }: { account: EmerisAccount; password: string },
+    {  password }: { password: string },
   ) {
     const response = await browser.runtime.sendMessage({
       type: 'fromPopup',
-      data: { action: 'createAccount', data: { account, password } },
+      data: { action: 'createWallet', data: { password } },
+    });
+    commit(MutationTypes.SET_WALLET, response as EmerisWallet);
+    return getters['getWallet'];
+  },
+  async [ActionTypes.CREATE_ACCOUNT](
+    { commit, getters },
+    { account }: { account: EmerisAccount },
+  ) {
+    const response = await browser.runtime.sendMessage({
+      type: 'fromPopup',
+      data: { action: 'createAccount', data: { account } },
     });
     commit(MutationTypes.SET_WALLET, response as EmerisWallet);
     return getters['getWallet'];
   },
   async [ActionTypes.UPDATE_ACCOUNT](
     { commit, getters },
-    { account, password }: { account: EmerisAccount; password: string },
+    { account }: { account: EmerisAccount },
   ) {
     const response = await browser.runtime.sendMessage({
       type: 'fromPopup',
-      data: { action: 'updateAccount', data: { account, password } },
+      data: { action: 'updateAccount', data: { account } },
     });
     commit(MutationTypes.SET_WALLET, response as EmerisWallet);
     return getters['getWallet'];
@@ -146,13 +161,16 @@ export const actions: ActionTree<State, RootState> & Actions = {
     }
     return getters['getLastAccount'];
   },
-  async [ActionTypes.GET_MNEMONIC]({ commit, getters }, { accountName, password }: { accountName: string, password: string }) {
+  async [ActionTypes.GET_MNEMONIC](
+    { commit, getters },
+    { accountName, password }: { accountName: string; password: string },
+  ) {
     try {
       const mnemonic = await browser.runtime.sendMessage({
         type: 'fromPopup',
         data: { action: 'getMnemonic', data: { accountName, password } },
       });
-      return mnemonic
+      return mnemonic;
     } catch (e) {
       console.log(e);
       throw new Error('Extension:getMnemonic failed');

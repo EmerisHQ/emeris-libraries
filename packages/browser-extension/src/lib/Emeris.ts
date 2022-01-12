@@ -27,6 +27,7 @@ export class Emeris implements IEmeris {
   private wallet: EmerisWallet;
   private selectedAccount: string;
   private popup: number;
+  private password: string;
   private queuedRequests: Map<
     string,
     Record<'resolver', (value: ExtensionRequest | PromiseLike<ExtensionRequest>) => void>
@@ -36,7 +37,7 @@ export class Emeris implements IEmeris {
 
   constructor(storage: EmerisStorage) {
     this.loaded = true;
-    this.storage = storage;
+    this.storage = storage;    
     this.popup = null;
     this.queuedRequests = new Map();
   }
@@ -52,12 +53,14 @@ export class Emeris implements IEmeris {
     clearTimeout(this.timeoutLock);
     this.timeoutLock = null;
     this.wallet = null;
+    this.password = null;
     this.selectedAccount=null;
   }
   async unlockWallet(password: string): Promise<EmerisWallet> {
     try {      
       
       this.wallet = await this.storage.unlockWallet(password);
+      this.password = password;
       this.selectedAccount = await this.storage.getLastAccount();
       this.timeoutLock = setTimeout(() => {
         this.lock();
@@ -118,8 +121,8 @@ export class Emeris implements IEmeris {
         }
         break;
       case 'createAccount':
-        await this.storage.saveAccount(message.data.data.account, message.data.data.password);
-        if (message.data.data.account.accountMnemonic == 'ledger') {
+        await this.storage.saveAccount(message.data.data.account, this.password);
+        if (message.data.data.account.isLedger) {
           try {
             await navigator['usb'].requestDevice({ filters: [] });
           } catch (e) {
@@ -128,7 +131,7 @@ export class Emeris implements IEmeris {
           }
         }
         try {
-          this.wallet = await this.unlockWallet(message.data.data.password);
+          this.wallet = await this.unlockWallet(this.password);
           this.selectedAccount = message.data.data.account.accountName;
         } catch (e) {
           console.log(e);
@@ -136,8 +139,8 @@ export class Emeris implements IEmeris {
         return this.wallet;
       case 'updateAccount':
         try {
-          await this.storage.updateAccount(message.data.data.account, message.data.data.password);
-          this.wallet = await this.unlockWallet(message.data.data.password);
+          await this.storage.updateAccount(message.data.data.account, this.password);
+          this.wallet = await this.unlockWallet(this.password);
           this.selectedAccount = message.data.data.account.accountName;
         } catch (e) {
           console.log(e);
@@ -152,6 +155,7 @@ export class Emeris implements IEmeris {
           console.log(e);
         }
         return this.wallet.find((x) => x.accountName == message.data.data.accountName);
+      case 'createWallet':
       case 'unlockWallet':
         try {
           this.wallet = await this.unlockWallet(message.data.data.password);

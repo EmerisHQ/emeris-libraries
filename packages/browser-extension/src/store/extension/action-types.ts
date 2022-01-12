@@ -9,6 +9,7 @@ export enum ActionTypes {
   CREATE_ACCOUNT = 'CREATE_ACCOUNT',
   UPDATE_ACCOUNT = 'UPDATE_ACCOUNT',
   UNLOCK_WALLET = 'UNLOCK_WALLET',
+  CREATE_WALLET = 'CREATE_WALLET',
 }
 export enum GlobalActionTypes {
   GET_PENDING = 'extension/GET_PENDING',
@@ -21,4 +22,5 @@ export enum GlobalActionTypes {
   CREATE_ACCOUNT = 'extension/CREATE_ACCOUNT',
   UPDATE_ACCOUNT = 'extension/UPDATE_ACCOUNT',
   UNLOCK_WALLET = 'extension/UNLOCK_WALLET',
+  CREATE_WALLET = 'extension/CREATE_WALLET',
 }

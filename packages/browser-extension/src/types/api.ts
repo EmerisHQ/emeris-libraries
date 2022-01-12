@@ -91,18 +91,22 @@ export type CreateAccountRequest = Request & {
   action: 'createAccount';
   data: {
     account: EmerisAccount;
-    password: string;
   };
 };
 export type UpdateAccountRequest = Request & {
   action: 'updateAccount';
   data: {
     account: EmerisAccount;
-    password: string;
   };
 };
 export type UnlockWalletRequest = Request & {
   action: 'unlockWallet';
+  data: {
+    password: string;
+  };
+};
+export type CreateWalletRequest = Request & {
+  action: 'createWallet';
   data: {
     password: string;
   };
@@ -129,6 +133,7 @@ export type PopupRequest =
   | UpdateAccountRequest
   | SetLastAccountRequest
   | GetMnemonicRequest
+  | CreateWalletRequest
   | UnlockWalletRequest
   | GetWalletRequest
   | GetLastAccountRequest

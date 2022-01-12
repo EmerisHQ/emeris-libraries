@@ -11,7 +11,7 @@ export enum AccountCreateStates {
 export type EmerisAccount = {
   accountName: string;
   accountMnemonic: string;
-  lastUsedChain?: string;
+  isLedger: boolean;
   setupState: AccountCreateStates;
 };
 export type EmerisWallet = EmerisAccount[];
