@@ -41,10 +41,10 @@ export default defineComponent({
       }
 
       // TODO get last wallet
-      // store.commit('extension/' + MutationTypes.SET_WALLET, {
-      //   ...wallets[0],
-      //   keyHash: '7ee143fd1d91345128da542f27ccd8d0e3d78fc0',
-      // });
+      store.commit('extension/' + MutationTypes.SET_WALLET, {
+        ...wallets[0],
+        keyHash: '7ee143fd1d91345128da542f27ccd8d0e3d78fc0',
+      });
       // TODO handle availability async in components and getters to not block rendering
       // probably do in the background and just get from there (hit cache first)
       const loadData = async () => {
