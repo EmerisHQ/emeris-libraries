@@ -27,6 +27,7 @@ import { useStore } from 'vuex';
 import Search from '@/components/common/Search.vue';
 import CoinList from '@/components/common/CoinList.vue';
 import Header from '@@/components/Header.vue';
+import { GlobalDemerisGetterTypes } from '@/store';
 
 export default {
   name: 'Receive Denom',
@@ -54,7 +55,10 @@ export default {
         assetsList.map(async (asset) => {
           return {
             ...asset,
-            display_name: await getDisplayName(asset.base_denom, this.$store.getters['demeris/getDexChain']),
+            display_name: await getDisplayName(
+              asset.base_denom,
+              this.$store.getters[GlobalDemerisGetterTypes.API.getDexChain],
+            ),
           };
         }),
       );
@@ -65,7 +69,7 @@ export default {
     const store = useStore();
 
     const assetsList = computed(() => {
-      if (!store.getters['demeris/getVerifiedDenoms']) return [];
+      if (!store.getters[GlobalDemerisGetterTypes.API.getVerifiedDenoms]) return [];
       return orderBy(nativeBalances.value, (item) => (item.base_denom.startsWith('pool') ? 1 : -1));
     });
 

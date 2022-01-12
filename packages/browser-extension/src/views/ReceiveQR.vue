@@ -32,6 +32,7 @@ import { useStore } from 'vuex';
 import Header from '@@/components/Header.vue';
 import QrCode from '@/components/common/QrCode.vue';
 import Icon from '@/components/ui/Icon.vue';
+import { GlobalDemerisGetterTypes } from '@/store';
 
 export default {
   name: 'Receive QR',
@@ -64,7 +65,10 @@ export default {
         assetsList.map(async (asset) => {
           return {
             ...asset,
-            display_name: await getDisplayName(asset.base_denom, this.$store.getters['demeris/getDexChain']),
+            display_name: await getDisplayName(
+              asset.base_denom,
+              this.$store.getters[GlobalDemerisGetterTypes.API.getDexChain],
+            ),
           };
         }),
       );
@@ -83,7 +87,7 @@ export default {
     const store = useStore();
 
     const assetsList = computed(() => {
-      if (!store.getters['demeris/getVerifiedDenoms']) return [];
+      if (!store.getters[GlobalDemerisGetterTypes.API.getVerifiedDenoms]) return [];
       return orderBy(nativeBalances.value, (item) => (item.base_denom.startsWith('pool') ? 1 : -1));
     });
 
