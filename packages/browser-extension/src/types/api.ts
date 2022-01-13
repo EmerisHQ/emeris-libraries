@@ -1,5 +1,5 @@
-import { EmerisWallet } from '.';
-import { TransactionSignRequest } from '../../../types/EmerisTransactions';
+import { EmerisAccount } from '.';
+import { TransactionSignRequest } from '../../../types/src/EmerisTransactions';
 
 
 export interface Request {
@@ -53,8 +53,8 @@ export type SupportedChainsRequest = Request & {
     origin?: string;
   };
 };
-export type GetWalletNameRequest = Request & {
-  action: 'getWalletName';
+export type GetAccountNameRequest = Request & {
+  action: 'getAccountName';
   data: {
     origin?: string;
   };
@@ -71,30 +71,43 @@ export type GetPendingRequest = Request & {
 export type GetWalletRequest = Request & {
   action: 'getWallet';
 };
-export type GetWalletsRequest = Request & {
-  action: 'getWallets';
-};
-export type SetPartialAccountCreationRequest = Request & {
-  action: 'setPartialAccountCreation';
+export type SetLastAccountRequest = Request & {
+  action: 'setLastAccount';
   data: {
-    wallet: EmerisWallet;
-    route: string;
+    accountName: string;
   };
 };
-export type GetPartialAccountCreationRequest = Request & {
-  action: 'getPartialAccountCreation';
-};
-export type CreateWalletRequest = Request & {
-  action: 'createWallet';
+export type GetMnemonicRequest = Request & {
+  action: 'getMnemonic';
   data: {
-    wallet: EmerisWallet;
+    accountName: string;
     password: string;
+  };
+};
+export type GetLastAccountRequest = Request & {
+  action: 'getLastAccount';
+};
+export type CreateAccountRequest = Request & {
+  action: 'createAccount';
+  data: {
+    account: EmerisAccount;
+  };
+};
+export type UpdateAccountRequest = Request & {
+  action: 'updateAccount';
+  data: {
+    account: EmerisAccount;
   };
 };
 export type UnlockWalletRequest = Request & {
   action: 'unlockWallet';
   data: {
-    walletName: string;
+    password: string;
+  };
+};
+export type CreateWalletRequest = Request & {
+  action: 'createWallet';
+  data: {
     password: string;
   };
 };
@@ -130,20 +143,18 @@ export type ExtensionRequest =
   | GetPublicKeyRequest
   | IsHWWalletRequest
   | SupportedChainsRequest
-  | GetWalletNameRequest
+  | GetAccountNameRequest
   | HasWalletRequest;
 export type PopupRequest =
   | GetPendingRequest
-  | SetPartialAccountCreationRequest
-  | GetPartialAccountCreationRequest
+  | CreateAccountRequest
+  | UpdateAccountRequest
+  | SetLastAccountRequest
+  | GetMnemonicRequest
   | CreateWalletRequest
   | UnlockWalletRequest
   | GetWalletRequest
-  | GetWalletsRequest
-  | SetPasswordRequest
-  | CheckPasswordRequest
-  | HasPasswordRequest
-  | ExtensionResetRequest
+  | GetLastAccountRequest
   | SetResponseRequest;
 export type RoutedExternalRequest = {
   type: 'toEmerisExtension' | 'toPopup';

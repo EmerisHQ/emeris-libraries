@@ -1,9 +1,13 @@
 {
   "name": "@emeris/types",
-  "version": "0.0.1",
+  "version": "0.0.3",
   "description": "Emeris common types",
   "author": "Tendermint, Inc <hello@tendermint.com>",
+  "main": "lib/index.js",
   "typings": "lib/index.d.ts",
+  "publishConfig": {
+    "access": "public"
+  },
   "scripts": {
     "build": "tsc",
     "test": "echo \"Error: no test specified\" && exit 1"
@@ -12,5 +16,8 @@
   "license": "ISC",
   "devDependencies": {
     "typescript": "^4.4.4"
+  },
+  "dependencies": {
+    "@sinclair/typebox": "^0.22.1"
   }
 }
