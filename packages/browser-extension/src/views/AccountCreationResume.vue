@@ -29,12 +29,12 @@ export default defineComponent({
   },
   methods: {
     async resume() {
-      const { route, wallet } = await this.$store.dispatch(GlobalActionTypes.GET_PARTIAL_ACCOUNT_CREATION);
-      this.$store.commit('extension/' + MutationTypes.SET_WALLET, wallet);
-      this.$router.push(route);
+      // const { route, wallet } = await this.$store.dispatch(GlobalActionTypes.GET_PARTIAL_ACCOUNT_CREATION);
+      // this.$store.commit('extension/' + MutationTypes.SET_WALLET, wallet);
+      // this.$router.push(route);
     },
     async abort() {
-      await this.$store.dispatch(GlobalActionTypes.SET_PARTIAL_ACCOUNT_CREATION, { wallet: undefined });
+      // await this.$store.dispatch(GlobalActionTypes.SET_PARTIAL_ACCOUNT_CREATION, { wallet: undefined });
       this.$router.push('/accounts');
     },
   },

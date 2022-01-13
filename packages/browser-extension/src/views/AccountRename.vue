@@ -5,7 +5,7 @@
       >If you have multiple accounts this will help you to find the right one</span
     >
     <div style="margin-bottom: 16px">
-      <Input v-model="wallet.walletName" />
+      <Input v-model="account.accountName" />
     </div>
     <div
       :style="{
@@ -34,10 +34,10 @@ export default defineComponent({
   components: { Button, Input, Header },
   computed: {
     ...mapState({
-      wallets: (state: RootState) => state.extension.wallets,
+      wallet: (state: RootState) => state.extension.wallet,
     }),
-    wallet() {
-      return this.wallets[this.index];
+    account() {
+      return this.wallet[this.index];
     },
   },
   props: {

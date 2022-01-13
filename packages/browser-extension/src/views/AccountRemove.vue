@@ -1,6 +1,6 @@
 <template>
   <ConfirmationScreen
-    :title="`Are you sure hat you want to remove ${wallet ? wallet.walletName : '...loading...'}?`"
+    :title="`Are you sure hat you want to remove ${wallet ? account.accountName : '...loading...'}?`"
     subtitle="If you have not backed up this wallet, you will lose access entirely"
   >
     <div
@@ -29,10 +29,10 @@ export default defineComponent({
   name: 'Account Remove',
   computed: {
     ...mapState({
-      wallets: (state: RootState) => state.extension.wallets,
+      wallet: (state: RootState) => state.extension.wallet,
     }),
-    wallet() {
-      return this.wallets[this.index];
+    account() {
+      return this.wallet[this.index];
     },
   },
   props: {

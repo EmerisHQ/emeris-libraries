@@ -49,7 +49,6 @@ export default defineComponent({
   name: 'Accounts',
   computed: {
     ...mapState({
-      wallets: (state: RootState) => state.extension.wallets,
       wallet: (state: RootState) => state.extension.wallet,
     }),
     editWalletIndex() {

@@ -73,50 +73,49 @@ export default defineComponent({
     account(account) {
       this.accountError = !/^[0-9]+'?$/.test(account);
 
-      this.$store.dispatch(GlobalActionTypes.SET_PARTIAL_ACCOUNT_CREATION, {
-        wallet: {
-          ...this.wallet,
-          hdPath: [account, this.change, this.addressIndex],
-        },
-        route: this.$route,
-      });
+      // this.$store.dispatch(GlobalActionTypes.SET_PARTIAL_ACCOUNT_CREATION, {
+      //   wallet: {
+      //     ...this.wallet,
+      //     hdPath: [account, this.change, this.addressIndex],
+      //   },
+      //   route: this.$route,
+      // });
     },
     change(change) {
       this.changeError = !/^[0-9]+'?$/.test(change);
 
-      this.$store.dispatch(GlobalActionTypes.SET_PARTIAL_ACCOUNT_CREATION, {
-        wallet: {
-          ...this.wallet,
-          hdPath: [this.account, change, this.addressIndex],
-        },
-        route: this.$route,
-      });
+      // this.$store.dispatch(GlobalActionTypes.SET_PARTIAL_ACCOUNT_CREATION, {
+      //   wallet: {
+      //     ...this.wallet,
+      //     hdPath: [this.account, change, this.addressIndex],
+      //   },
+      //   route: this.$route,
+      // });
     },
     addressIndex(index) {
       this.addressIndexError = !/^[0-9]+'?$/.test(index);
 
-      this.$store.dispatch(GlobalActionTypes.SET_PARTIAL_ACCOUNT_CREATION, {
-        wallet: {
-          ...this.wallet,
-          hdPath: [this.account, this.change, index],
-        },
-        route: this.$route,
-      });
+      // this.$store.dispatch(GlobalActionTypes.SET_PARTIAL_ACCOUNT_CREATION, {
+      //   wallet: {
+      //     ...this.wallet,
+      //     hdPath: [this.account, this.change, index],
+      //   },
+      //   route: this.$route,
+      // });
     },
   },
   async mounted() {
-    const partialAccountCreation = await this.$store.dispatch(GlobalActionTypes.GET_PARTIAL_ACCOUNT_CREATION);
-    if (partialAccountCreation && partialAccountCreation.wallet.hdPath) {
-      [this.account, this.change, this.addressIndex] = partialAccountCreation.wallet.hdPath;
-    }
-
-    this.$store.dispatch(GlobalActionTypes.SET_PARTIAL_ACCOUNT_CREATION, {
-      wallet: {
-        ...this.wallet,
-        hdPath: [this.account, this.change, this.addressIndex],
-      },
-      route: this.$route,
-    });
+    // const partialAccountCreation = await this.$store.dispatch(GlobalActionTypes.GET_PARTIAL_ACCOUNT_CREATION);
+    // if (partialAccountCreation && partialAccountCreation.wallet.hdPath) {
+    //   [this.account, this.change, this.addressIndex] = partialAccountCreation.wallet.hdPath;
+    // }
+    // this.$store.dispatch(GlobalActionTypes.SET_PARTIAL_ACCOUNT_CREATION, {
+    //   wallet: {
+    //     ...this.wallet,
+    //     hdPath: [this.account, this.change, this.addressIndex],
+    //   },
+    //   route: this.$route,
+    // });
   },
   methods: {
     submit() {

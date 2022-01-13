@@ -9,8 +9,10 @@ declare module '*.vue' {
 
 export type EmerisWindow = {
   emeris: IEmeris;
+  keplr: any;
+  getOfflineSigner: any;
 };
 declare global {
   // eslint-disable-next-line @typescript-eslint/no-empty-interface
-  interface Window extends EmerisWindow {}
+  interface Window extends EmerisWindow { }
 }
