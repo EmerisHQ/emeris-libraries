@@ -21,9 +21,9 @@
     "postinstall": "git submodule init"
   },
   "dependencies": {
-    "@cosmjs/crypto": "^0.26.2",
-    "@cosmjs/proto-signing": "^0.26.5",
-    "@cosmjs/stargate": "^0.26.5",
+    "@cosmjs/crypto": "^0.25.6",
+    "@cosmjs/proto-signing": "^0.25.6",
+    "@cosmjs/stargate": "^0.25.6",
     "@ledgerhq/hw-transport-webusb": "^6.11.2",
     "@starport/tendermint-liquidity-js": "^0.1.2",
     "@starport/vuex": "^0.1.56",
@@ -36,6 +36,7 @@
     "lodash.groupby": "^4.6.0",
     "lodash.orderby": "^4.6.0",
     "postcss": "^7.0.35",
+    "qrcode": "^1.5.0",
     "tailwindcss": "npm:@tailwindcss/postcss7-compat@^2.1.2",
     "uuid": "^8.3.2",
     "vue": "^3.0.0",
