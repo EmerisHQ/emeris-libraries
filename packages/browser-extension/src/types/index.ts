@@ -1,14 +1,21 @@
 import { ClientLibrary } from './libraries';
 
-export type EmerisEncryptedWallet = {
-  walletName: string;
+export type EmerisEncryptedWallet = { 
   walletData: string;
 };
-export type EmerisWallet = {
-  walletName: string;
-  walletMnemonic: string;
-  lastUsedChain?: string;
+export enum AccountCreateStates {
+  CREATED = 0, // Mnemonic saved
+  CONFIRMED = 1, // Mnemonic re-entered
+  COMPLETE = 2 // All steps complete
+}
+export type EmerisAccount = {
+  accountName: string;
+  accountMnemonic: string;
+  isLedger: boolean;
+  setupState: AccountCreateStates;
 };
+export type EmerisWallet = EmerisAccount[];
+
 export type EmerisPermission = {
   origin: string;
 };

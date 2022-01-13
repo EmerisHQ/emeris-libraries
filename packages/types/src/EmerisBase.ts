@@ -12,3 +12,7 @@ export type AmountWithMeta = Amount & {
     coinMinimalDenom: string;
     coinDecimals: number;
 };
+export type IbcInfo = {
+  path: string;
+  hash: string;
+};

@@ -6,7 +6,7 @@ import { RootState } from '..';
 export interface Getters {
   [GetterTypes.getPending](state: State): ExtensionRequest[];
   [GetterTypes.getWallet](state: State): EmerisWallet;
-  [GetterTypes.getWallets](state: State): EmerisEncryptedWallet[];
+  [GetterTypes.getLastAccount](state: State): string;
 }
 
 export interface GlobalGetters {
@@ -16,9 +16,9 @@ export interface GlobalGetters {
   [GlobalGetterTypes.getWallet](
     ...args: Parameters<Getters[GetterTypes.getWallet]>
   ): ReturnType<Getters[GetterTypes.getWallet]>;
-  [GlobalGetterTypes.getWallets](
-    ...args: Parameters<Getters[GetterTypes.getWallets]>
-  ): ReturnType<Getters[GetterTypes.getWallets]>;
+  [GlobalGetterTypes.getLastAccount](
+    ...args: Parameters<Getters[GetterTypes.getLastAccount]>
+  ): ReturnType<Getters[GetterTypes.getLastAccount]>;
 }
 
 export const getters: GetterTree<State, RootState> & Getters = {
@@ -28,7 +28,7 @@ export const getters: GetterTree<State, RootState> & Getters = {
   [GetterTypes.getWallet]: (state) => {
     return state.wallet;
   },
-  [GetterTypes.getWallets]: (state) => {
-    return state.wallets;
+  [GetterTypes.getLastAccount]: (state) => {
+    return state.lastAccount;
   },
 };

@@ -4,7 +4,6 @@ import {
   ExtensionResponse,
   GetAddressRequest,
   GetPublicKeyRequest,
-  GetWalletNameRequest,
   HasWalletRequest,
   IsHWWalletRequest,
   RoutedExtensionRequest,
@@ -12,6 +11,7 @@ import {
   SupportedChainsRequest,
   ApproveOriginRequest,
   SignAndBroadcastTransactionRequest,
+  GetAccountNameRequest,
 } from '@@/types/api';
 import { v4 as uuidv4 } from 'uuid';
 import { AbstractTx, AbstractTxResult } from '@@/types/transactions';
@@ -95,12 +95,12 @@ export class ProxyEmeris implements IEmeris {
     const response = await this.sendRequest(request as SupportedChainsRequest);
     return response.data as string[];
   }
-  async getWalletName(): Promise<string> {
+  async getAccountName(): Promise<string> {
     const request = {
-      action: 'getWalletName',
+      action: 'getAccountName',
       data: {},
     };
-    const response = await this.sendRequest(request as GetWalletNameRequest);
+    const response = await this.sendRequest(request as GetAccountNameRequest);
     return response.data as string;
   }
   async hasWallet(): Promise<boolean> {
