@@ -55,6 +55,7 @@ import Slideout from '@@/components/Slideout.vue';
 
 import { MutationTypes } from '@@/store/extension/mutation-types';
 import { GlobalActionTypes } from '@@/store/extension/action-types';
+import { AccountCreateStates } from '@@/types';
 
 // bring input in standard format
 const mnemonicFormat = (mnemonic) => mnemonic.trim().replace(/\s/, ' ');
@@ -75,31 +76,20 @@ export default defineComponent({
 
       const wordList = mnemonicFormat(this.mnemonic).split(' ');
       this.unknownWords = wordList.filter((word) => !bip39.wordlists.english.includes(word));
-
-      this.$store.dispatch(GlobalActionTypes.SET_PARTIAL_ACCOUNT_CREATION, {
-        wallet: {
-          walletMnemonic: mnemonicFormat(this.mnemonic),
-        },
-        route: this.$route,
-      });
     },
   },
   async mounted() {
-    const hasPasswod = await this.$store.dispatch(GlobalActionTypes.HAS_PASSWORD);
+    const hasPasswod = await this.$store.dispatch(GlobalActionTypes.HAS_WALLET);
 
     if (!hasPasswod) {
-      this.$router.push('/passwordCreate');
-    }
-
-    const partialAccountCreation = await this.$store.dispatch(GlobalActionTypes.GET_PARTIAL_ACCOUNT_CREATION);
-    if (partialAccountCreation) {
-      this.mnemonic = partialAccountCreation.wallet.walletMnemonic;
+      this.$router.push({ path: '/passwordCreate', query: { returnTo: this.$route.path } });
     }
   },
   methods: {
     submit() {
       this.$store.commit('extension/' + MutationTypes.SET_WALLET, {
         walletMnemonic: mnemonicFormat(this.mnemonic),
+        setupState: AccountCreateStates.COMPLETE,
       });
       this.$router.push({ path: '/accountCreate' });
     },

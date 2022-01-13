@@ -1,4 +1,4 @@
-import { EmerisEncryptedWallet, EmerisWallet, ExtensionRequest } from '@@/types/index';
+import { EmerisAccount, EmerisEncryptedWallet, EmerisWallet, ExtensionRequest } from '@@/types/index';
 import { MutationTypes } from './mutation-types';
 import { State } from './state';
 import { MutationTree } from 'vuex';
@@ -22,5 +22,8 @@ export const mutations: MutationTree<State> & Mutations = {
   },
   [MutationTypes.SET_LAST_ACCOUNT](state: State, accountName: string) {
     state.lastAccount = accountName;
+  },
+  [MutationTypes.SET_NEW_ACCOUNT](state: State, account: EmerisAccount) {
+    state.newAccount = account;
   },
 };

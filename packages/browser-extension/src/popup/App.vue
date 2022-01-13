@@ -10,6 +10,7 @@ import { useRoute, useRouter } from 'vue-router';
 import { useStore } from 'vuex';
 import { setStore } from '@/utils/useStore';
 import { GlobalDemerisActionTypes } from '@/store/demeris-api/action-types';
+import { DemerisMutationTypes } from '@/store/demeris-api/mutation-types';
 
 export default defineComponent({
   name: 'App',
@@ -21,32 +22,23 @@ export default defineComponent({
     setStore(store);
 
     onMounted(async () => {
-      const hasPassword = await store.dispatch(GlobalActionTypes.HAS_PASSWORD);
-      // TODO check if already unlocked
-      // if (hasPassword) {
-      //   router.push('/welcomeBack');
-      //   return;
-      // }
+      const hasWallet = await store.dispatch(GlobalActionTypes.HAS_WALLET); // if there is a last account used, the extension is initialized
+      const wallet = await store.dispatch(GlobalActionTypes.GET_WALLET); // if able to load the wallet, the extension is unlocked
 
-      const partialAccountCreation = await store.dispatch(GlobalActionTypes.GET_PARTIAL_ACCOUNT_CREATION);
-      if (partialAccountCreation) {
-        router.push('/accountCreationResume');
-        return;
-      }
-
-      const wallets = await store.dispatch(GlobalActionTypes.GET_WALLETS);
-      if (wallets.length === 0) {
+      if (!hasWallet) {
         router.push('/welcome');
-        return;
+      } else if (!wallet) {
+        router.push('/welcomeBack');
+      } else {
+        router.push('/portfolio');
       }
 
-      // TODO get last wallet
-      store.commit('extension/' + MutationTypes.SET_WALLET, {
-        ...wallets[0],
-        keyHash: '7ee143fd1d91345128da542f27ccd8d0e3d78fc0',
-      });
-      // TODO handle availability async in components and getters to not block rendering
-      // probably do in the background and just get from there (hit cache first)
+      store.commit(
+        'demerisAPI/' + DemerisMutationTypes.INIT,
+        { endpoint: process.env.VUE_APP_EMERIS_ENDPOINT },
+        { root: true },
+      );
+      // TODO handle in the background and just get from there (hit cache first)
       const loadData = async () => {
         await store.dispatch(GlobalDemerisActionTypes.GET_VERIFIED_DENOMS, {
           subscribe: true,
@@ -94,8 +86,6 @@ export default defineComponent({
         );
       };
       loadData();
-
-      router.push('/portfolio');
 
       store.dispatch(GlobalActionTypes.GET_PENDING);
       browser.runtime.onMessage.addListener((message) => {

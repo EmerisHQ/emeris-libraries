@@ -1,7 +1,7 @@
 import * as CryptoJS from 'crypto-js';
 
 import { SaveWalletError, UnlockWalletError } from '@@/errors';
-import { EmerisEncryptedWallet, EmerisAccount,EmerisWallet } from '@@/types';
+import { EmerisEncryptedWallet, EmerisAccount, EmerisWallet } from '@@/types';
 export enum EmerisStorageMode {
   SYNC = 'sync',
   LOCAL = 'local',
@@ -52,11 +52,15 @@ export default class EmerisStorage {
       return null;
     }
   }
-  async getLastAccount(): Promise<string | null> {   
-    
+  async hasWallet(): Promise<boolean> {
+    console.log('hasWallet', !!(await this.getWallet()))
+    return !!(await this.getWallet())
+  }
+  async getLastAccount(): Promise<string | null> {
+
     const res = await browser.storage[this.storageMode].get('lastAccount');
     return res.lastAccount ?? null;
-    
+
   }
   async setLastAccount(accountName: string): Promise<void> {
 
@@ -89,6 +93,7 @@ export default class EmerisStorage {
     }
   }
   private async saveWallet(wallet: EmerisWallet, password: string): Promise<boolean> {
+    debugger
     try {
       const encryptedWallet = CryptoJS.AES.encrypt(JSON.stringify(wallet), password).toString();
       await browser.storage[this.storageMode].set({ wallet: { walletData: encryptedWallet } });
@@ -102,6 +107,7 @@ export default class EmerisStorage {
     try {
       const encWallet = await this.getWallet();
       if (!encWallet) {
+        await this.saveWallet([], password) // create wallet object if not there
         return [];
       }
       const wallet = JSON.parse(CryptoJS.AES.decrypt(encWallet.walletData, password).toString(CryptoJS.enc.Utf8));
@@ -109,29 +115,6 @@ export default class EmerisStorage {
     } catch (e) {
       throw new UnlockWalletError('Could not unlock wallet: ' + e);
     }
-  }
-  async setPartialAccountCreation(wallet: EmerisWallet, route: string) {
-    if (!wallet) {
-      await browser.storage[this.storageMode].set({ 'partialAccount': null });
-    } else {
-      await browser.storage[this.storageMode].set({ 'partialAccount': { wallet, route } });
-    }
-  }
-  async getPartialAccountCreation() {
-    const { partialAccount } = await browser.storage[this.storageMode].get('partialAccount');
-    return partialAccount
-  }
-  async setPassword(password: String) {
-    await browser.storage[this.storageMode].set({ 'password': password });
-  }
-  async checkPassword(password: String): Promise<Boolean> {
-    // TODO this is not how it should be stored
-    const { password: storedPassword } = await browser.storage[this.storageMode].get('password');
-    return storedPassword === password
-  }
-  async hasPassword(): Promise<Boolean> {
-    const { password } = await browser.storage[this.storageMode].get('password');
-    return !!password
   }
   async extensionReset() {
     await browser.storage[this.storageMode].set({ password: null, wallets: null, lastWallet: null, permissions: null });

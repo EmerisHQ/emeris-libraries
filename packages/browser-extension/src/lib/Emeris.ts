@@ -146,11 +146,6 @@ export class Emeris implements IEmeris {
           console.log(e);
         }
         return this.wallet;
-      case 'setPartialAccountCreation':
-        await this.storage.setPartialAccountCreation(message.data.data.wallet, message.data.data.route);
-        return
-      case 'getPartialAccountCreation':
-        return await this.storage.getPartialAccountCreation();
       case 'getWallet':
         return this.wallet;
       case 'getMnemonic':
@@ -168,6 +163,8 @@ export class Emeris implements IEmeris {
           console.log(e);
         }
         return this.wallet;
+      case 'hasWallet':
+        return await this.hasWallet()
       case 'setResponse':
         request = this.queuedRequests.get(message.data.data.id);
         if (!request) {
@@ -240,7 +237,7 @@ export class Emeris implements IEmeris {
 
   }
   async hasWallet(_req: HasWalletRequest): Promise<boolean> {
-    return !!this.wallet;
+    return await this.storage.hasWallet();
   }
 
   async signTransaction(request: SignTransactionRequest): Promise<Uint8Array> {

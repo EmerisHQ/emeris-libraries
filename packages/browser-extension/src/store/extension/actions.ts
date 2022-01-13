@@ -1,4 +1,4 @@
-import { ActionTypes } from './action-types';
+import { ActionTypes, GlobalActionTypes } from './action-types';
 import { ActionContext, ActionTree } from 'vuex';
 import { State } from './state';
 import { RootState } from '..';
@@ -8,6 +8,7 @@ import { keyHashfromAddress } from '@/utils/basic';
 import { Secp256k1HdWallet } from "@cosmjs/amino";
 import { GlobalDemerisActionTypes } from '@/store/demeris-api/action-types';
 import { DemerisMutationTypes } from '@/store/demeris-api/mutation-types';
+import { GetterTypes } from './getter-types';
 
 type Namespaced<T, N extends string> = {
   [P in keyof T & string as `${N}/${P}`]: T[P];
@@ -125,7 +126,7 @@ export const actions: ActionTree<State, RootState> & Actions = {
     commit(MutationTypes.SET_WALLET, response as EmerisWallet);
     return getters['getWallet'];
   },
-  async [ActionTypes.UNLOCK_WALLET]({ commit, getters }, { password }: { password: string }) {
+  async [ActionTypes.UNLOCK_WALLET]({ commit, dispatch, getters }, { password }: { password: string }) {
     try {
       const wallet = await browser.runtime.sendMessage({
         type: 'fromPopup',
@@ -133,19 +134,17 @@ export const actions: ActionTree<State, RootState> & Actions = {
       });
       if (wallet) {
         commit(MutationTypes.SET_WALLET, wallet as EmerisWallet);
+        dispatch(ActionTypes.GET_LAST_ACCOUNT_USED)
 
-        // TODO refactor into actions
+        // // TODO whole block is a clone of getallbalances in getters => refactor
+        // const account = getters[GetterTypes.getAccount]
+        // if (!account) return
 
-        commit("demerisAPI/" + DemerisMutationTypes.INIT, { endpoint: process.env.VUE_APP_EMERIS_ENDPOINT }, { root: true })
-
-
-        // HACK to demo
-
-        // const hdWallet = await Secp256k1HdWallet.fromMnemonic(wallet.walletMnemonic, /* config for hdPath and prefix go here */)
+        // const hdWallet = await Secp256k1HdWallet.fromMnemonic(account.accountMnemonic, /* config for hdPath and prefix go here */)
         // const [{ address }] = await hdWallet.getAccounts()
         // const keyHash = keyHashfromAddress(address)
-        const keyHash = "7ee143fd1d91345128da542f27ccd8d0e3d78fc0"
-        await dispatch(GlobalDemerisActionTypes.GET_BALANCES, { subscribe: true, params: { address: keyHash } }, { root: true })
+
+        // await dispatch(GlobalDemerisActionTypes.GET_BALANCES, { subscribe: true, params: { address: keyHash } }, { root: true })
       }
     } catch (e) {
       console.log(e);
@@ -194,17 +193,8 @@ export const actions: ActionTree<State, RootState> & Actions = {
       throw new Error('Extension:getMnemonic failed');
     }
   },
-  async [ActionTypes.SET_PASSWORD]({ }, password) {
-    await browser.runtime.sendMessage({ type: 'fromPopup', data: { action: 'setPassword', data: { password } } });
-  },
-  async [ActionTypes.CHECK_PASSWORD]({ }, password) {
-    return await browser.runtime.sendMessage({ type: 'fromPopup', data: { action: 'checkPassword', data: { password } } });
-  },
-  async [ActionTypes.HAS_PASSWORD]() {
-    return await browser.runtime.sendMessage({ type: 'fromPopup', data: { action: 'hasPassword' } });
-  },
-  async [ActionTypes.EXTENSION_RESET]() {
-    return await browser.runtime.sendMessage({ type: 'fromPopup', data: { action: 'extensionReset' } });
-  },
+  // async [ActionTypes.EXTENSION_RESET]() {
+  //   return await browser.runtime.sendMessage({ type: 'fromPopup', data: { action: 'extensionReset' } });
+  // },
 };
 

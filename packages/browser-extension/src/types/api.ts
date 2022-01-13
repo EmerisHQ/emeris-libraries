@@ -155,7 +155,8 @@ export type PopupRequest =
   | UnlockWalletRequest
   | GetWalletRequest
   | GetLastAccountRequest
-  | SetResponseRequest;
+  | SetResponseRequest
+  | HasWalletRequest;
 export type RoutedExternalRequest = {
   type: 'toEmerisExtension' | 'toPopup';
   data: ExtensionRequest;

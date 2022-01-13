@@ -1,7 +1,7 @@
 <template>
   <div class="page">
     <Header title="Choose Password" />
-    <PasswordCreateForm :onContinue="() => $router.push('/create')" />
+    <PasswordCreateForm :onContinue="() => $router.push(String($route.query.returnTo) || '/create')" />
   </div>
 </template>
 

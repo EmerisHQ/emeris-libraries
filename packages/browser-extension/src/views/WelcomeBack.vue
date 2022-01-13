@@ -29,6 +29,7 @@ export default defineComponent({
   name: 'Welcome',
   data: () => ({
     error: false,
+    password: '',
   }),
   components: {
     Button,
@@ -37,7 +38,7 @@ export default defineComponent({
   },
   methods: {
     async checkPassword() {
-      const result = await this.$store.dispatch(GlobalActionTypes.CHECK_PASSWORD, this.password);
+      const result = await this.$store.dispatch(GlobalActionTypes.UNLOCK_WALLET, { password: this.password });
       if (result) {
         this.$router.push('/portfolio');
       } else {

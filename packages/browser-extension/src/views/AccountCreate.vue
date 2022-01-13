@@ -37,6 +37,7 @@ import Icon from '@/components/ui/Icon.vue';
 import { GlobalActionTypes } from '@@/store/extension/action-types';
 import { MutationTypes } from '@@/store/extension/mutation-types';
 import { RootState } from '@@/store';
+import { AccountCreateStates } from '@@/types';
 
 export default defineComponent({
   name: 'Create Account',
@@ -49,68 +50,34 @@ export default defineComponent({
   data: () => ({
     name: 'Account X',
   }),
-  watch: {
-    wallet(wallet) {
-      this.$store.dispatch(GlobalActionTypes.SET_PARTIAL_ACCOUNT_CREATION, {
-        wallet: {
-          walletName: this.name,
-          walletMnemonic: wallet.walletMnemonic,
-        },
-        route: this.$route,
-      });
-    },
-    name(name) {
-      if (!this.wallet) return;
-      this.$store.dispatch(GlobalActionTypes.SET_PARTIAL_ACCOUNT_CREATION, {
-        wallet: {
-          walletName: name,
-          walletMnemonic: this.wallet.walletMnemonic,
-        },
-        route: this.$route,
-      });
-    },
-  },
   async mounted() {
-    const hasPasswod = await this.$store.dispatch(GlobalActionTypes.HAS_PASSWORD);
-    this.wallets = (await this.$store.dispatch(GlobalActionTypes.GET_WALLETS)) || [];
-    this.name = 'Account ' + (this.wallets.length + 1);
+    const hasPasswod = await this.$store.dispatch(GlobalActionTypes.HAS_WALLET); // the wallet is encrypted with the password so the existence is equal
+    debugger;
     if (!hasPasswod) {
-      this.$router.push('/passwordCreate');
+      this.$router.push({ path: '/passwordCreate', query: { returnTo: this.$route.path } });
     }
 
+    const accounts = (await this.$store.dispatch(GlobalActionTypes.GET_WALLET)) || [];
+    this.name = 'Account ' + (accounts.length + 1);
     // if it is an import we have the seed in the store
     // if it is a new wallet we create a seed
     if (!this.wallet) {
-      this.$store.commit('extension/' + MutationTypes.SET_WALLET, {
-        walletName: 'new',
-        walletMnemonic: bip39.generateMnemonic(256),
-      });
-    } else {
-      const partialAccountCreation = await this.$store.dispatch(GlobalActionTypes.GET_PARTIAL_ACCOUNT_CREATION);
-      if (partialAccountCreation && partialAccountCreation.wallet.walletName) {
-        this.name = partialAccountCreation.wallet.walletName;
-      }
-
-      this.$store.dispatch(GlobalActionTypes.SET_PARTIAL_ACCOUNT_CREATION, {
-        wallet: {
-          walletName: this.name,
-          walletMnemonic: this.wallet.walletMnemonic,
-        },
-        route: this.$route,
+      this.$store.commit('extension/' + MutationTypes.SET_NEW_ACCOUNT, {
+        accountMnemonic: bip39.generateMnemonic(256),
       });
     }
   },
   methods: {
     async submit() {
-      const wallet = await this.$store.dispatch(GlobalActionTypes.CREATE_WALLET, {
-        wallet: { ...this.wallet, walletName: this.name },
-        password: '', // TOOD needed?
+      const wallet = await this.$store.dispatch(GlobalActionTypes.CREATE_ACCOUNT, {
+        account: {
+          ...this.newAccount,
+          accountName: this.name,
+          isLedger: false,
+          setupState: this.accountMnemonic.setupState || AccountCreateStates.CREATED, // if this is an import we don't need to check if the user backed up the mnemonic
+        },
       });
       if (wallet) {
-        this.$store.dispatch(GlobalActionTypes.SET_PARTIAL_ACCOUNT_CREATION, {
-          wallet: undefined,
-        });
-
         this.$router.push('/backup');
       }
     },

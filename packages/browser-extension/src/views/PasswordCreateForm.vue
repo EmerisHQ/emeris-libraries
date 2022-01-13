@@ -80,8 +80,7 @@ export default defineComponent({
   methods: {
     async submit() {
       if (this.length && this.upperCaseChar && this.symbolChar && this.digitChar && this.match) {
-        await this.$store.dispatch(GlobalActionTypes.SET_PASSWORD, this.password);
-        // this.$router.push('/create');
+        await this.$store.dispatch(GlobalActionTypes.CREATE_WALLET, { password: this.password });
         this.onContinue();
       }
     },
