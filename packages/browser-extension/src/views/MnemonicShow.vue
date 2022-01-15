@@ -5,7 +5,7 @@
       >Please write down your 12 words in a safe space manually on paper</span
     >
     <div class="words" style="margin-bottom: 20px">
-      <div class="word" v-for="(word, index) in account.accountName.trim().split(' ')" :key="index">
+      <div class="word" v-for="(word, index) in account.accountMnemonic.trim().split(' ')" :key="index">
         <div class="number">{{ index }}</div>
         <span>{{ word }}</span>
       </div>
@@ -37,8 +37,6 @@ import Button from '@/components/ui/Button.vue';
 import Header from '@@/components/Header.vue';
 import Checkbox from '@/components/ui/Checkbox.vue';
 import Icon from '@/components/ui/Icon.vue';
-import { mapState } from 'vuex';
-import { RootState } from '@@/store';
 import { GlobalGetterTypes } from '@@/store/extension/getter-types';
 
 export default defineComponent({
@@ -64,7 +62,7 @@ export default defineComponent({
       this.$router.push('/backup/confirm');
     },
     copy() {
-      navigator.clipboard.writeText(this.wallet.walletMnemonic);
+      navigator.clipboard.writeText(this.account.accountMnemonic);
       if (this.copied) {
         clearTimeout(this.copied);
       }

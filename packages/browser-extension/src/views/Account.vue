@@ -41,12 +41,13 @@ import Button from '@/components/ui/Button.vue';
 import Icon from '@/components/ui/Icon.vue';
 import Header from '@@/components/Header.vue';
 import { AccountCreateStates } from '@@/types';
+import { GlobalGetterTypes } from '@@/store/extension/getter-types';
 
 export default defineComponent({
   name: 'Account',
   computed: {
     account() {
-      return this.$store.getters.getAccount;
+      return this.$store.getters[GlobalGetterTypes.getAccount];
     },
     backedUp() {
       return this.account.setupState === AccountCreateStates.COMPLETE;
