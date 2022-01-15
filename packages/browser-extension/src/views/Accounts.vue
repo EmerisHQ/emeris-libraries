@@ -82,7 +82,7 @@ export default defineComponent({
       this.$router.push('/accountRename/' + this.editWalletIndex);
     },
     goToAccount(account) {
-      this.$store.dispatch(GlobalActionTypes.SET_LAST_ACCOUNT_USED, account.accountName);
+      this.$store.dispatch(GlobalActionTypes.SET_LAST_ACCOUNT_USED, { accountName: account.accountName });
       this.$store.dispatch(GlobalActionTypes.GET_WALLET);
       this.$router.push('/portfolio');
     },

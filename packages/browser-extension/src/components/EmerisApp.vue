@@ -1,12 +1,5 @@
 <template>
-  <div>
-    <Brandmark />
-    {{ wallet }}
-    <p v-for="item in pending" :key="item.id">
-      <ModalWrapper :request="item" />
-    </p>
-    <button v-on:click="logLedger">Ledger</button>
-  </div>
+  <div>Loading...</div>
 </template>
 
 <script lang="ts">

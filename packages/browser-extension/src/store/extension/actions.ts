@@ -204,11 +204,11 @@ export const actions: ActionTree<State, RootState> & Actions = {
     try {
       await browser.runtime.sendMessage({
         type: 'fromPopup',
-        data: { action: 'setLastAccountUsed' },
+        data: { action: 'setLastAccount', data: { accountName } },
       });
       commit(MutationTypes.SET_LAST_ACCOUNT, accountName);
     } catch (e) {
-      throw new Error('Extension:SetLastAccountUsed failed');
+      throw new Error('Extension:SetLastAccount failed');
     }
     return getters['getLastAccount'];
   },
