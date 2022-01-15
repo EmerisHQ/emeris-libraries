@@ -21,7 +21,6 @@
 import { defineComponent } from 'vue';
 import Button from '@/components/ui/Button.vue';
 import ConfirmationScreen from '@@/views/ConfirmationScreen.vue';
-import { GlobalActionTypes } from '@@/store/extension/action-types';
 import { mapState } from 'vuex';
 import { RootState } from '@@/store';
 

@@ -70,11 +70,6 @@ export default defineComponent({
   },
   methods: {
     goToShowMnemonic() {
-      // TEMPORARY FOR DEV PURPOSES
-      this.$store.commit('extension/' + MutationTypes.SET_WALLET, {
-        walletName: 'new',
-        walletMnemonic: `alien settle divert turtle six weekend alien settle divert turtle six weekend weekend wife garment october weekend weekend wife garment october weekend weekend wife garment`,
-      });
       this.$router.push({
         path: '/backup/show',
       });

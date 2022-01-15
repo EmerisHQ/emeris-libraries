@@ -38,7 +38,6 @@
 
 <script lang="ts">
 import { defineComponent } from 'vue';
-import { mapState } from 'vuex';
 
 import Button from '@/components/ui/Button.vue';
 import Input from '@/components/ui/Input.vue';
@@ -47,8 +46,7 @@ import Header from '@@/components/Header.vue';
 import Slideout from '@@/components/Slideout.vue';
 
 import { MutationTypes } from '@@/store/extension/mutation-types';
-import { GlobalActionTypes } from '@@/store/extension/action-types';
-import { RootState } from '@@/store';
+import { GlobalGetterTypes } from '@@/store/extension/getter-types';
 
 export default defineComponent({
   name: 'Create Account',
@@ -65,9 +63,9 @@ export default defineComponent({
     infoOpen: false,
   }),
   computed: {
-    ...mapState({
-      wallet: (state: RootState) => state.extension.wallet,
-    }),
+    account() {
+      return this.$store.getters[GlobalGetterTypes.getAccount];
+    },
   },
   watch: {
     account(account) {
@@ -119,8 +117,8 @@ export default defineComponent({
   },
   methods: {
     submit() {
-      this.$store.commit('extension/' + MutationTypes.SET_WALLET, {
-        walletMnemonic: this.mnemonic,
+      this.$store.commit('extension/' + MutationTypes.SET_NEW_ACCOUNT, {
+        accountMnemonic: this.mnemonic,
         hdPath: [this.account, this.change, this.addressIndex],
       });
       this.$router.push({ path: '/accountCreate' });

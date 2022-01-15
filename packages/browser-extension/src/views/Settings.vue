@@ -3,7 +3,7 @@
     <Header title="" />
     <div class="menu-item" @click="$router.push('/backup')">
       Back Up
-      <Icon v-if="!wallet.backedUp" name="WarningTriangleIcon" :icon-size="1" class="text-negative" />
+      <Icon v-if="!backedUp" name="WarningTriangleIcon" :icon-size="1" class="text-negative" />
     </div>
     <div class="menu-item" @click="$router.push('/whitelisted')">Manage connected sites</div>
     <div class="menu-item" @click="$router.push('/security')">Security</div>
@@ -32,15 +32,18 @@
 import { defineComponent } from 'vue';
 import Icon from '@/components/ui/Icon.vue';
 import Header from '@@/components/Header.vue';
-import { mapState } from 'vuex';
-import { RootState } from '@@/store';
+import { GlobalGetterTypes } from '@@/store/extension/getter-types';
+import { AccountCreateStates } from '@@/types';
 
 export default defineComponent({
   name: 'Settings',
   computed: {
-    ...mapState({
-      wallet: (state: RootState) => state.extension.wallet,
-    }),
+    account() {
+      return this.$store.getters[GlobalGetterTypes.getAccount];
+    },
+    backedUp() {
+      return this.account.setupState === AccountCreateStates.COMPLETE;
+    },
   },
   components: {
     Icon,

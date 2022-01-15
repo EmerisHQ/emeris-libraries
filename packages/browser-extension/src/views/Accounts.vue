@@ -4,11 +4,12 @@
       <a @click="edit = true" v-if="!edit">Edit</a>
       <a @click="edit = false" v-else>Done</a>
     </Header>
-    <div v-for="account in wallets" :key="account.walletName" class="wallet" @click="goToAccount(account)">
+    <div v-for="account in wallet" :key="account.accountName" class="wallet" @click="!edit && goToAccount(account)">
       <img :src="require('@@/assets/Avatar.svg')" />
       <div>
-        <h2 style="font-weight: 600">{{ account.walletName }}</h2>
-        <span class="secondary-text" v-if="account.backedUp">$12,345.67</span>
+        <h2 style="font-weight: 600">{{ account.accountName }}</h2>
+        <!-- TODO -->
+        <span class="secondary-text" v-if="!backedUp(account)">$12,345.67</span>
         <span class="secondary-text" style="color: #ff6072; opacity: 1; font-size: 13px" v-else
           >$12,345.67 - Not backed up</span
         >
@@ -20,7 +21,7 @@
         @click="editWallet = account"
         v-if="edit"
       />
-      <div style="margin-left: auto; line-height: 48px" v-else-if="account.walletName === wallet.walletName">✓</div>
+      <div style="margin-left: auto; line-height: 48px" v-else-if="account.accountName === lastAccount">✓</div>
     </div>
     <div style="margin-top: auto">
       <Button name="Add account" @click="addAccount" />
@@ -44,16 +45,19 @@ import Slideout from '@@/components/Slideout.vue';
 import { mapState } from 'vuex';
 import { RootState } from '@@/store';
 import { MutationTypes } from '@@/store/extension/mutation-types';
+import { AccountCreateStates } from '@@/types';
+import { GlobalActionTypes } from '@@/store/extension/action-types';
 
 export default defineComponent({
   name: 'Accounts',
   computed: {
     ...mapState({
       wallet: (state: RootState) => state.extension.wallet,
+      lastAccount: (state: RootState) => state.extension.lastAccount,
     }),
     editWalletIndex() {
       return this.editWallet
-        ? this.wallets.findIndex((wallet) => wallet.walletName === this.editWallet.walletName)
+        ? this.wallet.findIndex((wallet) => wallet.walletName === this.editWallet.walletName)
         : undefined;
     },
   },
@@ -72,20 +76,22 @@ export default defineComponent({
       this.$router.push('/accountAddAdditional');
     },
     removeAccount() {
-      this.$store.commit('extension/' + MutationTypes.SET_WALLET, this.editWallet);
       this.$router.push('/accountRemove/' + this.editWalletIndex);
     },
     renameAccount() {
-      this.$store.commit('extension/' + MutationTypes.SET_WALLET, this.editWallet);
       this.$router.push('/accountRename/' + this.editWalletIndex);
     },
-    goToAccount(wallet) {
-      this.$store.commit('extension/' + MutationTypes.SET_WALLET, wallet);
+    goToAccount(account) {
+      this.$store.dispatch(GlobalActionTypes.SET_LAST_ACCOUNT_USED, account.accountName);
+      this.$store.dispatch(GlobalActionTypes.GET_WALLET);
       this.$router.push('/portfolio');
+    },
+    backedUp(account) {
+      return account.setupState === AccountCreateStates.COMPLETE;
     },
   },
   mounted() {
-    if (this.wallets.length === 0) this.$router.push('/welcome');
+    if (this.wallet.length === 0) this.$router.push('/welcome');
   },
 });
 </script>

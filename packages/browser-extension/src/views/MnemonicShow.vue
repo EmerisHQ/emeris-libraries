@@ -5,7 +5,7 @@
       >Please write down your 12 words in a safe space manually on paper</span
     >
     <div class="words" style="margin-bottom: 20px">
-      <div class="word" v-for="(word, index) in wallet.walletMnemonic.trim().split(' ')" :key="index">
+      <div class="word" v-for="(word, index) in account.accountName.trim().split(' ')" :key="index">
         <div class="number">{{ index }}</div>
         <span>{{ word }}</span>
       </div>
@@ -39,12 +39,13 @@ import Checkbox from '@/components/ui/Checkbox.vue';
 import Icon from '@/components/ui/Icon.vue';
 import { mapState } from 'vuex';
 import { RootState } from '@@/store';
+import { GlobalGetterTypes } from '@@/store/extension/getter-types';
 
 export default defineComponent({
   computed: {
-    ...mapState({
-      wallet: (state: RootState) => state.extension.wallet,
-    }),
+    account() {
+      return this.$store.getters[GlobalGetterTypes.getAccount];
+    },
   },
 
   name: 'Mnemonic Show',

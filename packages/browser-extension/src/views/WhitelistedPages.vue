@@ -18,8 +18,6 @@ import { defineComponent } from 'vue';
 import Brandmark from '@/components/common/Brandmark.vue';
 import Button from '@/components/ui/Button.vue';
 import Header from '@@/components/Header.vue';
-import { mapState } from 'vuex';
-import { RootState } from '@@/store';
 
 export default defineComponent({
   name: 'Whitelisted Pages',
@@ -35,11 +33,6 @@ export default defineComponent({
       },
     ],
   }),
-  computed: {
-    ...mapState({
-      // wallet: (state: RootState) => state.extension.wallet,
-    }),
-  },
   components: {
     Brandmark,
     Header,

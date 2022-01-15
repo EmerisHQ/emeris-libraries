@@ -40,17 +40,11 @@ import { defineComponent } from 'vue';
 import Button from '@/components/ui/Button.vue';
 import Icon from '@/components/ui/Icon.vue';
 import Header from '@@/components/Header.vue';
-import { mapState } from 'vuex';
-import { RootState } from '@@/store';
 import { AccountCreateStates } from '@@/types';
 
 export default defineComponent({
   name: 'Account',
   computed: {
-    ...mapState({
-      wallet: (state: RootState) => state.extension.wallet,
-      // TODO get active wallet
-    }),
     account() {
       return this.$store.getters.getAccount;
     },

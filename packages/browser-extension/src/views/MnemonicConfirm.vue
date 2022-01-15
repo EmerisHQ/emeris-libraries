@@ -25,16 +25,15 @@ import { defineComponent } from 'vue';
 import * as bip39 from 'bip39';
 import Button from '@/components/ui/Button.vue';
 import Header from '@@/components/Header.vue';
-import { mapState } from 'vuex';
-import { RootState } from '@@/store';
+import { GlobalGetterTypes } from '@@/store/extension/getter-types';
 
 const shuffleArray = (array) => array.sort((a, b) => 0.5 - Math.random());
 
 export default defineComponent({
   computed: {
-    ...mapState({
-      wallet: (state: RootState) => state.extension.wallet,
-    }),
+    account() {
+      return this.$store.getters[GlobalGetterTypes.getAccount];
+    },
     positionWord() {
       switch (this.position + 1) {
         case 1:
@@ -55,10 +54,10 @@ export default defineComponent({
     },
   },
   watch: {
-    wallet: {
+    account: {
       immediate: true,
       handler() {
-        this.wordList = this.wallet.walletMnemonic.trim().split(' ');
+        this.wordList = this.account.accountMnemonic.trim().split(' ');
         this.showWords();
       },
     },

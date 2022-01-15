@@ -22,7 +22,7 @@
 import useAccount from '@/composables/useAccount';
 import { computed } from '@vue/runtime-core';
 import { getDisplayName } from '@/utils/actionHandler';
-import * as orderBy from 'lodash.orderby';
+import orderBy from 'lodash/orderBy';
 import { useStore } from 'vuex';
 import Search from '@/components/common/Search.vue';
 import CoinList from '@/components/common/CoinList.vue';

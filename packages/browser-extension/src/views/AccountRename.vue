@@ -24,9 +24,6 @@ import { mapState } from 'vuex';
 import Input from '@/components/ui/Input.vue';
 import Header from '@@/components/Header.vue';
 import Button from '@/components/ui/Button.vue';
-
-import { GlobalActionTypes } from '@@/store/extension/action-types';
-import { MutationTypes } from '@@/store/extension/mutation-types';
 import { RootState } from '@@/store';
 
 export default defineComponent({
