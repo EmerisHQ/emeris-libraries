@@ -37,6 +37,13 @@
   </div>
   <div class="page" v-else>
     <img :src="require(`@@/assets/EmptyPortfolioBG.png`)" class="background" />
+    <div style="display: flex; position: relative; margin-bottom: 36px">
+      <img
+        style="height: 24px; width: 24px; position: absolute"
+        :src="require('@@/assets/Avatar.svg')"
+        @click="$router.push('/account')"
+      />
+    </div>
     <div style="margin-top: auto">
       <h1>Get started by funding your wallet</h1>
       <p class="secondary-text" style="margin-bottom: 32px; margin-top: 16px; text-align: center">
@@ -53,8 +60,6 @@ import Button from '@/components/ui/Button.vue';
 import Icon from '@/components/ui/Icon.vue';
 import AssetsTable from '@/components/assets/AssetsTable/AssetsTable.vue';
 import TotalPrice from '@/components/common/TotalPrice.vue';
-import { mapState } from 'vuex';
-import { RootState } from '@@/store';
 import { GlobalDemerisGetterTypes } from '@/store';
 import { GlobalGetterTypes } from '@@/store/extension/getter-types';
 
