@@ -61,7 +61,7 @@ import { AccountCreateStates } from '@@/types';
 const mnemonicFormat = (mnemonic) => mnemonic.trim().replace(/\s/, ' ');
 
 export default defineComponent({
-  name: 'Create Account',
+  name: 'Import Account',
   components: { MnemonicInput, Header, Button, Modal, Slideout },
   data: () => ({
     mnemonic: undefined,
@@ -87,8 +87,8 @@ export default defineComponent({
   },
   methods: {
     submit() {
-      this.$store.commit('extension/' + MutationTypes.SET_WALLET, {
-        walletMnemonic: mnemonicFormat(this.mnemonic),
+      this.$store.commit('extension/' + MutationTypes.SET_NEW_ACCOUNT, {
+        accountMnemonic: mnemonicFormat(this.mnemonic),
         setupState: AccountCreateStates.COMPLETE,
       });
       this.$router.push({ path: '/accountCreate' });

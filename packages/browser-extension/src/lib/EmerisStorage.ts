@@ -53,7 +53,6 @@ export default class EmerisStorage {
     }
   }
   async hasWallet(): Promise<boolean> {
-    console.log('hasWallet', !!(await this.getWallet()))
     return !!(await this.getWallet())
   }
   async getLastAccount(): Promise<string | null> {

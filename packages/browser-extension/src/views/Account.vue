@@ -15,11 +15,11 @@
       class="secondary-text account-selector"
       style="text-align: center; margin-bottom: 32px; cursor: pointer"
       @click="$router.push('/accounts')"
-      >{{ wallets[0].walletName }} <Icon name="ChevronRightIcon" :icon-size="1"
+      >{{ account.accountName }} <Icon name="ChevronRightIcon" :icon-size="1"
     /></span>
     <div class="list-card-container" style="margin-bottom: 16px" @click="$router.push('/backup')">
       <h2>Back up your wallet</h2>
-      <span class="secondary-text" v-if="!wallets[0].backedUp">Your wallet is currently not secured</span>
+      <span class="secondary-text" v-if="!backedUp">Your wallet is currently not secured</span>
       <Icon name="ChevronRightIcon" :icon-size="1" />
     </div>
     <div class="list-card-container" style="margin-bottom: 16px">
@@ -42,14 +42,21 @@ import Icon from '@/components/ui/Icon.vue';
 import Header from '@@/components/Header.vue';
 import { mapState } from 'vuex';
 import { RootState } from '@@/store';
+import { AccountCreateStates } from '@@/types';
 
 export default defineComponent({
   name: 'Account',
   computed: {
     ...mapState({
-      wallets: (state: RootState) => state.extension.wallets,
+      wallet: (state: RootState) => state.extension.wallet,
       // TODO get active wallet
     }),
+    account() {
+      return this.$store.getters.getAccount;
+    },
+    backedUp() {
+      return this.account.setupState === AccountCreateStates.COMPLETE;
+    },
   },
   components: {
     Button,

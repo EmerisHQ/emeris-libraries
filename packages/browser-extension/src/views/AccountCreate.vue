@@ -44,7 +44,7 @@ export default defineComponent({
   components: { Button, Input, Header, Icon },
   computed: {
     ...mapState({
-      wallet: (state: RootState) => state.extension.wallet,
+      newAccount: (state: RootState) => state.extension.newAccount,
     }),
   },
   data: () => ({
@@ -61,7 +61,7 @@ export default defineComponent({
     this.name = 'Account ' + (accounts.length + 1);
     // if it is an import we have the seed in the store
     // if it is a new wallet we create a seed
-    if (!this.wallet) {
+    if (!this.newAccount) {
       this.$store.commit('extension/' + MutationTypes.SET_NEW_ACCOUNT, {
         accountMnemonic: bip39.generateMnemonic(256),
       });
@@ -74,7 +74,7 @@ export default defineComponent({
           ...this.newAccount,
           accountName: this.name,
           isLedger: false,
-          setupState: this.accountMnemonic.setupState || AccountCreateStates.CREATED, // if this is an import we don't need to check if the user backed up the mnemonic
+          setupState: this.newAccount.setupState || AccountCreateStates.CREATED, // if this is an import we don't need to check if the user backed up the mnemonic
         },
       });
       if (wallet) {

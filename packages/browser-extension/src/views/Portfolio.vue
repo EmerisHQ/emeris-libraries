@@ -14,7 +14,7 @@
       class="secondary-text account-selector"
       style="margin-bottom: 8px; cursor: pointer"
       @click="$router.push('/accounts')"
-      >{{ wallet ? wallet.walletName : 'Loading...' }} <Icon name="ChevronRightIcon" :icon-size="1"
+      >{{ account ? account.accountName : 'Loading...' }} <Icon name="ChevronRightIcon" :icon-size="1"
     /></span>
     <h1 style="font-size: 38px; text-align: left; margin-bottom: 24px">
       <TotalPrice :balances="balances" small-decimals />
@@ -61,14 +61,14 @@ import { GlobalGetterTypes } from '@@/store/extension/getter-types';
 export default defineComponent({
   name: 'Portfolio',
   computed: {
-    ...mapState({
-      wallet: (state: RootState) => state.extension.wallet,
-    }),
-    balances() {
-      return this.$store.getters[GlobalGetterTypes.getAllBalances];
+    account() {
+      return this.$store.getters[GlobalGetterTypes.getAccount];
     },
     verifiedDenoms() {
       return this.$store.getters[GlobalDemerisGetterTypes.API.getVerifiedDenoms];
+    },
+    balances() {
+      return this.$store.getters[GlobalGetterTypes.getAllBalances];
     },
   },
   components: {

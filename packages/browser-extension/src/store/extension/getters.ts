@@ -1,10 +1,10 @@
 import { EmerisEncryptedWallet, EmerisWallet, ExtensionRequest } from '@@/types/index';
 import { GetterTree } from 'vuex';
 import { GetterTypes, GlobalGetterTypes } from './getter-types';
+import { GlobalGetterTypes as GlobalApiGetterTypes } from '@/store/demeris-api/getter-types';
 import { State } from './state';
 import { RootState } from '..';
-import { keyHashfromAddress, parseCoins } from '@/utils/basic';
-import { Secp256k1HdWallet } from '@cosmjs/amino';
+import { Balance } from '@/types/api';
 export interface Getters {
   [GetterTypes.getPending](state: State): ExtensionRequest[];
   [GetterTypes.getWallet](state: State): EmerisWallet;
@@ -36,20 +36,17 @@ export const getters: GetterTree<State, RootState> & Getters = {
   [GetterTypes.getAccount]: (state) => {
     return (state.wallet || []).find(account => account.accountName === state.lastAccount);
   },
-  // accessing rootState doesn't allow for isolating each module, but this way we don't need to change the demeris module
-  [GetterTypes.getAllBalances]: async (state, getters, rootState) => {
+  [GetterTypes.getKeyHash]: (state, getters) => {
     const account = getters[GetterTypes.getAccount]
     if (!account) return
 
-    const hdWallet = await Secp256k1HdWallet.fromMnemonic(account.accountMnemonic, /* config for hdPath and prefix go here */)
-    const [{ address }] = await hdWallet.getAccounts()
-    const keyHash = keyHashfromAddress(address)
+    const keyHashRecord = state.keyHashes.find(({ accountName }) => accountName === account.accountName)
+    return keyHashRecord ? keyHashRecord.keyHash : undefined
+  },
+  // accessing rootState doesn't allow for isolating each module, but this way we don't need to change the demeris module
+  [GetterTypes.getAllBalances]: (state, getters, rootState, rootGetters) => {
+    const keyHash = getters[GetterTypes.getKeyHash]
 
-    const balances = Object.values(rootState.demerisAPI.balances)
-      .filter((balance) => balance !== null)
-      .flat()
-      .filter((balance) => keyHash === balance.address)
-      .filter((balance) => parseCoins(balance.amount)[0].amount != '0');
-    return balances.length > 0 ? balances : null;
+    return rootGetters[GlobalApiGetterTypes.getBalances]({ address: keyHash })
   },
 };

@@ -8,6 +8,7 @@ export type Mutations<S = State> = {
   [MutationTypes.REMOVE_REQUEST](state: S, requestId: string): void;
   [MutationTypes.SET_WALLET](state: S, wallet: EmerisWallet): void;
   [MutationTypes.SET_LAST_ACCOUNT](state: S, accountName: string): void;
+  [MutationTypes.SET_KEY_HASHES](state: S, keyHashLookup: { accountName: string, keyHash: string }[]): void;
 };
 
 export const mutations: MutationTree<State> & Mutations = {
@@ -25,5 +26,8 @@ export const mutations: MutationTree<State> & Mutations = {
   },
   [MutationTypes.SET_NEW_ACCOUNT](state: State, account: EmerisAccount) {
     state.newAccount = account;
+  },
+  [MutationTypes.SET_KEY_HASHES](state: State, keyHashLookup: { accountName: string, keyHash: string }[]) {
+    state.keyHashes = keyHashLookup;
   },
 };

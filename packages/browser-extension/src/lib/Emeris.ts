@@ -62,6 +62,9 @@ export class Emeris implements IEmeris {
       this.wallet = await this.storage.unlockWallet(password);
       this.password = password;
       this.selectedAccount = await this.storage.getLastAccount();
+      if (this.wallet.length > 0 && !this.selectedAccount) {
+        this.setLastAccount(this.wallet[0].accountName)
+      }
       this.timeoutLock = setTimeout(() => {
         this.lock();
       }, 120000);
@@ -96,6 +99,16 @@ export class Emeris implements IEmeris {
   getAccount() {
     return this.wallet.find(x => x.accountName == this.selectedAccount);
   }
+  async setLastAccount(accountName) {
+    if (accountName) {
+      try {
+        await this.storage.setLastAccount(accountName);
+        this.selectedAccount = accountName
+      } catch (e) {
+        console.log(e);
+      }
+    }
+  }
   async popupHandler(message: RoutedInternalRequest): Promise<unknown> {
     let request;
     console.log(message);
@@ -104,13 +117,7 @@ export class Emeris implements IEmeris {
       case 'getPending':
         return this.pending;
       case 'setLastAccount':
-        if (message.data.data.accountName) {
-          try {
-            await this.storage.setLastAccount(message.data.data.accountName);
-          } catch (e) {
-            console.log(e);
-          }
-        }
+        this.setLastAccount(message.data.data.accountName);
         break;
       case 'getLastAccount':
         try {
@@ -132,7 +139,7 @@ export class Emeris implements IEmeris {
         }
         try {
           this.wallet = await this.unlockWallet(this.password);
-          this.selectedAccount = message.data.data.account.accountName;
+          this.setLastAccount(message.data.data.account.accountName);
         } catch (e) {
           console.log(e);
         }
@@ -141,13 +148,15 @@ export class Emeris implements IEmeris {
         try {
           await this.storage.updateAccount(message.data.data.account, this.password);
           this.wallet = await this.unlockWallet(this.password);
-          this.selectedAccount = message.data.data.account.accountName;
+          this.setLastAccount(message.data.data.account.accountName);
         } catch (e) {
           console.log(e);
         }
         return this.wallet;
       case 'getWallet':
         return this.wallet;
+      case 'getAddress':
+        return this.getAddress(message.data);
       case 'getMnemonic':
         try {
           this.wallet = await this.unlockWallet(message.data.data.password);
@@ -207,7 +216,11 @@ export class Emeris implements IEmeris {
     if (!chain) {
       throw new Error('Chain not supported: ' + req.data.chainId);
     }
-    const mnemonic = this.getAccount().accountMnemonic
+    const account = this.getAccount()
+    if (!account) {
+      throw new Error('No account selected');
+    }
+    const mnemonic = account.accountMnemonic
     return await libs[chain.library].getAddress(mnemonic, chain);
   }
 
@@ -236,7 +249,7 @@ export class Emeris implements IEmeris {
     return this.selectedAccount;
 
   }
-  async hasWallet(_req: HasWalletRequest): Promise<boolean> {
+  async hasWallet(): Promise<boolean> {
     return await this.storage.hasWallet();
   }
 

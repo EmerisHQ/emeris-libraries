@@ -48,6 +48,10 @@ export interface Actions {
     { commit }: ActionContext<State, RootState>,
     { accountName, password }: { accountName: string; password: string },
   ): Promise<string>;
+  [ActionTypes.GET_ADDRESS](
+    { }: ActionContext<State, RootState>,
+    { chainId }: { chainId: string; },
+  ): Promise<string>;
 }
 export type GlobalActions = Namespaced<Actions, 'extension'>;
 
@@ -71,11 +75,51 @@ export const actions: ActionTree<State, RootState> & Actions = {
       return false;
     }
   },
-  async [ActionTypes.GET_WALLET]({ commit, getters }) {
+  // async [ActionTypes.LOAD_SESSION_DATA]({ state, commit, dispatch, getters }) {
+  //   const lastAccountUsed = await dispatch(ActionTypes.GET_LAST_ACCOUNT_USED) // also loads the last account to the state
+
+  //   // TODO move to background
+  //   const keyHashLookup = await Promise.all(state.wallet.map(async ({ accountName, accountMnemonic }) => {
+  //     const hdWallet = await Secp256k1HdWallet.fromMnemonic(accountMnemonic, /* config for hdPath and prefix go here */)
+  //     const [{ address }] = await hdWallet.getAccounts()
+  //     const keyHash = keyHashfromAddress(address)
+
+  //     return {
+  //       accountName,
+  //       keyHash
+  //     }
+  //   }))
+  //   commit(MutationTypes.SET_KEY_HASHES, keyHashLookup)
+
+  //   const keyHash = keyHashLookup.find(({ accountName }) => lastAccountUsed === accountName)
+
+  //   await dispatch(GlobalDemerisActionTypes.GET_BALANCES, { subscribe: true, params: { address: keyHash } }, { root: true })
+  // },
+  async [ActionTypes.GET_WALLET]({ commit, dispatch, getters }) {
     try {
       const wallet = await browser.runtime.sendMessage({ type: 'fromPopup', data: { action: 'getWallet' } });
       if (wallet) {
         commit(MutationTypes.SET_WALLET, wallet as EmerisWallet);
+        const lastAccountUsed = await dispatch(ActionTypes.GET_LAST_ACCOUNT_USED) // also loads the last account to the state
+
+        const keyHashLookup: {
+          accountName: string,
+          keyHash: string
+        }[] = await Promise.all(wallet.map(async ({ accountName, accountMnemonic }) => {
+          const hdWallet = await Secp256k1HdWallet.fromMnemonic(accountMnemonic, /* config for hdPath and prefix go here */)
+          const [{ address }] = await hdWallet.getAccounts()
+          const keyHash = keyHashfromAddress(address)
+
+          return {
+            accountName,
+            keyHash
+          }
+        }))
+        commit(MutationTypes.SET_KEY_HASHES, keyHashLookup)
+
+        const keyHashRecord = keyHashLookup.find(({ accountName }) => lastAccountUsed === accountName)
+        if (!keyHashRecord) return
+        await dispatch(GlobalDemerisActionTypes.GET_BALANCES, { subscribe: true, params: { address: keyHashRecord.keyHash } }, { root: true })
       }
     } catch (e) {
       throw new Error('Extension:GetWallet failed');
@@ -134,17 +178,7 @@ export const actions: ActionTree<State, RootState> & Actions = {
       });
       if (wallet) {
         commit(MutationTypes.SET_WALLET, wallet as EmerisWallet);
-        dispatch(ActionTypes.GET_LAST_ACCOUNT_USED)
-
-        // // TODO whole block is a clone of getallbalances in getters => refactor
-        // const account = getters[GetterTypes.getAccount]
-        // if (!account) return
-
-        // const hdWallet = await Secp256k1HdWallet.fromMnemonic(account.accountMnemonic, /* config for hdPath and prefix go here */)
-        // const [{ address }] = await hdWallet.getAccounts()
-        // const keyHash = keyHashfromAddress(address)
-
-        // await dispatch(GlobalDemerisActionTypes.GET_BALANCES, { subscribe: true, params: { address: keyHash } }, { root: true })
+        dispatch(ActionTypes.GET_WALLET)
       }
     } catch (e) {
       console.log(e);
@@ -156,7 +190,7 @@ export const actions: ActionTree<State, RootState> & Actions = {
     try {
       const accountName = await browser.runtime.sendMessage({
         type: 'fromPopup',
-        data: { action: 'getLastAccountUsed' },
+        data: { action: 'getLastAccount' },
       });
       if (accountName) {
         commit(MutationTypes.SET_LAST_ACCOUNT, accountName);
@@ -191,6 +225,21 @@ export const actions: ActionTree<State, RootState> & Actions = {
     } catch (e) {
       console.log(e);
       throw new Error('Extension:getMnemonic failed');
+    }
+  },
+  async [ActionTypes.GET_ADDRESS](
+    { },
+    { chainId }: { chainId: string },
+  ) {
+    try {
+      const address = await browser.runtime.sendMessage({
+        type: 'fromPopup',
+        data: { action: 'getAddress', data: { chainId } },
+      });
+      return address;
+    } catch (e) {
+      console.log(e);
+      throw new Error('Extension:getAddress failed');
     }
   },
   // async [ActionTypes.EXTENSION_RESET]() {

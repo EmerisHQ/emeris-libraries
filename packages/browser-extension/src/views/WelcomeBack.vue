@@ -38,8 +38,11 @@ export default defineComponent({
   },
   methods: {
     async checkPassword() {
-      const result = await this.$store.dispatch(GlobalActionTypes.UNLOCK_WALLET, { password: this.password });
-      if (result) {
+      const wallet = await this.$store.dispatch(GlobalActionTypes.UNLOCK_WALLET, { password: this.password });
+      debugger;
+      if (wallet && wallet.length === 0) {
+        this.$router.push('/welcome');
+      } else if (wallet) {
         this.$router.push('/portfolio');
       } else {
         this.error = true;

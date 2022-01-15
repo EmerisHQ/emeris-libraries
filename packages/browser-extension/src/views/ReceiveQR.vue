@@ -27,12 +27,13 @@
 import useAccount from '@/composables/useAccount';
 import { computed } from '@vue/runtime-core';
 import { getDisplayName } from '@/utils/actionHandler';
-import orderBy from 'lodash.orderby';
+import * as orderBy from 'lodash.orderby';
 import { useStore } from 'vuex';
 import Header from '@@/components/Header.vue';
 import QrCode from '@/components/common/QrCode.vue';
 import Icon from '@/components/ui/Icon.vue';
 import { GlobalDemerisGetterTypes } from '@/store';
+import { GlobalActionTypes } from '@@/store/extension/action-types';
 
 export default {
   name: 'Receive QR',
@@ -57,8 +58,7 @@ export default {
   watch: {
     async asset(asset) {
       if (!asset) return;
-      debugger;
-      this.recipientAddress = 'atom1c9x3ymwqwegu3fzdlvn5pgk7cqglze0zzn9xkg'; // TODO
+      this.recipientAddress = await this.$store.dispatch(GlobalActionTypes.GET_ADDRESS, { chainId: asset.on_chain });
     },
     async assetsList(assetsList) {
       this.displayNameAddedList = await Promise.all(

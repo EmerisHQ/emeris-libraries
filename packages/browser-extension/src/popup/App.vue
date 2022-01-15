@@ -22,22 +22,27 @@ export default defineComponent({
     setStore(store);
 
     onMounted(async () => {
+      store.commit(
+        'demerisAPI/' + DemerisMutationTypes.INIT,
+        { endpoint: process.env.VUE_APP_EMERIS_ENDPOINT },
+        { root: true },
+      );
+
       const hasWallet = await store.dispatch(GlobalActionTypes.HAS_WALLET); // if there is a last account used, the extension is initialized
       const wallet = await store.dispatch(GlobalActionTypes.GET_WALLET); // if able to load the wallet, the extension is unlocked
 
       if (!hasWallet) {
         router.push('/welcome');
       } else if (!wallet) {
+        // not unlocked
         router.push('/welcomeBack');
+      } else if (wallet.length === 0) {
+        // unlocked but no account
+        router.push('/welcome');
       } else {
         router.push('/portfolio');
       }
 
-      store.commit(
-        'demerisAPI/' + DemerisMutationTypes.INIT,
-        { endpoint: process.env.VUE_APP_EMERIS_ENDPOINT },
-        { root: true },
-      );
       // TODO handle in the background and just get from there (hit cache first)
       const loadData = async () => {
         await store.dispatch(GlobalDemerisActionTypes.GET_VERIFIED_DENOMS, {
