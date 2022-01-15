@@ -39,7 +39,6 @@ export default defineComponent({
   methods: {
     async checkPassword() {
       const wallet = await this.$store.dispatch(GlobalActionTypes.UNLOCK_WALLET, { password: this.password });
-      debugger;
       if (wallet && wallet.length === 0) {
         this.$router.push('/welcome');
       } else if (wallet) {
