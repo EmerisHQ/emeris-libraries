@@ -6,12 +6,14 @@
     </Header>
     <div v-for="account in wallet" :key="account.accountName" class="wallet" @click="!edit && goToAccount(account)">
       <img :src="require('@@/assets/Avatar.svg')" />
-      <div>
+      <div style="cursor: pointer">
         <h2 style="font-weight: 600">{{ account.accountName }}</h2>
         <!-- TODO -->
-        <span class="secondary-text" v-if="!backedUp(account)">$12,345.67</span>
+        <span class="secondary-text" v-if="!backedUp(account)"
+          ><TotalPrice :balances="balances(account)" small-decimals
+        /></span>
         <span class="secondary-text" style="color: #ff6072; opacity: 1; font-size: 13px" v-else
-          >$12,345.67 - Not backed up</span
+          ><TotalPrice :balances="balances(account)" small-decimals /> - Not backed up</span
         >
       </div>
       <Icon
@@ -42,11 +44,13 @@ import Button from '@/components/ui/Button.vue';
 import Icon from '@/components/ui/Icon.vue';
 import Header from '@@/components/Header.vue';
 import Slideout from '@@/components/Slideout.vue';
+import TotalPrice from '@/components/common/TotalPrice.vue';
 import { mapState } from 'vuex';
 import { RootState } from '@@/store';
-import { MutationTypes } from '@@/store/extension/mutation-types';
 import { AccountCreateStates } from '@@/types';
 import { GlobalActionTypes } from '@@/store/extension/action-types';
+import { GlobalGetterTypes } from '@@/store/extension/getter-types';
+import { GlobalDemerisActionTypes } from '@/store/demeris-api';
 
 export default defineComponent({
   name: 'Accounts',
@@ -70,6 +74,7 @@ export default defineComponent({
     Icon,
     Header,
     Slideout,
+    TotalPrice,
   },
   methods: {
     addAccount() {
@@ -89,9 +94,26 @@ export default defineComponent({
     backedUp(account) {
       return account.setupState === AccountCreateStates.COMPLETE;
     },
+    loadBalances() {
+      this.wallet.forEach((account) => {
+        const keyHash = this.$store.getters[GlobalGetterTypes.getKeyHash](account);
+        this.$store.dispatch(GlobalDemerisActionTypes.GET_BALANCES, {
+          subscribe: true,
+          params: { address: keyHash },
+        });
+      });
+    },
+    balances(account) {
+      return this.$store.getters[GlobalGetterTypes.getAllBalances](account) || [];
+    },
   },
-  mounted() {
-    if (this.wallet.length === 0) this.$router.push('/welcome');
+  watch: {
+    wallet: {
+      handler(wallet) {
+        if (wallet) this.loadBalances();
+      },
+      immediate: true,
+    },
   },
 });
 </script>
