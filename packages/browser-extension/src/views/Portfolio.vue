@@ -21,7 +21,7 @@
     </h1>
     <div style="display: flex">
       <Button name="Receive" style="margin-right: 12px; flex: 1" @click="$router.push('/receive')" />
-      <Button name="Send" variant="secondary" style="flex: 1" />
+      <Button name="Send" variant="secondary" style="flex: 1" disabled />
     </div>
 
     <h1 style="font-size: 21px; text-align: left; margin-top: 56px; margin-bottom: 24px">Assets</h1>

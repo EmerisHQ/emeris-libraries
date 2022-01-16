@@ -6,8 +6,9 @@
     <router-link :to="{ name: 'Account Import' }">
       <Button name="Import Account" variant="secondary" />
     </router-link>
-    <router-link :to="{ name: 'Import Ledger' }">
-      <Button name="Import Ledger" variant="link" />
+    <!-- <router-link :to="{ name: 'Import Ledger' }"> -->
+    <router-link :to="undefined">
+      <Button name="Import Ledger" variant="link" disabled />
     </router-link>
   </div>
 </template>
