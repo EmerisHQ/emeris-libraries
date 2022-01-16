@@ -123,6 +123,12 @@ export type CheckPasswordRequest = Request & {
     password: string;
   };
 };
+export type ChangePasswordRequest = Request & {
+  action: 'changePassword';
+  data: {
+    password: string;
+  };
+};
 export type HasPasswordRequest = Request & {
   action: 'hasPassword';
 };
@@ -153,6 +159,7 @@ export type PopupRequest =
   | GetMnemonicRequest
   | CreateWalletRequest
   | UnlockWalletRequest
+  | ChangePasswordRequest
   | GetWalletRequest
   | GetLastAccountRequest
   | SetResponseRequest

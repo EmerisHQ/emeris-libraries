@@ -9,7 +9,7 @@
       success: password && length && upperCaseChar && symbolChar && digitChar,
     }"
   >
-    <Input v-model="password" placeholder="Enter a Password" />
+    <Input v-model="password" placeholder="Enter a Password" type="password" />
   </div>
   <div
     style="margin-bottom: 24px"
@@ -18,7 +18,7 @@
       success: passwordRepeated && match,
     }"
   >
-    <Input v-model="passwordRepeated" placeholder="Confirm Password" />
+    <Input v-model="passwordRepeated" placeholder="Confirm Password" type="password" />
   </div>
   <span class="form-info" :class="{ error: password && !length, success: password && length }"
     >Minimum 8 characters</span
@@ -57,6 +57,8 @@ import { defineComponent } from 'vue';
 import Button from '@/components/ui/Button.vue';
 import Input from '@/components/ui/Input.vue';
 import { GlobalActionTypes } from '@@/store/extension/action-types';
+import { mapState } from 'vuex';
+import { RootState } from '@@/store';
 
 export default defineComponent({
   name: 'Password Create Form',
@@ -74,13 +76,22 @@ export default defineComponent({
     digitChar: false,
     match: false,
   }),
+  computed: {
+    ...mapState({
+      wallet: (state: RootState) => state.extension.wallet,
+    }),
+  },
   props: {
     onContinue: { type: Function, required: true },
   },
   methods: {
     async submit() {
       if (this.length && this.upperCaseChar && this.symbolChar && this.digitChar && this.match) {
-        await this.$store.dispatch(GlobalActionTypes.CREATE_WALLET, { password: this.password });
+        if (this.wallet) {
+          await this.$store.dispatch(GlobalActionTypes.CHANGE_PASSWORD, { password: this.password });
+        } else {
+          await this.$store.dispatch(GlobalActionTypes.CREATE_WALLET, { password: this.password });
+        }
         this.onContinue();
       }
     },

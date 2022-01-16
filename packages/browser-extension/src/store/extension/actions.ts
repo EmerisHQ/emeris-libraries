@@ -179,12 +179,18 @@ export const actions: ActionTree<State, RootState> & Actions = {
       if (wallet) {
         commit(MutationTypes.SET_WALLET, wallet as EmerisWallet);
         dispatch(ActionTypes.GET_WALLET)
+        return getters['getWallet'];
       }
     } catch (e) {
       console.log(e);
       throw new Error('Extension:UnlockWallet failed');
     }
-    return getters['getWallet'];
+  },
+  async [ActionTypes.CHANGE_PASSWORD]({ commit, dispatch, getters }, { password }: { password: string }) {
+    await browser.runtime.sendMessage({
+      type: 'fromPopup',
+      data: { action: 'changePassword', data: { password } },
+    });
   },
   async [ActionTypes.GET_LAST_ACCOUNT_USED]({ commit, getters }) {
     try {

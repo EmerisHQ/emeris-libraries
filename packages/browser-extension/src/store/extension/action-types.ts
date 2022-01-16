@@ -12,6 +12,7 @@ export enum ActionTypes {
   CREATE_WALLET = 'CREATE_WALLET',
   GET_ADDRESS = 'GET_ADDRESS',
   EXTENSION_RESET = 'EXTENSION_RESET',
+  CHANGE_PASSWORD = 'CHANGE_PASSWORD',
 }
 export enum GlobalActionTypes {
   GET_PENDING = 'extension/GET_PENDING',
@@ -27,4 +28,5 @@ export enum GlobalActionTypes {
   CREATE_WALLET = 'extension/CREATE_WALLET',
   GET_ADDRESS = 'extension/GET_ADDRESS',
   EXTENSION_RESET = 'extension/EXTENSION_RESET',
+  CHANGE_PASSWORD = 'extension/CHANGE_PASSWORD',
 }

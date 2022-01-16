@@ -1,16 +1,14 @@
 import { IEmeris } from '@@/types/emeris';
-import { EmerisAccount, EmerisWallet } from '@@/types';
+import { EmerisWallet } from '@@/types';
 import { v4 as uuidv4 } from 'uuid';
 import EmerisStorage from './EmerisStorage';
 import config from '../chain-config';
 import libs from './libraries';
 import { UnlockWalletError } from '@@/errors';
-import * as CryptoJS from 'crypto-js';
 import {
   GetAddressRequest,
   GetPublicKeyRequest,
   GetAccountNameRequest,
-  HasWalletRequest,
   IsHWWalletRequest,
   SignTransactionRequest,
   SupportedChainsRequest,
@@ -71,7 +69,14 @@ export class Emeris implements IEmeris {
       return this.wallet;
 
     } catch (e) {
-      console.log(e);
+      throw new UnlockWalletError('Could not unlock wallet: ' + e);
+    }
+  }
+  async changePassword(password: string): Promise<void> {
+    try {
+      this.storage.changePassword(this.password, password)
+      this.unlockWallet(password)
+    } catch (e) {
       throw new UnlockWalletError('Could not unlock wallet: ' + e);
     }
   }
@@ -168,10 +173,18 @@ export class Emeris implements IEmeris {
       case 'unlockWallet':
         try {
           this.wallet = await this.unlockWallet(message.data.data.password);
+          return this.wallet;
         } catch (e) {
           console.log(e);
         }
-        return this.wallet;
+        return
+      case 'changePassword':
+        try {
+          this.changePassword(message.data.data.password)
+        } catch (e) {
+          console.log(e);
+        }
+        return
       case 'hasWallet':
         return await this.hasWallet()
       case 'setResponse':
