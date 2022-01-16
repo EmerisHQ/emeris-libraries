@@ -66,13 +66,25 @@ export default class EmerisStorage {
     await browser.storage[this.storageMode].set({ lastAccount: accountName });
 
   }
-  async updateAccount(account: EmerisAccount, password: string): Promise<boolean> {
+  async updateAccount(newAccountName: string, oldAccountName: string, password: string): Promise<boolean> {
     try {
       const wallet = await this.unlockWallet(password);
-      const accounts = wallet.filter((x) => x.accountName != account.accountName);
-      accounts.push(account);
+      const oldAccount = wallet.find((x) => x.accountName === oldAccountName);
+      const accounts = wallet.filter((x) => x.accountName != oldAccountName);
+      accounts.push({ ...oldAccount, accountName: newAccountName });
       await this.saveWallet(accounts, password);
-      await this.setLastAccount(account.accountName);
+      await this.setLastAccount(newAccountName);
+      return true;
+    } catch (e) {
+      console.log(e);
+      throw new SaveWalletError('Could not save wallet: ' + e);
+    }
+  }
+  async removeAccount(accountName: string, password: string): Promise<boolean> {
+    try {
+      const wallet = await this.unlockWallet(password);
+      const accounts = wallet.filter((x) => x.accountName != accountName);
+      await this.saveWallet(accounts, password);
       return true;
     } catch (e) {
       console.log(e);

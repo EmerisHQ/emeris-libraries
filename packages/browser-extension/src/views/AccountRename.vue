@@ -5,7 +5,7 @@
       >If you have multiple accounts this will help you to find the right one</span
     >
     <div style="margin-bottom: 16px">
-      <Input v-model="account.accountName" />
+      <Input v-model="accountName" />
     </div>
     <div
       :style="{
@@ -25,10 +25,14 @@ import Input from '@/components/ui/Input.vue';
 import Header from '@@/components/Header.vue';
 import Button from '@/components/ui/Button.vue';
 import { RootState } from '@@/store';
+import { GlobalActionTypes } from '@@/store/extension/action-types';
 
 export default defineComponent({
   name: 'Account Rename',
   components: { Button, Input, Header },
+  data: () => ({
+    accountName: '',
+  }),
   computed: {
     ...mapState({
       wallet: (state: RootState) => state.extension.wallet,
@@ -37,12 +41,29 @@ export default defineComponent({
       return this.wallet[this.index];
     },
   },
+  watch: {
+    account: {
+      handler(account) {
+        this.accountName = account.accountName;
+      },
+      immediate: true,
+    },
+  },
   props: {
     index: { type: String, required: true },
   },
   methods: {
     async submit() {
-      // TODO
+      try {
+        await this.$store.dispatch(GlobalActionTypes.UPDATE_ACCOUNT, {
+          oldAccountName: this.account.accountName,
+          newAccountName: this.accountName,
+        });
+        this.$store.dispatch(GlobalActionTypes.GET_WALLET);
+        this.$router.push('/accounts');
+      } catch (err) {
+        console.error(err);
+      }
     },
   },
 });

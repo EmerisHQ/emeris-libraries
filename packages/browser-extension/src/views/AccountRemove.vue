@@ -23,6 +23,7 @@ import Button from '@/components/ui/Button.vue';
 import ConfirmationScreen from '@@/views/ConfirmationScreen.vue';
 import { mapState } from 'vuex';
 import { RootState } from '@@/store';
+import { GlobalActionTypes } from '@@/store/extension/action-types';
 
 export default defineComponent({
   name: 'Account Remove',
@@ -43,7 +44,8 @@ export default defineComponent({
   },
   methods: {
     async removeWallet() {
-      // TODO
+      await this.$store.dispatch(GlobalActionTypes.REMOVE_ACCOUNT, { accountName: this.account.accountName });
+      this.$router.push('/accounts');
     },
   },
 });

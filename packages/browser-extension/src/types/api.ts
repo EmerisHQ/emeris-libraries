@@ -96,7 +96,14 @@ export type CreateAccountRequest = Request & {
 export type UpdateAccountRequest = Request & {
   action: 'updateAccount';
   data: {
-    account: EmerisAccount;
+    oldAccountName: string;
+    newAccountName: string
+  };
+};
+export type RemoveAccountRequest = Request & {
+  action: 'removeAccount';
+  data: {
+    accountName: string;
   };
 };
 export type UnlockWalletRequest = Request & {
@@ -155,6 +162,7 @@ export type PopupRequest =
   | GetPendingRequest
   | CreateAccountRequest
   | UpdateAccountRequest
+  | RemoveAccountRequest
   | SetLastAccountRequest
   | GetMnemonicRequest
   | CreateWalletRequest

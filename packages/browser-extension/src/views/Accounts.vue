@@ -110,7 +110,8 @@ export default defineComponent({
   watch: {
     wallet: {
       handler(wallet) {
-        if (wallet) this.loadBalances();
+        if (wallet && wallet.length > 0) this.loadBalances();
+        if (wallet && wallet.length === 0) this.$router.push('/welcome');
       },
       immediate: true,
     },

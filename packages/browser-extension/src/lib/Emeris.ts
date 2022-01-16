@@ -56,7 +56,6 @@ export class Emeris implements IEmeris {
   }
   async unlockWallet(password: string): Promise<EmerisWallet> {
     try {
-
       this.wallet = await this.storage.unlockWallet(password);
       this.password = password;
       this.selectedAccount = await this.storage.getLastAccount();
@@ -151,9 +150,21 @@ export class Emeris implements IEmeris {
         return this.wallet;
       case 'updateAccount':
         try {
-          await this.storage.updateAccount(message.data.data.account, this.password);
+          await this.storage.updateAccount(message.data.data.newAccountName, message.data.data.oldAccountName, this.password);
           this.wallet = await this.unlockWallet(this.password);
-          this.setLastAccount(message.data.data.account.accountName);
+          this.setLastAccount(message.data.data.newAccountName);
+          return this.wallet;
+        } catch (e) {
+          console.log(e);
+        }
+        return
+      case 'removeAccount':
+        try {
+          await this.storage.removeAccount(message.data.data.accountName, this.password);
+          if (this.selectedAccount === message.data.data.accountName) {
+            this.selectedAccount === undefined
+          }
+          return await this.unlockWallet(this.password);
         } catch (e) {
           console.log(e);
         }
