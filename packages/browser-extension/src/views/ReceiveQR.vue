@@ -27,7 +27,7 @@
 import useAccount from '@/composables/useAccount';
 import { computed } from '@vue/runtime-core';
 import { getDisplayName } from '@/utils/actionHandler';
-import orderBy from 'lodash/orderBy';
+import orderBy from 'lodash.orderby';
 import { useStore } from 'vuex';
 import Header from '@@/components/Header.vue';
 import QrCode from '@/components/common/QrCode.vue';
