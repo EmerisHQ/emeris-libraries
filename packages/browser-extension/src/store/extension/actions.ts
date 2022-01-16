@@ -248,8 +248,8 @@ export const actions: ActionTree<State, RootState> & Actions = {
       throw new Error('Extension:getAddress failed');
     }
   },
-  // async [ActionTypes.EXTENSION_RESET]() {
-  //   return await browser.runtime.sendMessage({ type: 'fromPopup', data: { action: 'extensionReset' } });
-  // },
+  async [ActionTypes.EXTENSION_RESET]() {
+    return await browser.runtime.sendMessage({ type: 'fromPopup', data: { action: 'extensionReset' } });
+  },
 };
 

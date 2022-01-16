@@ -164,6 +164,7 @@ export type PopupRequest =
   | GetLastAccountRequest
   | SetResponseRequest
   | GetAddressRequest
+  | ExtensionResetRequest
   | HasWalletRequest;
 export type RoutedExternalRequest = {
   type: 'toEmerisExtension' | 'toPopup';

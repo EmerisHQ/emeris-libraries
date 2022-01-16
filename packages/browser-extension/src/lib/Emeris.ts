@@ -200,6 +200,9 @@ export class Emeris implements IEmeris {
         );
         browser.runtime.sendMessage({ type: 'toPopup', data: { action: 'update' } });
         return true;
+      case 'extensionReset':
+        this.storage.extensionReset()
+        return
     }
   }
   async ensurePopup(): Promise<void> {

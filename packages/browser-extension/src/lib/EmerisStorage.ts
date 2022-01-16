@@ -124,6 +124,6 @@ export default class EmerisStorage {
     }
   }
   async extensionReset() {
-    await browser.storage[this.storageMode].set({ password: null, wallets: null, lastWallet: null, permissions: null });
+    await browser.storage[this.storageMode].set({ password: null, wallet: null, lastAccount: null, permissions: null });
   }
 }
