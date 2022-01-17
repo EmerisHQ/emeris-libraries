@@ -1,6 +1,6 @@
 <template>
   <div class="page">
-    <Header title="" />
+    <Header title="" backTo="/settings" />
     <h1>Managed connected sites</h1>
     <div class="website" v-for="site in whitelistedWebsites" :key="site.origin">
       <Brandmark class="wordmark" style="margin-top: auto; margin-bottom: auto; margin-right: 18px" />
