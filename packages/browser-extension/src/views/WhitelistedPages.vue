@@ -2,12 +2,12 @@
   <div class="page">
     <Header title="" />
     <h1>Managed connected sites</h1>
-    <div class="website" v-for="site in sites" :key="site.url">
+    <div class="website" v-for="site in whitelistedWebsites" :key="site.origin">
       <Brandmark class="wordmark" style="margin-top: auto; margin-bottom: auto; margin-right: 18px" />
       <div style="display: flex; flex-direction: column">
-        <span>{{ site.name }}</span>
-        <span style="opacity: 67%">{{ site.url }}</span>
-        <a @click="$router.push('/whitelisted/remove/' + site.url)" style="color: #ff6072">disconnect</a>
+        <span>{{ site.origin }}</span>
+        <span style="opacity: 67%">{{ site.origin }}</span>
+        <a @click="$router.push('/whitelisted/remove/' + site.origin)" style="color: #ff6072">disconnect</a>
       </div>
     </div>
   </div>
@@ -18,25 +18,22 @@ import { defineComponent } from 'vue';
 import Brandmark from '@/components/common/Brandmark.vue';
 import Button from '@/components/ui/Button.vue';
 import Header from '@@/components/Header.vue';
+import { GlobalActionTypes } from '@@/store/extension/action-types';
 
 export default defineComponent({
   name: 'Whitelisted Pages',
-  data: () => ({
-    sites: [
-      {
-        name: 'Emeris',
-        url: 'app.emeris.com',
-      },
-      {
-        name: 'Emeris',
-        url: 'app.emeris.com',
-      },
-    ],
-  }),
   components: {
     Brandmark,
     Header,
     Button,
+  },
+  computed: {
+    whitelistedWebsites() {
+      return this.$store.state.extension.whitelistedWebsites;
+    },
+  },
+  mounted() {
+    this.$store.dispatch(GlobalActionTypes.GET_WHITELISTED_WEBSITES);
   },
 });
 </script>

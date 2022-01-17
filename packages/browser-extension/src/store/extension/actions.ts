@@ -17,10 +17,6 @@ type Namespaced<T, N extends string> = {
 export interface Actions {
   // Cross-chain endpoint actions
   [ActionTypes.GET_PENDING]({ commit, getters }: ActionContext<State, RootState>): Promise<ExtensionRequest[]>;
-  [ActionTypes.COMPLETE_REQUEST](
-    { commit }: ActionContext<State, RootState>,
-    { requestId }: { requestId: number },
-  ): Promise<boolean>;
   [ActionTypes.GET_WALLET]({ commit, getters }: ActionContext<State, RootState>): Promise<EmerisWallet>;
   [ActionTypes.HAS_WALLET]({ commit, getters }: ActionContext<State, RootState>): Promise<boolean>;
   [ActionTypes.CREATE_ACCOUNT](
@@ -56,6 +52,10 @@ export interface Actions {
     { }: ActionContext<State, RootState>,
     { chainId }: { chainId: string; },
   ): Promise<string>;
+  [ActionTypes.REMOVE_WHITELISTED_WEBSITE](
+    { }: ActionContext<State, RootState>,
+    { website }: { website: string; },
+  ): Promise<void>;
 }
 export type GlobalActions = Namespaced<Actions, 'extension'>;
 
@@ -70,14 +70,6 @@ export const actions: ActionTree<State, RootState> & Actions = {
       throw new Error('Extension:GetPendingRequests failed');
     }
     return getters['getPending'];
-  },
-  async [ActionTypes.COMPLETE_REQUEST]({ commit }, { requestId }) {
-    try {
-      commit(MutationTypes.REMOVE_REQUEST, requestId);
-      return true;
-    } catch (e) {
-      return false;
-    }
   },
   // async [ActionTypes.LOAD_SESSION_DATA]({ state, commit, dispatch, getters }) {
   //   const lastAccountUsed = await dispatch(ActionTypes.GET_LAST_ACCOUNT_USED) // also loads the last account to the state
@@ -122,7 +114,7 @@ export const actions: ActionTree<State, RootState> & Actions = {
         commit(MutationTypes.SET_KEY_HASHES, keyHashLookup)
 
         const keyHashRecord = keyHashLookup.find(({ accountName }) => lastAccountUsed === accountName)
-        if (!keyHashRecord) return
+        if (!keyHashRecord) return getters['getWallet']
         await dispatch(GlobalDemerisActionTypes.GET_BALANCES, { subscribe: true, params: { address: keyHashRecord.keyHash } }, { root: true })
       }
     } catch (e) {
@@ -265,6 +257,22 @@ export const actions: ActionTree<State, RootState> & Actions = {
   },
   async [ActionTypes.EXTENSION_RESET]() {
     return await browser.runtime.sendMessage({ type: 'fromPopup', data: { action: 'extensionReset' } });
+  },
+  async [ActionTypes.GET_WHITELISTED_WEBSITES]({ commit }) {
+    const whitelistWebsites = await browser.runtime.sendMessage({ type: 'fromPopup', data: { action: 'getWhitelistedWebsite' } });
+    commit(MutationTypes.SET_WHITELISTED_WEBSITES, whitelistWebsites)
+  },
+  async [ActionTypes.REMOVE_WHITELISTED_WEBSITE]({ dispatch }, { website }) {
+    await browser.runtime.sendMessage({ type: 'fromPopup', data: { action: 'removeWhitelistedWebsite', data: { website } } });
+    await dispatch(ActionTypes.GET_WHITELISTED_WEBSITES)
+  },
+  async [ActionTypes.WHITELIST_WEBSITE]({ dispatch, getters }, { website }) {
+    await browser.runtime.sendMessage({ type: 'fromPopup', data: { action: 'addWhitelistedWebsite', data: { website } } });
+    await browser.runtime.sendMessage({
+      type: 'fromPopup',
+      data: { action: 'setResponse', data: getters['getPending'][0] },
+    });
+    await dispatch(ActionTypes.GET_WHITELISTED_WEBSITES)
   },
 };
 

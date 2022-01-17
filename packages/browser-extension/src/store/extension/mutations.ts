@@ -30,4 +30,7 @@ export const mutations: MutationTree<State> & Mutations = {
   [MutationTypes.SET_KEY_HASHES](state: State, keyHashLookup: { accountName: string, keyHash: string }[]) {
     state.keyHashes = keyHashLookup;
   },
+  [MutationTypes.SET_WHITELISTED_WEBSITES](state: State, whitelistedWebsites: { origin: string }[]) {
+    state.whitelistedWebsites = whitelistedWebsites;
+  },
 };
