@@ -26,9 +26,9 @@ export default defineComponent({
     site() {
       return this.$store.state.extension.whitelistedWebsites.find((site) => site.origin === this.url);
     },
-  },
-  props: {
-    url: { type: String, required: true },
+    url() {
+      return this.$route.query.url;
+    },
   },
   components: {
     Brandmark,
@@ -37,8 +37,8 @@ export default defineComponent({
     ConfirmationScreen,
   },
   methods: {
-    remove() {
-      this.$store.dispatch(GlobalActionTypes.REMOVE_WHITELISTED_WEBSITE, { website: this.url });
+    async remove() {
+      await this.$store.dispatch(GlobalActionTypes.REMOVE_WHITELISTED_WEBSITE, { website: this.url });
       this.$router.push('/whitelisted');
     },
   },

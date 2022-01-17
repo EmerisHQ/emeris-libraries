@@ -7,7 +7,9 @@
       <div style="display: flex; flex-direction: column">
         <span>{{ site.origin }}</span>
         <span style="opacity: 67%">{{ site.origin }}</span>
-        <a @click="$router.push('/whitelisted/remove/' + site.origin)" style="color: #ff6072">disconnect</a>
+        <a @click="$router.push({ path: '/whitelisted/remove/', query: { url: site.origin } })" style="color: #ff6072"
+          >disconnect</a
+        >
       </div>
     </div>
   </div>
