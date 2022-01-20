@@ -1,22 +1,6 @@
 <template>
-  <div
-    :style="{
-      height: '100%',
-      width: '100%',
-      display: 'flex',
-      flexDirection: 'column',
-    }"
-  >
-    <img
-      :src="require(`@@/assets/WelcomeBG.png`)"
-      :style="{
-        position: 'fixed',
-        zIndex: -1,
-        // accounting for padding
-        top: '-24px',
-        left: '-24px',
-      }"
-    />
+  <div class="page">
+    <img :src="require(`@@/assets/WelcomeBG.png`)" class="background" />
     <img class="wordmark" :src="require(`@@/assets/EmerisWordmark.svg`)" />
     <h1>Experience the power of cross-chain DeFi</h1>
 
@@ -24,29 +8,24 @@
       :style="{
         marginTop: 'auto',
       }"
-      class="buttons"
     >
-      <router-link :to="{ name: 'Create Wallet' }">
-        <Button name="Create Account" @click="goTo('/create')" />
-      </router-link>
-      <Button name="Import Account" variant="secondary" />
-      <Button name="Import Ledger" variant="link" />
+      <AccountCreateSection />
     </div>
   </div>
 </template>
 
 <script lang="ts">
 import { defineComponent } from 'vue';
-import Button from '@/components/ui/Button.vue';
+import AccountCreateSection from '@@/views/AccountCreateSection.vue';
 
 export default defineComponent({
   name: 'Welcome',
   components: {
-    Button,
+    AccountCreateSection,
   },
   methods: {
     goTo(route) {
-      this.router.push(route);
+      this.$router.push(route);
     },
   },
 });
@@ -87,11 +66,6 @@ h1 {
   align-self: stretch;
   flex-grow: 0;
   margin: 0px 0px;
-}
-
-.buttons > *:not(:last-child) {
-  margin-bottom: 16px;
-  display: block;
 }
 
 :deep(.button-link) {

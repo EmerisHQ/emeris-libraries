@@ -1,7 +1,7 @@
 import * as CryptoJS from 'crypto-js';
 
 import { SaveWalletError, UnlockWalletError } from '@@/errors';
-import { EmerisEncryptedWallet, EmerisAccount,EmerisWallet } from '@@/types';
+import { EmerisEncryptedWallet, EmerisAccount, EmerisWallet } from '@@/types';
 export enum EmerisStorageMode {
   SYNC = 'sync',
   LOCAL = 'local',
@@ -37,7 +37,7 @@ export default class EmerisStorage {
   async deletePermission(origin: string): Promise<boolean> {
     try {
       const result = await browser.storage[this.storageMode].get('permissions');
-      const newPermissions = result.permissions.filter((permission => permission.origin != origin));
+      const newPermissions = result.permissions.filter((permission) => permission.origin != origin);
       await browser.storage[this.storageMode].set({ permissions: newPermissions });
       return true;
     } catch (e) {
@@ -52,24 +52,35 @@ export default class EmerisStorage {
       return null;
     }
   }
-  async getLastAccount(): Promise<string | null> {   
-    
+  async hasWallet(): Promise<boolean> {
+    return !!(await this.getWallet());
+  }
+  async getLastAccount(): Promise<string | null> {
     const res = await browser.storage[this.storageMode].get('lastAccount');
     return res.lastAccount ?? null;
-    
   }
   async setLastAccount(accountName: string): Promise<void> {
-
     await browser.storage[this.storageMode].set({ lastAccount: accountName });
-
   }
-  async updateAccount(account: EmerisAccount, password: string): Promise<boolean> {
+  async updateAccount(newAccountName: string, oldAccountName: string, password: string): Promise<boolean> {
     try {
       const wallet = await this.unlockWallet(password);
-      const accounts = wallet.filter((x) => x.accountName != account.accountName);
-      accounts.push(account);
+      const oldAccount = wallet.find((x) => x.accountName === oldAccountName);
+      const accounts = wallet.filter((x) => x.accountName != oldAccountName);
+      accounts.push({ ...oldAccount, accountName: newAccountName });
       await this.saveWallet(accounts, password);
-      await this.setLastAccount(account.accountName);
+      await this.setLastAccount(newAccountName);
+      return true;
+    } catch (e) {
+      console.log(e);
+      throw new SaveWalletError('Could not save wallet: ' + e);
+    }
+  }
+  async removeAccount(accountName: string, password: string): Promise<boolean> {
+    try {
+      const wallet = await this.unlockWallet(password);
+      const accounts = wallet.filter((x) => x.accountName != accountName);
+      await this.saveWallet(accounts, password);
       return true;
     } catch (e) {
       console.log(e);
@@ -89,6 +100,7 @@ export default class EmerisStorage {
     }
   }
   private async saveWallet(wallet: EmerisWallet, password: string): Promise<boolean> {
+    debugger;
     try {
       const encryptedWallet = CryptoJS.AES.encrypt(JSON.stringify(wallet), password).toString();
       await browser.storage[this.storageMode].set({ wallet: { walletData: encryptedWallet } });
@@ -102,6 +114,7 @@ export default class EmerisStorage {
     try {
       const encWallet = await this.getWallet();
       if (!encWallet) {
+        await this.saveWallet([], password); // create wallet object if not there
         return [];
       }
       const wallet = JSON.parse(CryptoJS.AES.decrypt(encWallet.walletData, password).toString(CryptoJS.enc.Utf8));
@@ -109,5 +122,16 @@ export default class EmerisStorage {
     } catch (e) {
       throw new UnlockWalletError('Could not unlock wallet: ' + e);
     }
+  }
+  async changePassword(oldPassword: string, newPassword: string): Promise<void> {
+    try {
+      const wallet = await this.unlockWallet(oldPassword);
+      this.saveWallet(wallet, newPassword);
+    } catch (e) {
+      throw new UnlockWalletError('Could not unlock wallet: ' + e);
+    }
+  }
+  async extensionReset() {
+    await browser.storage[this.storageMode].set({ password: null, wallet: null, lastAccount: null, permissions: null });
   }
 }

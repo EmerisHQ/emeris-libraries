@@ -1,12 +1,5 @@
 <template>
-  <div>
-    <Brandmark />
-    {{ wallet }}
-    <p v-for="item in pending" :key="item.id">
-      <ModalWrapper :request="item" />
-    </p>
-    <button v-on:click="logLedger">Ledger</button>
-  </div>
+  <div>Loading...</div>
 </template>
 
 <script lang="ts">
@@ -15,16 +8,11 @@ import { GlobalActionTypes } from '@@/store/extension/action-types';
 import { GlobalGetterTypes } from '@@/store/extension/getter-types';
 import { ExtensionRequest } from '@@/types';
 import { defineComponent, computed } from 'vue';
-import Brandmark from '@/components/common/Brandmark.vue';
-import ModalWrapper from '@@/components/ModalWrapper.vue';
 import TransportWebUSB from '@ledgerhq/hw-transport-webusb';
 
 export default defineComponent({
   name: 'EmerisApp',
-  components: {
-    Brandmark,
-    ModalWrapper,
-  },
+  components: {},
   setup() {
     const store = useExtensionStore();
 

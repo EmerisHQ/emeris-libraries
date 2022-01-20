@@ -9,7 +9,7 @@ const pageHandler = async (request) => {
     if (!emeris.loaded) {
       return { id: request.id, data: false };
     }
-    if (request.action !== 'enable' && (await emeris.isPermitted(request.data.origin)) === false) {      
+    if (request.action !== 'enable' && (await emeris.isPermitted(request.data.origin)) === false) {
       return { id: request.id, data: false };
     }
     return { id: request.id, data: await emeris[request.action](request) };
@@ -17,7 +17,8 @@ const pageHandler = async (request) => {
 };
 const messageHandler = async (request) => {
   if (request.type == 'fromPopup') {
-    return await emeris.popupHandler(request);
+    const result = await emeris.popupHandler(request);
+    return result;
   }
   return await pageHandler(request);
 };

@@ -1,7 +1,6 @@
 import { EmerisAccount } from '.';
 import { TransactionSignRequest } from '../../../types/src/EmerisTransactions';
 
-
 export interface Request {
   id?: string;
   action?: string;
@@ -17,6 +16,7 @@ export type SignTransactionRequest = Request & {
   action: 'signTransaction';
   data: {
     tx: TransactionSignRequest;
+    chainId: string;
     origin?: string;
   };
 };
@@ -71,7 +71,7 @@ export type GetPendingRequest = Request & {
 export type GetWalletRequest = Request & {
   action: 'getWallet';
 };
-export type SetLastAccountRequest =  Request & {
+export type SetLastAccountRequest = Request & {
   action: 'setLastAccount';
   data: {
     accountName: string;
@@ -96,7 +96,14 @@ export type CreateAccountRequest = Request & {
 export type UpdateAccountRequest = Request & {
   action: 'updateAccount';
   data: {
-    account: EmerisAccount;
+    oldAccountName: string;
+    newAccountName: string;
+  };
+};
+export type RemoveAccountRequest = Request & {
+  action: 'removeAccount';
+  data: {
+    accountName: string;
   };
 };
 export type UnlockWalletRequest = Request & {
@@ -110,6 +117,30 @@ export type CreateWalletRequest = Request & {
   data: {
     password: string;
   };
+};
+export type SetPasswordRequest = Request & {
+  action: 'setPassword';
+  data: {
+    password: string;
+  };
+};
+export type CheckPasswordRequest = Request & {
+  action: 'checkPassword';
+  data: {
+    password: string;
+  };
+};
+export type ChangePasswordRequest = Request & {
+  action: 'changePassword';
+  data: {
+    password: string;
+  };
+};
+export type HasPasswordRequest = Request & {
+  action: 'hasPassword';
+};
+export type ExtensionResetRequest = Request & {
+  action: 'extensionReset';
 };
 export type SetResponseRequest = Request & {
   action: 'setResponse';
@@ -131,13 +162,18 @@ export type PopupRequest =
   | GetPendingRequest
   | CreateAccountRequest
   | UpdateAccountRequest
+  | RemoveAccountRequest
   | SetLastAccountRequest
   | GetMnemonicRequest
   | CreateWalletRequest
   | UnlockWalletRequest
+  | ChangePasswordRequest
   | GetWalletRequest
   | GetLastAccountRequest
-  | SetResponseRequest;
+  | SetResponseRequest
+  | GetAddressRequest
+  | ExtensionResetRequest
+  | HasWalletRequest;
 export type RoutedExternalRequest = {
   type: 'toEmerisExtension' | 'toPopup';
   data: ExtensionRequest;

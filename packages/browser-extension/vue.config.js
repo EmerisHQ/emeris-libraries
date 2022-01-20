@@ -15,7 +15,7 @@ module.exports = {
     },
   },
   configureWebpack: {
-    devtool: "source-map",
+    devtool: "inline-source-map",
   },
   pluginOptions: {
     browserExtension: {
@@ -37,7 +37,13 @@ module.exports = {
   },
   chainWebpack: (config) => {
     config.optimization.splitChunks({
-      cacheGroups: {},
+      cacheGroups: {
+        demeris: {
+          test: path.resolve('./demeris'),
+          name: 'demeris',
+          // chunks: 'all'
+        },
+      },
     });
     config
       .entry("inject-emeris")
@@ -47,5 +53,11 @@ module.exports = {
       .alias
       .set('@', path.resolve(__dirname, 'demeris/src'))
       .set('@@', path.resolve(__dirname, 'src'));
+
+    config.resolve.symlinks(false)
+    config.resolve.alias.set('vue', path.resolve('./node_modules/vue'))
   },
+  transpileDependencies: [
+    '@starport/tendermint-liquidity-js',
+  ]
 };
