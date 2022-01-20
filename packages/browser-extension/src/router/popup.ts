@@ -169,10 +169,9 @@ const routes: Array<RouteRecordRaw> = [
     component: WhitelistedPages,
   },
   {
-    path: '/whitelisted/remove/:url',
+    path: '/whitelisted/remove',
     name: 'Whitelisted Page Remove',
     component: WhitelistedPageRemove,
-    props: true,
   },
   {
     path: '/security',

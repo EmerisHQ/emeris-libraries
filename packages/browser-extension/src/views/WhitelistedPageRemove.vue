@@ -1,12 +1,12 @@
 <template>
-  <ConfirmationScreen :title="`Are you sure you want to disconnect from ${site.name}?`">
+  <ConfirmationScreen :title="`Are you sure you want to disconnect from ${site.origin}?`">
     <div
       :style="{
         marginTop: 'auto',
       }"
       class="buttons"
     >
-      <Button name="Remove" />
+      <Button name="Remove" @click="remove" />
       <Button name="Cancel" variant="link" @click="$router.go(-1)" />
     </div>
   </ConfirmationScreen>
@@ -16,34 +16,27 @@
 import { defineComponent } from 'vue';
 import Button from '@/components/ui/Button.vue';
 import ConfirmationScreen from '@@/views/ConfirmationScreen.vue';
-import { mapState } from 'vuex';
+import { GlobalActionTypes } from '@@/store/extension/action-types';
 
 export default defineComponent({
   name: 'Whitelisted Page Remove',
   computed: {
-    ...mapState({}),
     site() {
-      return this.sites.find((site) => site.url === this.url);
+      return this.$store.state.extension.whitelistedWebsites.find((site) => site.origin === this.url);
     },
-  },
-  data: () => ({
-    sites: [
-      {
-        name: 'Emeris',
-        url: 'app.emeris.com',
-      },
-      {
-        name: 'Emeris2',
-        url: 'app2.emeris.com',
-      },
-    ],
-  }),
-  props: {
-    url: { type: String, required: true },
+    url() {
+      return this.$route.query.url;
+    },
   },
   components: {
     Button,
     ConfirmationScreen,
+  },
+  methods: {
+    async remove() {
+      await this.$store.dispatch(GlobalActionTypes.REMOVE_WHITELISTED_WEBSITE, { website: this.url });
+      this.$router.push('/whitelisted');
+    },
   },
 });
 </script>

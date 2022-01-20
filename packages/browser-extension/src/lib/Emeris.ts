@@ -214,8 +214,18 @@ export class Emeris implements IEmeris {
         browser.runtime.sendMessage({ type: 'toPopup', data: { action: 'update' } });
         return true;
       case 'extensionReset':
-        this.storage.extensionReset();
-        return;
+        this.storage.extensionReset()
+        return
+      case 'removeWhitelistedWebsite':
+        this.storage.deletePermission(message.data.data.website)
+        return
+      case 'getWhitelistedWebsite':
+        return this.storage.getPermissions()
+      case 'addWhitelistedWebsite':
+        // prevent dupes
+        const permissions = await this.storage.getPermissions()
+        if (permissions.find(permission => permission.origin === message.data.data.website)) return true
+        return this.storage.addPermission(message.data.data.website)
     }
   }
   async ensurePopup(): Promise<void> {
@@ -289,6 +299,7 @@ export class Emeris implements IEmeris {
     return (await this.forwardToPopup(request)).data as AbstractTxResult;
   }
   async enable(request: ApproveOriginRequest): Promise<boolean> {
+    // TODO purge this queue and replace with a sensible data struct to we can check if a request is a dupe
     request.id = uuidv4();
     const enabled = (await this.forwardToPopup(request)).data as boolean;
     if (enabled) {
