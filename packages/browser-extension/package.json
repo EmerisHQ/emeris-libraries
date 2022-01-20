@@ -34,6 +34,7 @@
     "core-js": "^3.18.3",
     "crypto-js": "^4.1.1",
     "lodash.groupby": "^4.6.0",
+    "lodash.isequal": "^4.5.0",
     "lodash.orderby": "^4.6.0",
     "postcss": "^7.0.35",
     "qrcode": "^1.5.0",
