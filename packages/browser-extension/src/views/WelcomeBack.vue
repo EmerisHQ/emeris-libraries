@@ -42,6 +42,7 @@ export default defineComponent({
       if (wallet && wallet.length === 0) {
         this.$router.push('/welcome');
       } else if (wallet) {
+        this.$store.dispatch(GlobalActionTypes.LOAD_SESSION_DATA);
         this.$router.push('/portfolio');
       } else {
         this.error = true;

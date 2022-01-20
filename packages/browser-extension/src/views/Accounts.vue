@@ -97,10 +97,9 @@ export default defineComponent({
     },
     loadBalances() {
       this.wallet.forEach((account) => {
-        const keyHash = this.$store.getters[GlobalGetterTypes.getKeyHash](account);
         this.$store.dispatch(GlobalDemerisActionTypes.GET_BALANCES, {
           subscribe: true,
-          params: { address: keyHash },
+          params: { address: account.keyHash },
         });
       });
     },

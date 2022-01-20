@@ -2,7 +2,7 @@ import { ActionTypes } from './action-types';
 import { ActionContext, ActionTree } from 'vuex';
 import { State } from './state';
 import { RootState } from '..';
-import { EmerisAccount, EmerisWallet, ExtensionRequest } from '@@/types/index';
+import { AccountCreateStates, EmerisAccount, EmerisWallet, ExtensionRequest } from '@@/types/index';
 import { MutationTypes } from './mutation-types';
 import { GlobalDemerisActionTypes } from '@/store';
 
@@ -47,7 +47,7 @@ export interface Actions {
   [ActionTypes.GET_MNEMONIC](
     { commit }: ActionContext<State, RootState>,
     { accountName, password }: { accountName: string; password: string },
-  ): Promise<string>;
+  ): Promise<void>;
   [ActionTypes.GET_ADDRESS]({ }: ActionContext<State, RootState>, { chainId }: { chainId: string }): Promise<string>;
 }
 export type GlobalActions = Namespaced<Actions, 'extension'>;
@@ -180,13 +180,15 @@ export const actions: ActionTree<State, RootState> & Actions = {
     }
     return getters['getLastAccount'];
   },
-  async [ActionTypes.GET_MNEMONIC]({ }, { accountName, password }: { accountName: string; password: string }) {
+  async [ActionTypes.GET_MNEMONIC]({ commit }, { accountName, password }: { accountName: string; password: string }) {
     try {
-      const mnemonic = await browser.runtime.sendMessage({
+      const account = await browser.runtime.sendMessage({
         type: 'fromPopup',
         data: { action: 'getMnemonic', data: { accountName, password } },
       });
-      return mnemonic;
+      debugger
+      if (!account) throw new Error('Password incorrect')
+      commit(MutationTypes.SET_MNEMONIC, { account })
     } catch (e) {
       console.log(e);
       throw new Error('Extension:getMnemonic failed');
@@ -203,6 +205,10 @@ export const actions: ActionTree<State, RootState> & Actions = {
       console.log(e);
       throw new Error('Extension:getAddress failed');
     }
+  },
+  async [ActionTypes.ACCOUNT_BACKED_UP]({ dispatch }, { accountName }: { accountName: string }) {
+    await browser.runtime.sendMessage({ type: 'fromPopup', data: { action: 'updateAccount', data: { account: { accountName, setupState: AccountCreateStates.COMPLETE } } } });
+    dispatch(ActionTypes.LOAD_SESSION_DATA)
   },
   async [ActionTypes.EXTENSION_RESET]() {
     return await browser.runtime.sendMessage({ type: 'fromPopup', data: { action: 'extensionReset' } });

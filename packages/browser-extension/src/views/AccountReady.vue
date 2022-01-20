@@ -16,12 +16,19 @@
 import { defineComponent } from 'vue';
 import Button from '@/components/ui/Button.vue';
 import Icon from '@/components/ui/Icon.vue';
+import { GlobalActionTypes } from '@@/store/extension/action-types';
+import { GlobalGetterTypes } from '@@/store/extension/getter-types';
 
 export default defineComponent({
   name: 'Account Ready',
   components: {
     Button,
     Icon,
+  },
+  computed: {
+    account() {
+      return this.$store.getters[GlobalGetterTypes.getAccount];
+    },
   },
 });
 </script>

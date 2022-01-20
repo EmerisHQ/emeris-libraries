@@ -70,7 +70,7 @@ export default defineComponent({
   methods: {
     goToShowMnemonic() {
       this.$router.push({
-        path: '/backup/show',
+        path: '/backup/password',
       });
     },
   },

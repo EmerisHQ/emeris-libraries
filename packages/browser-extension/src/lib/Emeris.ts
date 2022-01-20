@@ -1,5 +1,5 @@
 import { IEmeris } from '@@/types/emeris';
-import { EmerisWallet } from '@@/types';
+import { AccountCreateStates, EmerisWallet } from '@@/types';
 import { v4 as uuidv4 } from 'uuid';
 import EmerisStorage from './EmerisStorage';
 import config from '../chain-config';
@@ -151,8 +151,9 @@ export class Emeris implements IEmeris {
       case 'updateAccount':
         try {
           await this.storage.updateAccount(
-            message.data.data.newAccountName,
-            message.data.data.oldAccountName,
+            // @ts-ignore we are passing a partial account here
+            message.data.data.account,
+            message.data.data.account.accountName,
             this.password,
           );
           this.wallet = await this.unlockWallet(this.password);
@@ -179,11 +180,14 @@ export class Emeris implements IEmeris {
         return this.getAddress(message.data);
       case 'getMnemonic':
         try {
-          this.wallet = await this.unlockWallet(message.data.data.password);
+          const wallet = await this.unlockWallet(message.data.data.password);
+          if (wallet) {
+            return wallet.find((x) => x.accountName == message.data.data.accountName);
+          }
         } catch (e) {
           console.log(e);
         }
-        return this.wallet.find((x) => x.accountName == message.data.data.accountName);
+        return
       case 'createWallet':
       case 'unlockWallet':
         try {
@@ -258,14 +262,15 @@ export class Emeris implements IEmeris {
   async getDisplayAccounts() {
     if (!this.wallet) return undefined
     // TODO add hd paths to account and use here
-    return await Promise.all(this.wallet.map(async ({ accountName, accountMnemonic }) => {
+    return await Promise.all(this.wallet.map(async ({ accountName, accountMnemonic, setupState }) => {
       const hdWallet = await Secp256k1HdWallet.fromMnemonic(accountMnemonic, /* config for hdPath and prefix go here */)
       const [{ address }] = await hdWallet.getAccounts()
       const keyHash = keyHashfromAddress(address)
 
       return {
         accountName,
-        keyHash
+        keyHash,
+        setupState
       }
     }))
   }
