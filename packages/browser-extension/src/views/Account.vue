@@ -37,7 +37,6 @@
 
 <script lang="ts">
 import { defineComponent } from 'vue';
-import Button from '@/components/ui/Button.vue';
 import Icon from '@/components/ui/Icon.vue';
 import Header from '@@/components/Header.vue';
 import { AccountCreateStates } from '@@/types';
@@ -54,7 +53,6 @@ export default defineComponent({
     },
   },
   components: {
-    Button,
     Icon,
     Header,
   },

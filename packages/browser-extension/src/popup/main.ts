@@ -13,20 +13,20 @@ import { rootstore } from '../store/index';
 
 import { messages } from '@/locales/en';
 const i18n = createI18n({
-    globalInjection: true,
-    legacy: false,
-    locale: 'en',
-    fallbackLocale: 'en',
-    messages,
-    numberFormats: {
-        en: {
-            currency: {
-                style: 'currency',
-                currency: 'USD',
-                notation: 'standard',
-            },
-        },
+  globalInjection: true,
+  legacy: false,
+  locale: 'en',
+  fallbackLocale: 'en',
+  messages,
+  numberFormats: {
+    en: {
+      currency: {
+        style: 'currency',
+        currency: 'USD',
+        notation: 'standard',
+      },
     },
+  },
 });
 
 const app = createApp(App);

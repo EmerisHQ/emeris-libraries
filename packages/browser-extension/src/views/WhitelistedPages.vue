@@ -18,7 +18,6 @@
 <script lang="ts">
 import { defineComponent } from 'vue';
 import Brandmark from '@/components/common/Brandmark.vue';
-import Button from '@/components/ui/Button.vue';
 import Header from '@@/components/Header.vue';
 import { GlobalActionTypes } from '@@/store/extension/action-types';
 
@@ -27,7 +26,6 @@ export default defineComponent({
   components: {
     Brandmark,
     Header,
-    Button,
   },
   computed: {
     whitelistedWebsites() {

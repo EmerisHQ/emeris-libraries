@@ -1,10 +1,9 @@
-import { EmerisEncryptedWallet, EmerisWallet, ExtensionRequest } from '@@/types/index';
+import { EmerisWallet, ExtensionRequest } from '@@/types/index';
 import { GetterTree } from 'vuex';
 import { GetterTypes, GlobalGetterTypes } from './getter-types';
 import { GlobalGetterTypes as GlobalApiGetterTypes } from '@/store/demeris-api/getter-types';
 import { State } from './state';
 import { RootState } from '..';
-import { Balance } from '@/types/api';
 export interface Getters {
   [GetterTypes.getPending](state: State): ExtensionRequest[];
   [GetterTypes.getWallet](state: State): EmerisWallet;
@@ -34,17 +33,17 @@ export const getters: GetterTree<State, RootState> & Getters = {
     return state.lastAccount;
   },
   [GetterTypes.getAccount]: (state) => {
-    return (state.wallet || []).find(account => account.accountName === state.lastAccount);
+    return (state.wallet || []).find((account) => account.accountName === state.lastAccount);
   },
   [GetterTypes.getKeyHash]: (state) => (account) => {
-    const keyHashRecord = state.keyHashes.find(({ accountName }) => accountName === account.accountName)
-    return keyHashRecord ? keyHashRecord.keyHash : undefined
+    const keyHashRecord = state.keyHashes.find(({ accountName }) => accountName === account.accountName);
+    return keyHashRecord ? keyHashRecord.keyHash : undefined;
   },
   // accessing rootState doesn't allow for isolating each module, but this way we don't need to change the demeris module
   [GetterTypes.getAllBalances]: (state, getters, rootState, rootGetters) => (account) => {
-    const keyHash = getters[GetterTypes.getKeyHash](account)
-    if (!keyHash) return []
+    const keyHash = getters[GetterTypes.getKeyHash](account);
+    if (!keyHash) return [];
 
-    return rootGetters[GlobalApiGetterTypes.getBalances]({ address: keyHash })
+    return rootGetters[GlobalApiGetterTypes.getBalances]({ address: keyHash });
   },
 };

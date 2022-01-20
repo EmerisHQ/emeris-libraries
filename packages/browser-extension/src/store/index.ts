@@ -4,24 +4,18 @@ import { InjectionKey } from 'vue';
 import { ExtensionStore, State as ExtensionState, store as extension } from '@@/store/extension';
 import {
   DemerisStore as DemerisStoreAPI,
-  GlobalDemerisActionTypes as GlobalDemerisActionTypesAPI,
-  GlobalGetterTypes as GlobalGetterTypesAPI,
   module as moduleAPI,
   namespace as namespaceAPI,
   State as StateAPI,
 } from '@/store/demeris-api';
 import {
   DemerisStore as DemerisStoreTX,
-  GlobalDemerisActionTypes as GlobalDemerisActionTypesTX,
-  GlobalGetterTypes as GlobalGetterTypesTX,
   module as moduleTX,
   namespace as namespaceTX,
   State as StateTX,
 } from '@/store/demeris-tx';
 import {
   DemerisStore as DemerisStoreUSER,
-  GlobalDemerisActionTypes as GlobalDemerisActionTypesUSER,
-  GlobalGetterTypes as GlobalGetterTypesUSER,
   module as moduleUSER,
   namespace as namespaceUSER,
   State as StateUSER,
@@ -29,7 +23,7 @@ import {
 import init from '@/store/config';
 
 export type RootState = {
-  extension: ExtensionState,
+  extension: ExtensionState;
   [namespaceAPI]: StateAPI;
   [namespaceTX]: StateTX;
   [namespaceUSER]: StateUSER;
@@ -37,7 +31,9 @@ export type RootState = {
 };
 export type RootStore<S> = DemerisStoreAPI<S> & DemerisStoreTX<S> & DemerisStoreUSER<S> & ExtensionStore<S>;
 
-export type RootStoreType = RootStore<Pick<RootState, typeof namespaceAPI | typeof namespaceTX | typeof namespaceUSER | 'extension'>>;
+export type RootStoreType = RootStore<
+  Pick<RootState, typeof namespaceAPI | typeof namespaceTX | typeof namespaceUSER | 'extension'>
+>;
 
 export type TypedAPIStore = DemerisStoreAPI<Pick<RootState, typeof namespaceAPI>>;
 export type TypedUSERStore = DemerisStoreUSER<Pick<RootState, typeof namespaceUSER>>;

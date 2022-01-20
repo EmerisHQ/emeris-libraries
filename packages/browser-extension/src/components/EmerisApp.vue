@@ -8,16 +8,10 @@ import { GlobalActionTypes } from '@@/store/extension/action-types';
 import { GlobalGetterTypes } from '@@/store/extension/getter-types';
 import { ExtensionRequest } from '@@/types';
 import { defineComponent, computed } from 'vue';
-import Brandmark from '@/components/common/Brandmark.vue';
-import ModalWrapper from '@@/components/ModalWrapper.vue';
 import TransportWebUSB from '@ledgerhq/hw-transport-webusb';
 
 export default defineComponent({
   name: 'EmerisApp',
-  components: {
-    Brandmark,
-    ModalWrapper,
-  },
   methods: {
     async route() {
       const pending = await this.$store.dispatch(GlobalActionTypes.GET_PENDING);

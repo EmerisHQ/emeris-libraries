@@ -12,7 +12,6 @@
 
 <script lang="ts">
 import { defineComponent } from 'vue';
-import Button from '@/components/ui/Button.vue';
 import Brandmark from '@/components/common/Brandmark.vue';
 
 export default defineComponent({
@@ -22,7 +21,6 @@ export default defineComponent({
     subtitle: { type: String, required: false, default: undefined },
   },
   components: {
-    Button,
     Brandmark,
   },
 });

@@ -32,10 +32,9 @@ import { defineComponent } from 'vue';
 import Button from '@/components/ui/Button.vue';
 import Header from '@@/components/Header.vue';
 import ListCard from '@@/components/ListCard.vue';
-import Slideout from '@@/components/Slideout.vue';
 
 export default defineComponent({
   name: 'Connect Ledger',
-  components: { ListCard, Header, Button, Slideout },
+  components: { ListCard, Header, Button },
 });
 </script>
