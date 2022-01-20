@@ -1,4 +1,4 @@
-import { AddLiquidityData, CreatePoolData, IBCData, SwapData, Transaction, TransactionData, TransferData, WithdrawLiquidityData } from "../../types/EmerisTransactions";
+import { AddLiquidityData, CreatePoolData, IBCData, SwapData, Transaction, TransactionData, TransferData, WithdrawLiquidityData } from "../../types/src/EmerisTransactions";
 
 export class EmerisMessageMapper {
     chain_id = undefined
