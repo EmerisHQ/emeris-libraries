@@ -5,8 +5,7 @@
 <script lang="ts">
 import { defineComponent, onMounted } from 'vue';
 import { GlobalActionTypes } from '@@/store/extension/action-types';
-import { MutationTypes } from '@@/store/extension/mutation-types';
-import { useRoute, useRouter } from 'vue-router';
+import { useRouter } from 'vue-router';
 import { useStore } from 'vuex';
 import { setStore } from '@/utils/useStore';
 import { GlobalDemerisActionTypes } from '@/store/demeris-api/action-types';
@@ -17,7 +16,6 @@ export default defineComponent({
   setup() {
     const store = useStore();
     const router = useRouter();
-    const route = useRoute();
 
     setStore(store);
 

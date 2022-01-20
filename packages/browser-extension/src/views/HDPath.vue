@@ -29,7 +29,7 @@
       <h1 style="margin-bottom: 16px">What does it mean HD derivation path?</h1>
       <div class="secondary-text" style="margin-bottom: 24px">
         Derivation path, help you to have multiple accounts under one recovery phrase, please make sure to understand
-        before to set it. What each number represents: m / purpose' / coin_type' / account' / change / address_index
+        before to set it. What each number represents: m / purpose' / coin_type' / account' / change / address_index
       </div>
       <Button name="Ok" @click="() => (infoOpen = false)" />
     </Slideout>
@@ -41,7 +41,6 @@ import { defineComponent } from 'vue';
 
 import Button from '@/components/ui/Button.vue';
 import Input from '@/components/ui/Input.vue';
-import MnemonicInput from '@@/components/MnemonicInput.vue';
 import Header from '@@/components/Header.vue';
 import Slideout from '@@/components/Slideout.vue';
 
@@ -50,9 +49,8 @@ import { GlobalGetterTypes } from '@@/store/extension/getter-types';
 
 export default defineComponent({
   name: 'Create Account',
-  components: { MnemonicInput, Header, Button, Slideout, Input },
+  components: { Header, Button, Slideout, Input },
   data: () => ({
-    account: '0',
     change: '0',
     addressIndex: '0',
 

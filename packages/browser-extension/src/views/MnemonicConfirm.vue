@@ -27,7 +27,7 @@ import Button from '@/components/ui/Button.vue';
 import Header from '@@/components/Header.vue';
 import { GlobalGetterTypes } from '@@/store/extension/getter-types';
 
-const shuffleArray = (array) => array.sort((a, b) => 0.5 - Math.random());
+const shuffleArray = (array) => array.sort(() => 0.5 - Math.random());
 
 export default defineComponent({
   computed: {

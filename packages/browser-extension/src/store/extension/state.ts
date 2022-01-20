@@ -1,11 +1,11 @@
-import { EmerisAccount, EmerisEncryptedWallet, EmerisWallet, ExtensionRequest } from '@@/types';
+import { EmerisAccount, EmerisWallet, ExtensionRequest } from '@@/types';
 
 export type State = {
   pending: Array<ExtensionRequest>;
   wallet: EmerisWallet;
   lastAccount: string;
   newAccount: EmerisAccount;
-  keyHashes: { accountName, keyHash }[];
+  keyHashes: { accountName; keyHash }[];
 };
 export function getDefaultState(): State {
   return {
@@ -13,6 +13,6 @@ export function getDefaultState(): State {
     wallet: null,
     lastAccount: null,
     newAccount: null,
-    keyHashes: []
+    keyHashes: [],
   };
 }

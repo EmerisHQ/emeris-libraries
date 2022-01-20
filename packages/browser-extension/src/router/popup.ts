@@ -80,18 +80,18 @@ const routes: Array<RouteRecordRaw> = [
     path: '/accountRemove/:index',
     name: 'Account Remove',
     component: AccountRemove,
-    props: true
+    props: true,
   },
   {
     path: '/accountRename/:index',
     name: 'Account Rename',
     component: AccountRename,
-    props: true
+    props: true,
   },
   {
     path: '/accountAddAdditional',
     name: 'Account Add Additional',
-    component: AccountAddAdditional
+    component: AccountAddAdditional,
   },
   {
     path: '/accountImport',
@@ -172,7 +172,7 @@ const routes: Array<RouteRecordRaw> = [
     path: '/whitelisted/remove/:url',
     name: 'Whitelisted Page Remove',
     component: WhitelistedPageRemove,
-    props: true
+    props: true,
   },
   {
     path: '/security',
@@ -208,7 +208,7 @@ const routes: Array<RouteRecordRaw> = [
     path: '/receive/:denom',
     name: 'Receive QR',
     component: ReceiveQR,
-    props: true
+    props: true,
   },
   {
     path: '/whitelist',

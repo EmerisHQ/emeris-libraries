@@ -22,8 +22,6 @@
 <script lang="ts">
 import { defineComponent } from 'vue';
 import Button from '@/components/ui/Button.vue';
-// import ConfirmationScreen from '@@/views/ConfirmationScreen.vue';
-import Input from '@/components/ui/Input.vue';
 import Icon from '@/components/ui/Icon.vue';
 
 export default defineComponent({
@@ -33,11 +31,8 @@ export default defineComponent({
   }),
   components: {
     Button,
-    Input,
-    // ConfirmationScreen,
     Icon,
   },
 });
 </script>
-<style scoped>
-</style>
+<style scoped></style>

@@ -1,7 +1,6 @@
 import { EmerisAccount } from '.';
 import { TransactionSignRequest } from '../../../types/src/EmerisTransactions';
 
-
 export interface Request {
   id?: string;
   action?: string;
@@ -98,7 +97,7 @@ export type UpdateAccountRequest = Request & {
   action: 'updateAccount';
   data: {
     oldAccountName: string;
-    newAccountName: string
+    newAccountName: string;
   };
 };
 export type RemoveAccountRequest = Request & {

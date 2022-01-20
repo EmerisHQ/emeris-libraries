@@ -11,11 +11,9 @@
 
 <script lang="ts">
 import { defineComponent } from 'vue';
-import Button from '@/components/ui/Button.vue';
 import Icon from '@/components/ui/Icon.vue';
 import Header from '@@/components/Header.vue';
 import { mapState } from 'vuex';
-import { RootState } from '@@/store';
 
 export default defineComponent({
   name: 'Security',
@@ -23,7 +21,6 @@ export default defineComponent({
     ...mapState({}),
   },
   components: {
-    Button,
     Header,
     Icon,
   },

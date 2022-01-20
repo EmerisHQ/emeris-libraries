@@ -6,7 +6,7 @@ export type EmerisEncryptedWallet = {
 export enum AccountCreateStates {
   CREATED = 0, // Mnemonic saved
   CONFIRMED = 1, // Mnemonic re-entered
-  COMPLETE = 2 // All steps complete
+  COMPLETE = 2, // All steps complete
 }
 export type EmerisAccount = {
   accountName: string;

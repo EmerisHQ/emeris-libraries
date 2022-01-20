@@ -16,13 +16,11 @@
 
 <script lang="ts">
 import { defineComponent } from 'vue';
-import Button from '@/components/ui/Button.vue';
 import AccountCreateSection from '@@/views/AccountCreateSection.vue';
 
 export default defineComponent({
   name: 'Welcome',
   components: {
-    Button,
     AccountCreateSection,
   },
   methods: {

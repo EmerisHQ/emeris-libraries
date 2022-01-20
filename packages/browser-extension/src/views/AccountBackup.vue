@@ -53,7 +53,6 @@ import ListCard from '@@/components/ListCard.vue';
 import Slideout from '@@/components/Slideout.vue';
 import Header from '@@/components/Header.vue';
 import Checkbox from '@/components/ui/Checkbox.vue';
-import { MutationTypes } from '@@/store/extension/mutation-types';
 
 export default defineComponent({
   name: 'Welcome',

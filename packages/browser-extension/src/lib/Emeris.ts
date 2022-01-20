@@ -60,21 +60,20 @@ export class Emeris implements IEmeris {
       this.password = password;
       this.selectedAccount = await this.storage.getLastAccount();
       if (this.wallet.length > 0 && !this.selectedAccount) {
-        this.setLastAccount(this.wallet[0].accountName)
+        this.setLastAccount(this.wallet[0].accountName);
       }
       this.timeoutLock = setTimeout(() => {
         this.lock();
       }, 120000);
       return this.wallet;
-
     } catch (e) {
       throw new UnlockWalletError('Could not unlock wallet: ' + e);
     }
   }
   async changePassword(password: string): Promise<void> {
     try {
-      this.storage.changePassword(this.password, password)
-      this.unlockWallet(password)
+      this.storage.changePassword(this.password, password);
+      this.unlockWallet(password);
     } catch (e) {
       throw new UnlockWalletError('Could not unlock wallet: ' + e);
     }
@@ -101,13 +100,13 @@ export class Emeris implements IEmeris {
     return resp;
   }
   getAccount() {
-    return this.wallet.find(x => x.accountName == this.selectedAccount);
+    return this.wallet.find((x) => x.accountName == this.selectedAccount);
   }
   async setLastAccount(accountName) {
     if (accountName) {
       try {
         await this.storage.setLastAccount(accountName);
-        this.selectedAccount = accountName
+        this.selectedAccount = accountName;
       } catch (e) {
         console.log(e);
       }
@@ -149,19 +148,23 @@ export class Emeris implements IEmeris {
         return this.wallet;
       case 'updateAccount':
         try {
-          await this.storage.updateAccount(message.data.data.newAccountName, message.data.data.oldAccountName, this.password);
+          await this.storage.updateAccount(
+            message.data.data.newAccountName,
+            message.data.data.oldAccountName,
+            this.password,
+          );
           this.wallet = await this.unlockWallet(this.password);
           this.setLastAccount(message.data.data.newAccountName);
           return this.wallet;
         } catch (e) {
           console.log(e);
         }
-        return
+        return;
       case 'removeAccount':
         try {
           await this.storage.removeAccount(message.data.data.accountName, this.password);
           if (this.selectedAccount === message.data.data.accountName) {
-            this.selectedAccount === undefined
+            this.selectedAccount === undefined;
           }
           return await this.unlockWallet(this.password);
         } catch (e) {
@@ -187,16 +190,16 @@ export class Emeris implements IEmeris {
         } catch (e) {
           console.log(e);
         }
-        return
+        return;
       case 'changePassword':
         try {
-          this.changePassword(message.data.data.password)
+          this.changePassword(message.data.data.password);
         } catch (e) {
           console.log(e);
         }
-        return
+        return;
       case 'hasWallet':
-        return await this.hasWallet()
+        return await this.hasWallet();
       case 'setResponse':
         request = this.queuedRequests.get(message.data.data.id);
         if (!request) {
@@ -211,8 +214,8 @@ export class Emeris implements IEmeris {
         browser.runtime.sendMessage({ type: 'toPopup', data: { action: 'update' } });
         return true;
       case 'extensionReset':
-        this.storage.extensionReset()
-        return
+        this.storage.extensionReset();
+        return;
     }
   }
   async ensurePopup(): Promise<void> {
@@ -242,11 +245,11 @@ export class Emeris implements IEmeris {
     if (!chain) {
       throw new Error('Chain not supported: ' + req.data.chainId);
     }
-    const account = this.getAccount()
+    const account = this.getAccount();
     if (!account) {
       throw new Error('No account selected');
     }
-    const mnemonic = account.accountMnemonic
+    const mnemonic = account.accountMnemonic;
     return await libs[chain.library].getAddress(mnemonic, chain);
   }
 
@@ -271,9 +274,7 @@ export class Emeris implements IEmeris {
     return Object.keys(config);
   }
   async getAccountName(_req: GetAccountNameRequest): Promise<string> {
-
     return this.selectedAccount;
-
   }
   async hasWallet(): Promise<boolean> {
     return await this.storage.hasWallet();

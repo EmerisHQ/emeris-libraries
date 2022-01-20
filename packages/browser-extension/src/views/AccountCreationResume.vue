@@ -16,15 +16,11 @@
 import { defineComponent } from 'vue';
 import Button from '@/components/ui/Button.vue';
 import ConfirmationScreen from '@@/views/ConfirmationScreen.vue';
-import Input from '@/components/ui/Input.vue';
-import { GlobalActionTypes } from '@@/store/extension/action-types';
-import { MutationTypes } from '@@/store/extension/mutation-types';
 
 export default defineComponent({
   name: 'Account Creation Resume',
   components: {
     Button,
-    Input,
     ConfirmationScreen,
   },
   methods: {

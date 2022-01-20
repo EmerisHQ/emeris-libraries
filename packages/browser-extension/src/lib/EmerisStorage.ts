@@ -37,7 +37,7 @@ export default class EmerisStorage {
   async deletePermission(origin: string): Promise<boolean> {
     try {
       const result = await browser.storage[this.storageMode].get('permissions');
-      const newPermissions = result.permissions.filter((permission => permission.origin != origin));
+      const newPermissions = result.permissions.filter((permission) => permission.origin != origin);
       await browser.storage[this.storageMode].set({ permissions: newPermissions });
       return true;
     } catch (e) {
@@ -53,18 +53,14 @@ export default class EmerisStorage {
     }
   }
   async hasWallet(): Promise<boolean> {
-    return !!(await this.getWallet())
+    return !!(await this.getWallet());
   }
   async getLastAccount(): Promise<string | null> {
-
     const res = await browser.storage[this.storageMode].get('lastAccount');
     return res.lastAccount ?? null;
-
   }
   async setLastAccount(accountName: string): Promise<void> {
-
     await browser.storage[this.storageMode].set({ lastAccount: accountName });
-
   }
   async updateAccount(newAccountName: string, oldAccountName: string, password: string): Promise<boolean> {
     try {
@@ -104,7 +100,7 @@ export default class EmerisStorage {
     }
   }
   private async saveWallet(wallet: EmerisWallet, password: string): Promise<boolean> {
-    debugger
+    debugger;
     try {
       const encryptedWallet = CryptoJS.AES.encrypt(JSON.stringify(wallet), password).toString();
       await browser.storage[this.storageMode].set({ wallet: { walletData: encryptedWallet } });
@@ -118,7 +114,7 @@ export default class EmerisStorage {
     try {
       const encWallet = await this.getWallet();
       if (!encWallet) {
-        await this.saveWallet([], password) // create wallet object if not there
+        await this.saveWallet([], password); // create wallet object if not there
         return [];
       }
       const wallet = JSON.parse(CryptoJS.AES.decrypt(encWallet.walletData, password).toString(CryptoJS.enc.Utf8));
@@ -130,7 +126,7 @@ export default class EmerisStorage {
   async changePassword(oldPassword: string, newPassword: string): Promise<void> {
     try {
       const wallet = await this.unlockWallet(oldPassword);
-      this.saveWallet(wallet, newPassword)
+      this.saveWallet(wallet, newPassword);
     } catch (e) {
       throw new UnlockWalletError('Could not unlock wallet: ' + e);
     }

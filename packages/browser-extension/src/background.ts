@@ -18,7 +18,7 @@ const pageHandler = async (request) => {
 const messageHandler = async (request) => {
   if (request.type == 'fromPopup') {
     const result = await emeris.popupHandler(request);
-    return result
+    return result;
   }
   return await pageHandler(request);
 };
