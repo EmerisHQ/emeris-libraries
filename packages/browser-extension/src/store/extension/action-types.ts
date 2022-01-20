@@ -14,6 +14,7 @@ export enum ActionTypes {
   GET_ADDRESS = 'GET_ADDRESS',
   EXTENSION_RESET = 'EXTENSION_RESET',
   CHANGE_PASSWORD = 'CHANGE_PASSWORD',
+  LOAD_SESSION_DATA = 'LOAD_SESSION_DATA',
 }
 export enum GlobalActionTypes {
   GET_PENDING = 'extension/GET_PENDING',
@@ -31,4 +32,5 @@ export enum GlobalActionTypes {
   GET_ADDRESS = 'extension/GET_ADDRESS',
   EXTENSION_RESET = 'extension/EXTENSION_RESET',
   CHANGE_PASSWORD = 'extension/CHANGE_PASSWORD',
+  LOAD_SESSION_DATA = 'extension/LOAD_SESSION_DATA',
 }

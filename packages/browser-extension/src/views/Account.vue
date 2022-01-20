@@ -46,7 +46,7 @@ export default defineComponent({
   name: 'Account',
   computed: {
     account() {
-      return this.$store.getters[GlobalGetterTypes.getAccount];
+      return this.$store.getters[GlobalGetterTypes.getAccount] || {};
     },
     backedUp() {
       return this.account.setupState === AccountCreateStates.COMPLETE;

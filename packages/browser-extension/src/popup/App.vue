@@ -38,6 +38,7 @@ export default defineComponent({
         // unlocked but no account
         router.push('/welcome');
       } else {
+        store.dispatch(GlobalActionTypes.LOAD_SESSION_DATA);
         router.push('/portfolio');
       }
 

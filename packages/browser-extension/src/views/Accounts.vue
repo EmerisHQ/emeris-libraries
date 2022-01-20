@@ -89,6 +89,7 @@ export default defineComponent({
     goToAccount(account) {
       this.$store.dispatch(GlobalActionTypes.SET_LAST_ACCOUNT_USED, { accountName: account.accountName });
       this.$store.dispatch(GlobalActionTypes.GET_WALLET);
+      this.$store.dispatch(GlobalActionTypes.LOAD_SESSION_DATA);
       this.$router.push('/portfolio');
     },
     backedUp(account) {

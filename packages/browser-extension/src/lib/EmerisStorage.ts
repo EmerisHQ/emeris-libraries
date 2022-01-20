@@ -100,7 +100,6 @@ export default class EmerisStorage {
     }
   }
   private async saveWallet(wallet: EmerisWallet, password: string): Promise<boolean> {
-    debugger;
     try {
       const encryptedWallet = CryptoJS.AES.encrypt(JSON.stringify(wallet), password).toString();
       await browser.storage[this.storageMode].set({ wallet: { walletData: encryptedWallet } });
