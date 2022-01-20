@@ -1,5 +1,5 @@
 import { IEmeris } from '@@/types/emeris';
-import { AccountCreateStates, EmerisWallet } from '@@/types';
+import { EmerisWallet } from '@@/types';
 import { v4 as uuidv4 } from 'uuid';
 import EmerisStorage from './EmerisStorage';
 import config from '../chain-config';
