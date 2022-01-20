@@ -115,7 +115,6 @@ export class Emeris implements IEmeris {
   }
   async popupHandler(message: RoutedInternalRequest): Promise<unknown> {
     let request;
-    console.log(message);
     this.reset();
     switch (message?.data.action) {
       case 'getPending':

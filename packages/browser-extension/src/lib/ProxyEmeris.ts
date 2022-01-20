@@ -58,7 +58,6 @@ export class ProxyEmeris implements IEmeris {
     });
 
     this.queuedRequests.set(requestId, { resolver });
-    console.log(fullRequest);
     window.postMessage(fullRequest, window.location.origin);
 
     return await response;

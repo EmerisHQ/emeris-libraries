@@ -63,7 +63,6 @@ export const actions: ActionTree<State, RootState> & Actions = {
   async [ActionTypes.GET_PENDING]({ commit, getters }) {
     try {
       const latestPending = await browser.runtime.sendMessage({ type: 'fromPopup', data: { action: 'getPending' } });
-      console.log(latestPending);
 
       commit(MutationTypes.ADD_PENDING, latestPending);
     } catch (e) {

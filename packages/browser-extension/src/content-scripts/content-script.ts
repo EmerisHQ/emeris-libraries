@@ -1,4 +1,3 @@
-console.log('Emeris Extension loaded');
 function injectScript(file: string) {
   const container = document.head || document.documentElement;
   const scriptElement = document.createElement('script');
@@ -6,6 +5,7 @@ function injectScript(file: string) {
   scriptElement.src = file;
   scriptElement.type = 'text/javascript';
   container.insertBefore(scriptElement, container.children[0]);
+  console.log('Emeris Extension loaded');
 }
 const injected = browser.runtime.getURL('/js/inject-emeris.js');
 injectScript(injected);
