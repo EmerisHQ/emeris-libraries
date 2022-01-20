@@ -28,11 +28,11 @@ export const mutations: MutationTree<State> & Mutations = {
     state.newAccount = account;
   },
   [MutationTypes.SET_MNEMONIC](state: State, payload: { account: EmerisAccount }) {
-    state.wallet = state.wallet.map(account => {
+    state.wallet = state.wallet.map((account) => {
       if (account.accountName === payload.account.accountName) {
-        account.accountMnemonic = payload.account.accountMnemonic
+        account.accountMnemonic = payload.account.accountMnemonic;
       }
-      return account
-    })
+      return account;
+    });
   },
 };

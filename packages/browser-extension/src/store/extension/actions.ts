@@ -48,7 +48,7 @@ export interface Actions {
     { commit }: ActionContext<State, RootState>,
     { accountName, password }: { accountName: string; password: string },
   ): Promise<void>;
-  [ActionTypes.GET_ADDRESS]({ }: ActionContext<State, RootState>, { chainId }: { chainId: string }): Promise<string>;
+  [ActionTypes.GET_ADDRESS]({}: ActionContext<State, RootState>, { chainId }: { chainId: string }): Promise<string>;
 }
 export type GlobalActions = Namespaced<Actions, 'extension'>;
 
@@ -72,8 +72,12 @@ export const actions: ActionTree<State, RootState> & Actions = {
     }
   },
   async [ActionTypes.LOAD_SESSION_DATA]({ dispatch }) {
-    const lastAccountused = await dispatch(ActionTypes.GET_LAST_ACCOUNT_USED) // also loads the last account to the state
-    await dispatch(GlobalDemerisActionTypes.API.GET_BALANCES, { subscribe: true, params: { address: lastAccountused.keyHash } }, { root: true })
+    const lastAccountused = await dispatch(ActionTypes.GET_LAST_ACCOUNT_USED); // also loads the last account to the state
+    await dispatch(
+      GlobalDemerisActionTypes.API.GET_BALANCES,
+      { subscribe: true, params: { address: lastAccountused.keyHash } },
+      { root: true },
+    );
   },
   async [ActionTypes.GET_WALLET]({ commit, getters }) {
     try {
@@ -148,7 +152,7 @@ export const actions: ActionTree<State, RootState> & Actions = {
       throw new Error('Extension:UnlockWallet failed');
     }
   },
-  async [ActionTypes.CHANGE_PASSWORD]({ }, { password }: { password: string }) {
+  async [ActionTypes.CHANGE_PASSWORD]({}, { password }: { password: string }) {
     await browser.runtime.sendMessage({
       type: 'fromPopup',
       data: { action: 'changePassword', data: { password } },
@@ -186,15 +190,15 @@ export const actions: ActionTree<State, RootState> & Actions = {
         type: 'fromPopup',
         data: { action: 'getMnemonic', data: { accountName, password } },
       });
-      debugger
-      if (!account) throw new Error('Password incorrect')
-      commit(MutationTypes.SET_MNEMONIC, { account })
+      debugger;
+      if (!account) throw new Error('Password incorrect');
+      commit(MutationTypes.SET_MNEMONIC, { account });
     } catch (e) {
       console.log(e);
       throw new Error('Extension:getMnemonic failed');
     }
   },
-  async [ActionTypes.GET_ADDRESS]({ }, { chainId }: { chainId: string }) {
+  async [ActionTypes.GET_ADDRESS]({}, { chainId }: { chainId: string }) {
     try {
       const address = await browser.runtime.sendMessage({
         type: 'fromPopup',
@@ -207,8 +211,11 @@ export const actions: ActionTree<State, RootState> & Actions = {
     }
   },
   async [ActionTypes.ACCOUNT_BACKED_UP]({ dispatch }, { accountName }: { accountName: string }) {
-    await browser.runtime.sendMessage({ type: 'fromPopup', data: { action: 'updateAccount', data: { account: { accountName, setupState: AccountCreateStates.COMPLETE } } } });
-    dispatch(ActionTypes.LOAD_SESSION_DATA)
+    await browser.runtime.sendMessage({
+      type: 'fromPopup',
+      data: { action: 'updateAccount', data: { account: { accountName, setupState: AccountCreateStates.COMPLETE } } },
+    });
+    dispatch(ActionTypes.LOAD_SESSION_DATA);
   },
   async [ActionTypes.EXTENSION_RESET]() {
     return await browser.runtime.sendMessage({ type: 'fromPopup', data: { action: 'extensionReset' } });

@@ -20,7 +20,7 @@ import {
 } from '@@/types/api';
 import { AbstractTxResult } from '@@/types/transactions';
 import { keyHashfromAddress } from '@/utils/basic';
-import { Secp256k1HdWallet } from "@cosmjs/amino";
+import { Secp256k1HdWallet } from '@cosmjs/amino';
 export class Emeris implements IEmeris {
   public loaded: boolean;
   private storage: EmerisStorage;
@@ -151,7 +151,6 @@ export class Emeris implements IEmeris {
       case 'updateAccount':
         try {
           await this.storage.updateAccount(
-            // @ts-ignore we are passing a partial account here
             message.data.data.account,
             message.data.data.account.accountName,
             this.password,
@@ -175,7 +174,7 @@ export class Emeris implements IEmeris {
         }
         return this.wallet;
       case 'getWallet':
-        return this.getDisplayAccounts()
+        return this.getDisplayAccounts();
       case 'getAddress':
         return this.getAddress(message.data);
       case 'getMnemonic':
@@ -187,7 +186,7 @@ export class Emeris implements IEmeris {
         } catch (e) {
           console.log(e);
         }
-        return
+        return;
       case 'createWallet':
       case 'unlockWallet':
         try {
@@ -260,19 +259,23 @@ export class Emeris implements IEmeris {
   }
   // function limits the data that we return to the view layers to not expose accidentially data
   async getDisplayAccounts() {
-    if (!this.wallet) return undefined
+    if (!this.wallet) return undefined;
     // TODO add hd paths to account and use here
-    return await Promise.all(this.wallet.map(async ({ accountName, accountMnemonic, setupState }) => {
-      const hdWallet = await Secp256k1HdWallet.fromMnemonic(accountMnemonic, /* config for hdPath and prefix go here */)
-      const [{ address }] = await hdWallet.getAccounts()
-      const keyHash = keyHashfromAddress(address)
+    return await Promise.all(
+      this.wallet.map(async ({ accountName, accountMnemonic, setupState }) => {
+        const hdWallet = await Secp256k1HdWallet.fromMnemonic(
+          accountMnemonic /* config for hdPath and prefix go here */,
+        );
+        const [{ address }] = await hdWallet.getAccounts();
+        const keyHash = keyHashfromAddress(address);
 
-      return {
-        accountName,
-        keyHash,
-        setupState
-      }
-    }))
+        return {
+          accountName,
+          keyHash,
+          setupState,
+        };
+      }),
+    );
   }
 
   async getPublicKey(req: GetPublicKeyRequest): Promise<Uint8Array> {
