@@ -17,6 +17,7 @@ export type SignTransactionRequest = Request & {
   action: 'signTransaction';
   data: {
     tx: TransactionSignRequest;
+    chainId: string;
     origin?: string;
   };
 };

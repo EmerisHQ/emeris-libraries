@@ -9,6 +9,7 @@ export default class Queue<T> {
   dequeue(): T {
     return this.items.pop();
   }
+  // @ts-ignore
   head(): Τ {
     return this.items[this.items.length - 1];
   }
