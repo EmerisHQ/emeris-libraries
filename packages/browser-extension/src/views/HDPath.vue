@@ -62,7 +62,7 @@ export default defineComponent({
   }),
   computed: {
     newAccount() {
-      return this.$store.state.newAccount;
+      return this.$store.state.extension.newAccount;
     },
   },
   watch: {
@@ -79,7 +79,7 @@ export default defineComponent({
   methods: {
     submit() {
       this.$store.commit('extension/' + MutationTypes.SET_NEW_ACCOUNT, {
-        accountMnemonic: this.mnemonic,
+        ...this.newAccount,
         hdPath: [this.account, this.change, this.addressIndex],
       });
       this.$router.push({ path: '/accountCreate' });

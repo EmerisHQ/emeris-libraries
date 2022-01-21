@@ -141,6 +141,10 @@ export class Emeris implements IEmeris {
         }
         break;
       case 'createAccount':
+        // guard
+        if (!message.data.data.account.accountMnemonic) {
+          throw new Error("Account has no mnemonic")
+        }
         await this.storage.saveAccount(message.data.data.account, this.password);
         if (message.data.data.account.isLedger) {
           try {

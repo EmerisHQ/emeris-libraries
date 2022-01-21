@@ -5,7 +5,7 @@
         :style="{
           opacity: invalidChar || unknownWords.length > 0 ? 0.6 : 1,
         }"
-        @click="!invalidChar && unknownWords.length === 0 && $router.push('/accountImportHdPath')"
+        @click="toHdPath"
         >Advanced</a
       >
     </Header>
@@ -86,12 +86,21 @@ export default defineComponent({
     }
   },
   methods: {
-    submit() {
+    storeNewAccount() {
       this.$store.commit('extension/' + MutationTypes.SET_NEW_ACCOUNT, {
         accountMnemonic: mnemonicFormat(this.mnemonic),
         setupState: AccountCreateStates.COMPLETE,
       });
+    },
+    submit() {
+      this.storeNewAccount();
       this.$router.push({ path: '/accountCreate' });
+    },
+    toHdPath() {
+      if (!this.invalidChar && this.unknownWords.length === 0) {
+        this.storeNewAccount();
+        this.$router.push('/accountImportHdPath');
+      }
     },
   },
 });
