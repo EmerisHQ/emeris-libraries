@@ -13,6 +13,7 @@ export type EmerisAccount = {
   accountMnemonic: string;
   isLedger: boolean;
   setupState: AccountCreateStates;
+  hdPath?: [account: string, change: string, addressIndex: string] // TODO force setting or default later in code?
 };
 export type EmerisWallet = EmerisAccount[];
 

@@ -19,6 +19,15 @@ import {
   RoutedInternalRequest,
 } from '@@/types/api';
 import { AbstractTxResult } from '@@/types/transactions';
+
+const getHdPath = (chainConfig, account) => {
+  let hdPath = chainConfig.HDPath
+  if (account.hdPath) {
+    hdPath = chainConfig.HDPath.split('/').slice(0, 2).concat(account.hdPath).join('/')
+  }
+  return hdPath
+}
+
 export class Emeris implements IEmeris {
   public loaded: boolean;
   private storage: EmerisStorage;
@@ -260,7 +269,8 @@ export class Emeris implements IEmeris {
       throw new Error('No account selected');
     }
     const mnemonic = account.accountMnemonic;
-    return await libs[chain.library].getAddress(mnemonic, chain);
+
+    return await libs[chain.library].getAddress(mnemonic, { prefix: chain.prefix, HDPath: getHdPath(chain, account) });
   }
 
   async getPublicKey(req: GetPublicKeyRequest): Promise<Uint8Array> {
@@ -271,8 +281,13 @@ export class Emeris implements IEmeris {
     if (!chain) {
       throw new Error('Chain not supported: ' + req.data.chainId);
     }
-    const mnemonic = this.getAccount().accountMnemonic;
-    return await libs[chain.library].getPublicKey(mnemonic, chain);
+    const account = this.getAccount();
+    if (!account) {
+      throw new Error('No account selected');
+    }
+    const mnemonic = account.accountMnemonic;
+
+    return await libs[chain.library].getPublicKey(mnemonic, getHdPath(chain, { prefix: chain.prefix, HDPath: getHdPath(chain, account) }));
   }
   async isPermitted(origin: string): Promise<boolean> {
     return await this.storage.isPermitted(origin);
