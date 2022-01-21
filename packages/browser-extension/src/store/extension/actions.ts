@@ -43,14 +43,11 @@ export interface Actions {
   [ActionTypes.GET_MNEMONIC](
     { commit }: ActionContext<State, RootState>,
     { accountName, password }: { accountName: string; password: string },
-  ): Promise<string>;
-  [ActionTypes.GET_ADDRESS](
-    { }: ActionContext<State, RootState>,
-    { chainId }: { chainId: string; },
-  ): Promise<string>;
+  ): Promise<void>;
+  [ActionTypes.GET_ADDRESS]({ }: ActionContext<State, RootState>, { chainId }: { chainId: string }): Promise<string>;
   [ActionTypes.REMOVE_WHITELISTED_WEBSITE](
     { }: ActionContext<State, RootState>,
-    { website }: { website: string; },
+    { website }: { website: string },
   ): Promise<void>;
 }
 export type GlobalActions = Namespaced<Actions, 'extension'>;
@@ -193,7 +190,6 @@ export const actions: ActionTree<State, RootState> & Actions = {
         type: 'fromPopup',
         data: { action: 'getMnemonic', data: { accountName, password } },
       });
-      debugger;
       if (!account) throw new Error('Password incorrect');
       commit(MutationTypes.SET_MNEMONIC, { account });
     } catch (e) {
@@ -223,20 +219,29 @@ export const actions: ActionTree<State, RootState> & Actions = {
   async [ActionTypes.EXTENSION_RESET]() {
     return await browser.runtime.sendMessage({ type: 'fromPopup', data: { action: 'extensionReset' } });
   },
-  async[ActionTypes.GET_WHITELISTED_WEBSITES]({ commit }) {
-    const whitelistWebsites = await browser.runtime.sendMessage({ type: 'fromPopup', data: { action: 'getWhitelistedWebsite' } });
-    commit(MutationTypes.SET_WHITELISTED_WEBSITES, whitelistWebsites)
+  async [ActionTypes.GET_WHITELISTED_WEBSITES]({ commit }) {
+    const whitelistWebsites = await browser.runtime.sendMessage({
+      type: 'fromPopup',
+      data: { action: 'getWhitelistedWebsite' },
+    });
+    commit(MutationTypes.SET_WHITELISTED_WEBSITES, whitelistWebsites);
   },
-  async[ActionTypes.REMOVE_WHITELISTED_WEBSITE]({ dispatch }, { website }) {
-    await browser.runtime.sendMessage({ type: 'fromPopup', data: { action: 'removeWhitelistedWebsite', data: { website } } });
-    await dispatch(ActionTypes.GET_WHITELISTED_WEBSITES)
+  async [ActionTypes.REMOVE_WHITELISTED_WEBSITE]({ dispatch }, { website }) {
+    await browser.runtime.sendMessage({
+      type: 'fromPopup',
+      data: { action: 'removeWhitelistedWebsite', data: { website } },
+    });
+    await dispatch(ActionTypes.GET_WHITELISTED_WEBSITES);
   },
-  async[ActionTypes.WHITELIST_WEBSITE]({ dispatch, getters }, { website }) {
-    await browser.runtime.sendMessage({ type: 'fromPopup', data: { action: 'addWhitelistedWebsite', data: { website } } });
+  async [ActionTypes.WHITELIST_WEBSITE]({ dispatch, getters }, { website }) {
+    await browser.runtime.sendMessage({
+      type: 'fromPopup',
+      data: { action: 'addWhitelistedWebsite', data: { website } },
+    });
     await browser.runtime.sendMessage({
       type: 'fromPopup',
       data: { action: 'setResponse', data: getters['getPending'][0] },
     });
-    dispatch(ActionTypes.GET_WHITELISTED_WEBSITES)
+    await dispatch(ActionTypes.GET_WHITELISTED_WEBSITES);
   },
 };

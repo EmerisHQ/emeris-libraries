@@ -14,7 +14,7 @@ export default class EmerisStorage {
   }
   async getPermissions(): Promise<{ origin: string }[]> {
     const result = await browser.storage[this.storageMode].get('permissions');
-    return result.permissions
+    return result.permissions;
   }
   async isPermitted(origin: string): Promise<boolean> {
     const result = await browser.storage[this.storageMode].get('permissions');

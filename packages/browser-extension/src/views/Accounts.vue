@@ -9,11 +9,15 @@
       <div style="cursor: pointer">
         <h2 style="font-weight: 600">{{ account.accountName }}</h2>
         <!-- TODO -->
-        <span class="secondary-text" v-if="!backedUp(account)"
+        <span class="secondary-text" v-if="backedUp(account)"
           ><TotalPrice :balances="balances(account)" small-decimals
         /></span>
-        <span class="secondary-text" style="color: #ff6072; opacity: 1; font-size: 13px" v-else
-          ><TotalPrice :balances="balances(account)" small-decimals /> - Not backed up</span
+        <span class="secondary-text" style="color: #ff6072; opacity: 1" v-else
+          ><TotalPrice :balances="balances(account)" small-decimals style="display: inline-block" /><span
+            style="font-size: 13px"
+          >
+            - Not backed up</span
+          ></span
         >
       </div>
       <Icon
