@@ -43,7 +43,7 @@ export interface Actions {
   [ActionTypes.GET_MNEMONIC](
     { commit }: ActionContext<State, RootState>,
     { accountName, password }: { accountName: string; password: string },
-  ): Promise<string>;
+  ): Promise<void>;
   [ActionTypes.GET_ADDRESS](
     { }: ActionContext<State, RootState>,
     { chainId }: { chainId: string; },
