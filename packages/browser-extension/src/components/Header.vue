@@ -20,13 +20,14 @@ export default defineComponent({
   name: 'Header',
   props: {
     title: { type: String, required: true },
+    backTo: { type: String, required: false, default: undefined },
   },
   components: {
     Icon,
   },
   methods: {
     goBack() {
-      this.$router.go(-1);
+      this.backTo ? this.$router.push(this.backTo) : this.$router.go(-1);
     },
   },
 });

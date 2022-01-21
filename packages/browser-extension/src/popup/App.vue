@@ -3,7 +3,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, onMounted } from 'vue';
+import { defineComponent, onMounted, watch } from 'vue';
 import { GlobalActionTypes } from '@@/store/extension/action-types';
 import { useRouter } from 'vue-router';
 import { useStore } from 'vuex';
@@ -25,22 +25,6 @@ export default defineComponent({
         { endpoint: process.env.VUE_APP_EMERIS_ENDPOINT },
         { root: true },
       );
-
-      const hasWallet = await store.dispatch(GlobalActionTypes.HAS_WALLET); // if there is a last account used, the extension is initialized
-      const wallet = await store.dispatch(GlobalActionTypes.GET_WALLET); // if able to load the wallet, the extension is unlocked
-
-      if (!hasWallet) {
-        router.push('/welcome');
-      } else if (!wallet) {
-        // not unlocked
-        router.push('/welcomeBack');
-      } else if (wallet.length === 0) {
-        // unlocked but no account
-        router.push('/welcome');
-      } else {
-        store.dispatch(GlobalActionTypes.LOAD_SESSION_DATA);
-        router.push('/portfolio');
-      }
 
       // TODO handle in the background and just get from there (hit cache first)
       const loadData = async () => {
@@ -91,7 +75,6 @@ export default defineComponent({
       };
       loadData();
 
-      store.dispatch(GlobalActionTypes.GET_PENDING);
       browser.runtime.onMessage.addListener((message) => {
         if (message.type == 'toPopup' && message.data.action == 'update') {
           store.dispatch(GlobalActionTypes.GET_PENDING);

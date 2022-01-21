@@ -26,7 +26,4 @@ pnpm-debug.log*
 *.pem
 *.pub
 *.zip
-
-artifacts
-
-demeris
+/artifacts

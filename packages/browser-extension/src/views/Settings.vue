@@ -42,6 +42,7 @@ export default defineComponent({
       return this.$store.getters[GlobalGetterTypes.getAccount];
     },
     backedUp() {
+      if (!this.account) return false;
       return this.account.setupState === AccountCreateStates.COMPLETE;
     },
   },

@@ -35,4 +35,7 @@ export const mutations: MutationTree<State> & Mutations = {
       return account;
     });
   },
+  [MutationTypes.SET_WHITELISTED_WEBSITES](state: State, whitelistedWebsites: { origin: string }[]) {
+    state.whitelistedWebsites = whitelistedWebsites;
+  },
 };

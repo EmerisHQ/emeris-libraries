@@ -10,8 +10,8 @@
       </p>
     </div>
     <div style="display: flex; margin-top: auto">
-      <Button name="Reject" variant="secondary" style="margin-right: 16px; flex: 1" />
-      <Button name="Accept" style="flex: 1" />
+      <Button name="Reject" variant="secondary" style="margin-right: 16px; flex: 1" @click="close" />
+      <Button name="Accept" style="flex: 1" @click="accept" />
     </div>
   </div>
 </template>
@@ -19,6 +19,7 @@
 <script>
 import Brandmark from '@/components/common/Brandmark.vue';
 import Button from '@/components/ui/Button.vue';
+import { GlobalActionTypes } from '@@/store/extension/action-types';
 export default {
   data: () => ({
     url: '',
@@ -26,6 +27,15 @@ export default {
   components: {
     Brandmark,
     Button,
+  },
+  methods: {
+    close() {
+      window.close();
+    },
+    async accept() {
+      await this.$store.dispatch(GlobalActionTypes.WHITELIST_WEBSITE, { website: this.url });
+      this.$router.push('/');
+    },
   },
   mounted() {
     this.url = this.$route.query.url;

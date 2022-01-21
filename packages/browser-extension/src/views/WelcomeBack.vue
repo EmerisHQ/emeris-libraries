@@ -26,7 +26,7 @@ import Input from '@/components/ui/Input.vue';
 import { GlobalActionTypes } from '@@/store/extension/action-types';
 
 export default defineComponent({
-  name: 'Welcome',
+  name: 'Welcome Back',
   data: () => ({
     error: false,
     password: '',
@@ -39,11 +39,8 @@ export default defineComponent({
   methods: {
     async checkPassword() {
       const wallet = await this.$store.dispatch(GlobalActionTypes.UNLOCK_WALLET, { password: this.password });
-      if (wallet && wallet.length === 0) {
-        this.$router.push('/welcome');
-      } else if (wallet) {
-        this.$store.dispatch(GlobalActionTypes.LOAD_SESSION_DATA);
-        this.$router.push('/portfolio');
+      if (wallet) {
+        this.$router.push('/');
       } else {
         this.error = true;
       }

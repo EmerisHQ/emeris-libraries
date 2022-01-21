@@ -1,5 +1,5 @@
 import { coin, coins, makeSignDoc, Secp256k1HdWallet } from "@cosmjs/amino";
-import CosmosAminoMessageMapper from "../lib/cosmos_amino";
+import CosmosAminoMessageMapper from "../src/cosmos_amino";
 
 describe('Cosmos Mapps', () => {
     const mnemonic = "surround miss nominee dream gap cross assault thank captain prosper drop duty group candy wealth weather scale put";

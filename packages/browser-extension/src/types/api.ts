@@ -142,6 +142,21 @@ export type HasPasswordRequest = Request & {
 export type ExtensionResetRequest = Request & {
   action: 'extensionReset';
 };
+export type GetWhitelistedWebsiteRequest = Request & {
+  action: 'getWhitelistedWebsite';
+};
+export type RemoveWhitelistedWebsiteRequest = Request & {
+  action: 'removeWhitelistedWebsite';
+  data: {
+    website: string;
+  };
+};
+export type AddWhitelistedWebsiteRequest = Request & {
+  action: 'addWhitelistedWebsite';
+  data: {
+    website: string;
+  };
+};
 export type SetResponseRequest = Request & {
   action: 'setResponse';
   data: {
@@ -173,6 +188,9 @@ export type PopupRequest =
   | SetResponseRequest
   | GetAddressRequest
   | ExtensionResetRequest
+  | GetWhitelistedWebsiteRequest
+  | RemoveWhitelistedWebsiteRequest
+  | AddWhitelistedWebsiteRequest
   | HasWalletRequest;
 export type RoutedExternalRequest = {
   type: 'toEmerisExtension' | 'toPopup';
