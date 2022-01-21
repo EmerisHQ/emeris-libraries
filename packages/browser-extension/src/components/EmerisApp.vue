@@ -28,6 +28,9 @@ export default defineComponent({
           case 'enable':
             this.$router.push({ path: '/whitelist', query: { url: pending[0].data.origin } });
             break;
+          case 'signTransaction':
+            this.$router.push({ path: '/transaction/review' });
+            break;
           default:
             this.$router.push('/portfolio');
         }

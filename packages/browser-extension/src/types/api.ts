@@ -14,17 +14,13 @@ export type ApproveOriginRequest = Request & {
 };
 export type SignTransactionRequest = Request & {
   action: 'signTransaction';
-  data: {
-    tx: TransactionSignRequest;
-    chainId: string;
-    origin?: string;
-  };
+  data: TransactionSignRequest
 };
 export type SignAndBroadcastTransactionRequest = Request & {
   action: 'signAndBroadcastTransaction';
   data: {
     tx: TransactionSignRequest;
-    origin?: string;
+    origin?: string; // TODO origin should be inferred and not be part of the sub-request
   };
 };
 export type GetAddressRequest = Request & {

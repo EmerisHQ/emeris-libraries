@@ -7,14 +7,14 @@ import {
   HasWalletRequest,
   IsHWWalletRequest,
   RoutedExtensionRequest,
-  // SignTransactionRequest,
+  SignTransactionRequest,
   SupportedChainsRequest,
   ApproveOriginRequest,
-  // SignAndBroadcastTransactionRequest,
+  SignAndBroadcastTransactionRequest,
   GetAccountNameRequest,
 } from '@@/types/api';
 import { v4 as uuidv4 } from 'uuid';
-// import { AbstractTx, AbstractTxResult } from '@@/types/transactions';
+import { AbstractTx, AbstractTxResult } from '@@/types/transactions';
 export class ProxyEmeris implements IEmeris {
   loaded: boolean;
   private queuedRequests: Map<
@@ -112,14 +112,18 @@ export class ProxyEmeris implements IEmeris {
   }
 
   // TODO resolve type errors
-  // async signTransaction({ tx, chainId }: { tx: AbstractTx; chainId: string }): Promise<Uint8Array> {
-  //   const request = {
-  //     action: 'signTransaction',
-  //     data: { tx, chainId },
-  //   };
-  //   const response = await this.sendRequest(request as SignTransactionRequest);
-  //   return response.data as Uint8Array;
-  // }
+  async signTransaction({ tx, chainId, signingAddress }: {
+    tx: AbstractTx,
+    chainId: string,
+    signingAddress: string,
+  }): Promise<Uint8Array> {
+    const request = {
+      action: 'signTransaction',
+      data: { messages: [tx], chainId, signingAddress },
+    };
+    const response = await this.sendRequest(request as SignTransactionRequest);
+    return response.data as Uint8Array;
+  }
   async enable(): Promise<boolean> {
     const request = {
       action: 'enable',
