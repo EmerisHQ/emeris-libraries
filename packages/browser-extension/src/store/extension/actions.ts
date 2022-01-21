@@ -109,12 +109,13 @@ export const actions: ActionTree<State, RootState> & Actions = {
     commit(MutationTypes.SET_WALLET, response as EmerisWallet);
     return getters['getWallet'];
   },
-  async[ActionTypes.CREATE_ACCOUNT]({ commit, getters }, { account }: { account: EmerisAccount }) {
+  async[ActionTypes.CREATE_ACCOUNT]({ commit, dispatch, getters }, { account }: { account: EmerisAccount }) {
     const response = await browser.runtime.sendMessage({
       type: 'fromPopup',
       data: { action: 'createAccount', data: { account } },
     });
     commit(MutationTypes.SET_WALLET, response as EmerisWallet);
+    dispatch(ActionTypes.SET_LAST_ACCOUNT_USED, account)
     return getters['getWallet'];
   },
   async[ActionTypes.UPDATE_ACCOUNT](
