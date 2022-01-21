@@ -78,7 +78,7 @@ export default defineComponent({
         },
       });
       if (wallet) {
-        this.$router.push('/backup');
+        this.$router.push('/backup?new=true');
       }
     },
   },

@@ -57,7 +57,7 @@ export default defineComponent({
           accountName: this.account.accountName,
           password: this.password,
         });
-        this.$router.push('/backup/confirm');
+        this.$router.push('/backup/show');
       } catch (e) {
         this.error = true;
       }
