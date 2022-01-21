@@ -219,18 +219,18 @@ export class Emeris implements IEmeris {
         browser.runtime.sendMessage({ type: 'toPopup', data: { action: 'update' } });
         return true;
       case 'extensionReset':
-        this.storage.extensionReset()
-        return
+        this.storage.extensionReset();
+        return;
       case 'removeWhitelistedWebsite':
-        this.storage.deletePermission(message.data.data.website)
-        return
+        this.storage.deletePermission(message.data.data.website);
+        return;
       case 'getWhitelistedWebsite':
-        return this.storage.getPermissions()
+        return this.storage.getPermissions();
       case 'addWhitelistedWebsite':
         // prevent dupes
-        const permissions = await this.storage.getPermissions()
-        if (permissions.find(permission => permission.origin === message.data.data.website)) return true
-        return this.storage.addPermission(message.data.data.website)
+        const permissions = await this.storage.getPermissions();
+        if (permissions.find((permission) => permission.origin === message.data.data.website)) return true;
+        return this.storage.addPermission(message.data.data.website);
     }
   }
   async ensurePopup(): Promise<void> {
