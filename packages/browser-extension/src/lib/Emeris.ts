@@ -28,7 +28,10 @@ export class Emeris implements IEmeris {
   private password: string;
   private queuedRequests: Map<
     string,
-    Record<'resolver', (value: ExtensionRequest | PromiseLike<ExtensionRequest>) => void>
+    {
+      resolver;
+      rejecter;
+    }
   >;
   private pending: ExtensionRequest[] = [];
   private timeoutLock: ReturnType<typeof setTimeout>;
@@ -89,11 +92,12 @@ export class Emeris implements IEmeris {
     ).id;
   }
   async forwardToPopup(request: ExtensionRequest): Promise<ExtensionResponse> {
-    let resolver;
-    const response: Promise<ExtensionResponse> = new Promise((resolve) => {
+    let resolver, rejecter;
+    const response: Promise<ExtensionResponse> = new Promise((resolve, reject) => {
       resolver = resolve;
+      rejecter = reject;
     });
-    this.queuedRequests.set(request.id, { resolver });
+    this.queuedRequests.set(request.id, { resolver, rejecter });
     this.pending.push(request);
     this.ensurePopup();
     const resp = await response;
@@ -201,31 +205,25 @@ export class Emeris implements IEmeris {
       case 'hasWallet':
         return await this.hasWallet();
       case 'setResponse':
-        request = this.queuedRequests.get(message.data.data.id);
-        if (!request) {
-          return;
-        }
-        request.resolver(message.data.data);
-        this.queuedRequests.delete(message.data.data.id);
-        this.pending.splice(
-          this.pending.findIndex((req) => req.id == message.data.data.id),
-          1,
-        );
-        browser.runtime.sendMessage({ type: 'toPopup', data: { action: 'update' } });
-        return true;
+        return this.setResponse(message.data.data.id, message.data.data);
+      case 'acceptTransaction':
+        const response = 'hash';
+        return this.setResponse(message.data.data.id, response);
+      case 'cancelTransaction':
+        return this.setResponse(message.data.data.id, undefined, true);
       case 'extensionReset':
-        this.storage.extensionReset()
-        return
+        this.storage.extensionReset();
+        return;
       case 'removeWhitelistedWebsite':
-        this.storage.deletePermission(message.data.data.website)
-        return
+        this.storage.deletePermission(message.data.data.website);
+        return;
       case 'getWhitelistedWebsite':
-        return this.storage.getPermissions()
+        return this.storage.getPermissions();
       case 'addWhitelistedWebsite':
         // prevent dupes
-        const permissions = await this.storage.getPermissions()
-        if (permissions.find(permission => permission.origin === message.data.data.website)) return true
-        return this.storage.addPermission(message.data.data.website)
+        const permissions = (await this.storage.getPermissions()) || [];
+        if (permissions.find((permission) => permission.origin === message.data.data.website)) return true;
+        return this.storage.addPermission(message.data.data.website);
     }
   }
   async ensurePopup(): Promise<void> {
@@ -303,8 +301,26 @@ export class Emeris implements IEmeris {
     request.id = uuidv4();
     const enabled = (await this.forwardToPopup(request)).data as boolean;
     if (enabled) {
-      await this.storage.addPermission(request.data.origin);
+      await this.storage.addPermission(request.origin);
     }
     return enabled;
+  }
+  setResponse(id: string, response: any, abort = false) {
+    const request = this.queuedRequests.get(id);
+    if (!request) {
+      return;
+    }
+    if (abort) {
+      request.rejecter();
+    } else {
+      request.resolver(response);
+    }
+    this.queuedRequests.delete(id);
+    this.pending.splice(
+      this.pending.findIndex((req) => req.id == id),
+      1,
+    );
+    browser.runtime.sendMessage({ type: 'toPopup', data: { action: 'update' } });
+    return true;
   }
 }

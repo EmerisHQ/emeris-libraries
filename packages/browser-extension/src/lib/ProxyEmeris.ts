@@ -112,10 +112,14 @@ export class ProxyEmeris implements IEmeris {
   }
 
   // TODO resolve type errors
-  async signTransaction({ tx, chainId, signingAddress }: {
-    tx: AbstractTx,
-    chainId: string,
-    signingAddress: string,
+  async signTransaction({
+    tx,
+    chainId,
+    signingAddress,
+  }: {
+    tx: AbstractTx;
+    chainId: string;
+    signingAddress: string;
   }): Promise<Uint8Array> {
     const request = {
       action: 'signTransaction',

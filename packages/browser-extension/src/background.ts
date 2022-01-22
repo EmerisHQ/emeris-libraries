@@ -9,7 +9,7 @@ const pageHandler = async (request) => {
     if (!emeris.loaded) {
       return { id: request.id, data: false };
     }
-    if (request.action !== 'enable' && (await emeris.isPermitted(request.data.origin)) === false) {
+    if (request.action !== 'enable' && (await emeris.isPermitted(request.origin)) === false) {
       return { id: request.id, data: false };
     }
     return { id: request.id, data: await emeris[request.action](request) };

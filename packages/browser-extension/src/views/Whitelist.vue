@@ -20,10 +20,8 @@
 import Brandmark from '@/components/common/Brandmark.vue';
 import Button from '@/components/ui/Button.vue';
 import { GlobalActionTypes } from '@@/store/extension/action-types';
+import { GetterTypes } from '@@/store/extension/getter-types';
 export default {
-  data: () => ({
-    url: '',
-  }),
   components: {
     Brandmark,
     Button,
@@ -37,8 +35,14 @@ export default {
       this.$router.push('/');
     },
   },
+  computed: {
+    url() {
+      const pending = this.$store.getters[GetterTypes.getPending];
+      return pending && pending.length > 0 ? pending[0].origin : undefined;
+    },
+  },
   mounted() {
-    this.url = this.$route.query.url;
+    this.$store.dispatch(GlobalActionTypes.GET_PENDING);
   },
 };
 </script>

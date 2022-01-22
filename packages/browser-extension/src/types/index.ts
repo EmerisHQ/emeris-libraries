@@ -21,6 +21,7 @@ export type EmerisPermission = {
 };
 export type ExtensionRequest = {
   id?: string;
+  origin: string;
   [key: string]: unknown;
 };
 export type ExtensionResponse = {

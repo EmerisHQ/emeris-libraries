@@ -18,6 +18,11 @@ export default defineComponent({
       const hasWallet = await this.$store.dispatch(GlobalActionTypes.HAS_WALLET); // checking if the password was set
       const wallet = await this.$store.dispatch(GlobalActionTypes.GET_WALLET); // if able to load the wallet, the extension is unlocked
 
+      // if we are in a popup and there are no more pending requests, close
+      if (pending.length === 0 && location.search !== '?browser=true') {
+        window.close();
+      }
+
       // if the use has a password set but the extension is not unlocked
       if (hasWallet && !wallet) {
         this.$router.push('/welcomeBack');
@@ -26,7 +31,7 @@ export default defineComponent({
       else if (pending.length > 0) {
         switch (pending[0].action) {
           case 'enable':
-            this.$router.push({ path: '/whitelist', query: { url: pending[0].data.origin } });
+            this.$router.push({ path: '/whitelist' });
             break;
           case 'signTransaction':
             this.$router.push({ path: '/transaction/review' });

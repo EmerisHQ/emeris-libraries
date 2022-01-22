@@ -14,7 +14,7 @@ export default class EmerisStorage {
   }
   async getPermissions(): Promise<{ origin: string }[]> {
     const result = await browser.storage[this.storageMode].get('permissions');
-    return result.permissions
+    return result.permissions;
   }
   async isPermitted(origin: string): Promise<boolean> {
     const result = await browser.storage[this.storageMode].get('permissions');
@@ -104,7 +104,6 @@ export default class EmerisStorage {
     }
   }
   private async saveWallet(wallet: EmerisWallet, password: string): Promise<boolean> {
-    debugger;
     try {
       const encryptedWallet = CryptoJS.AES.encrypt(JSON.stringify(wallet), password).toString();
       await browser.storage[this.storageMode].set({ wallet: { walletData: encryptedWallet } });
