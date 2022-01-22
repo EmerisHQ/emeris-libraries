@@ -12,7 +12,23 @@
       <span class="secondary-text" style="margin-left: 16px; cursor: pointer">Data</span>
     </div>
 
-    {{ transaction }}
+    <div
+      style="
+        display: flex;
+        padding: 16px;
+
+        background: #171717;
+        border-radius: 8px;
+      "
+    >
+      <component
+        :is="message.type"
+        v-for="(message, index) in transaction.messages"
+        :message="message"
+        :chainName="transaction.chainId"
+        :key="index"
+      />
+    </div>
 
     <div
       style="
@@ -49,12 +65,14 @@
 import { defineComponent } from 'vue';
 import { GlobalGetterTypes } from '@@/store/extension/getter-types';
 import Button from '@/components/ui/Button.vue';
+import transfer from '@@/components/Transactions/transfer.vue';
 import { GlobalActionTypes } from '@@/store/extension/action-types';
 
 export default defineComponent({
   name: 'Transaction Review',
   components: {
     Button,
+    transfer,
   },
   computed: {
     pending() {
