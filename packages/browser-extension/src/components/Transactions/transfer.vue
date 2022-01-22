@@ -5,7 +5,7 @@
     <span class="secondary-text" style="font-size: 13px; margin-bottom: 8px; display: block">Amount</span>
     <div style="display: flex; flex-direction: row; margin-bottom: 12px">
       <CircleSymbol :denom="message.amount.denom" style="margin-right: 16px" />
-      <AmountDisplay :amount="message.amount" />
+      <AmountDisplay :amount="message.amount" style="font-weight: 500; font-size: 21px" />
     </div>
 
     <span class="secondary-text" style="font-size: 13px; margin-bottom: 8px; display: block">To</span>
