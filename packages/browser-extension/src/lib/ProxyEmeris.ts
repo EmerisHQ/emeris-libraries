@@ -1,4 +1,5 @@
 import { IEmeris } from '@@/types/emeris';
+import * as Base from '@@/../../types/lib/EmerisBase';
 import {
   ExtensionRequest,
   ExtensionResponse,
@@ -15,6 +16,7 @@ import {
 } from '@@/types/api';
 import { v4 as uuidv4 } from 'uuid';
 import { AbstractTx, AbstractTxResult } from '@@/types/transactions';
+import { Transaction, TransactionData } from 'EmerisTransactions';
 export class ProxyEmeris implements IEmeris {
   loaded: boolean;
   private queuedRequests: Map<
@@ -113,17 +115,24 @@ export class ProxyEmeris implements IEmeris {
 
   // TODO resolve type errors
   async signTransaction({
-    tx,
+    messages,
     chainId,
     signingAddress,
+    fee,
+    memo
   }: {
-    tx: AbstractTx;
-    chainId: string;
-    signingAddress: string;
+    signingAddress: string,
+    chainId: string,
+    messages: Transaction<TransactionData>[],
+    fee: {
+      gas: string,
+      amount: Base.Amount[]
+    }
+    memo?: string
   }): Promise<Uint8Array> {
     const request = {
       action: 'signTransaction',
-      data: { messages: [tx], chainId, signingAddress },
+      data: { messages, chainId, signingAddress, fee, memo },
     };
     const response = await this.sendRequest(request as SignTransactionRequest);
     if (!response.data) {

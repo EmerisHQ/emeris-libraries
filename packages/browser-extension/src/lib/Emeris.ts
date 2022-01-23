@@ -20,14 +20,6 @@ import {
 } from '@@/types/api';
 import { AbstractTxResult } from '@@/types/transactions';
 
-const getHdPath = (chainConfig, account) => {
-  let hdPath = chainConfig.HDPath
-  if (account.hdPath) {
-    hdPath = chainConfig.HDPath.split('/').slice(0, 2).concat(account.hdPath).join('/')
-  }
-  return hdPath
-}
-
 import { keyHashfromAddress } from '@/utils/basic';
 import { Secp256k1HdWallet } from '@cosmjs/amino';
 export class Emeris implements IEmeris {
@@ -92,7 +84,7 @@ export class Emeris implements IEmeris {
   async launchPopup(): Promise<number> {
     return (
       await browser.windows.create({
-        width: 400,
+        width: 375,
         height: 600,
         type: 'popup',
         url: browser.runtime.getURL('/popup.html'),
@@ -263,7 +255,7 @@ export class Emeris implements IEmeris {
     }
     const mnemonic = account.accountMnemonic;
 
-    return await libs[chain.library].getAddress(mnemonic, { prefix: chain.prefix, HDPath: getHdPath(chain, account) });
+    return await libs[chain.library].getAddress(account, chain);
   }
   // function limits the data that we return to the view layers to not expose accidentially data
   async getDisplayAccounts() {
@@ -298,9 +290,8 @@ export class Emeris implements IEmeris {
     if (!account) {
       throw new Error('No account selected');
     }
-    const mnemonic = account.accountMnemonic;
 
-    return await libs[chain.library].getPublicKey(mnemonic, getHdPath(chain, { prefix: chain.prefix, HDPath: getHdPath(chain, account) }));
+    return await libs[chain.library].getPublicKey(account, chain);
   }
   async isPermitted(origin: string): Promise<boolean> {
     return await this.storage.isPermitted(origin);
@@ -318,18 +309,37 @@ export class Emeris implements IEmeris {
     return await this.storage.hasWallet();
   }
 
-  async signTransaction(request: SignTransactionRequest): Promise<Uint8Array> {
+  async signTransaction(request: SignTransactionRequest): Promise<any> {
     request.id = uuidv4();
     const acceptTransactionSigning = (await this.forwardToPopup(request)).accept;
     if (acceptTransactionSigning) {
-      return new Uint8Array()
+      if (!this.wallet) {
+        throw new Error('No wallet configured');
+      }
+      const chain = config[request.data.chainId];
+      if (!chain) {
+        throw new Error('Chain not supported: ' + request.data.chainId);
+      }
+
+      const selectedAccount = this.wallet.find(({ accountName }) => accountName === this.selectedAccount)
+      const address = await libs[chain.library].getAddress(selectedAccount, chain)
+
+      if (address !== request.data.signingAddress) {
+        throw new Error('The requested signing address is not active in the extension');
+      }
+
+      const mapper = new chain.mapper(chain.chainId)
+      const chainMessages = [].concat(...request.data.messages.map(message => mapper.map(message, address)))
+      const broadcastable = await libs[chain.library].sign(selectedAccount, chain, chainMessages, request.data.fee, request.data.memo)
+
+      return broadcastable
     }
     return undefined
   }
-  async signAndBroadcastTransaction(request: SignAndBroadcastTransactionRequest): Promise<AbstractTxResult> {
-    request.id = uuidv4();
-    return (await this.forwardToPopup(request)).data as AbstractTxResult;
-  }
+  // async signAndBroadcastTransaction(request: SignAndBroadcastTransactionRequest): Promise<AbstractTxResult> {
+  //   request.id = uuidv4();
+  //   return (await this.forwardToPopup(request)).data as AbstractTxResult;
+  // }
   async enable(request: ApproveOriginRequest): Promise<boolean> {
     // TODO purge this queue and replace with a sensible data struct to we can check if a request is a dupe
     request.id = uuidv4();
