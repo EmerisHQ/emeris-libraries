@@ -66,11 +66,13 @@ const helpers = {
       const signedSequence = Int53.fromString(signed.sequence).toNumber();
       const pubkey = encodePubkey(encodeSecp256k1Pubkey(signerAccount.pubkey));
       const signedAuthInfoBytes = makeAuthInfoBytes([pubkey], signed.fee.amount, signedGasLimit, signedSequence, SignMode.SIGN_MODE_LEGACY_AMINO_JSON);
-      return TxRaw.fromPartial({
+      const txRaw = TxRaw.fromPartial({
         bodyBytes: signedTxBodyBytes,
         authInfoBytes: signedAuthInfoBytes,
         signatures: [fromBase64(signature.signature)],
       });
+      const txBytes = TxRaw.encode(txRaw).finish();
+      return txBytes
     } catch (err) {
       console.error(err)
       return undefined
