@@ -28,10 +28,7 @@ export class Emeris implements IEmeris {
   private password: string;
   private queuedRequests: Map<
     string,
-    {
-      resolver;
-      rejecter;
-    }
+    Record<'resolver', (value: ExtensionRequest | PromiseLike<ExtensionRequest>) => void>
   >;
   private pending: ExtensionRequest[] = [];
   private timeoutLock: ReturnType<typeof setTimeout>;
@@ -92,12 +89,11 @@ export class Emeris implements IEmeris {
     ).id;
   }
   async forwardToPopup(request: ExtensionRequest): Promise<ExtensionResponse> {
-    let resolver, rejecter;
-    const response: Promise<ExtensionResponse> = new Promise((resolve, reject) => {
+    let resolver;
+    const response: Promise<ExtensionResponse> = new Promise((resolve) => {
       resolver = resolve;
-      rejecter = reject;
     });
-    this.queuedRequests.set(request.id, { resolver, rejecter });
+    this.queuedRequests.set(request.id, { resolver });
     this.pending.push(request);
     this.ensurePopup();
     const resp = await response;
@@ -205,25 +201,15 @@ export class Emeris implements IEmeris {
       case 'hasWallet':
         return await this.hasWallet();
       case 'setResponse':
-        return this.setResponse(message.data.data.id, message.data.data);
-      case 'acceptTransaction':
-        const response = 'hash';
-        return this.setResponse(message.data.data.id, response);
-      case 'cancelTransaction':
-        return this.setResponse(message.data.data.id, undefined, true);
+        return this.setResponse(message.data.data.id, message.data.data)
       case 'extensionReset':
-        this.storage.extensionReset();
-        return;
+        this.storage.extensionReset()
+        return
       case 'removeWhitelistedWebsite':
-        this.storage.deletePermission(message.data.data.website);
-        return;
+        this.storage.deletePermission(message.data.data.website)
+        return
       case 'getWhitelistedWebsite':
-        return this.storage.getPermissions();
-      case 'addWhitelistedWebsite':
-        // prevent dupes
-        const permissions = (await this.storage.getPermissions()) || [];
-        if (permissions.find((permission) => permission.origin === message.data.data.website)) return true;
-        return this.storage.addPermission(message.data.data.website);
+        return this.storage.getPermissions()
     }
   }
   async ensurePopup(): Promise<void> {
@@ -290,7 +276,11 @@ export class Emeris implements IEmeris {
 
   async signTransaction(request: SignTransactionRequest): Promise<Uint8Array> {
     request.id = uuidv4();
-    return (await this.forwardToPopup(request)).data as Uint8Array;
+    const acceptTransactionSigning = (await this.forwardToPopup(request)).accept;
+    if (acceptTransactionSigning) {
+      return new Uint8Array()
+    }
+    return undefined
   }
   async signAndBroadcastTransaction(request: SignAndBroadcastTransactionRequest): Promise<AbstractTxResult> {
     request.id = uuidv4();
@@ -299,22 +289,18 @@ export class Emeris implements IEmeris {
   async enable(request: ApproveOriginRequest): Promise<boolean> {
     // TODO purge this queue and replace with a sensible data struct to we can check if a request is a dupe
     request.id = uuidv4();
-    const enabled = (await this.forwardToPopup(request)).data as boolean;
-    if (enabled) {
+    const accept = (await this.forwardToPopup(request)).accept as boolean;
+    if (accept) {
       await this.storage.addPermission(request.origin);
     }
-    return enabled;
+    return accept;
   }
-  setResponse(id: string, response: any, abort = false) {
+  setResponse(id: string, response: any) {
     const request = this.queuedRequests.get(id);
     if (!request) {
       return;
     }
-    if (abort) {
-      request.rejecter();
-    } else {
-      request.resolver(response);
-    }
+    request.resolver(response);
     this.queuedRequests.delete(id);
     this.pending.splice(
       this.pending.findIndex((req) => req.id == id),

@@ -126,6 +126,9 @@ export class ProxyEmeris implements IEmeris {
       data: { messages: [tx], chainId, signingAddress },
     };
     const response = await this.sendRequest(request as SignTransactionRequest);
+    if (!response.data) {
+      throw new Error('Signing was not successful')
+    }
     return response.data as Uint8Array;
   }
   async enable(): Promise<boolean> {

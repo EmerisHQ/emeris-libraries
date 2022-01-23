@@ -46,13 +46,20 @@ export interface Actions {
     { commit }: ActionContext<State, RootState>,
     { accountName, password }: { accountName: string; password: string },
   ): Promise<string>;
-  [ActionTypes.GET_ADDRESS]({}: ActionContext<State, RootState>, { chainId }: { chainId: string }): Promise<string>;
+  [ActionTypes.GET_ADDRESS]({ }: ActionContext<State, RootState>, { chainId }: { chainId: string }): Promise<string>;
   [ActionTypes.REMOVE_WHITELISTED_WEBSITE](
-    {}: ActionContext<State, RootState>,
+    { }: ActionContext<State, RootState>,
     { website }: { website: string },
   ): Promise<void>;
 }
 export type GlobalActions = Namespaced<Actions, 'extension'>;
+
+const respond = async (id, data) => {
+  await browser.runtime.sendMessage({
+    type: 'fromPopup',
+    data: { action: 'setResponse', data: { id, ...data } },
+  });
+}
 
 export const actions: ActionTree<State, RootState> & Actions = {
   async [ActionTypes.GET_PENDING]({ commit, getters }) {
@@ -186,7 +193,7 @@ export const actions: ActionTree<State, RootState> & Actions = {
       throw new Error('Extension:UnlockWallet failed');
     }
   },
-  async [ActionTypes.CHANGE_PASSWORD]({}, { password }: { password: string }) {
+  async [ActionTypes.CHANGE_PASSWORD]({ }, { password }: { password: string }) {
     await browser.runtime.sendMessage({
       type: 'fromPopup',
       data: { action: 'changePassword', data: { password } },
@@ -218,7 +225,7 @@ export const actions: ActionTree<State, RootState> & Actions = {
     }
     return getters['getLastAccount'];
   },
-  async [ActionTypes.GET_MNEMONIC]({}, { accountName, password }: { accountName: string; password: string }) {
+  async [ActionTypes.GET_MNEMONIC]({ }, { accountName, password }: { accountName: string; password: string }) {
     try {
       const mnemonic = await browser.runtime.sendMessage({
         type: 'fromPopup',
@@ -230,7 +237,7 @@ export const actions: ActionTree<State, RootState> & Actions = {
       throw new Error('Extension:getMnemonic failed');
     }
   },
-  async [ActionTypes.GET_ADDRESS]({}, { chainId }: { chainId: string }) {
+  async [ActionTypes.GET_ADDRESS]({ }, { chainId }: { chainId: string }) {
     try {
       const address = await browser.runtime.sendMessage({
         type: 'fromPopup',
@@ -259,21 +266,14 @@ export const actions: ActionTree<State, RootState> & Actions = {
     });
     await dispatch(ActionTypes.GET_WHITELISTED_WEBSITES);
   },
-  async [ActionTypes.WHITELIST_WEBSITE]({ dispatch, getters }, { website }) {
-    await browser.runtime.sendMessage({
-      type: 'fromPopup',
-      data: { action: 'addWhitelistedWebsite', data: { website } },
-    });
-    await browser.runtime.sendMessage({
-      type: 'fromPopup',
-      data: { action: 'setResponse', data: getters['getPending'][0] },
-    });
+  async [ActionTypes.WHITELIST_WEBSITE]({ dispatch }, { id, accept }) {
+    await respond(id, { accept })
     await dispatch(ActionTypes.GET_WHITELISTED_WEBSITES);
   },
-  async [ActionTypes.ACCEPT_TRANSACTION]({}, { id }) {
-    await browser.runtime.sendMessage({ type: 'fromPopup', data: { action: 'acceptTransaction', data: { id } } });
+  async [ActionTypes.ACCEPT_TRANSACTION]({ }, { id }) {
+    await respond(id, { accept: true })
   },
-  async [ActionTypes.CANCEL_TRANSACTION]({}, { id }) {
-    await browser.runtime.sendMessage({ type: 'fromPopup', data: { action: 'cancelTransaction', data: { id } } });
+  async [ActionTypes.CANCEL_TRANSACTION]({ }, { id }) {
+    await respond(id, { accept: false })
   },
 };
