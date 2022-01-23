@@ -26,6 +26,7 @@ import * as bip39 from 'bip39';
 import Button from '@/components/ui/Button.vue';
 import Header from '@@/components/Header.vue';
 import { GlobalGetterTypes } from '@@/store/extension/getter-types';
+import { GlobalActionTypes } from '@@/store/extension/action-types';
 
 const shuffleArray = (array) => array.sort(() => 0.5 - Math.random());
 
@@ -88,6 +89,7 @@ export default defineComponent({
       if (this.wordList[this.position] === word) {
         this.error = null;
         if (this.position === this.wordList.length - 1) {
+          this.$store.dispatch(GlobalActionTypes.ACCOUNT_BACKED_UP, { accountName: this.account.accountName });
           this.$router.push('/accountReady');
         }
         this.position++;

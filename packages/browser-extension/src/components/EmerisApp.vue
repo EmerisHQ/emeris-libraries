@@ -45,6 +45,7 @@ export default defineComponent({
         this.$router.push('/welcome');
         // extension is ready to use
       } else if (wallet) {
+        this.$store.dispatch(GlobalActionTypes.LOAD_SESSION_DATA);
         this.$router.push('/portfolio');
       } else {
         this.error = true;

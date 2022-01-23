@@ -9,11 +9,15 @@
       <div style="cursor: pointer">
         <h2 style="font-weight: 600">{{ account.accountName }}</h2>
         <!-- TODO -->
-        <span class="secondary-text" v-if="!backedUp(account)"
+        <span class="secondary-text" v-if="backedUp(account)"
           ><TotalPrice :balances="balances(account)" small-decimals
         /></span>
-        <span class="secondary-text" style="color: #ff6072; opacity: 1; font-size: 13px" v-else
-          ><TotalPrice :balances="balances(account)" small-decimals /> - Not backed up</span
+        <span class="secondary-text" style="color: #ff6072; opacity: 1" v-else
+          ><TotalPrice :balances="balances(account)" small-decimals style="display: inline-block" /><span
+            style="font-size: 13px"
+          >
+            - Not backed up</span
+          ></span
         >
       </div>
       <Icon
@@ -50,7 +54,7 @@ import { RootState } from '@@/store';
 import { AccountCreateStates } from '@@/types';
 import { GlobalActionTypes } from '@@/store/extension/action-types';
 import { GlobalGetterTypes } from '@@/store/extension/getter-types';
-import { GlobalDemerisActionTypes } from '@/store/demeris-api';
+import { GlobalDemerisActionTypes } from '@/store';
 
 export default defineComponent({
   name: 'Accounts',
@@ -89,6 +93,7 @@ export default defineComponent({
     goToAccount(account) {
       this.$store.dispatch(GlobalActionTypes.SET_LAST_ACCOUNT_USED, { accountName: account.accountName });
       this.$store.dispatch(GlobalActionTypes.GET_WALLET);
+      this.$store.dispatch(GlobalActionTypes.LOAD_SESSION_DATA);
       this.$router.push('/portfolio');
     },
     backedUp(account) {
@@ -96,10 +101,9 @@ export default defineComponent({
     },
     loadBalances() {
       this.wallet.forEach((account) => {
-        const keyHash = this.$store.getters[GlobalGetterTypes.getKeyHash](account);
-        this.$store.dispatch(GlobalDemerisActionTypes.GET_BALANCES, {
+        this.$store.dispatch(GlobalDemerisActionTypes.API.GET_BALANCES, {
           subscribe: true,
-          params: { address: keyHash },
+          params: { address: account.keyHash },
         });
       });
     },

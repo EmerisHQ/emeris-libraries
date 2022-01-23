@@ -35,15 +35,8 @@ export const getters: GetterTree<State, RootState> & Getters = {
   [GetterTypes.getAccount]: (state) => {
     return (state.wallet || []).find((account) => account.accountName === state.lastAccount);
   },
-  [GetterTypes.getKeyHash]: (state) => (account) => {
-    const keyHashRecord = state.keyHashes.find(({ accountName }) => accountName === account.accountName);
-    return keyHashRecord ? keyHashRecord.keyHash : undefined;
-  },
   // accessing rootState doesn't allow for isolating each module, but this way we don't need to change the demeris module
   [GetterTypes.getAllBalances]: (state, getters, rootState, rootGetters) => (account) => {
-    const keyHash = getters[GetterTypes.getKeyHash](account);
-    if (!keyHash) return [];
-
-    return rootGetters[GlobalApiGetterTypes.getBalances]({ address: keyHash });
+    return rootGetters[GlobalApiGetterTypes.getBalances]({ address: account.keyHash });
   },
 };
