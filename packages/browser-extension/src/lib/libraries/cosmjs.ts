@@ -77,6 +77,15 @@ const helpers = {
       console.error(err)
       return undefined
     }
+  },
+  async signAndBroadcast(account: EmerisAccount, chainConfig: ChainDetails, messages, fee, memo) {
+    const client = await SigningStargateClient.connect(
+      chainConfig.rpcEndpoint
+    );
+
+    const broadcastable = await helpers.sign(account, chainConfig, messages, fee, memo)
+    const response = await client.broadcastTx(broadcastable)
+    return response
   }
 };
 export default helpers;
