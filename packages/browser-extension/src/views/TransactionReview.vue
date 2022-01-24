@@ -68,8 +68,8 @@
         Add a reference for your transaction. This is often called a “memo” in other apps. If you’re sending to an
         exchange, be sure to include the correct reference provided by the exchange.
       </div>
-      <Input v-model="memo" style="margin-bottom: 32px" />
-      <div style="display: flex; flex-direction: row">
+      <Input v-model="memo" placeholder="Add a reference…" />
+      <div style="display: flex; flex-direction: row; margin-top: 32px">
         <Button
           name="Cancel"
           variant="secondary"
