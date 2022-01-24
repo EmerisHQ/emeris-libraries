@@ -16,8 +16,8 @@
         :glow="false"
         style="margin-right: 16px; margin-top: 10px"
       />
-      <div>
-        <span>{{ message.to_address }}</span>
+      <div style="display: flex; flex-direction: column">
+        <Address :address="message.to_address" />
         <span class="secondary-text" style="font-size: 13px">{{ chainName }}</span>
       </div>
     </div>
@@ -28,6 +28,7 @@
 import { TransferData } from '@@/../../types/lib/EmerisTransactions';
 import AmountDisplay from '@/components/common/AmountDisplay.vue';
 import CircleSymbol from '@/components/common/CircleSymbol.vue';
+import Address from '@@/components/Address.vue';
 export default {
   props: {
     message: { type: TransferData, required: true },
@@ -36,6 +37,7 @@ export default {
   components: {
     AmountDisplay,
     CircleSymbol,
+    Address,
   },
 };
 </script>

@@ -1,5 +1,5 @@
 <template>
-  <div class="page">
+  <div class="page" v-if="pending">
     <h1>Confirm Transaction</h1>
     <span style="color: #ffffffaa; text-align: center; width: 100%">{{
       pending.origin.replace(/http(s)?:\/\//, '')
@@ -45,7 +45,11 @@
         style="display: flex; flex-direction: row; justify-content: space-between; margin-bottom: 8px; font-size: 13px"
       >
         <span class="secondary-text">Reference (memo)</span>
-        <a href="">Add reference</a>
+        <a
+          @click="editMemo = true"
+          style="max-width: 161px; white-space: nowrap; text-overflow: ellipsis; overflow: hidden"
+          >{{ memo ? memo : 'Add reference' }}</a
+        >
       </div>
       <div
         style="display: flex; flex-direction: row; justify-content: space-between; margin-bottom: 16px; font-size: 13px"
@@ -58,6 +62,36 @@
         <Button name="Accept" style="flex: 1" @click="accept" />
       </div>
     </div>
+    <Slideout :open="editMemo">
+      <h1 style="margin-bottom: 16px">Reference</h1>
+      <div class="secondary-text" style="margin-bottom: 32px">
+        Add a reference for your transaction. This is often called a “memo” in other apps. If you’re sending to an
+        exchange, be sure to include the correct reference provided by the exchange.
+      </div>
+      <Input v-model="memo" style="margin-bottom: 32px" />
+      <div style="display: flex; flex-direction: row">
+        <Button
+          name="Cancel"
+          variant="secondary"
+          style="flex: 1; margin-right: 16px"
+          @click="
+            () => {
+              editMemo = false;
+              memo = undefined;
+            }
+          "
+        />
+        <Button
+          name="Done"
+          style="flex: 1"
+          @click="
+            () => {
+              editMemo = false;
+            }
+          "
+        />
+      </div>
+    </Slideout>
   </div>
 </template>
 
@@ -66,6 +100,8 @@ import { defineComponent } from 'vue';
 import { GlobalGetterTypes } from '@@/store/extension/getter-types';
 import Button from '@/components/ui/Button.vue';
 import transfer from '@@/components/Transactions/transfer.vue';
+import Slideout from '@@/components/Slideout.vue';
+import Input from '@/components/ui/Input.vue';
 import { GlobalActionTypes } from '@@/store/extension/action-types';
 
 export default defineComponent({
@@ -73,7 +109,14 @@ export default defineComponent({
   components: {
     Button,
     transfer,
+    Slideout,
+    Input,
   },
+  data: () => ({
+    memo: '',
+    editMemo: false,
+    editFees: false,
+  }),
   computed: {
     pending() {
       return this.$store.getters[GlobalGetterTypes.getPending][0];
@@ -99,10 +142,13 @@ export default defineComponent({
             },
           ],
         },
-        memo: 'hallo',
+        memo: this.memo,
       });
       this.$router.push('/');
     },
+  },
+  mounted() {
+    this.$store.dispatch(GlobalActionTypes.GET_PENDING);
   },
 });
 </script>
