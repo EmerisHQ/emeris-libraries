@@ -311,8 +311,8 @@ export class Emeris implements IEmeris {
 
   async signTransaction(request: SignTransactionRequest): Promise<any> {
     request.id = uuidv4();
-    const acceptTransactionSigning = (await this.forwardToPopup(request)).accept;
-    if (acceptTransactionSigning) {
+    const { accept, fees, memo } = await this.forwardToPopup(request);
+    if (accept) {
       if (!this.wallet) {
         throw new Error('No wallet configured');
       }
@@ -330,7 +330,7 @@ export class Emeris implements IEmeris {
 
       const mapper = new chain.mapper(chain.chainId)
       const chainMessages = [].concat(...request.data.messages.map(message => mapper.map(message, address)))
-      const broadcastable = await libs[chain.library].sign(selectedAccount, chain, chainMessages, request.data.fee, request.data.memo)
+      const broadcastable = await libs[chain.library].sign(selectedAccount, chain, chainMessages, fees, memo)
 
       return broadcastable
     }

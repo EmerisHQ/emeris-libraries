@@ -88,7 +88,19 @@ export default defineComponent({
       this.$router.push('/');
     },
     async accept() {
-      await this.$store.dispatch(GlobalActionTypes.ACCEPT_TRANSACTION, this.pending);
+      await this.$store.dispatch(GlobalActionTypes.ACCEPT_TRANSACTION, {
+        id: this.pending.id,
+        fees: {
+          gas: '200000',
+          amount: [
+            {
+              amount: 1,
+              denom: 'uatom',
+            },
+          ],
+        },
+        memo: 'hallo',
+      });
       this.$router.push('/');
     },
   },

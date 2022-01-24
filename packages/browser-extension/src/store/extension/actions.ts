@@ -245,8 +245,8 @@ export const actions: ActionTree<State, RootState> & Actions = {
     await respond(id, { accept })
     await dispatch(ActionTypes.GET_WHITELISTED_WEBSITES);
   },
-  async [ActionTypes.ACCEPT_TRANSACTION]({ }, { id }) {
-    await respond(id, { accept: true })
+  async [ActionTypes.ACCEPT_TRANSACTION]({ }, { id, fees, memo }) {
+    await respond(id, { accept: true, fees, memo })
   },
   async [ActionTypes.CANCEL_TRANSACTION]({ }, { id }) {
     await respond(id, { accept: false })
