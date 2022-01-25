@@ -6,6 +6,7 @@
     >
     <div style="margin-bottom: 16px">
       <Input v-model="name" />
+      <span class="form-info error" v-if="error">Name already in use</span>
     </div>
     <div
       :style="{
@@ -44,15 +45,18 @@ export default defineComponent({
   components: { Button, Input, Header, Icon },
   computed: {
     ...mapState({
+      wallet: (state: RootState) => state.extension.wallet,
       newAccount: (state: RootState) => state.extension.newAccount,
     }),
+    error() {
+      return this.wallet && this.wallet.find(({ accountName }) => accountName === this.name);
+    },
   },
   data: () => ({
     name: 'Account X',
   }),
   async mounted() {
     const hasPasswod = await this.$store.dispatch(GlobalActionTypes.HAS_WALLET); // the wallet is encrypted with the password so the existence is equal
-    debugger;
     if (!hasPasswod) {
       this.$router.push({ path: '/passwordCreate', query: { returnTo: this.$route.path } });
     }
@@ -69,6 +73,8 @@ export default defineComponent({
   },
   methods: {
     async submit() {
+      if (this.error) return;
+
       const wallet = await this.$store.dispatch(GlobalActionTypes.CREATE_ACCOUNT, {
         account: {
           ...this.newAccount,
@@ -78,7 +84,7 @@ export default defineComponent({
         },
       });
       if (wallet) {
-        this.$router.push('/backup');
+        this.$router.push('/backup?new=true');
       }
     },
   },

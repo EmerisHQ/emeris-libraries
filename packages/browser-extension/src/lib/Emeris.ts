@@ -19,6 +19,8 @@ import {
   RoutedInternalRequest,
 } from '@@/types/api';
 import { AbstractTxResult } from '@@/types/transactions';
+import { keyHashfromAddress } from '@/utils/basic';
+import { Secp256k1HdWallet } from '@cosmjs/amino';
 export class Emeris implements IEmeris {
   public loaded: boolean;
   private storage: EmerisStorage;
@@ -149,8 +151,8 @@ export class Emeris implements IEmeris {
       case 'updateAccount':
         try {
           await this.storage.updateAccount(
-            message.data.data.newAccountName,
-            message.data.data.oldAccountName,
+            message.data.data.account,
+            message.data.data.account.accountName,
             this.password,
           );
           this.wallet = await this.unlockWallet(this.password);
@@ -172,16 +174,19 @@ export class Emeris implements IEmeris {
         }
         return this.wallet;
       case 'getWallet':
-        return this.wallet;
+        return this.getDisplayAccounts();
       case 'getAddress':
         return this.getAddress(message.data);
       case 'getMnemonic':
         try {
-          this.wallet = await this.unlockWallet(message.data.data.password);
+          const wallet = await this.unlockWallet(message.data.data.password);
+          if (wallet) {
+            return wallet.find((x) => x.accountName == message.data.data.accountName);
+          }
         } catch (e) {
           console.log(e);
         }
-        return this.wallet.find((x) => x.accountName == message.data.data.accountName);
+        return;
       case 'createWallet':
       case 'unlockWallet':
         try {
@@ -214,18 +219,18 @@ export class Emeris implements IEmeris {
         browser.runtime.sendMessage({ type: 'toPopup', data: { action: 'update' } });
         return true;
       case 'extensionReset':
-        this.storage.extensionReset()
-        return
+        this.storage.extensionReset();
+        return;
       case 'removeWhitelistedWebsite':
-        this.storage.deletePermission(message.data.data.website)
-        return
+        this.storage.deletePermission(message.data.data.website);
+        return;
       case 'getWhitelistedWebsite':
-        return this.storage.getPermissions()
+        return this.storage.getPermissions();
       case 'addWhitelistedWebsite':
         // prevent dupes
-        const permissions = await this.storage.getPermissions()
-        if (permissions.find(permission => permission.origin === message.data.data.website)) return true
-        return this.storage.addPermission(message.data.data.website)
+        const permissions = await this.storage.getPermissions();
+        if (permissions.find((permission) => permission.origin === message.data.data.website)) return true;
+        return this.storage.addPermission(message.data.data.website);
     }
   }
   async ensurePopup(): Promise<void> {
@@ -261,6 +266,26 @@ export class Emeris implements IEmeris {
     }
     const mnemonic = account.accountMnemonic;
     return await libs[chain.library].getAddress(mnemonic, chain);
+  }
+  // function limits the data that we return to the view layers to not expose accidentially data
+  async getDisplayAccounts() {
+    if (!this.wallet) return undefined;
+    // TODO add hd paths to account and use here
+    return await Promise.all(
+      this.wallet.map(async ({ accountName, accountMnemonic, setupState }) => {
+        const hdWallet = await Secp256k1HdWallet.fromMnemonic(
+          accountMnemonic /* config for hdPath and prefix go here */,
+        );
+        const [{ address }] = await hdWallet.getAccounts();
+        const keyHash = keyHashfromAddress(address);
+
+        return {
+          accountName,
+          keyHash,
+          setupState,
+        };
+      }),
+    );
   }
 
   async getPublicKey(req: GetPublicKeyRequest): Promise<Uint8Array> {

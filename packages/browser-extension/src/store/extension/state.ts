@@ -5,7 +5,6 @@ export type State = {
   wallet: EmerisWallet;
   lastAccount: string;
   newAccount: EmerisAccount;
-  keyHashes: { accountName, keyHash }[];
   whitelistedWebsites: { origin: string }[];
 };
 export function getDefaultState(): State {
@@ -14,7 +13,6 @@ export function getDefaultState(): State {
     wallet: null,
     lastAccount: null,
     newAccount: null,
-    keyHashes: [],
     whitelistedWebsites: [],
   };
 }

@@ -12,6 +12,7 @@ import ExtensionReset from '../views/ExtensionReset.vue';
 import ExtensionResetConfirm from '../views/ExtensionResetConfirm.vue';
 import AccountBackup from '../views/AccountBackup.vue';
 import MnemonicShow from '../views/MnemonicShow.vue';
+import MnemonicShowPassword from '../views/MnemonicShowPassword.vue';
 import MnemonicConfirm from '../views/MnemonicConfirm.vue';
 import AccountReady from '../views/AccountReady.vue';
 import AccountRemove from '../views/AccountRemove.vue';
@@ -122,6 +123,11 @@ const routes: Array<RouteRecordRaw> = [
     path: '/backup',
     name: 'Account Backup',
     component: AccountBackup,
+  },
+  {
+    path: '/backup/password',
+    name: 'Recovery Phrase Password',
+    component: MnemonicShowPassword,
   },
   {
     path: '/backup/show',
