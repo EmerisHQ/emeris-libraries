@@ -104,7 +104,7 @@ export default defineComponent({
       if (/[A-Z]/g.test(password)) {
         this.upperCaseChar = true;
       }
-      if (/[$-/:-?{-~!"^_`[\]]/g.test(password)) {
+      if (/[$-/:-?{-~!"^_`[\]@]/g.test(password)) {
         this.symbolChar = true;
       }
       if (/[0-9]/g.test(password)) {
