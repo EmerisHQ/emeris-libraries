@@ -55,7 +55,7 @@
         style="display: flex; flex-direction: row; justify-content: space-between; margin-bottom: 16px; font-size: 13px"
       >
         <span class="secondary-text">Fees (additional)</span>
-        <a href="">~$1.98</a>
+        <a href="" @click.prevent="(e) => {}"><TotalPrice class="inline" :balances="fees" /></a>
       </div>
       <div style="display: flex; flex-direction: row">
         <Button name="Reject" variant="secondary" style="margin-right: 16px; flex: 1" @click="cancel" />
@@ -101,6 +101,7 @@ import { GlobalGetterTypes } from '@@/store/extension/getter-types';
 import Button from '@/components/ui/Button.vue';
 import transfer from '@@/components/Transactions/transfer.vue';
 import Slideout from '@@/components/Slideout.vue';
+import TotalPrice from '@/components/common/TotalPrice.vue';
 import Input from '@/components/ui/Input.vue';
 import { GlobalActionTypes } from '@@/store/extension/action-types';
 
@@ -111,11 +112,19 @@ export default defineComponent({
     transfer,
     Slideout,
     Input,
+    TotalPrice,
   },
   data: () => ({
     memo: '',
     editMemo: false,
     editFees: false,
+    fees: [
+      {
+        amount: 1,
+        denom: 'uatom',
+      },
+    ],
+    gas: 200000,
   }),
   computed: {
     pending() {
@@ -135,13 +144,8 @@ export default defineComponent({
         id: this.pending.id,
         // TODO currently setting default fee until fee selection works
         fees: {
-          gas: '2000000',
-          amount: [
-            {
-              amount: 1,
-              denom: 'uatom',
-            },
-          ],
+          gas: this.gas,
+          amount: this.fees,
         },
         memo: this.memo,
       });
