@@ -98,23 +98,13 @@ export default defineComponent({
   },
   watch: {
     password(password) {
-      if (password.length >= 8) {
-        this.length = true;
-      }
-      if (/[A-Z]/g.test(password)) {
-        this.upperCaseChar = true;
-      }
-      if (/[$-/:-?{-~!"^_`[\]@]/g.test(password)) {
-        this.symbolChar = true;
-      }
-      if (/[0-9]/g.test(password)) {
-        this.digitChar = true;
-      }
+      this.length = password.length >= 8;
+      this.upperCaseChar = /[A-Z]/g.test(password);
+      this.symbolChar = /[$-/:-?{-~!"^_`[\]@]/g.test(password);
+      this.digitChar = /[0-9]/g.test(password);
     },
     passwordRepeated(password) {
-      if (password === this.password) {
-        this.match = true;
-      }
+      this.match = password === this.password;
     },
   },
 });
