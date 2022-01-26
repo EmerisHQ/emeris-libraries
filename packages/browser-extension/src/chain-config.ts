@@ -7,7 +7,7 @@ const chainConfig = {
     HDPath: "m/44'/118'/0'/0/0",
     prefix: 'cosmos',
     mapper: mappers.CosmosAminoMessageMapper,
-    rpcEndpoint: 'https://cosmoshub.validator.network:443',
+    rpcEndpoint: 'https://rpc.cosmos.network:443',
     chainId: 'cosmos-hub-4'
   },
 } as Record<string, ChainDetails>;
