@@ -3,7 +3,7 @@
     <img :src="require(`@@/assets/UnlockBG.png`)" class="background" />
     <Brandmark class="wordmark" />
 
-    <h1 style="margin-top: 100px; margin-bottom: 16px">{{ title }}</h1>
+    <h1 style="margin-top: 187px; margin-bottom: 16px">{{ title }}</h1>
     <span style="color: #ffffffaa" v-if="subtitle">{{ subtitle }}</span>
 
     <slot></slot>
