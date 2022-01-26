@@ -1,7 +1,6 @@
 import { Secp256k1HdWallet, encodeSecp256k1Pubkey } from '@cosmjs/amino';
 import { stringToPath } from '@cosmjs/crypto';
 import { Int53 } from '@cosmjs/math';
-import { makeStdTx } from '@cosmjs/launchpad';
 import { fromBase64 } from '@cosmjs/encoding';
 import { SigningStargateClient } from '@cosmjs/stargate';
 import { ChainDetails, EmerisAccount } from '@@/types';
@@ -36,8 +35,54 @@ const helpers = {
     const [signerAccount] = await signer.getAccounts();
     return signerAccount.pubkey;
   },
+  signSignable: async (
+    account: EmerisAccount, chainConfig: ChainDetails, signable: any
+  ): Promise<Uint8Array> => {
+    const signer = await helpers.getSigner(account, chainConfig)
+    const [signerAccount] = await signer.getAccounts();
+
+    const client = await SigningStargateClient.connectWithSigner(
+      chainConfig.rpcEndpoint,
+      signer
+    );
+
+    const { signed, signature } = await signer.signAmino(signerAccount.address, signable);
+    const signedTxBody = {
+      // @ts-ignore
+      messages: signed.msgs.map((msg) => client.aminoTypes.fromAmino(msg)),
+      memo: signed.memo,
+    };
+    const signedTxBodyEncodeObject = {
+      typeUrl: "/cosmos.tx.v1beta1.TxBody",
+      value: signedTxBody,
+    };
+    const signedTxBodyBytes = client.registry.encode(signedTxBodyEncodeObject);
+    const signedGasLimit = Int53.fromString(signed.fee.gas).toNumber();
+    const signedSequence = Int53.fromString(signed.sequence).toNumber();
+    const pubkey = encodePubkey(encodeSecp256k1Pubkey(signerAccount.pubkey));
+    const signedAuthInfoBytes = makeAuthInfoBytes([pubkey], signed.fee.amount, signedGasLimit, signedSequence, SignMode.SIGN_MODE_LEGACY_AMINO_JSON);
+    const txRaw = TxRaw.fromPartial({
+      bodyBytes: signedTxBodyBytes,
+      authInfoBytes: signedAuthInfoBytes,
+      signatures: [fromBase64(signature.signature)],
+    });
+    const txBytes = TxRaw.encode(txRaw).finish();
+    return txBytes
+  },
   async sign(
     account: EmerisAccount, chainConfig: ChainDetails, messages, fee, memo) {
+    try {
+      const signable = await this.getRawSignable(account, chainConfig, messages, fee, memo)
+      const broadcastable = await this.signSignable(account, chainConfig, signable)
+
+      return broadcastable
+    } catch (err) {
+      console.error(err)
+      return undefined
+    }
+  },
+  async getRawSignable(
+    account: EmerisAccount, chainConfig: ChainDetails, messages, fee, memo): Promise<any> {
     try {
       const signer = await helpers.getSigner(account, chainConfig)
       const [signerAccount] = await signer.getAccounts();
@@ -51,28 +96,7 @@ const helpers = {
       const chainId = await client.getChainId();
       const signDoc = makeSignDoc(messages, fee, chainId, memo, accountNumber, sequence);
 
-      const { signed, signature } = await signer.signAmino(signerAccount.address, signDoc);
-      const signedTxBody = {
-        // @ts-ignore
-        messages: signed.msgs.map((msg) => client.aminoTypes.fromAmino(msg)),
-        memo: signed.memo,
-      };
-      const signedTxBodyEncodeObject = {
-        typeUrl: "/cosmos.tx.v1beta1.TxBody",
-        value: signedTxBody,
-      };
-      const signedTxBodyBytes = client.registry.encode(signedTxBodyEncodeObject);
-      const signedGasLimit = Int53.fromString(signed.fee.gas).toNumber();
-      const signedSequence = Int53.fromString(signed.sequence).toNumber();
-      const pubkey = encodePubkey(encodeSecp256k1Pubkey(signerAccount.pubkey));
-      const signedAuthInfoBytes = makeAuthInfoBytes([pubkey], signed.fee.amount, signedGasLimit, signedSequence, SignMode.SIGN_MODE_LEGACY_AMINO_JSON);
-      const txRaw = TxRaw.fromPartial({
-        bodyBytes: signedTxBodyBytes,
-        authInfoBytes: signedAuthInfoBytes,
-        signatures: [fromBase64(signature.signature)],
-      });
-      const txBytes = TxRaw.encode(txRaw).finish();
-      return txBytes
+      return signDoc
     } catch (err) {
       console.error(err)
       return undefined
