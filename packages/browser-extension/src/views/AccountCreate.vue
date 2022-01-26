@@ -21,7 +21,8 @@
           class="secondary-text"
         />
         <div>
-          <span class="secondary-text">By continuing you agree to </span><a href="/" style="opacity: 1">Terms of Use</a
+          <span class="secondary-text">By continuing you agree to </span
+          ><a href="/" @click.prevent="open('https://emeris.com/terms')" style="opacity: 1">Terms of Use</a
           ><span class="secondary-text"> & </span
           ><a href="" @click.prevent="open('https://emeris.com/privacy')">Privacy Policy</a
           ><span class="secondary-text"> of Emeris wallet</span>
