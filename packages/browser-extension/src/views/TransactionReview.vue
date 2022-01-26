@@ -133,8 +133,9 @@ export default defineComponent({
     async accept() {
       await this.$store.dispatch(GlobalActionTypes.ACCEPT_TRANSACTION, {
         id: this.pending.id,
+        // TODO currently setting default fee until fee selection works
         fees: {
-          gas: '200000',
+          gas: '2000000',
           amount: [
             {
               amount: 1,
