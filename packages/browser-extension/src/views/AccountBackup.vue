@@ -24,11 +24,11 @@
       class="buttons"
     >
       <Button name="Continue" @click="goToShowMnemonic" />
-      <Button name="Backup later" variant="link" @click="() => (backUpLater = true)" />
+      <Button name="Back up later" variant="link" @click="() => (backUpLater = true)" />
     </div>
 
     <Slideout v-bind:open="backUpLater" v-on:update:open="backUpLater = $event">
-      <h1 style="margin-bottom: 16px">Backup later</h1>
+      <h1 style="margin-bottom: 16px">Back up later</h1>
       <div class="secondary-text" style="margin-bottom: 24px; text-align: center">
         You may not be able to recover your account if you have not backed up your recovery phrase.
       </div>
