@@ -70,7 +70,8 @@ export default defineComponent({
   methods: {
     goToShowMnemonic() {
       this.$router.push({
-        path: '/backup/show',
+        // if this is a new account we don't force to reenter the password
+        path: this.$route.query.new ? '/backup/show' : '/backup/password',
       });
     },
   },
