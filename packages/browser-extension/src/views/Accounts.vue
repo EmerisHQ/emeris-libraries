@@ -33,7 +33,7 @@
     <div style="margin-top: auto">
       <Button name="Add account" @click="addAccount" />
     </div>
-    <Slideout :open="!!editWallet">
+    <Slideout v-bind:open="!!editWallet" v-on:update:open="editWallet = $event">
       <Button name="Remove account" variant="link" @click="removeAccount" />
       <Button name="Edit wallet name" variant="link" @click="renameAccount" />
       <div style="font-weight: 600">

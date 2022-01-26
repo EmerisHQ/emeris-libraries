@@ -13,12 +13,19 @@
         marginTop: 'auto',
       }"
     >
-      <div style="margin-bottom: 32px; display: flex" class="terms-of-use secondary-text">
-        <Icon name="InformationIcon" style="margin-right: 9px" icon-size="1" />
-        <span
-          >By continuing you agree to <a href="/">Terms of Use</a> &
-          <a href="https://emeris.com/privacy">Privacy Policy</a> of Emeris wallet</span
-        >
+      <div style="margin-bottom: 32px; display: flex" class="terms-of-use">
+        <Icon
+          name="InformationIcon"
+          style="margin-right: 9px; transform: rotate(180deg)"
+          icon-size="1"
+          class="secondary-text"
+        />
+        <div>
+          <span class="secondary-text">By continuing you agree to </span><a href="/" style="opacity: 1">Terms of Use</a
+          ><span class="secondary-text"> & </span
+          ><a href="" @click.prevent="open('https://emeris.com/privacy')">Privacy Policy</a
+          ><span class="secondary-text"> of Emeris wallet</span>
+        </div>
       </div>
       <Button name="Continue" :disabled="!name" @click="submit" />
     </div>
@@ -86,6 +93,9 @@ export default defineComponent({
       if (wallet) {
         this.$router.push('/backup?new=true');
       }
+    },
+    open(url) {
+      window.open(url);
     },
   },
 });

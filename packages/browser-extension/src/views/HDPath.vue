@@ -25,7 +25,7 @@
     >
       <Button name="Import" :disabled="accountError || changeError || addressIndexError" @click="submit" />
     </div>
-    <Slideout :open="infoOpen">
+    <Slideout v-bind:open="infoOpen" v-on:update:open="infoOpen = $event">
       <h1 style="margin-bottom: 16px">What does it mean HD derivation path?</h1>
       <div class="secondary-text" style="margin-bottom: 24px">
         Derivation path, help you to have multiple accounts under one recovery phrase, please make sure to understand
