@@ -13,6 +13,9 @@ jobs:
         with:
           node-version: '14'
           cache: 'npm'
+      - uses: webfactory/ssh-agent@v0.5.4
+        with:
+          ssh-private-key: ${{ secrets.DEMERIS_SSH_PRIVATE_KEY }}
       - run: npm install
       - run: git submodule init && git submodule update
       - name: build artifacts
