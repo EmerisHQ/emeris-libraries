@@ -26,7 +26,7 @@
       }"
     >
       <Checkbox
-        style="margin-bottom: 22px"
+        style="margin-bottom: 24px"
         v-model="checked"
         label="I have backed up my recovery phrase, I understand that if I loose my recovery phrase, I will loose my
           fund"
