@@ -73,7 +73,6 @@ export default class EmerisStorage {
       const accounts = wallet.filter((x) => x.accountName != oldAccountName);
       accounts.push({ ...oldAccount, ...account });
       await this.saveWallet(accounts, password);
-      await this.setLastAccount(account.accountName);
       return true;
     } catch (e) {
       console.log(e);
