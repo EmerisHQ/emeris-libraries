@@ -15,10 +15,11 @@ jobs:
           cache: 'npm'
       - name: build artifacts
         run: npm run build
-      - uses: papeloto/action-zip@v1
+      - uses: thedoctor0/zip-release@master
         with:
-          files: dist
-          dest: extension.zip
+          type: 'zip'
+          path: ./dist
+          filename: release.zip
       - name: Pull request artifacts
         if: ${{ github.event_name == 'pull_request' }}
         uses: gavv/pull-request-artifacts@v1.0.0
@@ -27,4 +28,4 @@ jobs:
           repo-token: ${{ github.token }}
           artifacts-branch: artifacts
           artifacts: |
-            extension.zip
+            release.zip
