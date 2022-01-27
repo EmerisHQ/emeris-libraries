@@ -56,6 +56,7 @@
 import { defineComponent } from 'vue';
 import Button from '@/components/ui/Button.vue';
 import Input from '@/components/ui/Input.vue';
+import Icon from '@/components/ui/Icon.vue';
 import { GlobalActionTypes } from '@@/store/extension/action-types';
 import { mapState } from 'vuex';
 import { RootState } from '@@/store';
@@ -65,6 +66,7 @@ export default defineComponent({
   components: {
     Button,
     Input,
+    Icon,
   },
   data: () => ({
     password: '',
