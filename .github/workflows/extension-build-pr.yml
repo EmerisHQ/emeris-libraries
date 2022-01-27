@@ -3,27 +3,28 @@ on: [push]
 defaults:
   run:
     working-directory: ./packages/browser-extension/
-Extension-Build:
-  runs-on: ubuntu-latest
-  steps:
-    - name: Check out repository code
-      uses: actions/checkout@v2
-    - uses: actions/setup-node@v2
-      with:
-        node-version: '14'
-        cache: 'npm'
-    - name: build artifacts
-      run: npm run build
-    - uses: papeloto/action-zip@v1
-      with:
-        files: dist
-        dest: extension.zip
-    - name: Pull request artifacts
-      if: ${{ github.event_name == 'pull_request' }}
-      uses: gavv/pull-request-artifacts@v1.0.0
-      with:
-        commit: ${{ github.event.pull_request.head.sha }}
-        repo-token: ${{ github.token }}
-        artifacts-branch: artifacts
-        artifacts: |
-          extension.zip
+jobs:
+  Extension-Build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out repository code
+        uses: actions/checkout@v2
+      - uses: actions/setup-node@v2
+        with:
+          node-version: '14'
+          cache: 'npm'
+      - name: build artifacts
+        run: npm run build
+      - uses: papeloto/action-zip@v1
+        with:
+          files: dist
+          dest: extension.zip
+      - name: Pull request artifacts
+        if: ${{ github.event_name == 'pull_request' }}
+        uses: gavv/pull-request-artifacts@v1.0.0
+        with:
+          commit: ${{ github.event.pull_request.head.sha }}
+          repo-token: ${{ github.token }}
+          artifacts-branch: artifacts
+          artifacts: |
+            extension.zip
