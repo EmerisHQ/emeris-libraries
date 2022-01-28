@@ -39,10 +39,11 @@
     }"
   >
     <div style="margin-bottom: 32px; display: flex">
-      <Icon name="InformationIcon" style="margin-right: 9px" icon-size="1" />
-      <span class="terms-of-use secondary-text"
-        >By continuing you agree to Terms of Use & Privacy Policy of Emeris wallet</span
-      >
+      <span class="secondary-text">By continuing you agree to </span
+      ><a href="/" @click.prevent="open('https://emeris.com/terms')" style="opacity: 1">Terms of Use</a
+      ><span class="secondary-text"> & </span
+      ><a href="" @click.prevent="open('https://emeris.com/privacy')">Privacy Policy</a
+      ><span class="secondary-text"> of Emeris wallet</span>
     </div>
     <Button
       name="Continue"
@@ -96,6 +97,9 @@ export default defineComponent({
         }
         this.onContinue();
       }
+    },
+    open(url) {
+      window.open(url);
     },
   },
   watch: {
