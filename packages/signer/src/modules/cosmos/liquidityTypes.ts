@@ -5,7 +5,7 @@ import {
   MsgDepositWithinBatch,
   MsgSwapWithinBatch,
   MsgWithdrawWithinBatch,
-} from '@starport/tendermint-liquidity-js/gravity-devs/liquidity/tendermint.liquidity.v1beta1/module/types/tendermint/liquidity/v1beta1/tx';
+} from '@starport/cosmos-gaia-js/gravity-devs/liquidity/tendermint.liquidity.v1beta1/module/types/tendermint/liquidity/v1beta1/tx';
 import Long from 'long';
 export interface AminoMsgCreatePool extends AminoMsg {
   readonly type: 'liquidity/MsgCreatePool';

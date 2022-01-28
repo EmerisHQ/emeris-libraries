@@ -3,7 +3,6 @@ import { LedgerSigner } from '@cosmjs/ledger-amino'
 import { Secp256k1HdWallet } from '@cosmjs/amino'
 import TransportWebHID from '@ledgerhq/hw-transport-webhid'
 import CosmosSigningClient from './cosmosSigningClient'
-import {} from '@starport/tendermint-liquidity-js'
 import GravitySigningClient from './gravitySigningClient'
 import OsmosisSigningClient from './osmosisSigningClient'
 import cosmosRegistry from './cosmosRegistry';
