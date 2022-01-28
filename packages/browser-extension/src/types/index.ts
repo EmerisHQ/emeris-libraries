@@ -49,5 +49,6 @@ export type ChainDetails = {
   prefix?: string;
   mapper: typeof EmerisMessageMapper;
   chainId: string;
+  chainName: string;
   rpcEndpoint: string;
 };
