@@ -12,37 +12,37 @@ export default class EmerisStorage {
   constructor(storageMode: EmerisStorageMode) {
     this.storageMode = storageMode;
   }
-  async getPermissions(): Promise<{ origin: string }[]> {
-    const result = await browser.storage[this.storageMode].get('permissions');
-    return result.permissions;
+  async getWhitelistedWebsites(): Promise<{ origin: string }[]> {
+    const result = await browser.storage[this.storageMode].get('whitelistedWebsites');
+    return result.whitelistedWebsites;
   }
-  async isPermitted(origin: string): Promise<boolean> {
-    const result = await browser.storage[this.storageMode].get('permissions');
-    if (!result.permissions) {
+  async isWhitelistedWebsite(origin: string): Promise<boolean> {
+    const result = await browser.storage[this.storageMode].get('whitelistedWebsites');
+    if (!result.whitelistedWebsites) {
       return false;
     } else {
-      const hasPermission = result.permissions.find((permission) => permission.origin == origin);
+      const hasPermission = result.whitelistedWebsites.find((permission) => permission.origin == origin);
       return !!hasPermission;
     }
   }
-  async addPermission(origin: string): Promise<boolean> {
+  async addWhitelistedWebsite(origin: string): Promise<boolean> {
     try {
-      const result = await browser.storage[this.storageMode].get('permissions');
-      if (!result.permissions) {
-        result.permissions = [];
+      const result = await browser.storage[this.storageMode].get('whitelistedWebsites');
+      if (!result.whitelistedWebsites) {
+        result.whitelistedWebsites = [];
       }
-      result.permissions.push({ origin });
-      await browser.storage[this.storageMode].set({ permissions: result.permissions });
+      result.whitelistedWebsites.push({ origin });
+      await browser.storage[this.storageMode].set({ whitelistedWebsites: result.whitelistedWebsites });
       return true;
     } catch (e) {
       return false;
     }
   }
-  async deletePermission(origin: string): Promise<boolean> {
+  async deleteWhitelistedWebsite(origin: string): Promise<boolean> {
     try {
-      const result = await browser.storage[this.storageMode].get('permissions');
-      const newPermissions = result.permissions.filter((permission) => permission.origin != origin);
-      await browser.storage[this.storageMode].set({ permissions: newPermissions });
+      const result = await browser.storage[this.storageMode].get('whitelistedWebsites');
+      const newWhitelistedWebsites = result.whitelistedWebsites.filter((permission) => permission.origin != origin);
+      await browser.storage[this.storageMode].set({ whitelistedWebsites: newWhitelistedWebsites });
       return true;
     } catch (e) {
       return false;
@@ -134,6 +134,6 @@ export default class EmerisStorage {
     }
   }
   async extensionReset() {
-    await browser.storage[this.storageMode].set({ password: null, wallet: null, lastAccount: null, permissions: null });
+    await browser.storage[this.storageMode].set({ password: null, wallet: null, lastAccount: null, whitelistedWebsites: null });
   }
 }

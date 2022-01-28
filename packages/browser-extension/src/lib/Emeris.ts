@@ -235,15 +235,15 @@ export class Emeris implements IEmeris {
         this.storage.extensionReset();
         return;
       case 'removeWhitelistedWebsite':
-        this.storage.deletePermission(message.data.data.website);
+        this.storage.deleteWhitelistedWebsite(message.data.data.website);
         return;
       case 'getWhitelistedWebsite':
-        return this.storage.getPermissions();
+        return this.storage.getWhitelistedWebsites();
       case 'addWhitelistedWebsite':
         // prevent dupes
-        const permissions = await this.storage.getPermissions();
-        if (permissions.find((permission) => permission.origin === message.data.data.website)) return true;
-        return this.storage.addPermission(message.data.data.website);
+        const whitelistedWebsites = await this.storage.getWhitelistedWebsites();
+        if (whitelistedWebsites.find((whitelistedWebsite) => whitelistedWebsite.origin === message.data.data.website)) return true;
+        return this.storage.addWhitelistedWebsite(message.data.data.website);
     }
   }
   async ensurePopup(): Promise<void> {
@@ -319,7 +319,7 @@ export class Emeris implements IEmeris {
     return await libs[chain.library].getPublicKey(mnemonic, getHdPath(chain, { prefix: chain.prefix, HDPath: getHdPath(chain, account) }));
   }
   async isPermitted(origin: string): Promise<boolean> {
-    return await this.storage.isPermitted(origin);
+    return await this.storage.isWhitelistedWebsite(origin);
   }
   async isHWWallet(_req: IsHWWalletRequest): Promise<boolean> {
     return false;
@@ -347,7 +347,7 @@ export class Emeris implements IEmeris {
     request.id = uuidv4();
     const enabled = (await this.forwardToPopup(request)).data as boolean;
     if (enabled) {
-      await this.storage.addPermission(request.data.origin);
+      await this.storage.addWhitelistedWebsite(request.data.origin);
     }
     return enabled;
   }
