@@ -1,5 +1,6 @@
 import * as API from './EmerisAPI';
 import * as Base from './EmerisBase';
+import { BaseFee } from './EmerisFees';
 
 export type FeeWDenom = {
     amount: API.APIGasPrice;
@@ -68,5 +69,6 @@ export type TransactionData =
 export type TransactionSignRequest = {
     signingAddress: string,
     chainId: string,
-    messages: Transaction<TransactionData>[]
+    messages: Transaction<TransactionData>[],
+    fees: BaseFee[]
 };
