@@ -7,7 +7,7 @@ export default class EmerisSigner {
   private mnemonic: string;
   private isLedger: boolean;
 
-  constructor(isLedger=false,mnemonic:string) {
+  constructor(isLedger=false,mnemonic?:string) {
     if (!isLedger) {
       this.mnemonic=mnemonic;
     }
