@@ -38,7 +38,7 @@
       marginTop: 'auto',
     }"
   >
-    <div style="margin-bottom: 32px; display: flex">
+    <div style="margin-bottom: 32px; font-size: 13px">
       <span class="secondary-text">By continuing you agree to </span
       ><a href="/" @click.prevent="open('https://emeris.com/terms')" style="opacity: 1">Terms of Use</a
       ><span class="secondary-text"> & </span

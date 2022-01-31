@@ -1,7 +1,10 @@
 <template>
   <div class="page">
     <img :src="require(`@@/assets/UnlockBG.png`)" class="background" />
-    <Icon style="color: #89ff9b; margin-top: 156px; margin-bottom: 28px" name="InformationIcon" :icon-size="2" />
+    <img
+      style="margin-top: 156px; margin-bottom: 28px; margin-left: auto; margin-right: auto; width: 46px"
+      :src="require(`@@/assets/CheckIcon.svg`)"
+    />
     <h1 style="margin-bottom: 20px" name>Password changed</h1>
     <div class="secondary-text" style="text-align: center; margin-bottom: 24px">
       You have successfully changed your password.
@@ -22,7 +25,6 @@
 <script lang="ts">
 import { defineComponent } from 'vue';
 import Button from '@/components/ui/Button.vue';
-import Icon from '@/components/ui/Icon.vue';
 
 export default defineComponent({
   name: 'Password Changed',
@@ -31,7 +33,6 @@ export default defineComponent({
   }),
   components: {
     Button,
-    Icon,
   },
 });
 </script>
