@@ -13,6 +13,12 @@ export default class EmerisSigner {
     }
     this.isLedger=isLedger;
   }
+  public static withLedger() {
+    return new EmerisSigner(true);
+  }
+  public static withMnemonic(mnemonic: string) {
+    return new EmerisSigner(false, mnemonic);
+  }
   async signTx(tx: SignerRequest): Promise<Uint8Array> {
     if (isCosmos(tx)) {
       const client:EmerisSigningClient = await getCosmosClient(tx.chain_name, this.isLedger, this.mnemonic);
