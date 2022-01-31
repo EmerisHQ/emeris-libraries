@@ -23,7 +23,7 @@ jobs:
       - uses: thedoctor0/zip-release@master
         with:
           type: 'zip'
-          path: ./dist
+          directory: ./packages/browser-extension/dist
           filename: release.zip
       - name: Pull request artifacts
         if: ${{ github.event_name == 'pull_request' }}
