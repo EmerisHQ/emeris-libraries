@@ -1,5 +1,8 @@
 name: Extension Build
-on: [pull_request]
+on: 
+  pull_request:
+    paths:
+      - "packages/browser-extension/**"
 defaults:
   run:
     working-directory: ./packages/browser-extension/
