@@ -1,5 +1,5 @@
 <template>
-  <EphemerisSpinner v-if="!account" />
+  <Loader v-if="!account" />
   <ConfirmationScreen
     v-else
     :title="`Are you sure hat you want to remove ${account.accountName}?`"
@@ -26,7 +26,7 @@ import ConfirmationScreen from '@@/views/ConfirmationScreen.vue';
 import { mapState } from 'vuex';
 import { RootState } from '@@/store';
 import { GlobalActionTypes } from '@@/store/extension/action-types';
-import EphemerisSpinner from '@/components/ui/EphemerisSpinner.vue';
+import Loader from '@@/components/Loader.vue';
 
 export default defineComponent({
   name: 'Account Remove',
@@ -44,7 +44,7 @@ export default defineComponent({
   components: {
     Button,
     ConfirmationScreen,
-    EphemerisSpinner,
+    Loader,
   },
   methods: {
     async removeWallet() {

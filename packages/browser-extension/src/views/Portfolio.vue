@@ -1,8 +1,25 @@
 <template>
-  <!-- <EphemerisSpinner v-if="!account || !balances || balances.length === 0 || !verifiedDenoms" /> -->
-  <EphemerisSpinner />
+  <Loader v-if="!account || balances === null || !verifiedDenoms" />
 
-  <!-- <div class="page" v-else>
+  <div class="page" v-else-if="balances.length === 0">
+    <img :src="require(`@@/assets/EmptyPortfolioBG.png`)" class="background" />
+    <div style="display: flex; position: relative; margin-bottom: 36px">
+      <img
+        style="height: 24px; width: 24px; position: absolute"
+        :src="require('@@/assets/Avatar.svg')"
+        @click="$router.push('/account')"
+      />
+    </div>
+    <div style="margin-top: auto">
+      <h1>Get started by funding your wallet</h1>
+      <p class="secondary-text" style="margin-bottom: 32px; margin-top: 16px; text-align: center">
+        Send your assets from an exchange or another wallet.
+      </p>
+      <Button name="Receive assets" @click="() => $router.push('/receive')" />
+    </div>
+  </div>
+
+  <div class="page" v-else>
     <img :src="require(`@@/assets/PortfolioBG.png`)" class="background" />
     <div style="display: flex; position: relative; margin-bottom: 36px">
       <img
@@ -37,24 +54,7 @@
       :show-headers="false"
       :limit-rows="4"
     />
-  </div> -->
-  <!-- <div class="page" v-else>
-    <img :src="require(`@@/assets/EmptyPortfolioBG.png`)" class="background" />
-    <div style="display: flex; position: relative; margin-bottom: 36px">
-      <img
-        style="height: 24px; width: 24px; position: absolute"
-        :src="require('@@/assets/Avatar.svg')"
-        @click="$router.push('/account')"
-      />
-    </div>
-    <div style="margin-top: auto">
-      <h1>Get started by funding your wallet</h1>
-      <p class="secondary-text" style="margin-bottom: 32px; margin-top: 16px; text-align: center">
-        Send your assets from an exchange or another wallet.
-      </p>
-      <Button name="Receive assets" @click="() => $router.push('/receive')" />
-    </div>
-  </div> -->
+  </div>
 </template>
 
 <script lang="ts">
@@ -62,7 +62,7 @@ import { defineComponent } from 'vue';
 import Button from '@/components/ui/Button.vue';
 import Icon from '@/components/ui/Icon.vue';
 import AssetsTable from '@/components/assets/AssetsTable/AssetsTable.vue';
-import EphemerisSpinner from '@/components/ui/EphemerisSpinner.vue';
+import Loader from '@@/components/Loader.vue';
 import TotalPrice from '@/components/common/TotalPrice.vue';
 import { GlobalDemerisGetterTypes } from '@/store';
 import { GlobalGetterTypes } from '@@/store/extension/getter-types';
@@ -86,7 +86,7 @@ export default defineComponent({
     Icon,
     AssetsTable,
     TotalPrice,
-    EphemerisSpinner,
+    Loader,
   },
   methods: {},
 });

@@ -1,5 +1,5 @@
 <template>
-  <EphemerisSpinner v-if="!asset" />
+  <Loader v-if="!asset" />
   <template v-else>
     <Header :title="`Receive ${asset.display_name}`" />
     <div style="text-align: center; margin-top: -24px">
@@ -37,7 +37,7 @@ import QrCode from '@/components/common/QrCode.vue';
 import Icon from '@/components/ui/Icon.vue';
 import { GlobalDemerisGetterTypes } from '@/store';
 import { GlobalActionTypes } from '@@/store/extension/action-types';
-import EphemerisSpinner from '@/components/ui/EphemerisSpinner.vue';
+import Loader from '@@/components/Loader.vue';
 
 export default {
   name: 'Receive QR',
@@ -45,7 +45,7 @@ export default {
     Header,
     QrCode,
     Icon,
-    EphemerisSpinner,
+    Loader,
   },
   data: () => ({
     displayNameAddedList: [],
