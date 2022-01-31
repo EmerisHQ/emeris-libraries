@@ -1,5 +1,5 @@
 <template>
-  <div>Loading...</div>
+  <EphemerisSpinner />
 </template>
 
 <script lang="ts">
@@ -9,9 +9,13 @@ import { GlobalGetterTypes } from '@@/store/extension/getter-types';
 import { ExtensionRequest } from '@@/types';
 import { defineComponent, computed } from 'vue';
 import TransportWebUSB from '@ledgerhq/hw-transport-webusb';
+import EphemerisSpinner from '@/components/ui/EphemerisSpinner.vue';
 
 export default defineComponent({
   name: 'EmerisApp',
+  components: {
+    EphemerisSpinner,
+  },
   methods: {
     async route() {
       const pending = await this.$store.dispatch(GlobalActionTypes.GET_PENDING);

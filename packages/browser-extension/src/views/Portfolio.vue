@@ -1,5 +1,8 @@
 <template>
-  <div class="page" v-if="balances && balances.length > 0 && verifiedDenoms">
+  <!-- <EphemerisSpinner v-if="!account || !balances || balances.length === 0 || !verifiedDenoms" /> -->
+  <EphemerisSpinner />
+
+  <!-- <div class="page" v-else>
     <img :src="require(`@@/assets/PortfolioBG.png`)" class="background" />
     <div style="display: flex; position: relative; margin-bottom: 36px">
       <img
@@ -14,7 +17,7 @@
       class="secondary-text account-selector"
       style="margin-bottom: 8px; cursor: pointer"
       @click="$router.push('/accounts')"
-      >{{ account ? account.accountName : 'Loading...' }} <Icon name="ChevronRightIcon" :icon-size="1"
+      >{{ account.accountName }} <Icon name="ChevronRightIcon" :icon-size="1"
     /></span>
     <h1 style="font-size: 38px; text-align: left; margin-bottom: 24px">
       <TotalPrice :balances="balances" small-decimals />
@@ -34,8 +37,8 @@
       :show-headers="false"
       :limit-rows="4"
     />
-  </div>
-  <div class="page" v-else>
+  </div> -->
+  <!-- <div class="page" v-else>
     <img :src="require(`@@/assets/EmptyPortfolioBG.png`)" class="background" />
     <div style="display: flex; position: relative; margin-bottom: 36px">
       <img
@@ -51,7 +54,7 @@
       </p>
       <Button name="Receive assets" @click="() => $router.push('/receive')" />
     </div>
-  </div>
+  </div> -->
 </template>
 
 <script lang="ts">
@@ -59,6 +62,7 @@ import { defineComponent } from 'vue';
 import Button from '@/components/ui/Button.vue';
 import Icon from '@/components/ui/Icon.vue';
 import AssetsTable from '@/components/assets/AssetsTable/AssetsTable.vue';
+import EphemerisSpinner from '@/components/ui/EphemerisSpinner.vue';
 import TotalPrice from '@/components/common/TotalPrice.vue';
 import { GlobalDemerisGetterTypes } from '@/store';
 import { GlobalGetterTypes } from '@@/store/extension/getter-types';
@@ -82,6 +86,7 @@ export default defineComponent({
     Icon,
     AssetsTable,
     TotalPrice,
+    EphemerisSpinner,
   },
   methods: {},
 });
