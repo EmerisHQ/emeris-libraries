@@ -33,4 +33,4 @@ jobs:
           repo-token: ${{ github.token }}
           artifacts-branch: artifacts
           artifacts: |
-            release.zip
+            ./packages/browser-extension/release.zip
