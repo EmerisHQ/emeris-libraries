@@ -1,5 +1,5 @@
 name: Extension Build
-on: [push]
+on: [pull_request]
 defaults:
   run:
     working-directory: ./packages/browser-extension/
