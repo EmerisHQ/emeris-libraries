@@ -24,7 +24,7 @@ jobs:
         with:
           type: 'zip'
           directory: ./packages/browser-extension/dist
-          filename: ../release.zip
+          filename: release.zip
       - name: Pull request artifacts
         if: ${{ github.event_name == 'pull_request' }}
         uses: gavv/pull-request-artifacts@v1.0.0
@@ -33,4 +33,4 @@ jobs:
           repo-token: ${{ github.token }}
           artifacts-branch: artifacts
           artifacts: |
-            ./packages/browser-extension/release.zip
+            ./packages/browser-extension/dist/release.zip
