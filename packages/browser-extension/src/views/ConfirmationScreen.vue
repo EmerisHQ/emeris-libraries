@@ -1,10 +1,12 @@
 <template>
   <div class="page">
     <img :src="require(`@@/assets/UnlockBG.png`)" class="background" />
-    <Brandmark class="wordmark" />
 
-    <h1 style="margin-top: 100px; margin-bottom: 16px">{{ title }}</h1>
-    <span style="color: #ffffffaa" v-if="subtitle">{{ subtitle }}</span>
+    <div style="margin-top: 100px; text-align: center">
+      <slot name="icon"></slot>
+      <h1 style="margin-bottom: 8px">{{ title }}</h1>
+      <span style="color: #ffffffaa" v-if="subtitle">{{ subtitle }}</span>
+    </div>
 
     <slot></slot>
   </div>

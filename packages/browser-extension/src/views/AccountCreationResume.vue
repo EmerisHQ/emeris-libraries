@@ -1,5 +1,14 @@
 <template>
-  <ConfirmationScreen title="Continue creating your account?">
+  <ConfirmationScreen
+    title="Continue creating your account?"
+    subtitle="You closed the extension window before finishing your account creation. Do you wish to continue?"
+  >
+    <template v-slot:icon>
+      <img
+        :src="require('@@/assets/DotsIcon.svg')"
+        style="width: 46px; margin-left: auto; margin-right: auto; margin-bottom: 35px"
+      />
+    </template>
     <div
       :style="{
         marginTop: 'auto',
@@ -7,7 +16,7 @@
       class="buttons"
     >
       <Button name="Continue" @click="resume" />
-      <Button name="Abort account creation" variant="link" @click="abort" />
+      <Button name="Cancel" variant="link" @click="abort" />
     </div>
   </ConfirmationScreen>
 </template>
