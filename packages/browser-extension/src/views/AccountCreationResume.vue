@@ -16,6 +16,7 @@
 import { defineComponent } from 'vue';
 import Button from '@/components/ui/Button.vue';
 import ConfirmationScreen from '@@/views/ConfirmationScreen.vue';
+import { GlobalActionTypes } from '@@/store/extension/action-types';
 
 export default defineComponent({
   name: 'Account Creation Resume',
@@ -25,13 +26,12 @@ export default defineComponent({
   },
   methods: {
     async resume() {
-      // const { route, wallet } = await this.$store.dispatch(GlobalActionTypes.GET_PARTIAL_ACCOUNT_CREATION);
-      // this.$store.commit('extension/' + MutationTypes.SET_WALLET, wallet);
-      // this.$router.push(route);
+      const newAccount = await this.$store.dispatch(GlobalActionTypes.GET_NEW_ACCOUNT);
+      this.$router.push(newAccount.route);
     },
     async abort() {
-      // await this.$store.dispatch(GlobalActionTypes.SET_PARTIAL_ACCOUNT_CREATION, { wallet: undefined });
-      this.$router.push('/accounts');
+      this.$store.dispatch(GlobalActionTypes.SET_NEW_ACCOUNT, undefined);
+      this.$router.push('/');
     },
   },
 });
