@@ -1,6 +1,5 @@
 <template>
   <div class="page">
-    <img :src="require(`@@/assets/UnlockBG.png`)" class="background" />
     <img
       style="margin-top: 156px; margin-left: auto; margin-right: auto; width: 46px"
       :src="require(`@@/assets/CheckIcon.svg`)"
