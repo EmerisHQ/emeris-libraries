@@ -1,6 +1,6 @@
 <template>
   <div class="page">
-    <Header title="">
+    <Header title="" backTo="/portfolio">
       <template v-slot:backButton>
         <!-- TODO add icon to Demeris -->
         <img :src="require('@@/assets/CoqIcon.svg')" @click="$router.push('/settings')" />

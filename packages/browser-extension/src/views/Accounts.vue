@@ -1,6 +1,6 @@
 <template>
   <div class="page">
-    <Header title="Accounts">
+    <Header title="Accounts" backTo="/account">
       <a @click="edit = true" v-if="!edit">Edit</a>
       <a @click="edit = false" v-else>Done</a>
     </Header>
