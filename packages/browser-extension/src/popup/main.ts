@@ -12,23 +12,30 @@ import router from '@@/router/popup';
 import { rootstore } from '../store/index';
 
 import { messages } from '@/locales/en';
-const i18n = createI18n({
-  globalInjection: true,
-  legacy: false,
-  locale: 'en',
-  fallbackLocale: 'en',
-  messages,
-  numberFormats: {
-    en: {
-      currency: {
-        style: 'currency',
-        currency: 'USD',
-        notation: 'standard',
+
+// aync execution to not block the render thread
+const main = () => {
+
+  const i18n = createI18n({
+    globalInjection: true,
+    legacy: false,
+    locale: 'en',
+    fallbackLocale: 'en',
+    messages,
+    numberFormats: {
+      en: {
+        currency: {
+          style: 'currency',
+          currency: 'USD',
+          notation: 'standard',
+        },
       },
     },
-  },
-});
+  });
 
-const app = createApp(App);
+  const app = createApp(App);
 
-app.use(rootstore).use(i18n).use(router).use(VueTippy).mount('#app');
+  app.use(rootstore).use(i18n).use(router).use(VueTippy).mount('#app');
+}
+
+main()
