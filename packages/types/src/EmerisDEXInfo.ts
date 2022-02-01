@@ -21,8 +21,12 @@ export  const Swap = Type.Strict(Type.Object({
 	chainId: Type.String(),
 	protocol: Type.Enum(DEX),
 	denomA: Denom,
+	balanceA: Type.String(),
+	weightA: Type.Number(),
 	denomB: Denom,
 	swapPrice: Type.String(),
+	balanceB: Type.String(),
+	weightB: Type.Number(),
 	swapType: Type.Enum(SwapType)
 }));
 export  const Swaps = Type.Array(Swap);
