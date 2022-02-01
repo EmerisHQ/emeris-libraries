@@ -23,7 +23,7 @@
       }"
       class="buttons"
     >
-      <Button name="Continue" @click="goToShowMnemonic" />
+      <Button name="Back up now" @click="goToShowMnemonic" />
       <Button name="Back up later" variant="link" @click="() => (backUpLater = true)" />
     </div>
 
