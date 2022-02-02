@@ -121,6 +121,7 @@ export default class GravitySigningClient extends SigningStargateClient implemen
     const txRaw: TxRaw = TxRaw.fromPartial({
       bodyBytes: signedTxBodyBytes,
       authInfoBytes: signedAuthInfoBytes,
+      // generates a proto-serialized signed TX object (with a dummy signature as it is never checked) because that's what the estimation endpoint expects.
       signatures: [new Uint8Array([1,2,3])],
     });
 
