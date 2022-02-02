@@ -44,9 +44,9 @@ export interface Actions {
     { commit }: ActionContext<State, RootState>,
     { accountName, password }: { accountName: string; password: string },
   ): Promise<void>;
-  [ActionTypes.GET_ADDRESS]({}: ActionContext<State, RootState>, { chainId }: { chainId: string }): Promise<string>;
+  [ActionTypes.GET_ADDRESS]({ }: ActionContext<State, RootState>, { chainId }: { chainId: string }): Promise<string>;
   [ActionTypes.REMOVE_WHITELISTED_WEBSITE](
-    {}: ActionContext<State, RootState>,
+    { }: ActionContext<State, RootState>,
     { website }: { website: string },
   ): Promise<void>;
 }
@@ -71,13 +71,16 @@ export const actions: ActionTree<State, RootState> & Actions = {
       return false;
     }
   },
-  async [ActionTypes.LOAD_SESSION_DATA]({ dispatch }) {
+  async [ActionTypes.LOAD_SESSION_DATA]({ dispatch, getters }) {
     const lastAccountused = await dispatch(ActionTypes.GET_LAST_ACCOUNT_USED); // also loads the last account to the state
-    await dispatch(
-      GlobalDemerisActionTypes.API.GET_BALANCES,
-      { subscribe: true, params: { address: lastAccountused.keyHash } },
-      { root: true },
-    );
+    const account = getters['getWallet'].find(account => account.accountName === lastAccountused)
+    await Promise.all(account.keyHashes.map(keyHash =>
+      dispatch(
+        GlobalDemerisActionTypes.API.GET_BALANCES,
+        { subscribe: true, params: { address: keyHash } },
+        { root: true },
+      )
+    ))
   },
   async [ActionTypes.GET_WALLET]({ commit, getters }) {
     try {
@@ -152,7 +155,7 @@ export const actions: ActionTree<State, RootState> & Actions = {
       throw new Error('Extension:UnlockWallet failed');
     }
   },
-  async [ActionTypes.CHANGE_PASSWORD]({}, { password }: { password: string }) {
+  async [ActionTypes.CHANGE_PASSWORD]({ }, { password }: { password: string }) {
     await browser.runtime.sendMessage({
       type: 'fromPopup',
       data: { action: 'changePassword', data: { password } },
@@ -197,7 +200,7 @@ export const actions: ActionTree<State, RootState> & Actions = {
       throw new Error('Extension:getMnemonic failed');
     }
   },
-  async [ActionTypes.GET_ADDRESS]({}, { chainId }: { chainId: string }) {
+  async [ActionTypes.GET_ADDRESS]({ }, { chainId }: { chainId: string }) {
     try {
       const address = await browser.runtime.sendMessage({
         type: 'fromPopup',

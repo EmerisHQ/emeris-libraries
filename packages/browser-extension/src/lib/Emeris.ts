@@ -20,7 +20,7 @@ import {
 } from '@@/types/api';
 import { AbstractTxResult } from '@@/types/transactions';
 import { keyHashfromAddress } from '@/utils/basic';
-import { Secp256k1HdWallet } from '@cosmjs/amino';
+import chainConfig from '../chain-config';
 export class Emeris implements IEmeris {
   public loaded: boolean;
   private storage: EmerisStorage;
@@ -273,15 +273,14 @@ export class Emeris implements IEmeris {
     // TODO add hd paths to account and use here
     return await Promise.all(
       this.wallet.map(async ({ accountName, accountMnemonic, setupState }) => {
-        const hdWallet = await Secp256k1HdWallet.fromMnemonic(
-          accountMnemonic /* config for hdPath and prefix go here */,
-        );
-        const [{ address }] = await hdWallet.getAccounts();
-        const keyHash = keyHashfromAddress(address);
-
         return {
           accountName,
-          keyHash,
+          keyHashes:
+            await Promise.all(Object.values(chainConfig).map(async chain => {
+              const address = await libs[chain.library].getAddress(accountMnemonic, chain)
+              const keyHash = keyHashfromAddress(address);
+              return keyHash
+            })),
           setupState,
         };
       }),
