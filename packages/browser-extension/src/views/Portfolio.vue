@@ -1,5 +1,5 @@
 <template>
-  <Loader v-if="!account || balances === null || !verifiedDenoms" />
+  <Loader v-if="!account || balances === null" />
 
   <div class="page" v-else-if="balances.length === 0">
     <img :src="require(`@@/assets/EmptyPortfolioBG.png`)" class="background" />
@@ -78,7 +78,7 @@ export default defineComponent({
     },
     balances() {
       if (!this.account) return [];
-      return this.$store.getters[GlobalGetterTypes.getAllBalances](this.account);
+      return this.$store.getters[GlobalGetterTypes.getAllBalances](this.account) || [];
     },
   },
   components: {
