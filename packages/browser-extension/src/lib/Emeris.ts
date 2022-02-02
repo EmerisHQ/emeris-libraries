@@ -284,18 +284,17 @@ export class Emeris implements IEmeris {
   // function limits the data that we return to the view layers to not expose accidentially data
   async getDisplayAccounts() {
     if (!this.wallet) return undefined;
-    // TODO add hd paths to account and use here
     return await Promise.all(
-      this.wallet.map(async ({ accountName, accountMnemonic, setupState }) => {
+      this.wallet.map(async (account) => {
         return {
-          accountName,
+          accountName: account.accountName,
           keyHashes:
             await Promise.all(Object.values(chainConfig).map(async chain => {
-              const address = await libs[chain.library].getAddress(accountMnemonic, chain)
+              const address = await libs[chain.library].getAddress(account.accountMnemonic, { prefix: chain.prefix, HDPath: getHdPath(chain, account) })
               const keyHash = keyHashfromAddress(address);
               return keyHash
             })),
-          setupState,
+          setupState: account.setupState,
         };
       }),
     );
