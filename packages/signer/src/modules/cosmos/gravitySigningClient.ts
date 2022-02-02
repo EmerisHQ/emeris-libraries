@@ -1,5 +1,11 @@
-
-import { AminoMsg, encodeSecp256k1Pubkey, makeSignDoc as makeSignDocAmino, OfflineAminoSigner, StdFee, StdSignDoc } from '@cosmjs/amino'
+import {
+  AminoMsg,
+  encodeSecp256k1Pubkey,
+  makeSignDoc as makeSignDocAmino,
+  OfflineAminoSigner,
+  StdFee,
+  StdSignDoc,
+} from '@cosmjs/amino'
 import { fromBase64 } from '@cosmjs/encoding'
 import { Int53 } from '@cosmjs/math'
 import { EncodeObject, encodePubkey, makeAuthInfoBytes, TxBodyEncodeObject } from '@cosmjs/proto-signing'
