@@ -1,0 +1,273 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Cosmos Mapps addliquidity 1`] = `
+Object {
+  "signature": Object {
+    "pub_key": Object {
+      "type": "tendermint/PubKeySecp256k1",
+      "value": "A4Fj1Y4k77Qaxuy496CHYB2rpfWXkM3LCnlyrU8eKbH7",
+    },
+    "signature": "2thzra3mWrp16gmZfdo2dt/zeHp7jYz9QeuTqnHiHw16l5kJZVwMm6zK16QgB0WWlJFBj8Z8Ry33I0Zy4UCxOw==",
+  },
+  "signed": Object {
+    "account_number": "0",
+    "chain_id": "emeris-chain",
+    "fee": Object {
+      "amount": Array [
+        Object {
+          "amount": "2000",
+          "denom": "ucosm",
+        },
+      ],
+      "gas": "180000",
+    },
+    "memo": "memo",
+    "msgs": Array [
+      Object {
+        "type": "liquidity/MsgDepositWithinBatch",
+        "value": Object {
+          "deposit_coins": Array [
+            Object {
+              "amount": "100",
+              "denom": "sayajin",
+            },
+            Object {
+              "amount": "10",
+              "denom": "supersajayin",
+            },
+          ],
+          "depositor_address": "cosmos1lsagfzrm4gz28he4wunt63sts5xzmczw8pkek3",
+          "pool_id": 1,
+        },
+      },
+    ],
+    "sequence": "0",
+  },
+}
+`;
+
+exports[`Cosmos Mapps createpool 1`] = `
+Object {
+  "signature": Object {
+    "pub_key": Object {
+      "type": "tendermint/PubKeySecp256k1",
+      "value": "A4Fj1Y4k77Qaxuy496CHYB2rpfWXkM3LCnlyrU8eKbH7",
+    },
+    "signature": "ke4AADGJQiiFcNHc2exQV5Uf4//2fDM48WkshJWTJhp2+ZLXLKH0WpVVjVfkkk9sYUArQSv5LryTjOK9suWgkQ==",
+  },
+  "signed": Object {
+    "account_number": "0",
+    "chain_id": "emeris-chain",
+    "fee": Object {
+      "amount": Array [
+        Object {
+          "amount": "2000",
+          "denom": "ucosm",
+        },
+      ],
+      "gas": "180000",
+    },
+    "memo": "memo",
+    "msgs": Array [
+      Object {
+        "type": "liquidity/MsgCreatePool",
+        "value": Object {
+          "deposit_coins": Array [
+            Object {
+              "amount": "100",
+              "denom": "sayajin",
+            },
+            Object {
+              "amount": "10",
+              "denom": "supersajayin",
+            },
+          ],
+          "pool_creator_address": "cosmos1lsagfzrm4gz28he4wunt63sts5xzmczw8pkek3",
+          "pool_type_id": 1,
+        },
+      },
+    ],
+    "sequence": "0",
+  },
+}
+`;
+
+exports[`Cosmos Mapps ibcTransfer 1`] = `
+Object {
+  "signature": Object {
+    "pub_key": Object {
+      "type": "tendermint/PubKeySecp256k1",
+      "value": "A4Fj1Y4k77Qaxuy496CHYB2rpfWXkM3LCnlyrU8eKbH7",
+    },
+    "signature": "GoucSewMkuOH8TenSawi4gzBac0MaNijwrG82RXudrhm/CL24eSf7NONrbAlYWbAXZskAo7gw0FJr0Jm+dhLUw==",
+  },
+  "signed": Object {
+    "account_number": "0",
+    "chain_id": "emeris-chain",
+    "fee": Object {
+      "amount": Array [
+        Object {
+          "amount": "2000",
+          "denom": "ucosm",
+        },
+      ],
+      "gas": "180000",
+    },
+    "memo": "memo",
+    "msgs": Array [
+      Object {
+        "type": "cosmos-sdk/MsgTransfer",
+        "value": Object {
+          "receiver": "cosmos1lsagfzrm4gz28he4wunt63sts5xzmczw8pkek3",
+          "sender": "cosmos1lsagfzrm4gz28he4wunt63sts5xzmczw8pkek3",
+          "source_channel": "abcdchannel",
+          "source_port": "transfer",
+          "timeout_timestamp": Long {
+            "high": 367368827,
+            "low": -1829849088,
+            "unsigned": false,
+          },
+          "token": Object {
+            "0": Object {
+              "amount": "2000",
+              "denom": "ucosm",
+            },
+          },
+        },
+      },
+    ],
+    "sequence": "0",
+  },
+}
+`;
+
+exports[`Cosmos Mapps swap 1`] = `
+Object {
+  "signature": Object {
+    "pub_key": Object {
+      "type": "tendermint/PubKeySecp256k1",
+      "value": "A4Fj1Y4k77Qaxuy496CHYB2rpfWXkM3LCnlyrU8eKbH7",
+    },
+    "signature": "1P+Yn1vbx2ounpqNPQ+T8eDvif94dNpfL0ekXJWoou9NLtS/ZrmAlZaIAoGvdexd87DelH0Kp3g77Uy0rNiNwA==",
+  },
+  "signed": Object {
+    "account_number": "0",
+    "chain_id": "emeris-chain",
+    "fee": Object {
+      "amount": Array [
+        Object {
+          "amount": "2000",
+          "denom": "ucosm",
+        },
+      ],
+      "gas": "180000",
+    },
+    "memo": "memo",
+    "msgs": Array [
+      Object {
+        "type": "liquidity/MsgSwapWithinBatch",
+        "value": Object {
+          "demand_coin_denom": "supersajayin",
+          "offer_coin": Object {
+            "amount": "100",
+            "denom": "sayajin",
+          },
+          "offer_coin_dee": Object {
+            "amount": "5",
+            "denom": "sayajin",
+          },
+          "order_price": "10500000000000000000",
+          "pool_id": 1,
+          "swap_requester_address": "cosmos1lsagfzrm4gz28he4wunt63sts5xzmczw8pkek3",
+          "swap_type_id": 1,
+        },
+      },
+    ],
+    "sequence": "0",
+  },
+}
+`;
+
+exports[`Cosmos Mapps transfer 1`] = `
+Object {
+  "signature": Object {
+    "pub_key": Object {
+      "type": "tendermint/PubKeySecp256k1",
+      "value": "A4Fj1Y4k77Qaxuy496CHYB2rpfWXkM3LCnlyrU8eKbH7",
+    },
+    "signature": "eL058wrn5N2EDEfS5RzInEehBNJspMMkOJiYzTW47RAfBkzD8Tbd7r26kkucI5DmNSd41RKHmeDfy93uRbkz6w==",
+  },
+  "signed": Object {
+    "account_number": "0",
+    "chain_id": "emeris-chain",
+    "fee": Object {
+      "amount": Array [
+        Object {
+          "amount": "2000",
+          "denom": "ucosm",
+        },
+      ],
+      "gas": "180000",
+    },
+    "memo": "memo",
+    "msgs": Array [
+      Object {
+        "type": "cosmos-sdk/MsgSend",
+        "value": Object {
+          "amount": Array [
+            Array [
+              Object {
+                "amount": "2000",
+                "denom": "ucosm",
+              },
+            ],
+          ],
+          "from_address": "cosmos1lsagfzrm4gz28he4wunt63sts5xzmczw8pkek3",
+          "to_address": "cosmos1lsagfzrm4gz28he4wunt63sts5xzmczw8pkek3",
+        },
+      },
+    ],
+    "sequence": "0",
+  },
+}
+`;
+
+exports[`Cosmos Mapps withdrawliquidity 1`] = `
+Object {
+  "signature": Object {
+    "pub_key": Object {
+      "type": "tendermint/PubKeySecp256k1",
+      "value": "A4Fj1Y4k77Qaxuy496CHYB2rpfWXkM3LCnlyrU8eKbH7",
+    },
+    "signature": "b+fPhTi91MTPvLzXuoQcBwCfbQ9llo24S2GePlxq+kFTV0vMiXzOillrN95r2olnDBtZ7rnIA7Kjl1ocRfAISQ==",
+  },
+  "signed": Object {
+    "account_number": "0",
+    "chain_id": "emeris-chain",
+    "fee": Object {
+      "amount": Array [
+        Object {
+          "amount": "2000",
+          "denom": "ucosm",
+        },
+      ],
+      "gas": "180000",
+    },
+    "memo": "memo",
+    "msgs": Array [
+      Object {
+        "type": "liquidity/MsgWithdrawWithinBatch",
+        "value": Object {
+          "pool_coin": Object {
+            "amount": "100",
+            "denom": "sayajin",
+          },
+          "pool_id": 1,
+          "withdrawer_address": "cosmos1lsagfzrm4gz28he4wunt63sts5xzmczw8pkek3",
+        },
+      },
+    ],
+    "sequence": "0",
+  },
+}
+`;

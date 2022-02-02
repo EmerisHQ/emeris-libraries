@@ -1,38 +1,38 @@
-import { AddLiquidityData, CreatePoolData, IBCData, SwapData, Transaction, TransactionData, TransferData, WithdrawLiquidityData } from "../../types/src/EmerisTransactions";
+import { EmerisTransactions } from "@emeris/types";
 
 export class EmerisMessageMapper {
-    chain_id = undefined
+    public chain_id: string;
 
-    constructor(chain_id) {
+    constructor(chain_id:string) {
         this.chain_id = chain_id
     }
 
-    map(transaction: Transaction<TransactionData>, signing_address: string) {
+    map(transaction: EmerisTransactions.Transaction<EmerisTransactions.TransactionData>, signing_address: string) {
         // @ts-expect-error
         return this[transaction.type](transaction.data, signing_address)
     }
 
-    transfer(transaction: TransferData, signing_address: string) {
+    transfer(transaction: EmerisTransactions.TransferData, signing_address: string) {
         throw new Error("This method is not implemented for " + this.chain_id)
     }
 
-    ibcTransfer(transaction: IBCData, signing_address: string) {
+    ibcTransfer(transaction: EmerisTransactions.IBCData, signing_address: string) {
         throw new Error("This method is not implemented for " + this.chain_id)
     }
 
-    swap(transaction: SwapData, signing_address: string) {
+    swap(transaction: EmerisTransactions.SwapData, signing_address: string) {
         throw new Error("This method is not implemented for " + this.chain_id)
     }
 
-    addliquidity(transaction: AddLiquidityData, signing_address: string) {
+    addliquidity(transaction: EmerisTransactions.AddLiquidityData, signing_address: string) {
         throw new Error("This method is not implemented for " + this.chain_id)
     }
 
-    withdrawliquidity(transaction: WithdrawLiquidityData, signing_address: string) {
+    withdrawliquidity(transaction: EmerisTransactions.WithdrawLiquidityData, signing_address: string) {
         throw new Error("This method is not implemented for " + this.chain_id)
     }
 
-    createpool(transaction: CreatePoolData, signing_address: string) {
+    createpool(transaction: EmerisTransactions.CreatePoolData, signing_address: string) {
         throw new Error("This method is not implemented for " + this.chain_id)
     }
 }

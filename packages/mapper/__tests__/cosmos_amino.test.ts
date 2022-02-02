@@ -25,7 +25,7 @@ describe('Cosmos Mapps', () => {
         }, firstAccount.address)
 
         const signDoc = makeSignDoc(msgs, fee, chainId, "memo", 0, 0);
-        const { signed, signature } = await wallet.signAmino(firstAccount.address, signDoc);
+        const { signed, signature } = await wallet.signAmino(firstAccount.address as string, signDoc);
 
         expect({ signed, signature }).toMatchSnapshot();
     });

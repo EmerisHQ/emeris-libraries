@@ -1,9 +1,9 @@
-import { AddLiquidityData, CreatePoolData, IBCData, SwapData, TransferData, WithdrawLiquidityData } from "../../types/src/EmerisTransactions";
+import { EmerisTransactions} from "@emeris/types";
 import { EmerisMessageMapper } from "./base";
 import * as Long from "long";
 
 export default class CosmosAminoMessageMapper extends EmerisMessageMapper {
-    transfer(transaction: TransferData, signing_address: string) {
+    transfer(transaction: EmerisTransactions.TransferData, signing_address: string) {
         return [{
             type: "cosmos-sdk/MsgSend",
             value: {
@@ -14,7 +14,7 @@ export default class CosmosAminoMessageMapper extends EmerisMessageMapper {
         }];
     }
 
-    ibcTransfer(transaction: IBCData, signing_address: string) {
+    ibcTransfer(transaction: EmerisTransactions.IBCData, signing_address: string) {
         return [{
             type: "cosmos-sdk/MsgTransfer",
             value: {
@@ -29,7 +29,7 @@ export default class CosmosAminoMessageMapper extends EmerisMessageMapper {
         }]
     }
 
-    swap(transaction: SwapData, signing_address: string) {
+    swap(transaction: EmerisTransactions.SwapData, signing_address: string) {
         let isReverse = false;
         if (transaction.from.denom !== transaction.pool.reserve_coin_denoms[0]) {
             isReverse = true;
@@ -53,7 +53,7 @@ export default class CosmosAminoMessageMapper extends EmerisMessageMapper {
         }]
     }
 
-    addliquidity(transaction: AddLiquidityData, signing_address: string) {
+    addliquidity(transaction: EmerisTransactions.AddLiquidityData, signing_address: string) {
         let depositCoins;
         if (transaction.coinA.denom > transaction.coinB.denom) {
             depositCoins = [transaction.coinB, transaction.coinA];
@@ -72,7 +72,7 @@ export default class CosmosAminoMessageMapper extends EmerisMessageMapper {
 
     }
 
-    withdrawliquidity(transaction: WithdrawLiquidityData, signing_address: string) {
+    withdrawliquidity(transaction: EmerisTransactions.WithdrawLiquidityData, signing_address: string) {
         return [{
             type: 'liquidity/MsgWithdrawWithinBatch',
             value: {
@@ -83,7 +83,7 @@ export default class CosmosAminoMessageMapper extends EmerisMessageMapper {
         }]
     }
 
-    createpool(transaction: CreatePoolData, signing_address: string) {
+    createpool(transaction: EmerisTransactions.CreatePoolData, signing_address: string) {
         let depositCoins;
         if (transaction.coinA.denom > transaction.coinB.denom) {
             depositCoins = [transaction.coinB, transaction.coinA];

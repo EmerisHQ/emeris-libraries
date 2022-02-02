@@ -1,9 +1,5 @@
-'use strict';
-
 import CosmosAminoMessageMapper from "./cosmos_amino";
 
-const emerisMapper = {
+export default  {
     CosmosAminoMessageMapper
 }
-
-module.exports = emerisMapper;
