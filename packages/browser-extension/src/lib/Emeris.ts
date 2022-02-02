@@ -23,7 +23,7 @@ import { AbstractTxResult } from '@@/types/transactions';
 const getHdPath = (chainConfig, account) => {
   let hdPath = chainConfig.HDPath
   if (account.hdPath) {
-    hdPath = chainConfig.HDPath.split('/').slice(0, 2).concat(account.hdPath).join('/')
+    hdPath = chainConfig.HDPath.split('/').slice(0, 3).concat(account.hdPath).join('/')
   }
   return hdPath
 }
