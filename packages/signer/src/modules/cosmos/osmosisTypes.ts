@@ -1,6 +1,6 @@
 import { AminoMsg } from '@cosmjs/amino';
 import { Coin } from 'cosmjs-types/cosmos/base/v1beta1/coin';
-import {MsgSwapExactAmountIn} from '@starport/osmosis-labs-osmosis-js/osmosis-labs/osmosis/osmosis.gamm.v1beta1/module/types/osmosis/gamm/v1beta1/tx';
+import {MsgSwapExactAmountIn} from '@clockwork-projects/osmosis-labs-osmosis-js/osmosis-labs/osmosis/osmosis.gamm.v1beta1/module/types/osmosis/gamm/v1beta1/tx';
 
 export interface AminoMsgSwapExactAmountIn extends AminoMsg {
   readonly type: 'osmosis/gamm/swap-exact-amount-in';

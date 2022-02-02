@@ -1,14 +1,13 @@
 {
   "name": "@emeris/signer",
-  "version": "0.0.1",
+  "version": "0.0.14",
   "description": "Emeris Signing Library",
   "author": "Tendermint, Inc <hello@tendermint.com>",
   "homepage": "https://github.com/allinbits/emeris-libraries#readme",
   "license": "ISC",
-  "main": "lib/emeris-key-mgr.js",
+  "main": "lib/EmerisSigner.js",
   "directories": {
-    "lib": "lib",
-    "test": "__tests__"
+    "lib": "lib"
   },
   "files": [
     "lib"
@@ -42,15 +41,17 @@
     "typescript": "^4.4.4"
   },
   "dependencies": {
+    "@clockwork-projects/cosmos-gaia-js": "^6.0.0",
+    "@clockwork-projects/osmosis-labs-osmosis-js": "^6.1.0",
     "@cosmjs/crypto": "^0.26.2",
     "@cosmjs/launchpad": "^0.27.1",
     "@cosmjs/ledger-amino": "^0.27.1",
     "@cosmjs/proto-signing": "^0.26.2",
     "@cosmjs/stargate": "^0.26.2",
     "@ledgerhq/hw-transport-webhid": "^6.20.0",
-    "@starport/cosmos-gaia-js": "^6.0.0",
-    "@starport/osmosis-labs-osmosis-js": "^6.1.1",
     "@terra-money/terra.js": "^1.8.10",
+    "@types/ledgerhq__hw-transport": "^4.21.4",
+    "@types/w3c-web-hid": "^1.0.2",
     "axios": "^0.23.0",
     "bech32": "^2.0.0"
   },

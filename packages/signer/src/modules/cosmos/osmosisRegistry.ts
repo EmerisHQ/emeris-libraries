@@ -1,2 +1,2 @@
-import { registry} from '@starport/osmosis-labs-osmosis-js';
+import { registry} from '@clockwork-projects/osmosis-labs-osmosis-js';
 export default registry

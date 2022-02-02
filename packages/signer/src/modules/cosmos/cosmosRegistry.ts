@@ -1,2 +1,2 @@
-import { registry} from '@starport/cosmos-gaia-js';
+import { registry } from '@clockwork-projects/cosmos-gaia-js';
 export default registry
