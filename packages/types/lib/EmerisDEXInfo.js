@@ -32,7 +32,8 @@ exports.Swap = typebox_1.Type.Strict(typebox_1.Type.Object({
     swapPrice: typebox_1.Type.String(),
     balanceB: typebox_1.Type.String(),
     weightB: typebox_1.Type.Number(),
-    swapType: typebox_1.Type.Enum(SwapType)
+    swapType: typebox_1.Type.Enum(SwapType),
+    swapFeeRate: typebox_1.Type.Number(),
 }));
 exports.Swaps = typebox_1.Type.Array(exports.Swap);
 exports.SwapsResponse = typebox_1.Type.Strict(typebox_1.Type.Object({

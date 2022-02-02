@@ -40,6 +40,7 @@ export declare const Swap: import("@sinclair/typebox").TObject<{
     balanceB: import("@sinclair/typebox").TString;
     weightB: import("@sinclair/typebox").TNumber;
     swapType: import("@sinclair/typebox").TEnum<import("@sinclair/typebox").TEnumKey<SwapType>[]>;
+    swapFeeRate: import("@sinclair/typebox").TNumber;
 }>;
 export declare const Swaps: import("@sinclair/typebox").TArray<import("@sinclair/typebox").TObject<{
     name: import("@sinclair/typebox").TString;
@@ -66,6 +67,7 @@ export declare const Swaps: import("@sinclair/typebox").TArray<import("@sinclair
     balanceB: import("@sinclair/typebox").TString;
     weightB: import("@sinclair/typebox").TNumber;
     swapType: import("@sinclair/typebox").TEnum<import("@sinclair/typebox").TEnumKey<SwapType>[]>;
+    swapFeeRate: import("@sinclair/typebox").TNumber;
 }>>;
 export declare const SwapsResponse: import("@sinclair/typebox").TObject<{
     swaps: import("@sinclair/typebox").TArray<import("@sinclair/typebox").TObject<{
@@ -93,6 +95,7 @@ export declare const SwapsResponse: import("@sinclair/typebox").TObject<{
         balanceB: import("@sinclair/typebox").TString;
         weightB: import("@sinclair/typebox").TNumber;
         swapType: import("@sinclair/typebox").TEnum<import("@sinclair/typebox").TEnumKey<SwapType>[]>;
+        swapFeeRate: import("@sinclair/typebox").TNumber;
     }>>;
 }>;
 export declare type Denom = Static<typeof Denom>;
