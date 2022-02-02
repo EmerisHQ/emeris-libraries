@@ -45,12 +45,12 @@ import Header from '@@/components/Header.vue';
 import Slideout from '@@/components/Slideout.vue';
 
 import { MutationTypes } from '@@/store/extension/mutation-types';
-import { GlobalGetterTypes } from '@@/store/extension/getter-types';
 
 export default defineComponent({
   name: 'Create Account',
   components: { Header, Button, Slideout, Input },
   data: () => ({
+    account: "0'",
     change: '0',
     addressIndex: '0',
 
@@ -61,62 +61,25 @@ export default defineComponent({
     infoOpen: false,
   }),
   computed: {
-    account() {
-      return this.$store.getters[GlobalGetterTypes.getAccount];
+    newAccount() {
+      return this.$store.state.extension.newAccount;
     },
   },
   watch: {
     account(account) {
       this.accountError = !/^[0-9]+'?$/.test(account);
-
-      // this.$store.dispatch(GlobalActionTypes.SET_PARTIAL_ACCOUNT_CREATION, {
-      //   wallet: {
-      //     ...this.wallet,
-      //     hdPath: [account, this.change, this.addressIndex],
-      //   },
-      //   route: this.$route,
-      // });
     },
     change(change) {
       this.changeError = !/^[0-9]+'?$/.test(change);
-
-      // this.$store.dispatch(GlobalActionTypes.SET_PARTIAL_ACCOUNT_CREATION, {
-      //   wallet: {
-      //     ...this.wallet,
-      //     hdPath: [this.account, change, this.addressIndex],
-      //   },
-      //   route: this.$route,
-      // });
     },
     addressIndex(index) {
       this.addressIndexError = !/^[0-9]+'?$/.test(index);
-
-      // this.$store.dispatch(GlobalActionTypes.SET_PARTIAL_ACCOUNT_CREATION, {
-      //   wallet: {
-      //     ...this.wallet,
-      //     hdPath: [this.account, this.change, index],
-      //   },
-      //   route: this.$route,
-      // });
     },
-  },
-  async mounted() {
-    // const partialAccountCreation = await this.$store.dispatch(GlobalActionTypes.GET_PARTIAL_ACCOUNT_CREATION);
-    // if (partialAccountCreation && partialAccountCreation.wallet.hdPath) {
-    //   [this.account, this.change, this.addressIndex] = partialAccountCreation.wallet.hdPath;
-    // }
-    // this.$store.dispatch(GlobalActionTypes.SET_PARTIAL_ACCOUNT_CREATION, {
-    //   wallet: {
-    //     ...this.wallet,
-    //     hdPath: [this.account, this.change, this.addressIndex],
-    //   },
-    //   route: this.$route,
-    // });
   },
   methods: {
     submit() {
       this.$store.commit('extension/' + MutationTypes.SET_NEW_ACCOUNT, {
-        accountMnemonic: this.mnemonic,
+        ...this.newAccount,
         hdPath: [this.account, this.change, this.addressIndex],
       });
       this.$router.push({ path: '/accountCreate' });
