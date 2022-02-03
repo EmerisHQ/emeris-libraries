@@ -99,16 +99,6 @@ export default defineComponent({
     backedUp(account) {
       return account.setupState === AccountCreateStates.COMPLETE;
     },
-    loadBalances() {
-      this.wallet.forEach((account) => {
-        account.keyHashes.forEach((keyHash) => {
-          this.$store.dispatch(GlobalDemerisActionTypes.API.GET_BALANCES, {
-            subscribe: true,
-            params: { address: keyHash },
-          });
-        });
-      });
-    },
     balances(account) {
       return this.$store.getters[GlobalGetterTypes.getAllBalances](account) || [];
     },
@@ -116,7 +106,6 @@ export default defineComponent({
   watch: {
     wallet: {
       handler(wallet) {
-        if (wallet && wallet.length > 0) this.loadBalances();
         if (wallet && wallet.length === 0) this.$router.push('/welcome');
       },
       immediate: true,
