@@ -289,11 +289,12 @@ export class Emeris implements IEmeris {
         return {
           accountName: account.accountName,
           keyHashes:
-            await Promise.all(Object.values(chainConfig).map(async chain => {
+            // wrapping in a Set to make all values unique
+            [...new Set(await Promise.all(Object.values(chainConfig).map(async chain => {
               const address = await libs[chain.library].getAddress(account.accountMnemonic, { prefix: chain.prefix, HDPath: getHdPath(chain, account) })
               const keyHash = keyHashfromAddress(address);
               return keyHash
-            })),
+            })))],
           setupState: account.setupState,
         };
       }),
