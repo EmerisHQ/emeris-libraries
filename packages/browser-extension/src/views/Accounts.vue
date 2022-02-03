@@ -1,23 +1,24 @@
 <template>
   <div class="page">
-    <Header title="Accounts">
+    <Header title="Accounts" backTo="/account">
       <a @click="edit = true" v-if="!edit">Edit</a>
       <a @click="edit = false" v-else>Done</a>
     </Header>
     <div v-for="account in wallet" :key="account.accountName" class="wallet" @click="!edit && goToAccount(account)">
-      <img :src="require('@@/assets/Avatar.svg')" />
+      <img :src="require('@@/assets/Avatar.svg')" style="width: 40px; height: 40px" />
       <div style="cursor: pointer">
         <h2 style="font-weight: 600">{{ account.accountName }}</h2>
         <!-- TODO -->
         <span class="secondary-text" v-if="backedUp(account)"
           ><TotalPrice :balances="balances(account)" small-decimals
         /></span>
-        <span class="secondary-text" style="color: #ff6072; opacity: 1" v-else
-          ><TotalPrice :balances="balances(account)" small-decimals style="display: inline-block" /><span
-            style="font-size: 13px"
-          >
-            - Not backed up</span
-          ></span
+        <span v-else
+          ><TotalPrice
+            :balances="balances(account)"
+            small-decimals
+            style="display: inline-block"
+            class="secondary-text"
+          /><span style="color: #ff6072; font-size: 13px"> · Not backed up</span></span
         >
       </div>
       <Icon
@@ -32,7 +33,7 @@
     <div style="margin-top: auto">
       <Button name="Add account" @click="addAccount" />
     </div>
-    <Slideout :open="!!editWallet">
+    <Slideout v-bind:open="!!editWallet" v-on:update:open="editWallet = $event">
       <Button name="Remove account" variant="link" @click="removeAccount" />
       <Button name="Edit wallet name" variant="link" @click="renameAccount" />
       <div style="font-weight: 600">
@@ -54,7 +55,7 @@ import { RootState } from '@@/store';
 import { AccountCreateStates } from '@@/types';
 import { GlobalActionTypes } from '@@/store/extension/action-types';
 import { GlobalGetterTypes } from '@@/store/extension/getter-types';
-import { GlobalDemerisActionTypes } from '@/store';
+import { GlobalDemerisActionTypes } from '@/store/demeris-api';
 
 export default defineComponent({
   name: 'Accounts',
@@ -99,6 +100,16 @@ export default defineComponent({
     backedUp(account) {
       return account.setupState === AccountCreateStates.COMPLETE;
     },
+    loadBalances() {
+      this.wallet.forEach((account) => {
+        if (!this.$store.getters[GlobalGetterTypes.getAllBalances](account)) {
+          this.$store.dispatch(GlobalDemerisActionTypes.GET_BALANCES, {
+            subscribe: true,
+            params: { address: account.keyHash },
+          });
+        }
+      });
+    },
     balances(account) {
       return this.$store.getters[GlobalGetterTypes.getAllBalances](account) || [];
     },
@@ -106,6 +117,7 @@ export default defineComponent({
   watch: {
     wallet: {
       handler(wallet) {
+        if (wallet && wallet.length > 0) this.loadBalances();
         if (wallet && wallet.length === 0) this.$router.push('/welcome');
       },
       immediate: true,
@@ -116,13 +128,19 @@ export default defineComponent({
 <style lang="scss" scoped>
 .wallet {
   display: flex;
-  margin-bottom: 24 px;
+  margin-bottom: 24px;
 
   img {
     height: 48px;
     width: 48px;
     margin-right: 16px;
-    margin-top: 2px;
+    margin-top: 6px;
+  }
+}
+
+:deep(.total-price) {
+  * {
+    font-size: 13px !important;
   }
 }
 </style>
