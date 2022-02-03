@@ -39,12 +39,6 @@ export default defineComponent({
         return;
       }
 
-      // loading data failed
-      if (!wallet) {
-        this.error = true;
-        return;
-      }
-
       await this.$store.dispatch(GlobalActionTypes.LOAD_SESSION_DATA);
 
       // return to account creation
