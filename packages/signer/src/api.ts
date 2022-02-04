@@ -19,3 +19,11 @@ export async function getNumbers(key_hash:string):Promise<EmerisNumbers>  {
     throw "Could not get account numbers";
   }
 }
+export async function getFee(tx:Uint8Array,chain_name:string):Promise<unknown>  {
+  try {
+    const result:AxiosResponse<unknown> = await axios.post('https://dev.demeris.io/v1/tx/'+chain_name+'/simulate',{tx_bytes:  Buffer.from(tx).toString('base64')});
+    return result.data ?? null;
+  }catch(e) {
+    throw "Could not get account numbers";
+  }
+}
