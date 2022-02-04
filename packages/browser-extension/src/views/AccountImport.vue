@@ -31,7 +31,7 @@
       :open="invalidRecoveryPhraseWarning"
       @close="invalidRecoveryPhraseWarning = false"
     ></Modal>
-    <Slideout :open="infoOpen">
+    <Slideout v-bind:open="infoOpen" v-on:update:open="infoOpen = $event">
       <h1 style="margin-bottom: 16px">What’s a recovery phrase?</h1>
       <div class="secondary-text" style="margin-bottom: 24px">
         These phrases are usually 12 or 24 words long. Each word in the phrase tends to be unrelated to another. Wallet

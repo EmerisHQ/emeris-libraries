@@ -1,13 +1,15 @@
 <template>
   <div class="page">
-    <img :src="require(`@@/assets/UnlockBG.png`)" class="background" />
-    <Icon style="color: #89ff9b; margin-top: 156px" name="InformationIcon" :icon-size="2" />
+    <img
+      style="margin-top: 156px; margin-left: auto; margin-right: auto; width: 46px"
+      :src="require(`@@/assets/CheckIcon.svg`)"
+    />
     <h1 style="margin-bottom: 20px" name>You’re all set</h1>
     <div class="secondary-text" style="text-align: center; margin-bottom: 24px">
       You have successfully created and backed up your new wallet. Enjoy exploring the new era of DeFi with Emeris.
     </div>
-    <router-link to="/portfolio">
-      <Button name="Go to portfolio" />
+    <router-link to="/portfolio" style="margin-top: auto">
+      <Button name="Continue" />
     </router-link>
   </div>
 </template>
@@ -15,14 +17,12 @@
 <script lang="ts">
 import { defineComponent } from 'vue';
 import Button from '@/components/ui/Button.vue';
-import Icon from '@/components/ui/Icon.vue';
 import { GlobalGetterTypes } from '@@/store/extension/getter-types';
 
 export default defineComponent({
   name: 'Account Ready',
   components: {
     Button,
-    Icon,
   },
   computed: {
     account() {
