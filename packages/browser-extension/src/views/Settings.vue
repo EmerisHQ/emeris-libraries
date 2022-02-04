@@ -1,6 +1,6 @@
 <template>
   <div class="page">
-    <Header title="" />
+    <Header title="" backTo="/account" />
     <div class="menu-item" @click="$router.push('/backup')">
       Back Up
       <Icon v-if="!backedUp" name="WarningTriangleIcon" :icon-size="1" class="text-negative" />

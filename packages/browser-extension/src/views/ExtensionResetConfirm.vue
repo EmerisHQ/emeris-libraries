@@ -2,7 +2,7 @@
   <div class="page">
     <Header title="Reset Wallet" />
     <div style="margin-top: 100px">
-      <Icon name="InformationIcon" icon-size="2" />
+      <Icon name="InformationIcon" icon-size="2" style="margin-bottom: 24px" />
       <h1>Are you sure you want to reset your wallet?</h1>
     </div>
     <div
