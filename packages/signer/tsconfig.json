@@ -1,9 +1,12 @@
 {
-  "compilerOptions": {
-    "noEmit": true,
+  "compilerOptions": {    
     "target": "esnext",
+    "module": "commonjs",
     "moduleResolution": "node",
     "declaration": true,
+    "emitDeclarationOnly": true,
+    "outDir": "./lib",
+    "rootDir": "./src",
     "allowSyntheticDefaultImports":true
   }
 }
