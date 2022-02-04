@@ -77,8 +77,8 @@ export default defineComponent({
       return this.$store.getters[GlobalDemerisGetterTypes.API.getVerifiedDenoms];
     },
     balances() {
-      if (!this.account) return [];
-      return this.$store.getters[GlobalGetterTypes.getAllBalances](this.account) || [];
+      if (!this.account) return undefined;
+      return this.$store.getters[GlobalGetterTypes.getAllBalances](this.account);
     },
   },
   components: {
