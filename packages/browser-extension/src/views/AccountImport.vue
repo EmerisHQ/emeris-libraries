@@ -53,7 +53,6 @@ import Header from '@@/components/Header.vue';
 import Modal from '@@/components/Modal.vue';
 import Slideout from '@@/components/Slideout.vue';
 
-import { MutationTypes } from '@@/store/extension/mutation-types';
 import { GlobalActionTypes } from '@@/store/extension/action-types';
 import { AccountCreateStates } from '@@/types';
 
@@ -84,10 +83,14 @@ export default defineComponent({
     if (!hasPasswod) {
       this.$router.push({ path: '/passwordCreate', query: { returnTo: this.$route.path } });
     }
+
+    this.$store.dispatch(GlobalActionTypes.SET_NEW_ACCOUNT, {
+      route: '/accountImport',
+    });
   },
   methods: {
     submit() {
-      this.$store.commit('extension/' + MutationTypes.SET_NEW_ACCOUNT, {
+      this.$store.dispatch(GlobalActionTypes.SET_NEW_ACCOUNT, {
         accountMnemonic: mnemonicFormat(this.mnemonic),
         setupState: AccountCreateStates.COMPLETE,
       });

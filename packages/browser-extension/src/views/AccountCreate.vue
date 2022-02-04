@@ -36,7 +36,6 @@ import Button from '@/components/ui/Button.vue';
 import Icon from '@/components/ui/Icon.vue';
 
 import { GlobalActionTypes } from '@@/store/extension/action-types';
-import { MutationTypes } from '@@/store/extension/mutation-types';
 import { RootState } from '@@/store';
 import { AccountCreateStates } from '@@/types';
 
@@ -55,6 +54,14 @@ export default defineComponent({
   data: () => ({
     name: 'Account X',
   }),
+  watch: {
+    name(name) {
+      this.$store.dispatch(GlobalActionTypes.SET_NEW_ACCOUNT, {
+        ...this.newAccount,
+        accountName: name,
+      });
+    },
+  },
   async mounted() {
     const hasPasswod = await this.$store.dispatch(GlobalActionTypes.HAS_WALLET); // the wallet is encrypted with the password so the existence is equal
     if (!hasPasswod) {
@@ -62,14 +69,11 @@ export default defineComponent({
     }
 
     const accounts = (await this.$store.dispatch(GlobalActionTypes.GET_WALLET)) || [];
-    this.name = 'Account ' + (accounts.length + 1);
-    // if it is an import we have the seed in the store
-    // if it is a new wallet we create a seed
-    if (!this.newAccount) {
-      this.$store.commit('extension/' + MutationTypes.SET_NEW_ACCOUNT, {
-        accountMnemonic: bip39.generateMnemonic(256),
-      });
-    }
+    this.name = this.newAccount?.accountName || 'Account ' + (accounts.length + 1);
+    this.$store.dispatch(GlobalActionTypes.SET_NEW_ACCOUNT, {
+      ...this.newAccount,
+      route: '/accountCreate',
+    });
   },
   methods: {
     async submit() {
@@ -79,11 +83,13 @@ export default defineComponent({
         account: {
           ...this.newAccount,
           accountName: this.name,
+          accountMnemonic: bip39.generateMnemonic(256), // will be overwritten by existing new account
           isLedger: false,
           setupState: this.newAccount.setupState || AccountCreateStates.CREATED, // if this is an import we don't need to check if the user backed up the mnemonic
         },
       });
       if (wallet) {
+        this.$store.dispatch(GlobalActionTypes.SET_NEW_ACCOUNT, undefined); // remove new account from flow
         this.$router.push('/backup?new=true');
       }
     },

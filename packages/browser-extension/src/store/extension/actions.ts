@@ -44,11 +44,18 @@ export interface Actions {
     { commit }: ActionContext<State, RootState>,
     { accountName, password }: { accountName: string; password: string },
   ): Promise<void>;
-  [ActionTypes.GET_ADDRESS]({}: ActionContext<State, RootState>, { chainId }: { chainId: string }): Promise<string>;
+  [ActionTypes.GET_ADDRESS]({ }: ActionContext<State, RootState>, { chainId }: { chainId: string }): Promise<string>;
   [ActionTypes.REMOVE_WHITELISTED_WEBSITE](
-    {}: ActionContext<State, RootState>,
+    { }: ActionContext<State, RootState>,
     { website }: { website: string },
   ): Promise<void>;
+  [ActionTypes.SET_NEW_ACCOUNT](
+    { commit }: ActionContext<State, RootState>,
+    account: EmerisAccount & { route: string }
+  ): void;
+  [ActionTypes.GET_NEW_ACCOUNT](
+    { commit }: ActionContext<State, RootState>,
+  ): Promise<EmerisAccount & { route: string }>;
 }
 export type GlobalActions = Namespaced<Actions, 'extension'>;
 
@@ -152,7 +159,7 @@ export const actions: ActionTree<State, RootState> & Actions = {
       throw new Error('Extension:UnlockWallet failed');
     }
   },
-  async [ActionTypes.CHANGE_PASSWORD]({}, { password }: { password: string }) {
+  async [ActionTypes.CHANGE_PASSWORD]({ }, { password }: { password: string }) {
     await browser.runtime.sendMessage({
       type: 'fromPopup',
       data: { action: 'changePassword', data: { password } },
@@ -197,7 +204,7 @@ export const actions: ActionTree<State, RootState> & Actions = {
       throw new Error('Extension:getMnemonic failed');
     }
   },
-  async [ActionTypes.GET_ADDRESS]({}, { chainId }: { chainId: string }) {
+  async [ActionTypes.GET_ADDRESS]({ }, { chainId }: { chainId: string }) {
     try {
       const address = await browser.runtime.sendMessage({
         type: 'fromPopup',
@@ -243,5 +250,22 @@ export const actions: ActionTree<State, RootState> & Actions = {
       data: { action: 'setResponse', data: getters['getPending'][0] },
     });
     await dispatch(ActionTypes.GET_WHITELISTED_WEBSITES);
+  },
+  [ActionTypes.SET_NEW_ACCOUNT]({ commit }, account: EmerisAccount & { route: string }) {
+    commit(MutationTypes.SET_NEW_ACCOUNT, account)
+    if (!account) {
+      localStorage.removeItem('new_account')
+    } else {
+      localStorage.setItem('new_account', JSON.stringify(account))
+    }
+  },
+  [ActionTypes.GET_NEW_ACCOUNT]({ commit }) {
+    const newAccount = localStorage.getItem('new_account')
+    if (newAccount) {
+      const parsedAccount = JSON.parse(newAccount)
+      commit(MutationTypes.SET_NEW_ACCOUNT, parsedAccount)
+      return parsedAccount
+    }
+    return undefined
   },
 };
