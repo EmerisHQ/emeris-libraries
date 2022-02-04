@@ -2,7 +2,7 @@
   <Loader v-if="!account" />
   <ConfirmationScreen
     v-else
-    :title="`Are you sure hat you want to remove ${account.accountName}?`"
+    :title="`Are you sure that you want to remove ${account.accountName}?`"
     subtitle="If you have not backed up this wallet, you will lose access entirely"
   >
     <div
