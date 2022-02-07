@@ -16,6 +16,9 @@ jobs:
         with:
           node-version: '16'
           cache: 'npm'
+          cache-dependency-path: |
+            packages/browser-extension/package-lock.json
+            packages/signer/package-lock.json
       - name: Build and link local packages
         run: |
           cd ../signer
