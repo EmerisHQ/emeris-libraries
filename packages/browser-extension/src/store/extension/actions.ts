@@ -78,13 +78,16 @@ export const actions: ActionTree<State, RootState> & Actions = {
       return false;
     }
   },
-  async [ActionTypes.LOAD_SESSION_DATA]({ dispatch }) {
+  async [ActionTypes.LOAD_SESSION_DATA]({ dispatch, getters }) {
     const lastAccountused = await dispatch(ActionTypes.GET_LAST_ACCOUNT_USED); // also loads the last account to the state
-    await dispatch(
-      GlobalDemerisActionTypes.API.GET_BALANCES,
-      { subscribe: true, params: { address: lastAccountused.keyHash } },
-      { root: true },
-    );
+    const account = getters['getWallet'].find(account => account.accountName === lastAccountused)
+    await Promise.all(account.keyHashes.map(keyHash =>
+      dispatch(
+        GlobalDemerisActionTypes.API.GET_BALANCES,
+        { subscribe: true, params: { address: keyHash } },
+        { root: true },
+      )
+    ))
   },
   async [ActionTypes.GET_WALLET]({ commit, getters }) {
     try {

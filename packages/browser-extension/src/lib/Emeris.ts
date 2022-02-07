@@ -30,7 +30,7 @@ const getHdPath = (chainConfig, account) => {
 }
 
 import { keyHashfromAddress } from '@/utils/basic';
-import { Secp256k1HdWallet } from '@cosmjs/amino';
+import chainConfig from '../chain-config';
 export class Emeris implements IEmeris {
   public loaded: boolean;
   private storage: EmerisStorage;
@@ -285,19 +285,18 @@ export class Emeris implements IEmeris {
   // function limits the data that we return to the view layers to not expose accidentially data
   async getDisplayAccounts() {
     if (!this.wallet) return undefined;
-    // TODO add hd paths to account and use here
     return await Promise.all(
-      this.wallet.map(async ({ accountName, accountMnemonic, setupState }) => {
-        const hdWallet = await Secp256k1HdWallet.fromMnemonic(
-          accountMnemonic /* config for hdPath and prefix go here */,
-        );
-        const [{ address }] = await hdWallet.getAccounts();
-        const keyHash = keyHashfromAddress(address);
-
+      this.wallet.map(async (account) => {
         return {
-          accountName,
-          keyHash,
-          setupState,
+          accountName: account.accountName,
+          keyHashes:
+            // wrapping in a Set to make all values unique
+            [...new Set(await Promise.all(Object.values(chainConfig).map(async chain => {
+              const address = await libs[chain.library].getAddress(account.accountMnemonic, { prefix: chain.prefix, HDPath: getHdPath(chain, account) })
+              const keyHash = keyHashfromAddress(address);
+              return keyHash
+            })))],
+          setupState: account.setupState,
         };
       }),
     );
