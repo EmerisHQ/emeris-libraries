@@ -16,6 +16,9 @@ jobs:
         with:
           node-version: '14'
           cache: 'npm'
+        cache-dependency-path: |
+          packages/browser-extension/package-lock.json
+          packages/mapper/package-lock.json
       - uses: webfactory/ssh-agent@v0.5.4
         with:
           ssh-private-key: ${{ secrets.DEMERIS_SSH_PRIVATE_KEY }}
