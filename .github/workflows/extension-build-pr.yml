@@ -15,12 +15,12 @@ jobs:
       - uses: actions/setup-node@v2
         with:
           node-version: '16'
-          cache: 'npm'
-          cache-dependency-path: 'packages/*/package-lock.json'
+          cache: 'yarn'
+          cache-dependency-path: 'packages/*/yarn.json'
       - name: Build and link local packages
         run: |
           cd ../signer
-          npm install
+          yarn
           npm run build
           npm link
           cd ../browser-extension
@@ -28,7 +28,7 @@ jobs:
       - uses: webfactory/ssh-agent@v0.5.4
         with:
           ssh-private-key: ${{ secrets.DEMERIS_SSH_PRIVATE_KEY }}
-      - run: npm install
+      - run: yarn
       - run: git submodule init && git submodule update
       - name: build artifacts
         run: npm run build
