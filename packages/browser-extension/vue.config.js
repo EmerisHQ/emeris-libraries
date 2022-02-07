@@ -16,6 +16,9 @@ module.exports = {
   },
   configureWebpack: {
     devtool: "inline-source-map",
+    output: {
+      filename: '[name].js'
+    }
   },
   pluginOptions: {
     browserExtension: {

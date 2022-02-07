@@ -7,7 +7,7 @@ function injectScript(file: string) {
   container.insertBefore(scriptElement, container.children[0]);
   console.log('Emeris Extension loaded');
 }
-const injected = browser.runtime.getURL('/js/inject-emeris.js');
+const injected = browser.runtime.getURL('/inject-emeris.js');
 injectScript(injected);
 
 const sendMessage = async (msg: unknown) => {
