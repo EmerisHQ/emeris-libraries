@@ -82,7 +82,7 @@
         <Button name="Accept" style="flex: 1" @click="accept" />
       </div>
     </div>
-    <Slideout :open="editMemo">
+    <Slideout v-bind:open="editMemo" v-on:update:open="editMemo = $event">
       <h1 style="margin-bottom: 16px">Reference</h1>
       <div class="secondary-text" style="margin-bottom: 32px">
         Add a reference for your transaction. This is often called a “memo” in other apps. If you’re sending to an

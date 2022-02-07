@@ -1,7 +1,7 @@
 <template>
   <div class="page">
     <Header title="Confirm recovery phrase" />
-    <img :src="require('@@/assets/Stepper.png')" style="margin-bottom: 34px" />
+    <img :src="require(`@@/assets/Stepper-${step}.svg`)" style="margin-bottom: 34px" />
     <span class="secondary-text" style="margin-bottom: 48px"
       >Select the <b>{{ positionWord }}</b> word in your recovery phrase</span
     >
@@ -12,7 +12,7 @@
         :name="word"
         variant="link"
         v-for="word in possibleWords"
-        :key="position + word"
+        :key="word"
         @click="() => check(word)"
       />
     </div>
@@ -36,7 +36,7 @@ export default defineComponent({
       return this.$store.getters[GlobalGetterTypes.getAccount];
     },
     positionWord() {
-      switch (this.position + 1) {
+      switch (this.positions[this.step] + 1) {
         case 1:
           return '1st';
         case 2:
@@ -50,7 +50,7 @@ export default defineComponent({
         case 23:
           return '23rd';
         default:
-          return this.position + 1 + 'th';
+          return this.positions[this.step] + 1 + 'th';
       }
     },
   },
@@ -59,6 +59,10 @@ export default defineComponent({
       immediate: true,
       handler() {
         this.wordList = this.account.accountMnemonic.trim().split(' ');
+        while (this.positions.length < 3) {
+          const position = Math.floor(Math.random() * this.wordList.length);
+          if (!this.positions.includes(position)) this.positions.push(position);
+        }
         this.showWords();
       },
     },
@@ -66,7 +70,8 @@ export default defineComponent({
 
   name: 'Mnemonic Confirm',
   data: () => ({
-    position: 0,
+    step: 0,
+    positions: [],
     error: null,
     possibleWords: [],
     wordList: [],
@@ -77,7 +82,7 @@ export default defineComponent({
   },
   methods: {
     showWords() {
-      const possibleWords = [this.wordList[this.position]];
+      const possibleWords = [this.wordList[this.positions[this.step]]];
       while (possibleWords.length < 6) {
         const wordIndex = Math.floor(Math.random() * bip39.wordlists.english.length);
         if (possibleWords.includes(bip39.wordlists.english[wordIndex])) continue;
@@ -86,13 +91,13 @@ export default defineComponent({
       this.possibleWords = shuffleArray(possibleWords);
     },
     check(word) {
-      if (this.wordList[this.position] === word) {
+      if (this.wordList[this.positions[this.step]] === word) {
         this.error = null;
-        if (this.position === this.wordList.length - 1) {
+        if (this.step === 2) {
           this.$store.dispatch(GlobalActionTypes.ACCOUNT_BACKED_UP, { accountName: this.account.accountName });
           this.$router.push('/accountReady');
         }
-        this.position++;
+        this.step++;
         this.showWords();
       } else {
         this.error = word;

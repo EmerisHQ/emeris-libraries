@@ -50,5 +50,6 @@ export type ChainDetails = {
   mapper: typeof EmerisMessageMapper;
   chainName: string;
   chainId: string;
+  chainName: string;
   rpcEndpoint: string;
 };

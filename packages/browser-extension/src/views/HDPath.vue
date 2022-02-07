@@ -25,7 +25,7 @@
     >
       <Button name="Import" :disabled="accountError || changeError || addressIndexError" @click="submit" />
     </div>
-    <Slideout :open="infoOpen">
+    <Slideout v-bind:open="infoOpen" v-on:update:open="infoOpen = $event">
       <h1 style="margin-bottom: 16px">What does it mean HD derivation path?</h1>
       <div class="secondary-text" style="margin-bottom: 24px">
         Derivation path, help you to have multiple accounts under one recovery phrase, please make sure to understand
@@ -45,6 +45,7 @@ import Header from '@@/components/Header.vue';
 import Slideout from '@@/components/Slideout.vue';
 
 import { MutationTypes } from '@@/store/extension/mutation-types';
+import { GlobalActionTypes } from '@@/store/extension/action-types';
 
 export default defineComponent({
   name: 'Create Account',
@@ -68,17 +69,47 @@ export default defineComponent({
   watch: {
     account(account) {
       this.accountError = !/^[0-9]+'?$/.test(account);
+
+      if (!this.accountError)
+        this.$store.dispatch(GlobalActionTypes.SET_NEW_ACCOUNT, {
+          ...this.newAccount,
+          hdPath: [account, this.newAccount.hdPath[1], this.newAccount.hdPath[2]],
+        });
     },
     change(change) {
       this.changeError = !/^[0-9]+'?$/.test(change);
+
+      if (!this.changeError)
+        this.$store.dispatch(GlobalActionTypes.SET_NEW_ACCOUNT, {
+          ...this.newAccount,
+          hdPath: [this.newAccount.hdPath[0], change, this.newAccount.hdPath[2]],
+        });
     },
     addressIndex(index) {
       this.addressIndexError = !/^[0-9]+'?$/.test(index);
+
+      if (!this.addressIndexError)
+        this.$store.dispatch(GlobalActionTypes.SET_NEW_ACCOUNT, {
+          ...this.newAccount,
+          hdPath: [this.newAccount.hdPath[0], this.newAccount.hdPath[1], index],
+        });
     },
+  },
+  mounted() {
+    if (this.newAccount?.hdPath) {
+      this.account = this.newAccount.hdPath[0];
+      this.change = this.newAccount.hdPath[1];
+      this.addressIndex = this.newAccount.hdPath[2];
+    }
+    this.$store.dispatch(GlobalActionTypes.SET_NEW_ACCOUNT, {
+      ...this.newAccount,
+      hdPath: this.newAccount?.hdPath || ["0'", '0', '0'],
+      route: '/accountImportHdPath',
+    });
   },
   methods: {
     submit() {
-      this.$store.commit('extension/' + MutationTypes.SET_NEW_ACCOUNT, {
+      this.$store.dispatch(MutationTypes.SET_NEW_ACCOUNT, {
         ...this.newAccount,
         hdPath: [this.account, this.change, this.addressIndex],
       });

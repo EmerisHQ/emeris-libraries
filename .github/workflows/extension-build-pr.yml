@@ -1,0 +1,46 @@
+name: Extension Build
+on: 
+  pull_request:
+    paths:
+      - "packages/browser-extension/**"
+defaults:
+  run:
+    working-directory: ./packages/browser-extension/
+jobs:
+  Extension-Build:
+    runs-on: self-hosted
+    steps:
+      - name: Check out repository code
+        uses: actions/checkout@v2
+      - uses: actions/setup-node@v2
+        with:
+          node-version: '14'
+          cache: 'npm'
+          cache-dependency-path: |
+            packages/browser-extension/package-lock.json
+            packages/mapper/package-lock.json
+      - uses: webfactory/ssh-agent@v0.5.4
+        with:
+          ssh-private-key: ${{ secrets.DEMERIS_SSH_PRIVATE_KEY }}
+      - name: add deps for mapper
+        run: |
+          cd ../mapper
+          npm install
+      - run: npm install
+      - run: git submodule init && git submodule update
+      - name: build artifacts
+        run: npm run build
+      - uses: thedoctor0/zip-release@master
+        with:
+          type: 'zip'
+          directory: ./packages/browser-extension/dist
+          filename: release.zip
+      - name: Pull request artifacts
+        if: ${{ github.event_name == 'pull_request' }}
+        uses: gavv/pull-request-artifacts@v1.0.0
+        with:
+          commit: ${{ github.event.pull_request.head.sha }}
+          repo-token: ${{ github.token }}
+          artifacts-branch: artifacts
+          artifacts: |
+            ./packages/browser-extension/dist/release.zip

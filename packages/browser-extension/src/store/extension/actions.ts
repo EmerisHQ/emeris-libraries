@@ -50,6 +50,13 @@ export interface Actions {
     { }: ActionContext<State, RootState>,
     { website }: { website: string },
   ): Promise<void>;
+  [ActionTypes.SET_NEW_ACCOUNT](
+    { commit }: ActionContext<State, RootState>,
+    account: EmerisAccount & { route: string }
+  ): void;
+  [ActionTypes.GET_NEW_ACCOUNT](
+    { commit }: ActionContext<State, RootState>,
+  ): Promise<EmerisAccount & { route: string }>;
 }
 export type GlobalActions = Namespaced<Actions, 'extension'>;
 
@@ -274,5 +281,22 @@ export const actions: ActionTree<State, RootState> & Actions = {
         }
       },
     });
+  },
+  [ActionTypes.SET_NEW_ACCOUNT]({ commit }, account: EmerisAccount & { route: string }) {
+    commit(MutationTypes.SET_NEW_ACCOUNT, account)
+    if (!account) {
+      localStorage.removeItem('new_account')
+    } else {
+      localStorage.setItem('new_account', JSON.stringify(account))
+    }
+  },
+  [ActionTypes.GET_NEW_ACCOUNT]({ commit }) {
+    const newAccount = localStorage.getItem('new_account')
+    if (newAccount) {
+      const parsedAccount = JSON.parse(newAccount)
+      commit(MutationTypes.SET_NEW_ACCOUNT, parsedAccount)
+      return parsedAccount
+    }
+    return undefined
   },
 };
