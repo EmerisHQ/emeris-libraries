@@ -26,6 +26,7 @@ export default defineComponent({
       // if the use has a password set but the extension is not unlocked
       if (hasWallet && !wallet) {
         this.$router.push('/welcomeBack');
+        return
       }
       // if there are pending requests show those first
       else if (pending.length > 0) {
