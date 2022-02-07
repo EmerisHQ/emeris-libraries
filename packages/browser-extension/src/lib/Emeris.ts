@@ -20,10 +20,11 @@ import {
 } from '@@/types/api';
 import { AbstractTxResult } from '@@/types/transactions';
 
+// joining the hdpath stored per account with the prefix set in the chain config
 const getHdPath = (chainConfig, account) => {
   let hdPath = chainConfig.HDPath
   if (account.hdPath) {
-    hdPath = chainConfig.HDPath.split('/').slice(0, 2).concat(account.hdPath).join('/')
+    hdPath = chainConfig.HDPath.split('/').slice(0, 3).concat(account.hdPath).join('/')
   }
   return hdPath
 }
