@@ -24,8 +24,8 @@ jobs:
           ssh-private-key: ${{ secrets.DEMERIS_SSH_PRIVATE_KEY }}
       - name: add deps for mapper
         run: |
-        cd ../mapper
-        npm install
+          cd ../mapper
+          npm install
       - run: npm install
       - run: git submodule init && git submodule update
       - name: build artifacts
