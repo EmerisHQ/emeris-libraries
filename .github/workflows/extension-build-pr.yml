@@ -22,9 +22,9 @@ jobs:
           cd ../signer
           yarn
           npm run build
-          npm link
+          yarn link
           cd ../browser-extension
-          npm link @emeris/signer
+          yarn link @emeris/signer
       - uses: webfactory/ssh-agent@v0.5.4
         with:
           ssh-private-key: ${{ secrets.DEMERIS_SSH_PRIVATE_KEY }}
