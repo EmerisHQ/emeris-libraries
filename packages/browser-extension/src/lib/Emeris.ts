@@ -18,7 +18,7 @@ import {
   ExtensionResponse,
   RoutedInternalRequest,
 } from '@@/types/api';
-import { AbstractTxResult } from '@@/types/transactions';
+import { AbstractTxResult } from '@@/types/transactions'; // TODO
 
 import { keyHashfromAddress } from '@/utils/basic';
 import { Secp256k1HdWallet } from '@cosmjs/amino';
@@ -330,7 +330,7 @@ export class Emeris implements IEmeris {
 
       const mapper = new chain.mapper(chain.chainId)
       const chainMessages = [].concat(...request.data.messages.map(message => mapper.map(message, address)))
-      const broadcastable = await libs[chain.library].sign(selectedAccount, chain, chainMessages, request.data.fees, memo)
+      const broadcastable = await libs[chain.library].sign(selectedAccount, chain, chainMessages, request.data.fee, <string>memo)
 
       return broadcastable
     }

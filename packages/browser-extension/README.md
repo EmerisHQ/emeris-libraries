@@ -13,6 +13,15 @@ cd demeris
 npm i
 ```
 
+As long as the signer is not published you need to link it locally:
+
+```
+cd ../signer
+npm link
+cd ../browser-extension
+npm link @emeris/signer
+```
+
 ## Develop
 
 ```
