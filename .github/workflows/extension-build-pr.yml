@@ -20,6 +20,7 @@ jobs:
       - name: Build and link local packages
         run: |
           cd ../signer
+          npm install
           npm run build
           npm link
           cd ../browser-extension
