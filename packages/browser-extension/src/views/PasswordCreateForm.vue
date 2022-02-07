@@ -38,11 +38,12 @@
       marginTop: 'auto',
     }"
   >
-    <div style="margin-bottom: 32px; display: flex">
-      <Icon name="InformationIcon" style="margin-right: 9px" icon-size="1" />
-      <span class="terms-of-use secondary-text"
-        >By continuing you agree to Terms of Use & Privacy Policy of Emeris wallet</span
-      >
+    <div style="margin-bottom: 32px; font-size: 13px">
+      <span class="secondary-text">By continuing you agree to </span
+      ><a href="/" @click.prevent="open('https://emeris.com/terms')" style="opacity: 1">Terms of Use</a
+      ><span class="secondary-text"> & </span
+      ><a href="" @click.prevent="open('https://emeris.com/privacy')">Privacy Policy</a
+      ><span class="secondary-text"> of Emeris wallet</span>
     </div>
     <Button
       name="Continue"
@@ -56,6 +57,7 @@
 import { defineComponent } from 'vue';
 import Button from '@/components/ui/Button.vue';
 import Input from '@/components/ui/Input.vue';
+import Icon from '@/components/ui/Icon.vue';
 import { GlobalActionTypes } from '@@/store/extension/action-types';
 import { mapState } from 'vuex';
 import { RootState } from '@@/store';
@@ -65,6 +67,7 @@ export default defineComponent({
   components: {
     Button,
     Input,
+    Icon,
   },
   data: () => ({
     password: '',
@@ -95,26 +98,19 @@ export default defineComponent({
         this.onContinue();
       }
     },
+    open(url) {
+      window.open(url);
+    },
   },
   watch: {
     password(password) {
-      if (password.length >= 8) {
-        this.length = true;
-      }
-      if (/[A-Z]/g.test(password)) {
-        this.upperCaseChar = true;
-      }
-      if (/[$-/:-?{-~!"^_`[\]]/g.test(password)) {
-        this.symbolChar = true;
-      }
-      if (/[0-9]/g.test(password)) {
-        this.digitChar = true;
-      }
+      this.length = password.length >= 8;
+      this.upperCaseChar = /[A-Z]/g.test(password);
+      this.symbolChar = /[$-/:-?{-~!"^_`[\]@]/g.test(password);
+      this.digitChar = /[0-9]/g.test(password);
     },
     passwordRepeated(password) {
-      if (password === this.password) {
-        this.match = true;
-      }
+      this.match = password === this.password;
     },
   },
 });

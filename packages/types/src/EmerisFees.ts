@@ -1,3 +1,4 @@
+import { Static, Type } from "@sinclair/typebox";
 import { Denom } from "./EmerisDEXInfo";
 import { Transaction, TransactionData } from "./EmerisTransactions";
 
@@ -15,3 +16,19 @@ export type EstimatedFeeResponse = {
 export type EstimatedFeeRequest = {
 	tx: Transaction<TransactionData>;
 }
+
+const Coin = Type.Strict(Type.Object({
+	denom: Type.String(),
+	amount: Type.String()
+}))
+
+export const FeesRequest = Type.Strict(Type.Object({
+	tx: Type.Any(),
+}));
+export const FeesResponse = Type.Strict(Type.Object({
+	GasWanted: Type.String(),
+	GasUsed: Type.String(),
+	Fees: Type.Array(Coin)
+}));
+export type FeesRequest = Static<typeof FeesRequest>
+export type FeesResponse = Static<typeof FeesResponse>

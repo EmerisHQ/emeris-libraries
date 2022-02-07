@@ -24,7 +24,7 @@ export const mutations: MutationTree<State> & Mutations = {
   [MutationTypes.SET_LAST_ACCOUNT](state: State, accountName: string) {
     state.lastAccount = accountName;
   },
-  [MutationTypes.SET_NEW_ACCOUNT](state: State, account: EmerisAccount) {
+  [MutationTypes.SET_NEW_ACCOUNT](state: State, account: EmerisAccount & { route: string }) {
     state.newAccount = account;
   },
   [MutationTypes.SET_MNEMONIC](state: State, payload: { account: EmerisAccount }) {

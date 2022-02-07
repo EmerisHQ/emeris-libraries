@@ -1,6 +1,6 @@
 <template>
   <div class="page">
-    <Header title="Security" />
+    <Header title="Security" backTo="/settings" />
     <div class="menu-item" @click="$router.push('/passwordChange/old')">
       Change Password <Icon name="ChevronRightIcon" />
     </div>

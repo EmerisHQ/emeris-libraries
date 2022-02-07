@@ -26,9 +26,14 @@ exports.Swap = typebox_1.Type.Strict(typebox_1.Type.Object({
     chainId: typebox_1.Type.String(),
     protocol: typebox_1.Type.Enum(DEX),
     denomA: exports.Denom,
+    balanceA: typebox_1.Type.String(),
+    weightA: typebox_1.Type.Number(),
     denomB: exports.Denom,
     swapPrice: typebox_1.Type.String(),
-    swapType: typebox_1.Type.Enum(SwapType)
+    balanceB: typebox_1.Type.String(),
+    weightB: typebox_1.Type.Number(),
+    swapType: typebox_1.Type.Enum(SwapType),
+    swapFeeRate: typebox_1.Type.Number(),
 }));
 exports.Swaps = typebox_1.Type.Array(exports.Swap);
 exports.SwapsResponse = typebox_1.Type.Strict(typebox_1.Type.Object({

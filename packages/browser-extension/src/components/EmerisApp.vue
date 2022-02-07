@@ -6,7 +6,7 @@
 import { useExtensionStore } from '@@/store';
 import { GlobalActionTypes } from '@@/store/extension/action-types';
 import { GlobalGetterTypes } from '@@/store/extension/getter-types';
-import { ExtensionRequest } from '@@/types';
+import { AccountCreateStates, ExtensionRequest } from '@@/types';
 import { defineComponent, computed } from 'vue';
 import TransportWebUSB from '@ledgerhq/hw-transport-webusb';
 import Loader from '@@/components/Loader.vue';
@@ -35,17 +35,25 @@ export default defineComponent({
           default:
             this.$router.push('/portfolio');
         }
+        return;
       }
       // if the user has not yet created an account
       else if (!hasWallet || (wallet && wallet.length === 0)) {
         this.$router.push('/welcome');
-        // extension is ready to use
-      } else if (wallet) {
-        this.$store.dispatch(GlobalActionTypes.LOAD_SESSION_DATA);
-        this.$router.push('/portfolio');
-      } else {
-        this.error = true;
+        return;
       }
+
+      await this.$store.dispatch(GlobalActionTypes.LOAD_SESSION_DATA);
+
+      // return to account creation
+      const newAccount = await this.$store.dispatch(GlobalActionTypes.GET_NEW_ACCOUNT);
+      if (newAccount) {
+        this.$router.push('/accountCreationResume');
+        return;
+      }
+
+      // default case go to portfolio
+      this.$router.push('/portfolio');
     },
   },
   mounted() {

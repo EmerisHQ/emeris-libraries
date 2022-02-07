@@ -2,7 +2,8 @@
   <div class="page">
     <Header title="Recovery phrase" />
     <span class="secondary-text" style="margin-bottom: 36px"
-      >Please write down your 12 words in a safe space manually on paper</span
+      >Please write down your {{ account.accountMnemonic.trim().split(' ').length }} words in a safe space manually on
+      paper</span
     >
     <div class="words" style="margin-bottom: 20px">
       <div class="word" v-for="(word, index) in account.accountMnemonic.trim().split(' ')" :key="index">
@@ -10,8 +11,12 @@
         <span>{{ word }}</span>
       </div>
     </div>
-    <a style="margin-bottom: 38px; font-size: 13px; color: #89ff9b" v-if="copied" @click="copy">
-      <Icon name="InformationIcon" :icon-size="0.5" style="margin-right: 8px" />Copied for 2 minutes</a
+    <a
+      style="margin-bottom: 38px; font-size: 13px; color: #89ff9b; flex-direction: row; display: flex"
+      v-if="copied"
+      @click="copy"
+    >
+      <Icon name="InformationIcon" :icon-size="1" style="margin-right: 8px" />Copied for 2 minutes</a
     >
     <a style="margin-bottom: 38px; font-size: 13px" v-else @click="copy">Click to copy</a>
 
@@ -21,7 +26,7 @@
       }"
     >
       <Checkbox
-        style="margin-bottom: 22px"
+        style="margin-bottom: 24px"
         v-model="checked"
         label="I have backed up my recovery phrase, I understand that if I loose my recovery phrase, I will loose my
           fund"
@@ -116,10 +121,6 @@ export default defineComponent({
 
   .checkbox__label {
     font-size: 13px;
-  }
-
-  .checkbox__control:checked {
-    background: linear-gradient(154.46deg, #64dafb 9.7%, #30ffdf 33.94%, #fffd38 69.44%);
   }
 }
 </style>

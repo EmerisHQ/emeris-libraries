@@ -5,7 +5,7 @@
         :style="{
           opacity: invalidChar || unknownWords.length > 0 ? 0.6 : 1,
         }"
-        @click="!invalidChar && unknownWords.length === 0 && $router.push('/accountImportHdPath')"
+        @click="toHdPath"
         >Advanced</a
       >
     </Header>
@@ -31,7 +31,7 @@
       :open="invalidRecoveryPhraseWarning"
       @close="invalidRecoveryPhraseWarning = false"
     ></Modal>
-    <Slideout :open="infoOpen">
+    <Slideout v-bind:open="infoOpen" v-on:update:open="infoOpen = $event">
       <h1 style="margin-bottom: 16px">What’s a recovery phrase?</h1>
       <div class="secondary-text" style="margin-bottom: 24px">
         These phrases are usually 12 or 24 words long. Each word in the phrase tends to be unrelated to another. Wallet
@@ -53,7 +53,6 @@ import Header from '@@/components/Header.vue';
 import Modal from '@@/components/Modal.vue';
 import Slideout from '@@/components/Slideout.vue';
 
-import { MutationTypes } from '@@/store/extension/mutation-types';
 import { GlobalActionTypes } from '@@/store/extension/action-types';
 import { AccountCreateStates } from '@@/types';
 
@@ -84,14 +83,27 @@ export default defineComponent({
     if (!hasPasswod) {
       this.$router.push({ path: '/passwordCreate', query: { returnTo: this.$route.path } });
     }
+
+    this.$store.dispatch(GlobalActionTypes.SET_NEW_ACCOUNT, {
+      route: '/accountImport',
+    });
   },
   methods: {
-    submit() {
-      this.$store.commit('extension/' + MutationTypes.SET_NEW_ACCOUNT, {
+    storeNewAccount() {
+      this.$store.dispatch(GlobalActionTypes.SET_NEW_ACCOUNT, {
         accountMnemonic: mnemonicFormat(this.mnemonic),
         setupState: AccountCreateStates.COMPLETE,
       });
+    },
+    submit() {
+      this.storeNewAccount();
       this.$router.push({ path: '/accountCreate' });
+    },
+    toHdPath() {
+      if (!this.invalidChar && this.unknownWords.length === 0) {
+        this.storeNewAccount();
+        this.$router.push('/accountImportHdPath');
+      }
     },
   },
 });
