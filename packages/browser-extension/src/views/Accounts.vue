@@ -55,7 +55,7 @@ import { RootState } from '@@/store';
 import { AccountCreateStates } from '@@/types';
 import { GlobalActionTypes } from '@@/store/extension/action-types';
 import { GlobalGetterTypes } from '@@/store/extension/getter-types';
-import { GlobalDemerisActionTypes } from '@/store/demeris-api';
+import { GlobalDemerisActionTypes } from '@/store';
 
 export default defineComponent({
   name: 'Accounts',
@@ -102,7 +102,7 @@ export default defineComponent({
     },
     loadBalances() {
       this.wallet.forEach((account) => {
-        this.$store.dispatch(GlobalDemerisActionTypes.GET_BALANCES, {
+        this.$store.dispatch(GlobalDemerisActionTypes.API.GET_BALANCES, {
           subscribe: true,
           params: { address: account.keyHash },
         });

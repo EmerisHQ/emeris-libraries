@@ -19,6 +19,16 @@ import {
   RoutedInternalRequest,
 } from '@@/types/api';
 import { AbstractTxResult } from '@@/types/transactions';
+
+// joining the hdpath stored per account with the prefix set in the chain config
+const getHdPath = (chainConfig, account) => {
+  let hdPath = chainConfig.HDPath
+  if (account.hdPath) {
+    hdPath = chainConfig.HDPath.split('/').slice(0, 3).concat(account.hdPath).join('/')
+  }
+  return hdPath
+}
+
 import { keyHashfromAddress } from '@/utils/basic';
 import { Secp256k1HdWallet } from '@cosmjs/amino';
 export class Emeris implements IEmeris {
@@ -132,6 +142,10 @@ export class Emeris implements IEmeris {
         }
         break;
       case 'createAccount':
+        // guard
+        if (!message.data.data.account.accountMnemonic) {
+          throw new Error("Account has no mnemonic")
+        }
         await this.storage.saveAccount(message.data.data.account, this.password);
         if (message.data.data.account.isLedger) {
           try {
@@ -222,15 +236,15 @@ export class Emeris implements IEmeris {
         this.storage.extensionReset();
         return;
       case 'removeWhitelistedWebsite':
-        this.storage.deletePermission(message.data.data.website);
+        this.storage.deleteWhitelistedWebsite(message.data.data.website);
         return;
       case 'getWhitelistedWebsite':
-        return this.storage.getPermissions();
+        return this.storage.getWhitelistedWebsites();
       case 'addWhitelistedWebsite':
         // prevent dupes
-        const permissions = await this.storage.getPermissions();
-        if (permissions.find((permission) => permission.origin === message.data.data.website)) return true;
-        return this.storage.addPermission(message.data.data.website);
+        const whitelistedWebsites = await this.storage.getWhitelistedWebsites();
+        if (whitelistedWebsites.find((whitelistedWebsite) => whitelistedWebsite.origin === message.data.data.website)) return true;
+        return this.storage.addWhitelistedWebsite(message.data.data.website);
     }
   }
   async ensurePopup(): Promise<void> {
@@ -265,7 +279,8 @@ export class Emeris implements IEmeris {
       throw new Error('No account selected');
     }
     const mnemonic = account.accountMnemonic;
-    return await libs[chain.library].getAddress(mnemonic, chain);
+
+    return await libs[chain.library].getAddress(mnemonic, { prefix: chain.prefix, HDPath: getHdPath(chain, account) });
   }
   // function limits the data that we return to the view layers to not expose accidentially data
   async getDisplayAccounts() {
@@ -296,11 +311,16 @@ export class Emeris implements IEmeris {
     if (!chain) {
       throw new Error('Chain not supported: ' + req.data.chainId);
     }
-    const mnemonic = this.getAccount().accountMnemonic;
-    return await libs[chain.library].getPublicKey(mnemonic, chain);
+    const account = this.getAccount();
+    if (!account) {
+      throw new Error('No account selected');
+    }
+    const mnemonic = account.accountMnemonic;
+
+    return await libs[chain.library].getPublicKey(mnemonic, getHdPath(chain, { prefix: chain.prefix, HDPath: getHdPath(chain, account) }));
   }
   async isPermitted(origin: string): Promise<boolean> {
-    return await this.storage.isPermitted(origin);
+    return await this.storage.isWhitelistedWebsite(origin);
   }
   async isHWWallet(_req: IsHWWalletRequest): Promise<boolean> {
     return false;
@@ -328,7 +348,7 @@ export class Emeris implements IEmeris {
     request.id = uuidv4();
     const enabled = (await this.forwardToPopup(request)).data as boolean;
     if (enabled) {
-      await this.storage.addPermission(request.data.origin);
+      await this.storage.addWhitelistedWebsite(request.data.origin);
     }
     return enabled;
   }
