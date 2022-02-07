@@ -6,7 +6,7 @@
       </div>
     </slot>
     <span class="title">{{ title }}</span>
-    <div class="additional-button">
+    <div class="additional-button" style="position: absolute; right: 16px">
       <slot></slot>
     </div>
   </div>

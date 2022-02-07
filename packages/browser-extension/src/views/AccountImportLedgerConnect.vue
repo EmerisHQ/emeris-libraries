@@ -2,7 +2,7 @@
   <div class="page">
     <div style="margin-bottom: 56px; margin-top: 150px; display: flex; flex-direction: column; align-items: center">
       <img class="loader" :src="require('@@/assets/EphemerisLoader.svg')" />
-      <img :src="require('@@/assets/LedgerBox.png')" style="width: 151px; margin-top: 32px" />
+      <img :src="require('@@/assets/LedgerBox.svg')" style="width: 151px; margin-top: 32px" />
     </div>
     <div
       :style="{

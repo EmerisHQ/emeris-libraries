@@ -27,7 +27,8 @@ export  const Swap = Type.Strict(Type.Object({
 	swapPrice: Type.String(),
 	balanceB: Type.String(),
 	weightB: Type.Number(),
-	swapType: Type.Enum(SwapType)
+	swapType: Type.Enum(SwapType),
+	swapFeeRate:Type.Number(),
 }));
 export  const Swaps = Type.Array(Swap);
 

@@ -20,6 +20,15 @@ import {
 } from '@@/types/api';
 import { AbstractTxResult } from '@@/types/transactions';
 
+// joining the hdpath stored per account with the prefix set in the chain config
+const getHdPath = (chainConfig, account) => {
+  let hdPath = chainConfig.HDPath
+  if (account.hdPath) {
+    hdPath = chainConfig.HDPath.split('/').slice(0, 3).concat(account.hdPath).join('/')
+  }
+  return hdPath
+}
+
 import { keyHashfromAddress } from '@/utils/basic';
 import { Secp256k1HdWallet } from '@cosmjs/amino';
 export class Emeris implements IEmeris {
@@ -216,10 +225,15 @@ export class Emeris implements IEmeris {
         this.storage.extensionReset();
         return;
       case 'removeWhitelistedWebsite':
-        this.storage.deletePermission(message.data.data.website);
+        this.storage.deleteWhitelistedWebsite(message.data.data.website);
         return;
       case 'getWhitelistedWebsite':
-        return this.storage.getPermissions()
+        return this.storage.getWhitelistedWebsites();
+      case 'addWhitelistedWebsite':
+        // prevent dupes
+        const whitelistedWebsites = await this.storage.getWhitelistedWebsites();
+        if (whitelistedWebsites.find((whitelistedWebsite) => whitelistedWebsite.origin === message.data.data.website)) return true;
+        return this.storage.addWhitelistedWebsite(message.data.data.website);
     }
   }
   async ensurePopup(): Promise<void> {
@@ -253,9 +267,8 @@ export class Emeris implements IEmeris {
     if (!account) {
       throw new Error('No account selected');
     }
-    const mnemonic = account.accountMnemonic;
 
-    return await libs[chain.library].getAddress(account, chain);
+    return await libs[chain.library].getAddress(account, { prefix: chain.prefix, HDPath: getHdPath(chain, account) });
   }
   // function limits the data that we return to the view layers to not expose accidentially data
   async getDisplayAccounts() {
@@ -291,10 +304,10 @@ export class Emeris implements IEmeris {
       throw new Error('No account selected');
     }
 
-    return await libs[chain.library].getPublicKey(account, chain);
+    return await libs[chain.library].getPublicKey(account, getHdPath(chain, { prefix: chain.prefix, HDPath: getHdPath(chain, account) }));
   }
   async isPermitted(origin: string): Promise<boolean> {
-    return await this.storage.isPermitted(origin);
+    return await this.storage.isWhitelistedWebsite(origin);
   }
   async isHWWallet(_req: IsHWWalletRequest): Promise<boolean> {
     return false;
@@ -343,11 +356,11 @@ export class Emeris implements IEmeris {
   async enable(request: ApproveOriginRequest): Promise<boolean> {
     // TODO purge this queue and replace with a sensible data struct to we can check if a request is a dupe
     request.id = uuidv4();
-    const accept = (await this.forwardToPopup(request)).accept as boolean;
-    if (accept) {
-      await this.storage.addPermission(request.origin);
+    const enabled = (await this.forwardToPopup(request)).data as boolean;
+    if (enabled) {
+      await this.storage.addWhitelistedWebsite(request.origin);
     }
-    return accept;
+    return enabled;
   }
   setResponse(id: string, response: any) {
     const request = this.queuedRequests.get(id);
