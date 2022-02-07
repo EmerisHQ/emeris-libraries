@@ -22,7 +22,7 @@ jobs:
           cd ../signer
           yarn
           npm run build
-          npm link
+          yarn link
           cd ../browser-extension
           npm link @emeris/signer
       - uses: webfactory/ssh-agent@v0.5.4
