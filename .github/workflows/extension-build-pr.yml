@@ -13,9 +13,9 @@ jobs:
       - name: Check out repository code
         uses: actions/checkout@v2
         
-      - uses: mskelton/setup-yarn@v1
+      - uses: DerYeger/yarn-setup-action@master
         with:
-          node-version: '16.x'
+          node-version: 16
           
       - uses: actions/setup-node@v2
         with:
