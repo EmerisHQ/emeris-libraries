@@ -268,7 +268,7 @@ export class Emeris implements IEmeris {
       throw new Error('No account selected');
     }
 
-    return await libs[chain.library].getAddress(account, { prefix: chain.prefix, HDPath: getHdPath(chain, account) });
+    return await libs[chain.library].getAddress(account, chain);
   }
   // function limits the data that we return to the view layers to not expose accidentially data
   async getDisplayAccounts() {
