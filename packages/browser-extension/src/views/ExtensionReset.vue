@@ -13,6 +13,9 @@
       <router-link to="/extensionReset/confirm">
         <Button name="Reset wallet" />
       </router-link>
+      <router-link to="/">
+        <Button name="Cancel" variant="link" />
+      </router-link>
     </div>
   </div>
 </template>
