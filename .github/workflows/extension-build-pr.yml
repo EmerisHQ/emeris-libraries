@@ -42,7 +42,6 @@ jobs:
       - name: Install extension packages
         run: |
           yarn install --frozen-lockfile
-          yarn add @types/lodash.groupby@4.6.6 @types/lodash.orderby@4.6.6 @types/lodash.isequal@4.5.5
 
       - name: build artifacts
         run: npm run build
