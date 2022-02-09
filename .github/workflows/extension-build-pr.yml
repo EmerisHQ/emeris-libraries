@@ -41,10 +41,10 @@ jobs:
 
       - name: Install extension packages
         run: yarn install --frozen-lockfile
-      - name: Install demeris packages
-        run: |
-          cd ./demeris
-          yarn install --frozen-lockfile
+      # - name: Install demeris packages
+      #   run: |
+      #     cd ./demeris
+      #     yarn install --frozen-lockfile
 
       - name: build artifacts
         run: npm run build
