@@ -20,7 +20,7 @@ cd ../signer
 npm link
 cd ../browser-extension
 npm link @emeris/signer
-```
+``` 
 
 ## Develop
 
