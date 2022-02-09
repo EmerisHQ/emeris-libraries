@@ -44,6 +44,11 @@ jobs:
 
       - run: yarn install --frozen-lockfile
       - run: git submodule init && git submodule update
+      - name: Install demeris packages
+        run: |
+          cd ./demeris
+          yarn install --frozen-lockfile
+
       - name: build artifacts
         run: npm run build
 
