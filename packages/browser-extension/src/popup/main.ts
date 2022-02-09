@@ -31,9 +31,5 @@ const i18n = createI18n({
 
 const app = createApp(App);
 
-<<<<<<< Updated upstream
 // @ts-ignore somehow here is a type incompatibility with demeris
-=======
-// @ts-ignore
->>>>>>> Stashed changes
 app.use(rootstore).use(i18n).use(router).use(VueTippy).mount('#app');
