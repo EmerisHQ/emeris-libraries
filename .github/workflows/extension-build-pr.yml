@@ -32,6 +32,8 @@ jobs:
         run: |
           cd ../signer
           yarn install --frozen-lockfile
+          cd ../mapper
+          yarn install --frozen-lockfile
           npm run build
           yarn link
           cd ../browser-extension
