@@ -14,8 +14,8 @@
     "url": "git+https://github.com/allinbits/emeris-libraries.git"
   },
   "scripts": {
-    "serve": "env-cmd --file ./demeris/.env.production vue-cli-service build --mode development --watch --no-clean",
-    "build": "env-cmd --file ./demeris/.env.production vue-cli-service build --mode production",
+    "serve": "env-cmd --file ./demeris/.env vue-cli-service build --mode development --watch --no-clean",
+    "build": "env-cmd --file ./demeris/.env vue-cli-service build --mode production",
     "test:unit": "vue-cli-service test:unit",
     "lint": "vue-cli-service lint",
     "postinstall": "git submodule init"
