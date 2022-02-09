@@ -26,6 +26,7 @@ jobs:
           cache-dependency-path: |
             ./packages/browser-extension/yarn.lock
             ./packages/signer/yarn.lock
+            ./packages/mapper/yarn.lock
             ./packages/browser-extension/demeris/package-lock.json
 
       - name: Build and link local packages
@@ -41,15 +42,14 @@ jobs:
 
       - name: Install extension packages
         run: yarn install --frozen-lockfile
-      - name: Install demeris packages
-        run: |
-          cd ./demeris
-          yarn install --frozen-lockfile
 
       - name: build artifacts
         run: npm run build
         env:
           NODE_OPTIONS: --max_old_space_size=4048
+          # Put int secrets
+          VUE_APP_EMERIS_PROD_ENDPOINT: https://api.emeris.com/v1
+          VUE_APP_EMERIS_PROD_LIQUIDITY_ENDPOINT: https://api.emeris.com/v1/liquidity
 
       - uses: thedoctor0/zip-release@master
         with:

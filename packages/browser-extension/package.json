@@ -15,7 +15,7 @@
   },
   "scripts": {
     "serve": "env-cmd --file ./demeris/.env vue-cli-service build --mode development --watch --no-clean",
-    "build": "env-cmd --file ./demeris/.env vue-cli-service build --mode production",
+    "build": "vue-cli-service build --mode production",
     "test:unit": "vue-cli-service test:unit",
     "lint": "vue-cli-service lint",
     "postinstall": "git submodule init"
