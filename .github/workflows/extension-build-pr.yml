@@ -17,7 +17,7 @@ jobs:
         with:
           node-version: '16'
           cache: 'yarn'
-          cache-dependency-path: 'packages/*/yarn.json'
+          cache-dependency-path: 'packages/*/yarn.lock'
       - name: Build and link local packages
         run: |
           cd ../signer
