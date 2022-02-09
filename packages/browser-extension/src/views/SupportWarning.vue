@@ -1,8 +1,9 @@
 <template>
   <div class="page">
-    <div style="margin-top: 100px">
+    <Header :title="$route.query.caption" backTo="/settings" />
+    <div style="margin-top: 100px; text-align: center">
       <Icon name="WarningTriangleIcon" icon-size="2" style="color: #fc8c0b; margin-bottom: 24px" />
-      <h1 style="margin-bottom: 24px">Emeris support team will never ask you your recovery phras</h1>
+      <h1 style="margin-bottom: 24px">Emeris support team will never ask you your recovery phrase</h1>
       <span class="secondary-text">Please make sure to kepp it secret and store it in a secure place</span>
     </div>
     <div
@@ -10,8 +11,7 @@
         marginTop: 'auto',
       }"
     >
-      <Button class="reset-btn" name="Yes" @click="submit" />
-      <Button name="No" variant="link" @click="$router.go(-1)" />
+      <Button :name="'Continue to ' + $route.query.caption" @click="submit" />
     </div>
   </div>
 </template>
@@ -21,12 +21,14 @@ import { defineComponent } from 'vue';
 
 import Button from '@/components/ui/Button.vue';
 import Icon from '@/components/ui/Icon.vue';
+import Header from '@@/components/Header.vue';
 
 export default defineComponent({
   name: 'Support Warning',
   components: {
     Button,
     Icon,
+    Header,
   },
   methods: {
     async submit() {

@@ -17,16 +17,22 @@
 
     <div class="bottom secondary-text" style="width: calc(100% - 48px)">
       <hr style="opacity: 0.14; margin-bottom: 24px" />
-      <div class="menu-item" @click="$router.push({ path: '/support', query: { url: 'https://t.me/EmerisHQ' } })">
-        Join the telegram community
+      <div
+        class="menu-item"
+        @click="$router.push({ path: '/support', query: { url: 'https://t.me/EmerisHQ', caption: 'Telegram' } })"
+      >
+        Join the Telegram community
       </div>
       <div
         class="menu-item"
-        @click="$router.push({ path: '/support', query: { url: 'https://twitter.com/emerishq' } })"
+        @click="$router.push({ path: '/support', query: { url: 'https://twitter.com/emerishq', caption: 'Twitter' } })"
       >
         Twitter
       </div>
-      <div class="menu-item" @click="$router.push({ path: '/support', query: { url: 'https://emeris.com/support' } })">
+      <div
+        class="menu-item"
+        @click="$router.push({ path: '/support', query: { url: 'https://emeris.com/support', caption: 'Support' } })"
+      >
         Support
       </div>
     </div>
