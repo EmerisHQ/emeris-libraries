@@ -12,21 +12,21 @@ jobs:
     steps:
       - name: Check out repository code
         uses: actions/checkout@v2
+
+      - name: Add checkout key for demeris repo
+        uses: webfactory/ssh-agent@v0.5.4
+        with:
+          ssh-private-key: ${{ secrets.DEMERIS_SSH_PRIVATE_KEY }}
+      - run: git submodule init && git submodule update
           
       - uses: actions/setup-node@v2
         with:
           node-version: '16'
-
-      - name: Get yarn cache
-        id: yarn-cache
-        run: echo "::set-output name=dir::$(yarn cache dir)"
-
-      - uses: actions/cache@v1
-        with:
-          path: ${{ steps.yarn-cache.outputs.dir }}
-          key: ${{ runner.os }}-yarn-${{ hashFiles('**/yarn.lock') }}
-          restore-keys: |
-            ${{ runner.os }}-yarn-
+          cache: 'yarn'
+          cache-dependency-path: |
+            ./packages/browser-extension/yarn.lock
+            ./packages/signer/yarn.lock
+            ./packages/browser-extension/demeris/package-lock.json
 
       - name: Build and link local packages
         run: |
@@ -37,13 +37,8 @@ jobs:
           cd ../browser-extension
           yarn link @emeris/signer
 
-      - name: Add checkout key for demeris repo
-        uses: webfactory/ssh-agent@v0.5.4
-        with:
-          ssh-private-key: ${{ secrets.DEMERIS_SSH_PRIVATE_KEY }}
-
-      - run: yarn install --frozen-lockfile
-      - run: git submodule init && git submodule update
+      - name: Install extension packages
+        run: yarn install --frozen-lockfile
       - name: Install demeris packages
         run: |
           cd ./demeris
@@ -51,6 +46,8 @@ jobs:
 
       - name: build artifacts
         run: npm run build
+        env:
+          NODE_OPTIONS: --max_old_space_size=4048
 
       - uses: thedoctor0/zip-release@master
         with:
