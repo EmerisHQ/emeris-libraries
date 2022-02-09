@@ -3,7 +3,7 @@
     <Header title="" backTo="/settings" />
     <h1>Managed connected sites</h1>
     <div class="website" v-for="site in whitelistedWebsites" :key="site.origin">
-      <Brandmark class="wordmark" style="margin-top: auto; margin-bottom: auto; margin-right: 18px" />
+      <Brandmark style="margin-top: auto; margin-bottom: auto; margin-right: 18px" />
       <div style="display: flex; flex-direction: column">
         <span>{{ site.origin }}</span>
         <span style="opacity: 67%">{{ site.origin }}</span>

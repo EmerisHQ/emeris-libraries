@@ -93,7 +93,7 @@ export class Emeris implements IEmeris {
   async launchPopup(): Promise<number> {
     return (
       await browser.windows.create({
-        width: 400,
+        width: 375,
         height: 600,
         type: 'popup',
         url: browser.runtime.getURL('/popup.html'),
@@ -220,18 +220,7 @@ export class Emeris implements IEmeris {
       case 'hasWallet':
         return await this.hasWallet();
       case 'setResponse':
-        request = this.queuedRequests.get(message.data.data.id);
-        if (!request) {
-          return;
-        }
-        request.resolver(message.data.data);
-        this.queuedRequests.delete(message.data.data.id);
-        this.pending.splice(
-          this.pending.findIndex((req) => req.id == message.data.data.id),
-          1,
-        );
-        browser.runtime.sendMessage({ type: 'toPopup', data: { action: 'update' } });
-        return true;
+        return this.setResponse(message.data.data.id, message.data.data)
       case 'extensionReset':
         this.storage.extensionReset();
         return;
@@ -278,9 +267,8 @@ export class Emeris implements IEmeris {
     if (!account) {
       throw new Error('No account selected');
     }
-    const mnemonic = account.accountMnemonic;
 
-    return await libs[chain.library].getAddress(mnemonic, { prefix: chain.prefix, HDPath: getHdPath(chain, account) });
+    return await libs[chain.library].getAddress(account, chain);
   }
   // function limits the data that we return to the view layers to not expose accidentially data
   async getDisplayAccounts() {
@@ -314,9 +302,8 @@ export class Emeris implements IEmeris {
     if (!account) {
       throw new Error('No account selected');
     }
-    const mnemonic = account.accountMnemonic;
 
-    return await libs[chain.library].getPublicKey(mnemonic, getHdPath(chain, { prefix: chain.prefix, HDPath: getHdPath(chain, account) }));
+    return await libs[chain.library].getPublicKey(account, getHdPath(chain, { prefix: chain.prefix, HDPath: getHdPath(chain, account) }));
   }
   async isPermitted(origin: string): Promise<boolean> {
     return await this.storage.isWhitelistedWebsite(origin);
@@ -334,21 +321,58 @@ export class Emeris implements IEmeris {
     return await this.storage.hasWallet();
   }
 
-  async signTransaction(request: SignTransactionRequest): Promise<Uint8Array> {
+  async signTransaction(request: SignTransactionRequest): Promise<any> {
     request.id = uuidv4();
-    return (await this.forwardToPopup(request)).data as Uint8Array;
+    const { accept, memo } = await this.forwardToPopup(request);
+    if (accept) {
+      if (!this.wallet) {
+        throw new Error('No wallet configured');
+      }
+      const chain = config[request.data.chainId];
+      if (!chain) {
+        throw new Error('Chain not supported: ' + request.data.chainId);
+      }
+
+      const selectedAccount = this.wallet.find(({ accountName }) => accountName === this.selectedAccount)
+      const address = await libs[chain.library].getAddress(selectedAccount, chain)
+
+      if (address !== request.data.signingAddress) {
+        throw new Error('The requested signing address is not active in the extension');
+      }
+
+      const mapper = new chain.mapper(chain.chainId)
+      const chainMessages = [].concat(...request.data.messages.map(message => mapper.map(message, address)))
+      const broadcastable = await libs[chain.library].sign(selectedAccount, chain, chainMessages, request.data.fees, memo)
+
+      return broadcastable
+    }
+    return undefined
   }
-  async signAndBroadcastTransaction(request: SignAndBroadcastTransactionRequest): Promise<AbstractTxResult> {
-    request.id = uuidv4();
-    return (await this.forwardToPopup(request)).data as AbstractTxResult;
-  }
+  // async signAndBroadcastTransaction(request: SignAndBroadcastTransactionRequest): Promise<AbstractTxResult> {
+  //   request.id = uuidv4();
+  //   return (await this.forwardToPopup(request)).data as AbstractTxResult;
+  // }
   async enable(request: ApproveOriginRequest): Promise<boolean> {
     // TODO purge this queue and replace with a sensible data struct to we can check if a request is a dupe
     request.id = uuidv4();
     const enabled = (await this.forwardToPopup(request)).data as boolean;
     if (enabled) {
-      await this.storage.addWhitelistedWebsite(request.data.origin);
+      await this.storage.addWhitelistedWebsite(request.origin);
     }
     return enabled;
+  }
+  setResponse(id: string, response: any) {
+    const request = this.queuedRequests.get(id);
+    if (!request) {
+      return;
+    }
+    request.resolver(response);
+    this.queuedRequests.delete(id);
+    this.pending.splice(
+      this.pending.findIndex((req) => req.id == id),
+      1,
+    );
+    browser.runtime.sendMessage({ type: 'toPopup', data: { action: 'update' } });
+    return true;
   }
 }

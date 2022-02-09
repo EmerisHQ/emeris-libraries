@@ -20,25 +20,33 @@
 import Brandmark from '@/components/common/Brandmark.vue';
 import Button from '@/components/ui/Button.vue';
 import { GlobalActionTypes } from '@@/store/extension/action-types';
+import { GlobalGetterTypes } from '@@/store/extension/getter-types';
 export default {
-  data: () => ({
-    url: '',
-  }),
   components: {
     Brandmark,
     Button,
   },
   methods: {
-    close() {
+    async close() {
+      await this.$store.dispatch(GlobalActionTypes.WHITELIST_WEBSITE, { id: this.pending.id, accept: false });
       window.close();
     },
     async accept() {
-      await this.$store.dispatch(GlobalActionTypes.WHITELIST_WEBSITE, { website: this.url });
+      await this.$store.dispatch(GlobalActionTypes.WHITELIST_WEBSITE, { id: this.pending.id, accept: true });
       this.$router.push('/');
     },
   },
+  computed: {
+    pending() {
+      return this.$store.getters[GlobalGetterTypes.getPending][0];
+    },
+    url() {
+      const pending = this.$store.getters[GlobalGetterTypes.getPending];
+      return pending && pending.length > 0 ? pending[0].origin : undefined;
+    },
+  },
   mounted() {
-    this.url = this.$route.query.url;
+    this.$store.dispatch(GlobalActionTypes.GET_PENDING);
   },
 };
 </script>

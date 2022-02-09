@@ -16,9 +16,16 @@ jobs:
         with:
           node-version: '14'
           cache: 'npm'
+          cache-dependency-path: |
+            packages/browser-extension/package-lock.json
+            packages/mapper/package-lock.json
       - uses: webfactory/ssh-agent@v0.5.4
         with:
           ssh-private-key: ${{ secrets.DEMERIS_SSH_PRIVATE_KEY }}
+      - name: add deps for mapper
+        run: |
+          cd ../mapper
+          npm install
       - run: npm install
       - run: git submodule init && git submodule update
       - name: build artifacts

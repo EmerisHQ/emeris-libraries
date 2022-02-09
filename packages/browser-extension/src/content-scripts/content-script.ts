@@ -32,7 +32,7 @@ window.addEventListener('message', async (event: MessageEvent) => {
   if (!validateMsg(event.data.data)) {
     return;
   }
-  event.data.data.data.origin = event.origin;
+  event.data.data.origin = event.origin;
   const response = await sendMessage(event.data.data);
 
   window.postMessage({ type: 'fromEmerisExtension', data: response }, event.origin);
