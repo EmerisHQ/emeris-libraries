@@ -47,7 +47,7 @@ jobs:
         run: npm run build
         env:
           NODE_OPTIONS: --max_old_space_size=4048
-          # Put int secrets
+          # Put in secrets
           VUE_APP_EMERIS_PROD_ENDPOINT: https://api.emeris.com/v1
           VUE_APP_EMERIS_PROD_LIQUIDITY_ENDPOINT: https://api.emeris.com/v1/liquidity
 
