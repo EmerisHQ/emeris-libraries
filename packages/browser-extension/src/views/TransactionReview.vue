@@ -1,5 +1,5 @@
 <template>
-  <div class="page" v-if="pending">
+  <div class="page" style="padding-bottom: 135px" v-if="pending">
     <h1>Confirm Transaction</h1>
     <span style="color: #ffffffaa; text-align: center; width: 100%">{{
       pending.origin.replace(/http(s)?:\/\//, '')
@@ -62,7 +62,7 @@
         <Button name="Accept" style="flex: 1" @click="accept" />
       </div>
     </div>
-    <Slideout :open="editMemo">
+    <Slideout v-bind:open="editMemo" v-on:update:open="editMemo = $event">
       <h1 style="margin-bottom: 16px">Reference</h1>
       <div class="secondary-text" style="margin-bottom: 32px">
         Add a reference for your transaction. This is often called a “memo” in other apps. If you’re sending to an
@@ -143,7 +143,7 @@ export default defineComponent({
       return this.$store.getters[GlobalGetterTypes.getPending][0];
     },
     transaction() {
-      return this.pending.data;
+      return this.pending?.data;
     },
   },
   methods: {

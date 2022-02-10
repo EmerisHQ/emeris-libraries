@@ -1,6 +1,6 @@
 <template>
   <div>
-    <div class="backdrop" v-if="open"></div>
+    <div class="backdrop" v-if="open" @click.prevent="$emit('update:open', false)"></div>
     <div class="slideout" ref="slideout" :class="{ open: open }">
       <slot></slot>
     </div>
@@ -10,6 +10,10 @@
 <script>
 export default {
   name: 'Slideout',
+  model: {
+    prop: 'open',
+    event: 'update',
+  },
   props: {
     open: { type: Boolean, required: true },
   },
@@ -29,8 +33,10 @@ export default {
   height: 100%;
   background-color: black;
   opacity: 67%;
+  z-index: 1000;
 }
 .slideout {
+  z-index: 1001;
   visibility: hidden; // to not show before position is calculated
   background: #171717;
   border-radius: 16px 16px 0px 0px;

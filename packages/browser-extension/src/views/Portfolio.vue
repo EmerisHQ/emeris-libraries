@@ -37,12 +37,12 @@
   </div>
   <div class="page" v-else>
     <img :src="require(`@@/assets/EmptyPortfolioBG.png`)" class="background" />
-    <div style="display: flex; position: relative; margin-bottom: 36px">
-      <img
-        style="height: 24px; width: 24px; position: absolute"
-        :src="require('@@/assets/Avatar.svg')"
-        @click="$router.push('/account')"
-      />
+    <div
+      style="display: flex; flex-direction: row; position: relative; margin-bottom: 36px; position: absolute"
+      @click="$router.push('/account')"
+    >
+      <img style="height: 40px; width: 40px" :src="require('@@/assets/Avatar.svg')" />
+      <Icon name="CaretRightIcon" :icon-size="1" style="transform: rotate(90deg)" />
     </div>
     <div style="margin-top: auto">
       <h1>Get started by funding your wallet</h1>

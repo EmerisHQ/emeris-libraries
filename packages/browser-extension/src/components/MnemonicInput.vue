@@ -108,16 +108,20 @@ export default defineComponent({
 </script>
 
 <style lang="scss" scoped>
-input {
+[contentEditable] {
   outline: none;
 }
 
-input::placeholder {
+[contentEditable]::placeholder {
   transition: color 150ms ease-out;
 }
 
-input:focus ~ .focus-border {
+[contentEditable]:focus ~ .focus-border {
   visibility: visible;
+}
+
+[contentEditable]:focus-visible {
+  outline-color: white;
 }
 
 .input__hint {

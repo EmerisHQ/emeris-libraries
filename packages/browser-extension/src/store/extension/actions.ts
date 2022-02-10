@@ -49,6 +49,13 @@ export interface Actions {
     { }: ActionContext<State, RootState>,
     { website }: { website: string },
   ): Promise<void>;
+  [ActionTypes.SET_NEW_ACCOUNT](
+    { commit }: ActionContext<State, RootState>,
+    account: EmerisAccount & { route: string }
+  ): void;
+  [ActionTypes.GET_NEW_ACCOUNT](
+    { commit }: ActionContext<State, RootState>,
+  ): Promise<EmerisAccount & { route: string }>;
 }
 export type GlobalActions = Namespaced<Actions, 'extension'>;
 
@@ -78,13 +85,16 @@ export const actions: ActionTree<State, RootState> & Actions = {
       return false;
     }
   },
-  async [ActionTypes.LOAD_SESSION_DATA]({ dispatch }) {
+  async [ActionTypes.LOAD_SESSION_DATA]({ dispatch, getters }) {
     const lastAccountused = await dispatch(ActionTypes.GET_LAST_ACCOUNT_USED); // also loads the last account to the state
-    await dispatch(
-      GlobalDemerisActionTypes.API.GET_BALANCES,
-      { subscribe: true, params: { address: lastAccountused.keyHash } },
-      { root: true },
-    );
+    const account = getters['getWallet'].find(account => account.accountName === lastAccountused)
+    await Promise.all(account.keyHashes.map(keyHash =>
+      dispatch(
+        GlobalDemerisActionTypes.API.GET_BALANCES,
+        { subscribe: true, params: { address: keyHash } },
+        { root: true },
+      )
+    ))
   },
   async [ActionTypes.GET_WALLET]({ commit, getters }) {
     try {
@@ -250,5 +260,22 @@ export const actions: ActionTree<State, RootState> & Actions = {
   },
   async [ActionTypes.CANCEL_TRANSACTION]({ }, { id }) {
     await respond(id, { accept: false })
+  },
+  [ActionTypes.SET_NEW_ACCOUNT]({ commit }, account: EmerisAccount & { route: string }) {
+    commit(MutationTypes.SET_NEW_ACCOUNT, account)
+    if (!account) {
+      localStorage.removeItem('new_account')
+    } else {
+      localStorage.setItem('new_account', JSON.stringify(account))
+    }
+  },
+  [ActionTypes.GET_NEW_ACCOUNT]({ commit }) {
+    const newAccount = localStorage.getItem('new_account')
+    if (newAccount) {
+      const parsedAccount = JSON.parse(newAccount)
+      commit(MutationTypes.SET_NEW_ACCOUNT, parsedAccount)
+      return parsedAccount
+    }
+    return undefined
   },
 };

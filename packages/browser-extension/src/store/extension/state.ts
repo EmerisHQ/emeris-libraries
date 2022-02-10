@@ -4,7 +4,9 @@ export type State = {
   pending: Array<ExtensionRequest>;
   wallet: EmerisWallet;
   lastAccount: string;
-  newAccount: EmerisAccount;
+  newAccount: EmerisAccount & {
+    route: string; // route user dropped off
+  };
   whitelistedWebsites: { origin: string }[];
 };
 export function getDefaultState(): State {
