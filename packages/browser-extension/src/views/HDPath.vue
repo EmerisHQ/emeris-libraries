@@ -69,6 +69,19 @@ export default defineComponent({
   watch: {
     account(account) {
       this.accountError = !/^[0-9]+'?$/.test(account);
+
+      if (!this.accountError)
+        this.$store.dispatch(GlobalActionTypes.SET_NEW_ACCOUNT, {
+          ...this.newAccount,
+          hdPath: [account, this.newAccount.hdPath[1], this.newAccount.hdPath[2]],
+        });
+    },
+    change(change) {
+      this.changeError = !/^[0-9]+'?$/.test(change);
+
+      if (!this.changeError)
+        this.$store.dispatch(GlobalActionTypes.SET_NEW_ACCOUNT, {
+          ...this.newAccount,
           hdPath: [this.newAccount.hdPath[0], change, this.newAccount.hdPath[2]],
         });
     },
