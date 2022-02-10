@@ -281,7 +281,7 @@ export class Emeris implements IEmeris {
           keyHashes:
             // wrapping in a Set to make all values unique
             [...new Set(await Promise.all(Object.values(chainConfig).map(async chain => {
-              const address = await libs[chain.library].getAddress(account.accountMnemonic, { prefix: chain.prefix, HDPath: getHdPath(chain, account) })
+              const address = await libs[chain.library].getAddress(account, chain)
               const keyHash = keyHashfromAddress(address);
               return keyHash
             })))],
