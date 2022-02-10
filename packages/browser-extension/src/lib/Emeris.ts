@@ -351,7 +351,7 @@ export class Emeris implements IEmeris {
       await this.storage.addWhitelistedWebsite(request.origin);
     }
     return enabled;
-  },
+  }
   setResponse(id: string, response: any) {
     const request = this.queuedRequests.get(id);
     if (!request) {
