@@ -28,8 +28,8 @@
       <Checkbox
         style="margin-bottom: 24px"
         v-model="checked"
-        label="I have backed up my recovery phrase, I understand that if I loose my recovery phrase, I will loose my
-          fund"
+        label="I have backed up my recovery phrase, I understand that if I lose my recovery phrase, I will lose my
+          funds"
       />
       <Button name="Continue" :disabled="!checked" @click="submit" />
     </div>
