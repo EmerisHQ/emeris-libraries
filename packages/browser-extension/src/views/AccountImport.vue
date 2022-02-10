@@ -91,7 +91,7 @@ export default defineComponent({
   methods: {
     storeNewAccount() {
       this.$store.dispatch(GlobalActionTypes.SET_NEW_ACCOUNT, {
-        accountMnemonic: mnemonicFormat(this.mnemonic),
+        accountMnemonic: mnemonicFormat(this.mnemonic), // TODO does store the mnemonic in localstorage unencrypted
         setupState: AccountCreateStates.COMPLETE,
       });
     },

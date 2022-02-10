@@ -102,10 +102,12 @@ export default defineComponent({
     },
     loadBalances() {
       this.wallet.forEach((account) => {
-        this.$store.dispatch(GlobalDemerisActionTypes.API.GET_BALANCES, {
-          subscribe: true,
-          params: { address: account.keyHash },
-        });
+        if (!this.$store.getters[GlobalGetterTypes.getAllBalances](account)) {
+          this.$store.dispatch(GlobalDemerisActionTypes.API.GET_BALANCES, {
+            subscribe: true,
+            params: { address: account.keyHash },
+          });
+        }
       });
     },
     balances(account) {

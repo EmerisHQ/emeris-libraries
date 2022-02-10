@@ -5,39 +5,14 @@
       pending.origin.replace(/http(s)?:\/\//, '')
     }}</span>
     <div style="display: flex; flex-direction: row; margin-bottom: 16px; font-size: 13px; line-height: 24px">
-      <div
-        style="display: flex; flex-direction: row; cursor: pointer"
-        :class="{ 'secondary-text': !showMessages }"
-        @click="showMessages = true"
-      >
+      <div style="display: flex; flex-direction: row; cursor: pointer">
         Details
         <div class="badge" style="margin-left: 8px">{{ transaction.messages.length }}</div>
       </div>
-      <span
-        :class="{ 'secondary-text': showMessages }"
-        style="margin-left: 16px; cursor: pointer"
-        @click="showMessages = false"
-        >Data</span
-      >
+      <span class="secondary-text" style="margin-left: 16px; cursor: pointer">Data</span>
     </div>
 
-    <template v-if="showMessages">
-      <div
-        style="
-          display: flex;
-          padding: 16px;
-
-          background: #171717;
-          border-radius: 8px;
-        "
-        v-for="(message, index) in transaction.messages"
-        :key="index"
-      >
-        <component :is="message.type" :message="message" :chainName="transaction.chainId" />
-      </div>
-    </template>
     <div
-      v-else
       style="
         display: flex;
         padding: 16px;
@@ -46,8 +21,13 @@
         border-radius: 8px;
       "
     >
-      <span v-if="!this.rawTransation">Loading ...</span>
-      <Yaml v-else :json="this.rawTransation" />
+      <component
+        :is="message.type"
+        v-for="(message, index) in transaction.messages"
+        :message="message"
+        :chainName="transaction.chainId"
+        :key="index"
+      />
     </div>
 
     <div
@@ -121,7 +101,6 @@ import { GlobalGetterTypes } from '@@/store/extension/getter-types';
 import Button from '@/components/ui/Button.vue';
 import transfer from '@@/components/Transactions/transfer.vue';
 import Slideout from '@@/components/Slideout.vue';
-import Yaml from '@@/components/Yaml.vue';
 import TotalPrice from '@/components/common/TotalPrice.vue';
 import Input from '@/components/ui/Input.vue';
 import { GlobalActionTypes } from '@@/store/extension/action-types';
@@ -134,13 +113,11 @@ export default defineComponent({
     Slideout,
     Input,
     TotalPrice,
-    Yaml,
   },
   data: () => ({
     memo: '',
     editMemo: false,
     editFees: false,
-    showMessages: true,
     fees: [
       {
         amount: 1,
@@ -148,7 +125,6 @@ export default defineComponent({
       },
     ],
     gas: 200000,
-    rawTransation: undefined,
   }),
   computed: {
     pending() {
@@ -178,18 +154,6 @@ export default defineComponent({
   },
   mounted() {
     this.$store.dispatch(GlobalActionTypes.GET_PENDING);
-    this.$watch(
-      (vm) => [vm.fees, vm.gas, vm.memo, vm.transaction],
-      async ([fees, gas, memo, transaction]) => {
-        if (fees && gas && transaction)
-          this.rawTransation = await this.$store.dispatch(GlobalActionTypes.GET_RAW_TRANSACTION, {
-            fees,
-            gas: '' + gas,
-            memo,
-            ...transaction,
-          });
-      },
-    );
   },
 });
 </script>
