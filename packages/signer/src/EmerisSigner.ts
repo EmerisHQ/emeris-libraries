@@ -1,4 +1,3 @@
-import { HdPath } from '@cosmjs/crypto'
 import { getCosmosClient } from './modules/cosmos'
 import { EmerisSigningClient } from './modules/cosmos/emerisSigningClient'
 import { isCosmos } from './type-guards'
@@ -54,5 +53,21 @@ export default class EmerisSigner {
       )
       return await client.getRawTX(tx.msgs, tx.fee, tx.memo)
     }
+  }
+  private async getSignerAccount(chain_name: string) {
+    // @ts-ignore
+    if (isCosmos({
+      chain_name
+    })) {
+      const client: EmerisSigningClient = await getCosmosClient(chain_name, false, this.mnemonic);
+      const [signerAccount] = await client.exposedSigner.getAccounts()
+      return signerAccount;
+    }
+  }
+  async getAddress(chain_name: string): Promise<string> {
+    return (await this.getSignerAccount(chain_name)).address
+  }
+  async getPubkey(chain_name: string): Promise<Uint8Array> {
+    return (await this.getSignerAccount(chain_name)).pubkey
   }
 }

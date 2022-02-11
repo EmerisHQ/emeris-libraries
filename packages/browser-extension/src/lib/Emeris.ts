@@ -18,16 +18,7 @@ import {
   ExtensionResponse,
   RoutedInternalRequest,
 } from '@@/types/api';
-import { AbstractTxResult } from '@@/types/transactions';
-
-// joining the hdpath stored per account with the prefix set in the chain config
-const getHdPath = (chainConfig, account) => {
-  let hdPath = chainConfig.HDPath
-  if (account.hdPath) {
-    hdPath = chainConfig.HDPath.split('/').slice(0, 3).concat(account.hdPath).join('/')
-  }
-  return hdPath
-}
+import { AbstractTxResult } from '@@/types/transactions'; // TODO
 
 import { keyHashfromAddress } from '@/utils/basic';
 import chainConfig from '../chain-config';
@@ -280,7 +271,7 @@ export class Emeris implements IEmeris {
           keyHashes:
             // wrapping in a Set to make all values unique
             [...new Set(await Promise.all(Object.values(chainConfig).map(async chain => {
-              const address = await libs[chain.library].getAddress(account.accountMnemonic, { prefix: chain.prefix, HDPath: getHdPath(chain, account) })
+              const address = await libs[chain.library].getAddress(account, chain)
               const keyHash = keyHashfromAddress(address);
               return keyHash
             })))],
@@ -303,7 +294,7 @@ export class Emeris implements IEmeris {
       throw new Error('No account selected');
     }
 
-    return await libs[chain.library].getPublicKey(account, getHdPath(chain, { prefix: chain.prefix, HDPath: getHdPath(chain, account) }));
+    return await libs[chain.library].getPublicKey(account, chain);
   }
   async isPermitted(origin: string): Promise<boolean> {
     return await this.storage.isWhitelistedWebsite(origin);
@@ -342,7 +333,7 @@ export class Emeris implements IEmeris {
 
       const mapper = new chain.mapper(chain.chainId)
       const chainMessages = [].concat(...request.data.messages.map(message => mapper.map(message, address)))
-      const broadcastable = await libs[chain.library].sign(selectedAccount, chain, chainMessages, request.data.fees, memo)
+      const broadcastable = await libs[chain.library].sign(selectedAccount, chain, chainMessages, request.data.fee, <string>memo)
 
       return broadcastable
     }
