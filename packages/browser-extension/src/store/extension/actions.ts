@@ -59,6 +59,13 @@ export interface Actions {
 }
 export type GlobalActions = Namespaced<Actions, 'extension'>;
 
+const respond = async (id, data) => {
+  await browser.runtime.sendMessage({
+    type: 'fromPopup',
+    data: { action: 'setResponse', data: { id, ...data } },
+  });
+}
+
 export const actions: ActionTree<State, RootState> & Actions = {
   async [ActionTypes.GET_PENDING]({ commit, getters }) {
     try {
@@ -244,16 +251,15 @@ export const actions: ActionTree<State, RootState> & Actions = {
     });
     await dispatch(ActionTypes.GET_WHITELISTED_WEBSITES);
   },
-  async [ActionTypes.WHITELIST_WEBSITE]({ dispatch, getters }, { website }) {
-    await browser.runtime.sendMessage({
-      type: 'fromPopup',
-      data: { action: 'addWhitelistedWebsite', data: { website } },
-    });
-    await browser.runtime.sendMessage({
-      type: 'fromPopup',
-      data: { action: 'setResponse', data: getters['getPending'][0] },
-    });
+  async [ActionTypes.WHITELIST_WEBSITE]({ dispatch }, { id, accept }) {
+    await respond(id, { accept })
     await dispatch(ActionTypes.GET_WHITELISTED_WEBSITES);
+  },
+  async [ActionTypes.ACCEPT_TRANSACTION]({ }, { id, fees, memo }) {
+    await respond(id, { accept: true, fees, memo })
+  },
+  async [ActionTypes.CANCEL_TRANSACTION]({ }, { id }) {
+    await respond(id, { accept: false })
   },
   [ActionTypes.SET_NEW_ACCOUNT]({ commit }, account: EmerisAccount & { route: string }) {
     commit(MutationTypes.SET_NEW_ACCOUNT, account)

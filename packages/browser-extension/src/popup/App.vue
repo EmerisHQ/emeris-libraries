@@ -22,7 +22,7 @@ export default defineComponent({
     onMounted(async () => {
       store.commit(
         'demerisAPI/' + DemerisMutationTypes.INIT,
-        { endpoint: process.env.VUE_APP_EMERIS_ENDPOINT },
+        { endpoint: process.env.VUE_APP_EMERIS_PROD_ENDPOINT || 'https://api.emeris.com/v1' },
         { root: true },
       );
 
@@ -57,7 +57,7 @@ export default defineComponent({
         }
         // init starport store
         await store.dispatch('common/env/config', {
-          apiNode: process.env.VUE_APP_EMERIS_LIQUIDITY_ENDPOINT,
+          apiNode: process.env.VUE_APP_EMERIS_PROD_LIQUIDITY_ENDPOINT || 'https://api.emeris.com/v1/liquidity',
           rpcNode: null,
           wsNode: null,
           chainId: 'cosmos-hub',

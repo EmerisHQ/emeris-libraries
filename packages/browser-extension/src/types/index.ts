@@ -1,3 +1,4 @@
+import { EmerisMessageMapper } from '../../../mapper/src/base';
 import { ClientLibrary } from './libraries';
 
 export type EmerisEncryptedWallet = {
@@ -22,6 +23,7 @@ export type EmerisPermission = {
 };
 export type ExtensionRequest = {
   id?: string;
+  origin: string;
   [key: string]: unknown;
 };
 export type ExtensionResponse = {
@@ -45,4 +47,8 @@ export type ChainDetails = {
   library: ClientLibrary;
   HDPath?: string;
   prefix?: string;
+  mapper: typeof EmerisMessageMapper;
+  chainId: string;
+  chainName: string;
+  rpcEndpoint: string;
 };

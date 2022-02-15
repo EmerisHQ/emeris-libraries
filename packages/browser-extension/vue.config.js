@@ -56,6 +56,7 @@ module.exports = {
 
     config.resolve.symlinks(false)
     config.resolve.alias.set('vue', path.resolve('./node_modules/vue'))
+    config.plugins.delete('fork-ts-checker')
   },
   transpileDependencies: [
     '@starport/tendermint-liquidity-js',

@@ -1,4 +1,5 @@
 import { IEmeris } from '@@/types/emeris';
+import * as Base from '@@/../../types/lib/EmerisBase';
 import {
   ExtensionRequest,
   ExtensionResponse,
@@ -7,14 +8,15 @@ import {
   HasWalletRequest,
   IsHWWalletRequest,
   RoutedExtensionRequest,
-  // SignTransactionRequest,
+  SignTransactionRequest,
   SupportedChainsRequest,
   ApproveOriginRequest,
-  // SignAndBroadcastTransactionRequest,
+  SignAndBroadcastTransactionRequest,
   GetAccountNameRequest,
 } from '@@/types/api';
 import { v4 as uuidv4 } from 'uuid';
-// import { AbstractTx, AbstractTxResult } from '@@/types/transactions';
+import { AbstractTx, AbstractTxResult } from '@@/types/transactions';
+import { Transaction, TransactionData } from 'EmerisTransactions';
 export class ProxyEmeris implements IEmeris {
   loaded: boolean;
   private queuedRequests: Map<
@@ -112,14 +114,32 @@ export class ProxyEmeris implements IEmeris {
   }
 
   // TODO resolve type errors
-  // async signTransaction({ tx, chainId }: { tx: AbstractTx; chainId: string }): Promise<Uint8Array> {
-  //   const request = {
-  //     action: 'signTransaction',
-  //     data: { tx, chainId },
-  //   };
-  //   const response = await this.sendRequest(request as SignTransactionRequest);
-  //   return response.data as Uint8Array;
-  // }
+  async signTransaction({
+    messages,
+    chainId,
+    signingAddress,
+    fee,
+    memo
+  }: {
+    signingAddress: string,
+    chainId: string,
+    messages: Transaction<TransactionData>[],
+    fee: {
+      gas: string,
+      amount: Base.Amount[]
+    }
+    memo?: string
+  }): Promise<Uint8Array> {
+    const request = {
+      action: 'signTransaction',
+      data: { messages, chainId, signingAddress, fee, memo },
+    };
+    const response = await this.sendRequest(request as SignTransactionRequest);
+    if (!response.data) {
+      throw new Error('Signing was not successful')
+    }
+    return response.data as Uint8Array;
+  }
   async enable(): Promise<boolean> {
     const request = {
       action: 'enable',

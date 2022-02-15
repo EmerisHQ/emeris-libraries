@@ -8,8 +8,7 @@ export class EmerisMessageMapper {
     }
 
     map(transaction: Transaction<TransactionData>, signing_address: string) {
-        // @ts-expect-error
-        return this[transaction.type](transaction.data, signing_address)
+        return this[transaction.type](transaction, signing_address)
     }
 
     transfer(transaction: TransferData, signing_address: string) {
