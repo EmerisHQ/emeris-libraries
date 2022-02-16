@@ -3,25 +3,25 @@ import { EmerisMessageMapper } from "./base";
 import * as Long from "long";
 
 export default class CosmosAminoMessageMapper extends EmerisMessageMapper {
-    transfer(transaction: EmerisTransactions.TransferData, signing_address: string) {
+    transfer(transaction: EmerisTransactions.AbstractTransferTransactionData, signing_address: string) {
         return [{
             type: "cosmos-sdk/MsgSend",
             value: {
                 amount: [transaction.amount],
-                to_address: transaction.to_address,
+                to_address: transaction.toAddress,
                 from_address: signing_address,
             },
         }];
     }
 
-    ibcTransfer(transaction: EmerisTransactions.IBCData, signing_address: string) {
+    IBCtransfer(transaction: EmerisTransactions.AbstractIBCTransferTransactionData, signing_address: string) {
         return [{
             type: "cosmos-sdk/MsgTransfer",
             value: {
                 source_port: 'transfer',
                 source_channel: transaction.through,
                 sender: signing_address,
-                receiver: transaction.to_address,
+                receiver: transaction.toAddress,
                 timeout_timestamp: Long.fromString(new Date().getTime() + 300000 + '000000'),
                 //timeoutHeight: { revisionHeight: "10000000000",revisionNumber:"0"},
                 token: { ...transaction.amount },
@@ -29,7 +29,7 @@ export default class CosmosAminoMessageMapper extends EmerisMessageMapper {
         }]
     }
 
-    swap(transaction: EmerisTransactions.SwapData, signing_address: string) {
+    swap(transaction: EmerisTransactions.AbstractSwapTransactionData, signing_address: string) {
         let isReverse = false;
         if (transaction.from.denom !== transaction.pool.reserve_coin_denoms[0]) {
             isReverse = true;
