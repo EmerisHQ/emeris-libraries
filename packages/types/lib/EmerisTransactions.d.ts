@@ -83,6 +83,7 @@ export declare type AbstractTransferTransactionData = {
 };
 export declare type AbstractTransferTransaction = {
     type: 'transfer';
+    protocol?: EmerisDEXInfo.DEX;
     data: AbstractTransferTransactionData;
 };
 export declare type AbstractIBCTransferTransactionData = {
@@ -94,47 +95,53 @@ export declare type AbstractIBCTransferTransactionData = {
 };
 export declare type AbstractIBCTransferTransaction = {
     type: 'IBCtransfer';
+    protocol?: EmerisDEXInfo.DEX;
     data: AbstractIBCTransferTransactionData;
 };
 export declare type AbstractSwapTransactionData = {
     from: AbstractAmount;
     to: AbstractAmount;
     poolId: string;
-    protocol: string;
 };
 export declare type AbstractSwapTransaction = {
     type: 'swap';
+    protocol?: EmerisDEXInfo.DEX;
     data: AbstractSwapTransactionData;
 };
 export declare type AbstractCreatePoolTransactionData = {
     coinA: AbstractAmount;
     coinB: AbstractAmount;
-    protocol: EmerisDEXInfo.DEX;
     extensions?: Record<string, unknown>;
 };
 export declare type AbstractCreatePoolTransaction = {
     type: 'createPool';
+    protocol?: EmerisDEXInfo.DEX;
     data: AbstractCreatePoolTransactionData;
 };
 export declare type AbstractAddLiquidityTransactionData = {
     coinA: AbstractAmount;
     coinB: AbstractAmount;
-    protocol: EmerisDEXInfo.DEX;
     poolId: string;
 };
 export declare type AbstractAddLiquidityTransaction = {
     type: 'addLiquidity';
+    protocol?: EmerisDEXInfo.DEX;
     data: AbstractAddLiquidityTransactionData;
 };
 export declare type AbstractWithdrawLiquidityTransactionData = {
     poolCoin: AbstractAmount;
-    protocol: EmerisDEXInfo.DEX;
     poolId: string;
 };
 export declare type AbstractWithdrawLiquidityTransaction = {
     type: 'withdrawLiquidity';
+    protocol?: EmerisDEXInfo.DEX;
     data: AbstractWithdrawLiquidityTransactionData;
 };
 export declare type AbstractTransactionData = AbstractTransferTransactionData | AbstractIBCTransferTransactionData | AbstractSwapTransactionData | AbstractCreatePoolTransactionData | AbstractAddLiquidityTransactionData | AbstractWithdrawLiquidityTransactionData;
 export declare type AbstractTransaction = AbstractTransferTransaction | AbstractIBCTransferTransaction | AbstractSwapTransaction | AbstractCreatePoolTransaction | AbstractAddLiquidityTransaction | AbstractWithdrawLiquidityTransaction;
+export declare type AbstractTransactionMappingRequest = {
+    chainName: string;
+    signingAddress: string;
+    txs: AbstractTransaction[];
+};
 //# sourceMappingURL=EmerisTransactions.d.ts.map

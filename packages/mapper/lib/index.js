@@ -1,9 +1,15 @@
 "use strict";
-var __importDefault = (this && this.__importDefault) || function (mod) {
-    return (mod && mod.__esModule) ? mod : { "default": mod };
-};
 Object.defineProperty(exports, "__esModule", { value: true });
-const cosmos_amino_1 = __importDefault(require("./cosmos_amino"));
-exports.default = {
-    CosmosAminoMessageMapper: cosmos_amino_1.default
-};
+const EmerisMessageMapper_1 = require("./EmerisMessageMapper");
+async function map(req) {
+    const chainName = req.chainName;
+    const signingAddress = req.signingAddress;
+    const mapped = req.txs.map(async (tx) => {
+        (await EmerisMessageMapper_1.EmerisMessageMapper.fromChainProtocol(chainName, tx.protocol)).map(tx, signingAddress);
+    });
+}
+exports.default = map;
+async function test() {
+    console.log(await EmerisMessageMapper_1.EmerisMessageMapper.fromChainProtocol('cosmos'));
+}
+test();

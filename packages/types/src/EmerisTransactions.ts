@@ -93,6 +93,7 @@ export type AbstractTransferTransactionData = {
 }
 export type AbstractTransferTransaction = {
     type: 'transfer';
+    protocol?: EmerisDEXInfo.DEX;
     data: AbstractTransferTransactionData;
 }
 export type AbstractIBCTransferTransactionData = {
@@ -104,46 +105,53 @@ export type AbstractIBCTransferTransactionData = {
 }
 export type AbstractIBCTransferTransaction = {
     type: 'IBCtransfer';
+    protocol?: EmerisDEXInfo.DEX;
     data: AbstractIBCTransferTransactionData;
 }
 export type AbstractSwapTransactionData = {    
     from: AbstractAmount;
     to: AbstractAmount;
     poolId: string;
-    protocol: string;
 }
 export type AbstractSwapTransaction = {
     type: 'swap';
+    protocol?: EmerisDEXInfo.DEX;
     data: AbstractSwapTransactionData;
 }
 export type AbstractCreatePoolTransactionData = {
     coinA: AbstractAmount;
     coinB: AbstractAmount;
-    protocol: EmerisDEXInfo.DEX;
     extensions?: Record<string,unknown>
 }
 export type AbstractCreatePoolTransaction = {
     type: 'createPool';
+    protocol?: EmerisDEXInfo.DEX;
     data: AbstractCreatePoolTransactionData;
 }
 export type AbstractAddLiquidityTransactionData = {
     coinA: AbstractAmount;
     coinB: AbstractAmount;
-    protocol: EmerisDEXInfo.DEX;
     poolId: string;
 }
 export type AbstractAddLiquidityTransaction = {
     type: 'addLiquidity';
+    protocol?: EmerisDEXInfo.DEX;
     data: AbstractAddLiquidityTransactionData;
 }
 export type AbstractWithdrawLiquidityTransactionData = {
     poolCoin: AbstractAmount
-    protocol: EmerisDEXInfo.DEX;
     poolId: string;
 }
 export type AbstractWithdrawLiquidityTransaction = {
     type: 'withdrawLiquidity';
+    protocol?: EmerisDEXInfo.DEX;
     data: AbstractWithdrawLiquidityTransactionData;
 }
 export type AbstractTransactionData = AbstractTransferTransactionData | AbstractIBCTransferTransactionData | AbstractSwapTransactionData | AbstractCreatePoolTransactionData | AbstractAddLiquidityTransactionData | AbstractWithdrawLiquidityTransactionData;
 export type AbstractTransaction = AbstractTransferTransaction | AbstractIBCTransferTransaction | AbstractSwapTransaction | AbstractCreatePoolTransaction | AbstractAddLiquidityTransaction | AbstractWithdrawLiquidityTransaction;
+
+export type AbstractTransactionMappingRequest = {
+    chainName: string;
+    signingAddress: string;
+    txs: AbstractTransaction[];
+}

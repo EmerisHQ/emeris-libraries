@@ -2,41 +2,42 @@ import { EmerisTransactions } from "@emeris/types";
 import { EmerisMessageMapper } from "./base";
 import * as Long from "long";
 export default class CosmosAminoMessageMapper extends EmerisMessageMapper {
-    transfer(transaction: EmerisTransactions.TransferData, signing_address: string): {
+    transfer(transaction: EmerisTransactions.AbstractTransferTransactionData, signing_address: string): {
         type: string;
         value: {
-            amount: import("@emeris/types/lib/EmerisBase").Amount[];
+            amount: EmerisTransactions.AbstractAmount[];
             to_address: string;
             from_address: string;
         };
     }[];
-    ibcTransfer(transaction: EmerisTransactions.IBCData, signing_address: string): {
+    IBCtransfer(transaction: EmerisTransactions.AbstractIBCTransferTransactionData, signing_address: string): {
         type: string;
         value: {
             source_port: string;
             source_channel: string;
             sender: string;
-            receiver: string | undefined;
+            receiver: string;
             timeout_timestamp: Long.Long;
             token: {
                 denom: string;
+                base_denom?: string | undefined;
                 amount: string;
             };
         };
     }[];
-    swap(transaction: EmerisTransactions.SwapData, signing_address: string): {
+    swap(transaction: EmerisTransactions.AbstractSwapTransactionData, signing_address: string): {
         type: string;
         value: {
             swap_requester_address: string;
             pool_id: number;
-            swap_type_id: number;
+            swap_type_id: any;
             offer_coin: {
                 amount: string;
                 denom: string;
             };
             demand_coin_denom: string;
-            offer_coin_dee: number;
-            order_price: number;
+            offer_coin_dee: any;
+            order_price: any;
         };
     }[];
     addliquidity(transaction: EmerisTransactions.AddLiquidityData, signing_address: string): {

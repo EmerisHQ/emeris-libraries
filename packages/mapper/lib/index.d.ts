@@ -1,6 +1,3 @@
-import CosmosAminoMessageMapper from "./cosmos_amino";
-declare const _default: {
-    CosmosAminoMessageMapper: typeof CosmosAminoMessageMapper;
-};
-export default _default;
+import { EmerisTransactions } from "@emeris/types";
+export default function map(req: EmerisTransactions.AbstractTransactionMappingRequest): Promise<void>;
 //# sourceMappingURL=index.d.ts.map
