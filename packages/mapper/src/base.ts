@@ -1,38 +1,58 @@
 import { EmerisTransactions } from "@emeris/types";
 
-export class EmerisMessageMapper {
+export interface IEmerisMessageMapper {
+    map: (transaction:EmerisTransactions.AbstractTransaction,signing_address:string) =>string;
+    [EmerisTransactions.AbstractTransaction['type']]
+}
+export class EmerisMessageMapper  {
     public chain_id: string;
 
     constructor(chain_id:string) {
         this.chain_id = chain_id
     }
-
-    map(transaction: EmerisTransactions.Transaction<EmerisTransactions.TransactionData>, signing_address: string) {
-        // @ts-expect-error
-        return this[transaction.type](transaction.data, signing_address)
+    keyof EmerisTransactions.AbstractTransaction['type'];
+    map(transaction: EmerisTransactions.AbstractTransaction, signing_address: string) {
+        switch (transaction.type) {
+            case 'transfer':       
+            return this[transaction.type](transaction.data, signing_address)
+            case 'IBCtransfer':       
+            return this[transaction.type](transaction.data, signing_address)
+            case 'addLiquidity':       
+            return this[transaction.type](transaction.data, signing_address)
+            case 'createPool':       
+            return this[transaction.type](transaction.data, signing_address)
+            case 'withdrawLiquidity':       
+            return this[transaction.type](transaction.data, signing_address)
+            case 'swap':            
+            return this[transaction.type](transaction.data, signing_address)
+            default:
+        }
+        
     }
 
-    transfer(transaction: EmerisTransactions.TransferData, signing_address: string) {
+    transfer(transaction: EmerisTransactions.AbstractTransferTransactionData, signing_address: string) {
         throw new Error("This method is not implemented for " + this.chain_id)
     }
 
-    ibcTransfer(transaction: EmerisTransactions.IBCData, signing_address: string) {
+    
+    IBCtransfer(transaction: EmerisTransactions.AbstractIBCTransferTransactionData, signing_address: string) {
         throw new Error("This method is not implemented for " + this.chain_id)
     }
 
-    swap(transaction: EmerisTransactions.SwapData, signing_address: string) {
+    swap(transaction: EmerisTransactions.AbstractSwapTransactionData, signing_address: string) {
         throw new Error("This method is not implemented for " + this.chain_id)
     }
 
-    addliquidity(transaction: EmerisTransactions.AddLiquidityData, signing_address: string) {
+    addLiquidity(transaction: EmerisTransactions.AbstractAddLiquidityTransactionData, signing_address: string) {
         throw new Error("This method is not implemented for " + this.chain_id)
     }
 
-    withdrawliquidity(transaction: EmerisTransactions.WithdrawLiquidityData, signing_address: string) {
+    withdrawLiquidity(transaction: EmerisTransactions.AbstractWithdrawLiquidityTransactionData, signing_address: string) {
         throw new Error("This method is not implemented for " + this.chain_id)
     }
 
-    createpool(transaction: EmerisTransactions.CreatePoolData, signing_address: string) {
+    createPool(transaction: EmerisTransactions.AbstractCreatePoolTransactionData, signing_address: string) {
         throw new Error("This method is not implemented for " + this.chain_id)
     }
+    
 }

@@ -9,7 +9,7 @@
     <div
       style="margin-bottom: 56px; margin-top: 72px; margin-left auto; margin-right: auto; display: block; margin-left: auto;"
     >
-      <img :src="require('@@/assets/LedgerBox.png')" style="width: 151px" />
+      <img :src="require('@@/assets/LedgerBox.svg')" style="width: 151px" />
     </div>
     <ListCard :img="require(`@@/assets/Step1.svg`)" caption="Unlock & connect your Ledger device with your computer" />
     <ListCard :img="require(`@@/assets/Step2.svg`)" caption="Open the ‘Cosmos’ app on your Ledger device" />
