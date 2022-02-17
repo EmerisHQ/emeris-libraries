@@ -4,19 +4,19 @@ import * as Long from "long";
 
 export default class CosmosAminoMessageMapper extends EmerisMessageMapper {
 	
-    transfer(transaction: EmerisTransactions.AbstractTransferTransactionData, signing_address: string) {
-        return [{
+    transfer(transaction: EmerisTransactions.AbstractTransferTransactionData, signing_address: string) {        
+        return {
             type: "cosmos-sdk/MsgSend",
             value: {
                 amount: [transaction.amount],
                 to_address: transaction.toAddress,
                 from_address: signing_address,
             },
-        }];
+        };
     }
 
     IBCtransfer(transaction: EmerisTransactions.AbstractIBCTransferTransactionData, signing_address: string) {
-        return [{
+        return {
             type: "cosmos-sdk/MsgTransfer",
             value: {
                 source_port: 'transfer',
@@ -27,7 +27,7 @@ export default class CosmosAminoMessageMapper extends EmerisMessageMapper {
                 //timeoutHeight: { revisionHeight: "10000000000",revisionNumber:"0"},
                 token: { ...transaction.amount },
             }
-        }]
+        }
     }
 
 }
