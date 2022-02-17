@@ -101,7 +101,7 @@ export declare type AbstractIBCTransferTransaction = {
 export declare type AbstractSwapTransactionData = {
     from: AbstractAmount;
     to: AbstractAmount;
-    poolId: string;
+    pool: Record<string, unknown>;
 };
 export declare type AbstractSwapTransaction = {
     type: 'swap';
@@ -121,7 +121,7 @@ export declare type AbstractCreatePoolTransaction = {
 export declare type AbstractAddLiquidityTransactionData = {
     coinA: AbstractAmount;
     coinB: AbstractAmount;
-    poolId: string;
+    pool: Record<string, unknown>;
 };
 export declare type AbstractAddLiquidityTransaction = {
     type: 'addLiquidity';
@@ -130,7 +130,7 @@ export declare type AbstractAddLiquidityTransaction = {
 };
 export declare type AbstractWithdrawLiquidityTransactionData = {
     poolCoin: AbstractAmount;
-    poolId: string;
+    pool: Record<string, unknown>;
 };
 export declare type AbstractWithdrawLiquidityTransaction = {
     type: 'withdrawLiquidity';

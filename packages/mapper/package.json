@@ -29,9 +29,9 @@
   },
   "devDependencies": {
     "@cosmjs/amino": "^0.26.2",
+    "@emeris/types": "^0.0.10",
     "@types/jest": "^27.0.2",
     "@types/long": "^4.0.1",
-    "@emeris/types": "^0.0.10",
     "babel-jest": "^27.3.1",
     "jest": "^27.3.1",
     "long": "^4.0.0",
@@ -42,5 +42,8 @@
     "webpack-cli": "^4.9.1"
   },
   "dependencies": {
+    "@clockwork-projects/cosmos-gaia-js": "^6.0.0",
+    "@clockwork-projects/osmosis-labs-osmosis-js": "^6.1.0",
+    "bignumber.js": "^9.0.2"
   }
 }
