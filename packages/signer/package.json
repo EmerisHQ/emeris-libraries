@@ -1,6 +1,6 @@
 {
   "name": "@emeris/signer",
-  "version": "0.0.20",
+  "version": "0.0.22",
   "description": "Emeris Signing Library",
   "author": "Tendermint, Inc <hello@tendermint.com>",
   "homepage": "https://github.com/allinbits/emeris-libraries#readme",
