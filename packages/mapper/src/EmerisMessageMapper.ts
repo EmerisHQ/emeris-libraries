@@ -7,7 +7,7 @@ export class EmerisMessageMapper  {
         this.chain_id = chain_id
     }
     static async fromChainProtocol(chainName:string, protocol?:EmerisDEXInfo.DEX) {
-        const { default: MappingClass }: {default: typeof EmerisMessageMapper} = await import('./implementations/' + chainName + '/'+ (protocol? +protocol:''));        
+        const { default: MappingClass }: {default: typeof EmerisMessageMapper} = await import('./implementations/' + chainName + '/'+ (protocol?protocol:''));        
         return new MappingClass(chainName);
     }
     map(transaction: EmerisTransactions.AbstractTransaction, signing_address: string) {
