@@ -7,7 +7,7 @@ import { AminoMsg } from '@cosmjs/stargate/node_modules/@cosmjs/amino';
 const getHdPath = (chainConfig, account) => {
   let hdPath = chainConfig.HDPath
   if (account.hdPath) {
-    hdPath = chainConfig.HDPath.split('/').slice(0, 2).concat(account.hdPath).join('/')
+    hdPath = chainConfig.HDPath.split('/').slice(0, 3).concat(account.hdPath).join('/')
   }
   return hdPath
 }
@@ -34,6 +34,23 @@ const helpers = {
         chain_name: chainConfig.chainName
       })
       return broadcastable
+    } catch (err) {
+      console.error(err)
+      return undefined
+    }
+  },
+  async getRawSignable(
+    account: EmerisAccount, chainConfig: ChainDetails, messages, fee, memo): Promise<any> {
+    try {
+      const signer = EmerisSigner.withMnemonic(getHdPath(chainConfig, account), account.accountMnemonic)
+      const rawTx = await signer.getRawTX({
+        msgs: messages,
+        fee,
+        memo,
+        chain_name: chainConfig.chainName
+      })
+
+      return rawTx
     } catch (err) {
       console.error(err)
       return undefined

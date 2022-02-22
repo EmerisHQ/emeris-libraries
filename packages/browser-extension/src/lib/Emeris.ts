@@ -17,6 +17,7 @@ import {
   ExtensionRequest,
   ExtensionResponse,
   RoutedInternalRequest,
+  GetRawTransactionRequest,
 } from '@@/types/api';
 import { AbstractTxResult } from '@@/types/transactions'; // TODO
 
@@ -312,6 +313,28 @@ export class Emeris implements IEmeris {
     return await this.storage.hasWallet();
   }
 
+  async getRawTransaction(request: GetRawTransactionRequest): Promise<string> {
+    if (!this.wallet) {
+      throw new Error('No wallet configured');
+    }
+    const chain = config[request.data.chainId];
+    if (!chain) {
+      throw new Error('Chain not supported: ' + request.data.chainId);
+    }
+
+    const selectedAccount = this.wallet.find(({ accountName }) => accountName === this.selectedAccount)
+    const address = await libs[chain.library].getAddress(selectedAccount, chain)
+
+    if (address !== request.data.signingAddress) {
+      throw new Error('The requested signing address is not active in the extension');
+    }
+
+    const mapper = new chain.mapper(chain.chainId)
+    const chainMessages = [].concat(...request.data.messages.map(message => mapper.map(message, address)))
+    const signable = await libs[chain.library].getRawSignable(selectedAccount, chain, chainMessages, request.data.fee, request.data.memo)
+
+    return signable
+  }
   async signTransaction(request: SignTransactionRequest): Promise<any> {
     request.id = uuidv4();
     const { accept, memo } = await this.forwardToPopup(request);

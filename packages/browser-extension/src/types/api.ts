@@ -1,5 +1,6 @@
 import { EmerisAccount } from '.';
 import { TransactionSignRequest } from '../../../types/src/EmerisTransactions';
+import * as Base from '@/types/base';
 
 export interface Request {
   id?: string;
@@ -9,6 +10,16 @@ export interface Request {
 }
 export type ApproveOriginRequest = Request & {
   action: 'enable';
+};
+export type GetRawTransactionRequest = Request & {
+  action: 'getRawTransaction';
+  data: TransactionSignRequest & {
+    fee: {
+      gas: string,
+      amount: Base.Amount[]
+    }
+    memo?: string
+  };
 };
 export type SignTransactionRequest = Request & {
   action: 'signTransaction';
@@ -184,6 +195,7 @@ export type PopupRequest =
   | AddWhitelistedWebsiteRequest
   | AcceptTransactionSignRequest
   | CancelTransactionSignRequest
+  | GetRawTransactionRequest
   | HasWalletRequest;
 export type RoutedExternalRequest = {
   type: 'toEmerisExtension' | 'toPopup';
