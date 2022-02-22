@@ -1,6 +1,6 @@
 {
   "name": "@emeris/signer",
-  "version": "0.0.16",
+  "version": "0.0.23",
   "description": "Emeris Signing Library",
   "author": "Tendermint, Inc <hello@tendermint.com>",
   "homepage": "https://github.com/allinbits/emeris-libraries#readme",
@@ -18,6 +18,7 @@
   },
   "scripts": {
     "watch": "babel src --out-dir lib --extensions \".ts,.tsx\" --watch --source-maps",
+    "prebuild": "tsc",
     "build": "babel src --out-dir lib --extensions \".ts,.tsx\" --source-maps",
     "tsc": "tsc",
     "lint": "eslint 'src/**/*.ts'",
@@ -48,7 +49,9 @@
     "@cosmjs/ledger-amino": "^0.27.1",
     "@cosmjs/proto-signing": "^0.27.1",
     "@cosmjs/stargate": "^0.27.1",
+    "@emeris/types": "0.0.11",
     "@ledgerhq/hw-transport-webhid": "^6.20.0",
+    "@starport/vuex": "^0.1.58",
     "@terra-money/terra.js": "^1.8.10",
     "@types/ledgerhq__hw-transport": "^4.21.4",
     "@types/w3c-web-hid": "^1.0.2",
