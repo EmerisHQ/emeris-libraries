@@ -1,47 +1,68 @@
 <template>
-  <div>Loading...</div>
+  <Loader />
 </template>
 
 <script lang="ts">
 import { useExtensionStore } from '@@/store';
 import { GlobalActionTypes } from '@@/store/extension/action-types';
 import { GlobalGetterTypes } from '@@/store/extension/getter-types';
-import { ExtensionRequest } from '@@/types';
+import { AccountCreateStates, ExtensionRequest } from '@@/types';
 import { defineComponent, computed } from 'vue';
 import TransportWebUSB from '@ledgerhq/hw-transport-webusb';
+import Loader from '@@/components/Loader.vue';
 
 export default defineComponent({
   name: 'EmerisApp',
+  components: {
+    Loader,
+  },
   methods: {
     async route() {
       const pending = await this.$store.dispatch(GlobalActionTypes.GET_PENDING);
       const hasWallet = await this.$store.dispatch(GlobalActionTypes.HAS_WALLET); // checking if the password was set
       const wallet = await this.$store.dispatch(GlobalActionTypes.GET_WALLET); // if able to load the wallet, the extension is unlocked
 
+      // if we are in a popup and there are no more pending requests, close
+      if (pending.length === 0 && location.search !== '?browser=true') {
+        window.close();
+      }
+
       // if the use has a password set but the extension is not unlocked
       if (hasWallet && !wallet) {
         this.$router.push('/welcomeBack');
+        return
       }
       // if there are pending requests show those first
       else if (pending.length > 0) {
         switch (pending[0].action) {
           case 'enable':
-            this.$router.push({ path: '/whitelist', query: { url: pending[0].data.origin } });
+            this.$router.push({ path: '/whitelist' });
+            break;
+          case 'signTransaction':
+            this.$router.push({ path: '/transaction/review' });
             break;
           default:
             this.$router.push('/portfolio');
         }
+        return;
       }
       // if the user has not yet created an account
       else if (!hasWallet || (wallet && wallet.length === 0)) {
         this.$router.push('/welcome');
-        // extension is ready to use
-      } else if (wallet) {
-        this.$store.dispatch(GlobalActionTypes.LOAD_SESSION_DATA);
-        this.$router.push('/portfolio');
-      } else {
-        this.error = true;
+        return;
       }
+
+      await this.$store.dispatch(GlobalActionTypes.LOAD_SESSION_DATA);
+
+      // return to account creation
+      const newAccount = await this.$store.dispatch(GlobalActionTypes.GET_NEW_ACCOUNT);
+      if (newAccount) {
+        this.$router.push('/accountCreationResume');
+        return;
+      }
+
+      // default case go to portfolio
+      this.$router.push('/portfolio');
     },
   },
   mounted() {

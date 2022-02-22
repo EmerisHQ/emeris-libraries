@@ -1,5 +1,5 @@
 import CosmosAminoMessageMapper from "./cosmos_amino";
 
-export default  {
+export default {
     CosmosAminoMessageMapper
 }

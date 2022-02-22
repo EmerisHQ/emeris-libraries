@@ -3,7 +3,7 @@ import { EmerisTransactions } from "@emeris/types";
 export class EmerisMessageMapper {
     public chain_id: string;
 
-    constructor(chain_id:string) {
+    constructor(chain_id: string) {
         this.chain_id = chain_id
     }
 

@@ -35,6 +35,7 @@ import SupportWarning from '../views/SupportWarning.vue';
 import ReceiveDenom from '../views/ReceiveDenom.vue';
 import ReceiveQR from '../views/ReceiveQR.vue';
 import Whitelist from '../views/Whitelist.vue';
+import TransactionReview from '../views/TransactionReview.vue';
 
 const routes: Array<RouteRecordRaw> = [
   {
@@ -219,6 +220,11 @@ const routes: Array<RouteRecordRaw> = [
     path: '/whitelist',
     name: 'Whitelist',
     component: Whitelist,
+  },
+  {
+    path: '/transaction/review',
+    name: 'Transaction Review',
+    component: TransactionReview,
   },
 ];
 

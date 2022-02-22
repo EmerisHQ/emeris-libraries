@@ -1,69 +1,59 @@
 import { EmerisAccount } from '.';
 import { TransactionSignRequest } from '../../../types/src/EmerisTransactions';
+import * as Base from '@/types/base';
 
 export interface Request {
   id?: string;
   action?: string;
+  origin?: string; // set by Emeris
   data?: Record<string, unknown>;
 }
 export type ApproveOriginRequest = Request & {
   action: 'enable';
-  data: {
-    origin?: string;
+};
+export type GetRawTransactionRequest = Request & {
+  action: 'getRawTransaction';
+  data: TransactionSignRequest & {
+    fee: {
+      gas: string,
+      amount: Base.Amount[]
+    }
+    memo?: string
   };
 };
 export type SignTransactionRequest = Request & {
   action: 'signTransaction';
-  data: {
-    tx: TransactionSignRequest;
-    chainId: string;
-    origin?: string;
-  };
+  data: TransactionSignRequest;
 };
 export type SignAndBroadcastTransactionRequest = Request & {
   action: 'signAndBroadcastTransaction';
   data: {
     tx: TransactionSignRequest;
-    origin?: string;
   };
 };
 export type GetAddressRequest = Request & {
   action: 'getAddress';
   data: {
     chainId: string;
-    origin?: string;
   };
 };
 export type GetPublicKeyRequest = Request & {
   action: 'getPublicKey';
   data: {
     chainId: string;
-    origin?: string;
   };
 };
 export type IsHWWalletRequest = Request & {
   action: 'isHWWallet';
-  data: {
-    origin?: string;
-  };
 };
 export type SupportedChainsRequest = Request & {
   action: 'supportedChains';
-  data: {
-    origin?: string;
-  };
 };
 export type GetAccountNameRequest = Request & {
   action: 'getAccountName';
-  data: {
-    origin?: string;
-  };
 };
 export type HasWalletRequest = Request & {
   action: 'hasWallet';
-  data: {
-    origin?: string;
-  };
 };
 export type GetPendingRequest = Request & {
   action: 'getPending';
@@ -157,6 +147,18 @@ export type AddWhitelistedWebsiteRequest = Request & {
     website: string;
   };
 };
+export type AcceptTransactionSignRequest = Request & {
+  action: 'acceptTransaction';
+  data: {
+    id: string;
+  };
+};
+export type CancelTransactionSignRequest = Request & {
+  action: 'cancelTransaction';
+  data: {
+    id: string;
+  };
+};
 export type SetResponseRequest = Request & {
   action: 'setResponse';
   data: {
@@ -191,6 +193,9 @@ export type PopupRequest =
   | GetWhitelistedWebsiteRequest
   | RemoveWhitelistedWebsiteRequest
   | AddWhitelistedWebsiteRequest
+  | AcceptTransactionSignRequest
+  | CancelTransactionSignRequest
+  | GetRawTransactionRequest
   | HasWalletRequest;
 export type RoutedExternalRequest = {
   type: 'toEmerisExtension' | 'toPopup';

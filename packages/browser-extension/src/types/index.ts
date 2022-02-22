@@ -1,3 +1,4 @@
+import { EmerisMessageMapper } from '../../../mapper/src/base';
 import { ClientLibrary } from './libraries';
 
 export type EmerisEncryptedWallet = {
@@ -13,6 +14,7 @@ export type EmerisAccount = {
   accountMnemonic: string;
   isLedger: boolean;
   setupState: AccountCreateStates;
+  hdPath?: [account: string, change: string, addressIndex: string] // TODO force setting or default later in code?
 };
 export type EmerisWallet = EmerisAccount[];
 
@@ -21,6 +23,7 @@ export type EmerisPermission = {
 };
 export type ExtensionRequest = {
   id?: string;
+  origin: string;
   [key: string]: unknown;
 };
 export type ExtensionResponse = {
@@ -44,4 +47,8 @@ export type ChainDetails = {
   library: ClientLibrary;
   HDPath?: string;
   prefix?: string;
+  mapper: typeof EmerisMessageMapper;
+  chainName: string;
+  chainId: string;
+  rpcEndpoint: string;
 };

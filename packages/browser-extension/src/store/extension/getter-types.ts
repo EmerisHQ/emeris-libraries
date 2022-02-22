@@ -4,7 +4,6 @@ export enum GetterTypes {
   getLastAccount = 'getLastAccount',
   getAccount = 'getAccount',
   getAllBalances = 'getAllBalances',
-  getKeyHash = 'getKeyHash',
 }
 export enum GlobalGetterTypes {
   getPending = 'extension/getPending',
@@ -12,5 +11,4 @@ export enum GlobalGetterTypes {
   getLastAccount = 'extension/getLastAccount',
   getAccount = 'extension/getAccount',
   getAllBalances = 'extension/getAllBalances',
-  getKeyHash = 'extension/getKeyHash',
 }

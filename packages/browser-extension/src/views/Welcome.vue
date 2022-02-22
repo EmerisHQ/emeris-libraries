@@ -1,8 +1,7 @@
 <template>
   <div class="page">
     <img :src="require(`@@/assets/WelcomeBG.png`)" class="background" />
-    <img class="wordmark" :src="require(`@@/assets/EmerisWordmark.svg`)" />
-    <h1>Experience the power of cross-chain DeFi</h1>
+    <img class="wordmark" :src="require(`@@/assets/EmerisWordmark.svg`)" style="margin-top: 48px" />
 
     <div
       :style="{
@@ -10,6 +9,9 @@
       }"
     >
       <AccountCreateSection />
+      <div style="text-align: center; margin-top: 16px; font-size: 13px">
+        Need help? Visit <a href="" @click="open('https://support.emeris.com/')">Emeris Support</a>
+      </div>
     </div>
   </div>
 </template>
@@ -26,6 +28,9 @@ export default defineComponent({
   methods: {
     goTo(route) {
       this.$router.push(route);
+    },
+    open(url) {
+      window.open(url);
     },
   },
 });

@@ -17,10 +17,12 @@ import {
   ExtensionRequest,
   ExtensionResponse,
   RoutedInternalRequest,
+  GetRawTransactionRequest,
 } from '@@/types/api';
-import { AbstractTxResult } from '@@/types/transactions';
+import { AbstractTxResult } from '@@/types/transactions'; // TODO
+
 import { keyHashfromAddress } from '@/utils/basic';
-import { Secp256k1HdWallet } from '@cosmjs/amino';
+import chainConfig from '../chain-config';
 export class Emeris implements IEmeris {
   public loaded: boolean;
   private storage: EmerisStorage;
@@ -83,7 +85,7 @@ export class Emeris implements IEmeris {
   async launchPopup(): Promise<number> {
     return (
       await browser.windows.create({
-        width: 400,
+        width: 375,
         height: 600,
         type: 'popup',
         url: browser.runtime.getURL('/popup.html'),
@@ -132,6 +134,10 @@ export class Emeris implements IEmeris {
         }
         break;
       case 'createAccount':
+        // guard
+        if (!message.data.data.account.accountMnemonic) {
+          throw new Error("Account has no mnemonic")
+        }
         await this.storage.saveAccount(message.data.data.account, this.password);
         if (message.data.data.account.isLedger) {
           try {
@@ -206,31 +212,20 @@ export class Emeris implements IEmeris {
       case 'hasWallet':
         return await this.hasWallet();
       case 'setResponse':
-        request = this.queuedRequests.get(message.data.data.id);
-        if (!request) {
-          return;
-        }
-        request.resolver(message.data.data);
-        this.queuedRequests.delete(message.data.data.id);
-        this.pending.splice(
-          this.pending.findIndex((req) => req.id == message.data.data.id),
-          1,
-        );
-        browser.runtime.sendMessage({ type: 'toPopup', data: { action: 'update' } });
-        return true;
+        return this.setResponse(message.data.data.id, message.data.data)
       case 'extensionReset':
         this.storage.extensionReset();
         return;
       case 'removeWhitelistedWebsite':
-        this.storage.deletePermission(message.data.data.website);
+        this.storage.deleteWhitelistedWebsite(message.data.data.website);
         return;
       case 'getWhitelistedWebsite':
-        return this.storage.getPermissions();
+        return this.storage.getWhitelistedWebsites();
       case 'addWhitelistedWebsite':
         // prevent dupes
-        const permissions = await this.storage.getPermissions();
-        if (permissions.find((permission) => permission.origin === message.data.data.website)) return true;
-        return this.storage.addPermission(message.data.data.website);
+        const whitelistedWebsites = await this.storage.getWhitelistedWebsites();
+        if (whitelistedWebsites.find((whitelistedWebsite) => whitelistedWebsite.origin === message.data.data.website)) return true;
+        return this.storage.addWhitelistedWebsite(message.data.data.website);
     }
   }
   async ensurePopup(): Promise<void> {
@@ -264,25 +259,24 @@ export class Emeris implements IEmeris {
     if (!account) {
       throw new Error('No account selected');
     }
-    const mnemonic = account.accountMnemonic;
-    return await libs[chain.library].getAddress(mnemonic, chain);
+
+    return await libs[chain.library].getAddress(account, chain);
   }
   // function limits the data that we return to the view layers to not expose accidentially data
   async getDisplayAccounts() {
     if (!this.wallet) return undefined;
-    // TODO add hd paths to account and use here
     return await Promise.all(
-      this.wallet.map(async ({ accountName, accountMnemonic, setupState }) => {
-        const hdWallet = await Secp256k1HdWallet.fromMnemonic(
-          accountMnemonic /* config for hdPath and prefix go here */,
-        );
-        const [{ address }] = await hdWallet.getAccounts();
-        const keyHash = keyHashfromAddress(address);
-
+      this.wallet.map(async (account) => {
         return {
-          accountName,
-          keyHash,
-          setupState,
+          accountName: account.accountName,
+          keyHashes:
+            // wrapping in a Set to make all values unique
+            [...new Set(await Promise.all(Object.values(chainConfig).map(async chain => {
+              const address = await libs[chain.library].getAddress(account, chain)
+              const keyHash = keyHashfromAddress(address);
+              return keyHash
+            })))],
+          setupState: account.setupState,
         };
       }),
     );
@@ -296,11 +290,15 @@ export class Emeris implements IEmeris {
     if (!chain) {
       throw new Error('Chain not supported: ' + req.data.chainId);
     }
-    const mnemonic = this.getAccount().accountMnemonic;
-    return await libs[chain.library].getPublicKey(mnemonic, chain);
+    const account = this.getAccount();
+    if (!account) {
+      throw new Error('No account selected');
+    }
+
+    return await libs[chain.library].getPublicKey(account, chain);
   }
   async isPermitted(origin: string): Promise<boolean> {
-    return await this.storage.isPermitted(origin);
+    return await this.storage.isWhitelistedWebsite(origin);
   }
   async isHWWallet(_req: IsHWWalletRequest): Promise<boolean> {
     return false;
@@ -315,21 +313,80 @@ export class Emeris implements IEmeris {
     return await this.storage.hasWallet();
   }
 
-  async signTransaction(request: SignTransactionRequest): Promise<Uint8Array> {
-    request.id = uuidv4();
-    return (await this.forwardToPopup(request)).data as Uint8Array;
+  async getRawTransaction(request: GetRawTransactionRequest): Promise<string> {
+    if (!this.wallet) {
+      throw new Error('No wallet configured');
+    }
+    const chain = config[request.data.chainId];
+    if (!chain) {
+      throw new Error('Chain not supported: ' + request.data.chainId);
+    }
+
+    const selectedAccount = this.wallet.find(({ accountName }) => accountName === this.selectedAccount)
+    const address = await libs[chain.library].getAddress(selectedAccount, chain)
+
+    if (address !== request.data.signingAddress) {
+      throw new Error('The requested signing address is not active in the extension');
+    }
+
+    const mapper = new chain.mapper(chain.chainId)
+    const chainMessages = [].concat(...request.data.messages.map(message => mapper.map(message, address)))
+    const signable = await libs[chain.library].getRawSignable(selectedAccount, chain, chainMessages, request.data.fee, request.data.memo)
+
+    return signable
   }
-  async signAndBroadcastTransaction(request: SignAndBroadcastTransactionRequest): Promise<AbstractTxResult> {
+  async signTransaction(request: SignTransactionRequest): Promise<any> {
     request.id = uuidv4();
-    return (await this.forwardToPopup(request)).data as AbstractTxResult;
+    const { accept, memo } = await this.forwardToPopup(request);
+    if (accept) {
+      if (!this.wallet) {
+        throw new Error('No wallet configured');
+      }
+      const chain = config[request.data.chainId];
+      if (!chain) {
+        throw new Error('Chain not supported: ' + request.data.chainId);
+      }
+
+      const selectedAccount = this.wallet.find(({ accountName }) => accountName === this.selectedAccount)
+      const address = await libs[chain.library].getAddress(selectedAccount, chain)
+
+      if (address !== request.data.signingAddress) {
+        throw new Error('The requested signing address is not active in the extension');
+      }
+
+      const mapper = new chain.mapper(chain.chainId)
+      const chainMessages = [].concat(...request.data.messages.map(message => mapper.map(message, address)))
+      const broadcastable = await libs[chain.library].sign(selectedAccount, chain, chainMessages, request.data.fee, <string>memo)
+
+      return broadcastable
+    }
+    return undefined
   }
+  // async signAndBroadcastTransaction(request: SignAndBroadcastTransactionRequest): Promise<AbstractTxResult> {
+  //   request.id = uuidv4();
+  //   return (await this.forwardToPopup(request)).data as AbstractTxResult;
+  // }
   async enable(request: ApproveOriginRequest): Promise<boolean> {
     // TODO purge this queue and replace with a sensible data struct to we can check if a request is a dupe
     request.id = uuidv4();
     const enabled = (await this.forwardToPopup(request)).data as boolean;
     if (enabled) {
-      await this.storage.addPermission(request.data.origin);
+      await this.storage.addWhitelistedWebsite(request.origin);
     }
     return enabled;
+  }
+  setResponse(id: string, response: any) {
+    const request = this.queuedRequests.get(id);
+    if (!request) {
+      return;
+    }
+    request.resolver(response);
+    this.queuedRequests.delete(id);
+    this.pending.splice(
+      this.pending.findIndex((req) => req.id == id),
+      1,
+    );
+    browser.runtime.sendMessage({ type: 'toPopup', data: { action: 'update' } });
+    return true;
   }
 }

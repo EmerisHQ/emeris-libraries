@@ -7,7 +7,7 @@ function injectScript(file: string) {
   container.insertBefore(scriptElement, container.children[0]);
   console.log('Emeris Extension loaded');
 }
-const injected = browser.runtime.getURL('/js/inject-emeris.js');
+const injected = browser.runtime.getURL('/inject-emeris.js');
 injectScript(injected);
 
 const sendMessage = async (msg: unknown) => {
@@ -32,7 +32,7 @@ window.addEventListener('message', async (event: MessageEvent) => {
   if (!validateMsg(event.data.data)) {
     return;
   }
-  event.data.data.data.origin = event.origin;
+  event.data.data.origin = event.origin;
   const response = await sendMessage(event.data.data);
 
   window.postMessage({ type: 'fromEmerisExtension', data: response }, event.origin);

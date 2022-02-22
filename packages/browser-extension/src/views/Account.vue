@@ -1,6 +1,6 @@
 <template>
   <div class="page">
-    <Header title="">
+    <Header title="" backTo="/portfolio">
       <template v-slot:backButton>
         <!-- TODO add icon to Demeris -->
         <img :src="require('@@/assets/CoqIcon.svg')" @click="$router.push('/settings')" />
@@ -12,8 +12,8 @@
       :src="require('@@/assets/Avatar.svg')"
     />
     <span
-      class="secondary-text account-selector"
-      style="text-align: center; margin-bottom: 32px; cursor: pointer"
+      class="account-selector"
+      style="text-align: center; margin-bottom: 32px; cursor: pointer; font-size: 21px"
       @click="$router.push('/accounts')"
       >{{ account.accountName }} <Icon name="ChevronRightIcon" :icon-size="1"
     /></span>

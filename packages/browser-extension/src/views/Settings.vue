@@ -1,27 +1,38 @@
 <template>
   <div class="page">
-    <Header title="" />
+    <Header title="" backTo="/account" />
     <div class="menu-item" @click="$router.push('/backup')">
       Back Up
       <Icon v-if="!backedUp" name="WarningTriangleIcon" :icon-size="1" class="text-negative" />
     </div>
-    <div class="menu-item" @click="$router.push('/whitelisted')">Manage connected sites</div>
-    <div class="menu-item" @click="$router.push('/security')">Security</div>
+    <div class="menu-item" @click="$router.push('/whitelisted')">
+      Manage connected sites <Icon name="ChevronRightIcon" :icon-size="1" />
+    </div>
+    <div class="menu-item" @click="$router.push('/security')">
+      Security <Icon name="ChevronRightIcon" :icon-size="1" />
+    </div>
     <!-- <div class="menu-item">Currency</div> -->
     <!-- <div class="menu-item">Networks</div> -->
     <!-- <div class="menu-item">Theme</div> -->
 
-    <div class="bottom secondary-text">
-      <div class="menu-item" @click="$router.push({ path: '/support', query: { url: 'https://t.me/EmerisHQ' } })">
-        Join the telegram community
+    <div class="bottom secondary-text" style="width: calc(100% - 48px)">
+      <hr style="opacity: 0.14; margin-bottom: 24px" />
+      <div
+        class="menu-item"
+        @click="$router.push({ path: '/support', query: { url: 'https://t.me/EmerisHQ', caption: 'Telegram' } })"
+      >
+        Join the Telegram community
       </div>
       <div
         class="menu-item"
-        @click="$router.push({ path: '/support', query: { url: 'https://twitter.com/emerishq' } })"
+        @click="$router.push({ path: '/support', query: { url: 'https://twitter.com/emerishq', caption: 'Twitter' } })"
       >
         Twitter
       </div>
-      <div class="menu-item" @click="$router.push({ path: '/support', query: { url: 'https://emeris.com/support' } })">
+      <div
+        class="menu-item"
+        @click="$router.push({ path: '/support', query: { url: 'https://emeris.com/support', caption: 'Support' } })"
+      >
         Support
       </div>
     </div>
