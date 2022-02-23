@@ -29,23 +29,10 @@ jobs:
             ./packages/mapper/yarn.lock
             ./packages/browser-extension/demeris/package-lock.json
 
-      - name: Build and link local packages
-        run: |
-          cd ../signer
-          yarn install --frozen-lockfile
-          npm run build
-          yarn link
-          cd ../mapper
-          yarn install --frozen-lockfile
-          cd ../browser-extension
-          yarn link @emeris/signer
-
-      - name: Install extension packages
-        run: yarn install --frozen-lockfile
-
       - name: build artifacts
         run: |
           cd ../..
+          npx lerna bootstrap
           npx lerna run build
         env:
           NODE_OPTIONS: --max_old_space_size=4048
