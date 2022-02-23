@@ -25,7 +25,7 @@
 </template>
 
 <script>
-import { TransferData } from '@@/../../types/lib/EmerisTransactions';
+import { TransferData } from 'EmerisTransactions';
 import AmountDisplay from '@/components/common/AmountDisplay.vue';
 import CircleSymbol from '@/components/common/CircleSymbol.vue';
 import Address from '@@/components/Address.vue';
