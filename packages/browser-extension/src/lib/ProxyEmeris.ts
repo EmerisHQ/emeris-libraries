@@ -1,5 +1,5 @@
 import { IEmeris } from '@@/types/emeris';
-import * as Base from '@@/../../types/lib/EmerisBase';
+import { EmerisBase as Base} from '@emeris/types';
 import {
   ExtensionRequest,
   ExtensionResponse,
@@ -17,7 +17,8 @@ import {
 } from '@@/types/api';
 import { v4 as uuidv4 } from 'uuid';
 import { AbstractTx, AbstractTxResult } from '@@/types/transactions';
-import { Transaction, TransactionData } from 'EmerisTransactions';
+import { EmerisTransactions } from '@emeris/types';
+
 export class ProxyEmeris implements IEmeris {
   loaded: boolean;
   private queuedRequests: Map<
@@ -119,16 +120,16 @@ export class ProxyEmeris implements IEmeris {
     chainId,
     signingAddress,
     fee,
-    memo
+    memo,
   }: {
-    signingAddress: string,
-    chainId: string,
-    messages: Transaction<TransactionData>[],
+    signingAddress: string;
+    chainId: string;
+    messages: EmerisTransactions.Transaction<EmerisTransactions.TransactionData>[];
     fee: {
-      gas: string,
-      amount: Base.Amount[]
-    }
-    memo?: string
+      gas: string;
+      amount: Base.Amount[];
+    };
+    memo?: string;
   }): Promise<Uint8Array> {
     const request = {
       action: 'signTransaction',
@@ -136,7 +137,7 @@ export class ProxyEmeris implements IEmeris {
     };
     const response = await this.sendRequest(request as SignTransactionRequest);
     if (!response.data) {
-      throw new Error('Signing was not successful')
+      throw new Error('Signing was not successful');
     }
     return response.data as Uint8Array;
   }
