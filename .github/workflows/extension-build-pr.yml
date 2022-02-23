@@ -44,7 +44,9 @@ jobs:
         run: yarn install --frozen-lockfile
 
       - name: build artifacts
-        run: npm run build
+        run: |
+          cd ../..
+          npx lerna run build
         env:
           NODE_OPTIONS: --max_old_space_size=4048
           # Put in secrets
