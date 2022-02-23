@@ -44,6 +44,7 @@
   "dependencies": {
     "@clockwork-projects/cosmos-gaia-js": "^6.0.0",
     "@clockwork-projects/osmosis-labs-osmosis-js": "^6.1.0",
+    "@cosmjs/amino": "^0.27.1",
     "@cosmjs/crypto": "^0.27.1",
     "@cosmjs/launchpad": "^0.27.1",
     "@cosmjs/ledger-amino": "^0.27.1",
