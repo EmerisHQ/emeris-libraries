@@ -13,6 +13,7 @@ import {
   ApproveOriginRequest,
   SignAndBroadcastTransactionRequest,
   GetAccountNameRequest,
+  GetRawTransactionRequest,
 } from '@@/types/api';
 import { v4 as uuidv4 } from 'uuid';
 import { AbstractTx, AbstractTxResult } from '@@/types/transactions';
@@ -113,7 +114,6 @@ export class ProxyEmeris implements IEmeris {
     return response.data as boolean;
   }
 
-  // TODO resolve type errors
   async signTransaction({
     messages,
     chainId,

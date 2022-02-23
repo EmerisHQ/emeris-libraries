@@ -5,6 +5,7 @@ import { RootState } from '..';
 import { AccountCreateStates, EmerisAccount, EmerisWallet, ExtensionRequest } from '@@/types/index';
 import { MutationTypes } from './mutation-types';
 import { GlobalDemerisActionTypes } from '@/store';
+import { Transaction, TransactionData } from 'EmerisTransactions';
 
 type Namespaced<T, N extends string> = {
   [P in keyof T & string as `${N}/${P}`]: T[P];
@@ -260,6 +261,29 @@ export const actions: ActionTree<State, RootState> & Actions = {
   },
   async [ActionTypes.CANCEL_TRANSACTION]({ }, { id }) {
     await respond(id, { accept: false })
+  },
+  async [ActionTypes.GET_RAW_TRANSACTION]({ }, {
+    messages,
+    chainId,
+    signingAddress,
+    gas,
+    fees,
+    memo }) {
+    return await browser.runtime.sendMessage({
+      type: 'fromPopup',
+      data: {
+        action: 'getRawTransaction', data: {
+          messages,
+          chainId,
+          signingAddress,
+          fee: {
+            gas,
+            amount: fees
+          },
+          memo
+        }
+      },
+    });
   },
   [ActionTypes.SET_NEW_ACCOUNT]({ commit }, account: EmerisAccount & { route: string }) {
     commit(MutationTypes.SET_NEW_ACCOUNT, account)

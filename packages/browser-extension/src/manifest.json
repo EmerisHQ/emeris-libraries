@@ -27,7 +27,7 @@
   "content_scripts": [
     {
       "js": [
-        "js/content-script.js"
+        "content-script.js"
       ],
       "matches": [
         "*://*/*"
@@ -35,7 +35,7 @@
     }
   ],
   "web_accessible_resources": [
-    "/js/inject-emeris.js"
+    "/inject-emeris.js"
   ],
   "browser_action": {
     "browser_style": true,

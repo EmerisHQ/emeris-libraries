@@ -12,8 +12,8 @@
       :src="require('@@/assets/Avatar.svg')"
     />
     <span
-      class="secondary-text account-selector"
-      style="text-align: center; margin-bottom: 32px; cursor: pointer"
+      class="account-selector"
+      style="text-align: center; margin-bottom: 32px; cursor: pointer; font-size: 21px"
       @click="$router.push('/accounts')"
       >{{ account.accountName }} <Icon name="ChevronRightIcon" :icon-size="1"
     /></span>

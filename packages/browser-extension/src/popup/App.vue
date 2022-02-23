@@ -57,7 +57,7 @@ export default defineComponent({
         }
         // init starport store
         await store.dispatch('common/env/config', {
-          apiNode: process.env.VUE_APP_EMERIS_PROD_LIQUIDITY_ENDPOINT || 'https://dev.demeris.io/v1/liquidity',
+          apiNode: process.env.VUE_APP_EMERIS_PROD_LIQUIDITY_ENDPOINT || 'https://api.emeris.com/v1/liquidity',
           rpcNode: null,
           wsNode: null,
           chainId: 'cosmos-hub',
