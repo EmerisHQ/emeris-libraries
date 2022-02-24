@@ -74,8 +74,8 @@ export type DelegatorRewardsResponse = {
 export type SeqNumber = {
   chain_name: string;
   address: string;
-  sequence_number: string;
-  account_number: string;
+  sequence_number: number;
+  account_number: number;
 };
 export type Numbers = Array<SeqNumber>;
 export type NumbersResponse = {

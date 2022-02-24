@@ -39,9 +39,7 @@ export default class CosmosSigningClient extends SigningStargateClient implement
     const pubkey = encodePubkey(encodeSecp256k1Pubkey(accountFromSigner.pubkey))
     const signMode = SignMode.SIGN_MODE_LEGACY_AMINO_JSON
     const chain_id = (await getChain(this.chain_name)).node_info.chain_id
-    const { sequence_number, account_number } = (await getNumbers(keyHash(signerAddress))).find(
-      (x) => x.chain_name == this.chain_name,
-    )
+    const { sequence_number, account_number } = (await getNumbers(this.chain_name, keyHash(signerAddress)))
     return { aminoTypes, signerAddress, pubkey, signMode, chain_id, sequence_number, account_number }
   }
   private mapMessages(messages: readonly AminoMsg[] | readonly EncodeObject[]): {

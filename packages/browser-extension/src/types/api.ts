@@ -1,5 +1,5 @@
 import { EmerisAccount } from '.';
-import { TransactionSignRequest } from '../../../types/src/EmerisTransactions';
+import { TransactionSignRequest } from 'EmerisTransactions';
 import * as Base from '@/types/base';
 
 export interface Request {
