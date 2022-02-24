@@ -12,24 +12,34 @@ jobs:
     steps:
       - name: Check out repository code
         uses: actions/checkout@v2
-      - uses: actions/setup-node@v2
-        with:
-          node-version: '14'
-          cache: 'npm'
-          cache-dependency-path: |
-            packages/browser-extension/package-lock.json
-            packages/mapper/package-lock.json
-      - uses: webfactory/ssh-agent@v0.5.4
+
+      - name: Add checkout key for demeris repo
+        uses: webfactory/ssh-agent@v0.5.4
         with:
           ssh-private-key: ${{ secrets.DEMERIS_SSH_PRIVATE_KEY }}
-      - name: add deps for mapper
-        run: |
-          cd ../mapper
-          npm install
-      - run: npm install
       - run: git submodule init && git submodule update
+          
+      - uses: actions/setup-node@v2
+        with:
+          node-version: '16'
+          cache: 'yarn'
+          cache-dependency-path: |
+            ./packages/browser-extension/yarn.lock
+            ./packages/signer/yarn.lock
+            ./packages/mapper/yarn.lock
+            ./packages/browser-extension/demeris/package-lock.json
+
       - name: build artifacts
-        run: npm run build
+        run: |
+          cd ../..
+          npx lerna bootstrap
+          npx lerna run build
+        env:
+          NODE_OPTIONS: --max_old_space_size=4048
+          # Put in secrets
+          VUE_APP_EMERIS_PROD_ENDPOINT: https://api.emeris.com/v1
+          VUE_APP_EMERIS_PROD_LIQUIDITY_ENDPOINT: https://api.emeris.com/v1/liquidity
+
       - uses: thedoctor0/zip-release@master
         with:
           type: 'zip'

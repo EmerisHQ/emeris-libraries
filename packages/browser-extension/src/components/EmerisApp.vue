@@ -1,5 +1,5 @@
 <template>
-  <div>Loading...</div>
+  <Loader />
 </template>
 
 <script lang="ts">
@@ -9,9 +9,13 @@ import { GlobalGetterTypes } from '@@/store/extension/getter-types';
 import { AccountCreateStates, ExtensionRequest } from '@@/types';
 import { defineComponent, computed } from 'vue';
 import TransportWebUSB from '@ledgerhq/hw-transport-webusb';
+import Loader from '@@/components/Loader.vue';
 
 export default defineComponent({
   name: 'EmerisApp',
+  components: {
+    Loader,
+  },
   methods: {
     async route() {
       const pending = await this.$store.dispatch(GlobalActionTypes.GET_PENDING);
@@ -26,6 +30,7 @@ export default defineComponent({
       // if the use has a password set but the extension is not unlocked
       if (hasWallet && !wallet) {
         this.$router.push('/welcomeBack');
+        return
       }
       // if there are pending requests show those first
       else if (pending.length > 0) {

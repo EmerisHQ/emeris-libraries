@@ -16,7 +16,6 @@
     "baseUrl": ".",
     "typeRoots": [
       "./node_modules/@types",
-      "./node_modules/@emeris/types"
     ],
     "paths": {
       "@@/*": [

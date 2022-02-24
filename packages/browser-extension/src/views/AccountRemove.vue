@@ -1,6 +1,8 @@
 <template>
+  <Loader v-if="!account" />
   <ConfirmationScreen
-    :title="`Are you sure hat you want to remove ${wallet ? account.accountName : '...loading...'}?`"
+    v-else
+    :title="`Are you sure that you want to remove ${account.accountName}?`"
     subtitle="If you have not backed up this wallet, you will lose access entirely"
   >
     <div
@@ -24,6 +26,7 @@ import ConfirmationScreen from '@@/views/ConfirmationScreen.vue';
 import { mapState } from 'vuex';
 import { RootState } from '@@/store';
 import { GlobalActionTypes } from '@@/store/extension/action-types';
+import Loader from '@@/components/Loader.vue';
 
 export default defineComponent({
   name: 'Account Remove',
@@ -41,6 +44,7 @@ export default defineComponent({
   components: {
     Button,
     ConfirmationScreen,
+    Loader,
   },
   methods: {
     async removeWallet() {
