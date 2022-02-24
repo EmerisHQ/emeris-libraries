@@ -1,4 +1,4 @@
-import { EmerisMessageMapper } from '../../../mapper/src/base';
+import  EmerisMessageMapper  from '@emeris/mapper';
 import { ClientLibrary } from './libraries';
 
 export type EmerisEncryptedWallet = {

@@ -35,10 +35,10 @@ export async function getCosmosClient(
     case 'microtick':
     case 'emoney':
     case 'terra':
-      return new CosmosSigningClient(undefined, signer, { cosmosRegistry }, chain_name)
+      return new CosmosSigningClient(undefined, signer, { registry: cosmosRegistry }, chain_name)
     case 'cosmos-hub':
-      return new GravitySigningClient(undefined, signer, { gravityRegistry }, chain_name)
+      return new GravitySigningClient(undefined, signer, { registry: gravityRegistry }, chain_name)
     case 'osmosis':
-      return new OsmosisSigningClient(undefined, signer, { osmosisRegistry }, chain_name)
+      return new OsmosisSigningClient(undefined, signer, { registry: osmosisRegistry }, chain_name)
   }
 }

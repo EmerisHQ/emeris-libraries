@@ -2,6 +2,12 @@ import { Static, Type } from "@sinclair/typebox";
 import { Denom } from "./EmerisDEXInfo";
 import { Transaction, TransactionData } from "./EmerisTransactions";
 
+export enum GasPriceLevel {
+	Low = 'low',
+	Average = 'average',
+	High = 'high'
+}
+
 export type BaseFee = {
 	denom: Denom;
 	amount: string;
@@ -23,12 +29,13 @@ const Coin = Type.Strict(Type.Object({
 }))
 
 export const FeesRequest = Type.Strict(Type.Object({
-	tx: Type.Any(),
+	gasPriceLevel: Type.Enum(GasPriceLevel),
+	tx: Type.Any()
 }));
 export const FeesResponse = Type.Strict(Type.Object({
-	GasWanted: Type.String(),
-	GasUsed: Type.String(),
-	Fees: Type.Array(Coin)
+	gasUsed: Type.String(),
+	fee: Type.Array(Coin),
+	totalUSD: Type.Number()
 }));
 export type FeesRequest = Static<typeof FeesRequest>
 export type FeesResponse = Static<typeof FeesResponse>

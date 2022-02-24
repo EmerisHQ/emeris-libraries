@@ -1,3 +1,4 @@
+import { EmerisDEXInfo } from '.';
 import * as API from './EmerisAPI';
 import * as Base from './EmerisBase';
 import { BaseFee } from './EmerisFees';
@@ -38,9 +39,9 @@ export type TransferData = {
 export type SwapData = {
     from: Base.Amount;
     to: Base.Amount;
-    pool: Pool;
+    poolId: string;
+    protocol: string;
     orderPrice: number;
-    offerFee: number;
 };
 export type AddLiquidityData = {
     coinA: Base.Amount;
@@ -76,3 +77,81 @@ export type TransactionSignRequest = {
     },
     memo: string
 };
+export type AbstractAmount = {
+    denom: string;
+    base_denom?: string;
+    amount: string;
+}
+export type AbstractFee = {
+    amount: AbstractAmount;
+    gas: number;
+}
+export type AbstractTransferTransactionData = {
+    amount: AbstractAmount;
+    fromAddress: string;
+    toAddress: string;
+}
+export type AbstractTransferTransaction = {
+    type: 'transfer';
+    protocol?: EmerisDEXInfo.DEX;
+    data: AbstractTransferTransactionData;
+}
+export type AbstractIBCTransferTransactionData = {
+    amount: AbstractAmount;
+    fromAddress: string;
+    toAddress: string;
+    toChain:string;
+    through: string;
+}
+export type AbstractIBCTransferTransaction = {
+    type: 'IBCtransfer';
+    protocol?: EmerisDEXInfo.DEX;
+    data: AbstractIBCTransferTransactionData;
+}
+export type AbstractSwapTransactionData = {    
+    from: AbstractAmount;
+    to: AbstractAmount;
+    pool: Record<string,unknown>;
+}
+export type AbstractSwapTransaction = {
+    type: 'swap';
+    protocol?: EmerisDEXInfo.DEX;
+    data: AbstractSwapTransactionData;
+}
+export type AbstractCreatePoolTransactionData = {
+    coinA: AbstractAmount;
+    coinB: AbstractAmount;
+    extensions?: Record<string,unknown>
+}
+export type AbstractCreatePoolTransaction = {
+    type: 'createPool';
+    protocol?: EmerisDEXInfo.DEX;
+    data: AbstractCreatePoolTransactionData;
+}
+export type AbstractAddLiquidityTransactionData = {
+    coinA: AbstractAmount;
+    coinB: AbstractAmount;
+    pool: Record<string,unknown>;
+}
+export type AbstractAddLiquidityTransaction = {
+    type: 'addLiquidity';
+    protocol?: EmerisDEXInfo.DEX;
+    data: AbstractAddLiquidityTransactionData;
+}
+export type AbstractWithdrawLiquidityTransactionData = {
+    poolCoin: AbstractAmount
+    pool: Record<string,unknown>;
+}
+export type AbstractWithdrawLiquidityTransaction = {
+    type: 'withdrawLiquidity';
+    protocol?: EmerisDEXInfo.DEX;
+    data: AbstractWithdrawLiquidityTransactionData;
+}
+export type AbstractTransactionData = AbstractTransferTransactionData | AbstractIBCTransferTransactionData | AbstractSwapTransactionData | AbstractCreatePoolTransactionData | AbstractAddLiquidityTransactionData | AbstractWithdrawLiquidityTransactionData;
+export type AbstractTransaction = AbstractTransferTransaction | AbstractIBCTransferTransaction | AbstractSwapTransaction | AbstractCreatePoolTransaction | AbstractAddLiquidityTransaction | AbstractWithdrawLiquidityTransaction;
+
+export type AbstractTransactionMappingRequest = {
+    chainName: string;
+    signingAddress: string;
+    txs: AbstractTransaction[];
+}
