@@ -27,6 +27,7 @@ jobs:
             ./packages/browser-extension/yarn.lock
             ./packages/signer/yarn.lock
             ./packages/mapper/yarn.lock
+            ./packages/types/package-lock.json
             ./packages/browser-extension/demeris/package-lock.json
 
       - name: build artifacts
