@@ -59,7 +59,7 @@ export default class EmerisSigner {
     if (isCosmos({
       chain_name
     })) {
-      const client: EmerisSigningClient = await getCosmosClient(chain_name, false, this.mnemonic);
+      const client: EmerisSigningClient = await getCosmosClient(chain_name, false, this.mnemonic, this.HdPath);
       const [signerAccount] = await client.exposedSigner.getAccounts()
       return signerAccount;
     }
