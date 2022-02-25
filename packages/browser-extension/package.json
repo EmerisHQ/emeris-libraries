@@ -25,7 +25,7 @@
     "@cosmjs/proto-signing": "^0.25.6",
     "@cosmjs/stargate": "^0.25.6",
     "@emeris/mapper": "0.0.5",
-    "@emeris/signer": "^0.0.16",
+    "@emeris/signer": "^0.0.23",
     "@ledgerhq/hw-transport-webusb": "^6.11.2",
     "@starport/tendermint-liquidity-js": "^0.1.2",
     "@starport/vuex": "^0.1.58",
@@ -96,9 +96,6 @@
   },
   "bugs": {
     "url": "https://github.com/allinbits/emeris-libraries/issues"
-  },
-  "resolutions": {
-    "acorn": "8.7.0"
   },
   "lint-staged": {
     "*.{js,jsx,vue,ts,tsx}": [
