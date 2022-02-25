@@ -20,6 +20,7 @@ import {
   GetRawTransactionRequest,
 } from '@@/types/api';
 import { AbstractTxResult } from '@@/types/transactions'; // TODO
+import TxMapper from '@emeris/mapper';
 
 import { keyHashfromAddress } from '@/utils/basic';
 import chainConfig from '../chain-config';
@@ -329,8 +330,7 @@ export class Emeris implements IEmeris {
       throw new Error('The requested signing address is not active in the extension');
     }
 
-    const mapper = new chain.mapper(chain.chainId)
-    const chainMessages = [].concat(...request.data.messages.map(message => mapper.map(message, address)))
+    const chainMessages = await TxMapper(request.data)
     const signable = await libs[chain.library].getRawSignable(selectedAccount, chain, chainMessages, request.data.fee, request.data.memo)
 
     return signable
@@ -354,8 +354,8 @@ export class Emeris implements IEmeris {
         throw new Error('The requested signing address is not active in the extension');
       }
 
-      const mapper = new chain.mapper(chain.chainId)
-      const chainMessages = [].concat(...request.data.messages.map(message => mapper.map(message, address)))
+      const chainMessages = await TxMapper(request.data)
+      // @ts-ignore
       const broadcastable = await libs[chain.library].sign(selectedAccount, chain, chainMessages, request.data.fee, <string>memo)
 
       return broadcastable
