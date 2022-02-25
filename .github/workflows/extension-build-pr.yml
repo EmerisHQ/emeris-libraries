@@ -22,11 +22,10 @@ jobs:
       - uses: actions/setup-node@v2
         with:
           node-version: '16'
-          cache: 'yarn'
           cache-dependency-path: |
-            ./packages/browser-extension/yarn.lock
-            ./packages/signer/yarn.lock
-            ./packages/mapper/yarn.lock
+            ./packages/browser-extension/package-lock.json
+            ./packages/signer/package-lock.json
+            ./packages/mapper/package-lock.json
             ./packages/types/package-lock.json
             ./packages/browser-extension/demeris/package-lock.json
 
