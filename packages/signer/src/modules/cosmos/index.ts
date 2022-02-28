@@ -14,13 +14,13 @@ export async function getCosmosClient(
   chain_name: string,
   isLedger: boolean,
   mnemonic?: string,
-  HdPath?:string,
+  HdPath?: string,
 ): Promise<EmerisSigningClient> {
   let signer
   if (isLedger) {
     signer = new LedgerSigner(await TransportWebHID.create(), { hdPaths: [stringToPath(HdPath)] })
   } else {
-    signer = await Secp256k1HdWallet.fromMnemonic(mnemonic, { hdPaths: [stringToPath(HdPath)]})
+    signer = await Secp256k1HdWallet.fromMnemonic(mnemonic, { hdPaths: [stringToPath(HdPath)] })
   }
   switch (chain_name) {
     case 'akash':
