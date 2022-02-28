@@ -105,5 +105,8 @@
       "vue-cli-service lint",
       "git add"
     ]
+	},
+	"resolutions": {
+		"image-webpack-loader": "^4.5"
   }
 }

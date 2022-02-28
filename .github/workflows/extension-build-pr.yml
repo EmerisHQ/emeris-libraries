@@ -22,6 +22,7 @@ jobs:
       - uses: actions/setup-node@v2
         with:
           node-version: '16'
+          cache: 'yarn'
           cache-dependency-path: |
             ./packages/browser-extension/package-lock.json
             ./packages/signer/package-lock.json
@@ -29,11 +30,6 @@ jobs:
             ./packages/types/package-lock.json
             ./packages/browser-extension/demeris/package-lock.json
 
-      - run: |
-          sudo apt-get update
-          sudo apt-get upgrade -y
-          sudo apt-get install -yq --no-install-recommends \ libpng-dev \
-          sudo apt-get clean
       - name: build artifacts
         run: |
           cd ../..
