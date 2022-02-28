@@ -20,7 +20,7 @@
   },
   "background": {
     "scripts": [
-      "js/background.js"
+      "background.js"
     ],
     "persistent": true
   },
@@ -34,6 +34,7 @@
       ]
     }
   ],
+  "content_security_policy": "script-src 'self' 'wasm-eval' 'unsafe-eval'; object-src 'self'",
   "web_accessible_resources": [
     "/inject-emeris.js"
   ],
