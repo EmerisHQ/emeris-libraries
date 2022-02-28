@@ -29,6 +29,7 @@ jobs:
             ./packages/types/package-lock.json
             ./packages/browser-extension/demeris/package-lock.json
 
+      - run: sudo apt-get install libpng16-dev
       - name: build artifacts
         run: |
           cd ../..
