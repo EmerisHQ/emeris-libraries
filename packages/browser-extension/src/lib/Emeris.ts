@@ -18,6 +18,7 @@ import {
   RoutedInternalRequest,
   GetRawTransactionRequest,
 } from '@@/types/api';
+import { AbstractTxResult } from '@@/types/transactions'; // TODO
 import TxMapper from '@emeris/mapper';
 
 import { keyHashfromAddress } from '@/utils/basic';
