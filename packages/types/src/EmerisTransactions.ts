@@ -56,6 +56,9 @@ export type WithdrawLiquidityData = {
     poolCoin: Base.Amount;
     pool: Pool;
 };
+export type CustomData = {
+    raw: any;
+};
 export type Transaction<TransactionType> = {
     type: 'ibcTransfer' | 'swap' | 'transfer' | 'addliquidity' | 'withdrawliquidity' | 'createpool' | 'custom';
     data: TransactionType
@@ -67,6 +70,7 @@ export type TransactionData =
     | AddLiquidityData
     | WithdrawLiquidityData
     | CreatePoolData
+    | CustomData
 export type TransactionSignRequest = {
     signingAddress: string,
     chainId: string,
@@ -100,7 +104,7 @@ export type AbstractIBCTransferTransactionData = {
     amount: AbstractAmount;
     fromAddress: string;
     toAddress: string;
-    toChain:string;
+    toChain: string;
     through: string;
 }
 export type AbstractIBCTransferTransaction = {
@@ -108,10 +112,10 @@ export type AbstractIBCTransferTransaction = {
     protocol?: EmerisDEXInfo.DEX;
     data: AbstractIBCTransferTransactionData;
 }
-export type AbstractSwapTransactionData = {    
+export type AbstractSwapTransactionData = {
     from: AbstractAmount;
     to: AbstractAmount;
-    pool: Record<string,unknown>;
+    pool: Record<string, unknown>;
 }
 export type AbstractSwapTransaction = {
     type: 'swap';
@@ -121,7 +125,7 @@ export type AbstractSwapTransaction = {
 export type AbstractCreatePoolTransactionData = {
     coinA: AbstractAmount;
     coinB: AbstractAmount;
-    extensions?: Record<string,unknown>
+    extensions?: Record<string, unknown>
 }
 export type AbstractCreatePoolTransaction = {
     type: 'createPool';
@@ -131,7 +135,7 @@ export type AbstractCreatePoolTransaction = {
 export type AbstractAddLiquidityTransactionData = {
     coinA: AbstractAmount;
     coinB: AbstractAmount;
-    pool: Record<string,unknown>;
+    pool: Record<string, unknown>;
 }
 export type AbstractAddLiquidityTransaction = {
     type: 'addLiquidity';
@@ -140,7 +144,7 @@ export type AbstractAddLiquidityTransaction = {
 }
 export type AbstractWithdrawLiquidityTransactionData = {
     poolCoin: AbstractAmount
-    pool: Record<string,unknown>;
+    pool: Record<string, unknown>;
 }
 export type AbstractWithdrawLiquidityTransaction = {
     type: 'withdrawLiquidity';

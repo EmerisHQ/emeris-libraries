@@ -3,11 +3,9 @@
     <span style="margin-bottom: 12px; display: block">Custom transaction</span>
 
     <div
-      :class="{
-        expand: expand,
-      }"
+      style="display: flex; flex-direction: column; overflow: hidden; transition: max-height 0.5s ease-out"
       :style="{
-        height: expand ? 'auto' : '36px',
+        height: expand ? $refs.innerSlideout.clientHeight + 'px' : '36px',
       }"
     >
       <Yaml :json="message.raw" />

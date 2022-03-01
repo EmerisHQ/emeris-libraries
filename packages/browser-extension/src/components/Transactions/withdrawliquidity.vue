@@ -9,6 +9,7 @@
     </div>
 
     <span class="secondary-text" style="font-size: 13px; margin-bottom: 8px; display: block">To</span>
+    <!-- TODO get pool directly instead of from a client for safety -->
     <span>{{ message.pool.reserve_coin_denoms.map((denom) => denom.toUpperCase()).join(' · ') }}</span>
   </div>
 </template>

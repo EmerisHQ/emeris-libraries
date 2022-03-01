@@ -13,22 +13,19 @@
     </div>
 
     <div
+      v-for="(message, index) in transaction.messages"
+      :key="index"
       style="
         display: flex;
+        flex-direction: column;
         padding: 16px;
 
         background: #171717;
         border-radius: 8px;
+        margin-bottom: 16px;
       "
     >
-      <component
-        style="flex: 1"
-        :is="message.type"
-        v-for="(message, index) in transaction.messages"
-        :message="message"
-        :chainName="transaction.chainId"
-        :key="index"
-      />
+      <component style="flex: 1" :is="message.type" :message="message" :chainName="transaction.chainId" />
     </div>
 
     <div
@@ -40,6 +37,7 @@
         left: 0;
         padding: 0 16px 16px 16px;
         background: var(--bg);
+        z-index: 100;
       "
     >
       <div
