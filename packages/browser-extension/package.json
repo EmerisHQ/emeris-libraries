@@ -21,11 +21,14 @@
     "postinstall": "git submodule init"
   },
   "dependencies": {
+    "@cosmjs/amino": "^0.27.1",
     "@cosmjs/crypto": "^0.25.6",
+    "@cosmjs/encoding": "^0.27.1",
+    "@cosmjs/math": "^0.27.1",
     "@cosmjs/proto-signing": "^0.25.6",
     "@cosmjs/stargate": "^0.25.6",
     "@emeris/mapper": "0.0.5",
-    "@emeris/signer": "^0.0.16",
+    "@emeris/signer": "^0.0.23",
     "@ledgerhq/hw-transport-webusb": "^6.11.2",
     "@starport/tendermint-liquidity-js": "^0.1.2",
     "@starport/vuex": "^0.1.58",
@@ -42,7 +45,7 @@
     "postcss": "^7.0.35",
     "prismjs": "^1.26.0",
     "qrcode": "^1.5.0",
-    "tailwindcss": "npm:@tailwindcss/postcss7-compat@^2.1.2",
+    "tailwindcss": "npm:@tailwindcss/postcss7-compat@^2.2.17",
     "uuid": "^8.3.2",
     "vue": "^3.0.0",
     "vue-cli-plugin-tailwind": "^2.0.6",
@@ -59,6 +62,7 @@
     "@types/crypto-js": "^4.0.2",
     "@types/firefox-webext-browser": "^94.0.0",
     "@types/jest": "^27.0.2",
+    "@types/lodash": "4.14.171",
     "@types/lodash.groupby": "^4.6.6",
     "@types/lodash.isequal": "^4.5.5",
     "@types/lodash.orderby": "^4.6.6",
@@ -96,13 +100,13 @@
   "bugs": {
     "url": "https://github.com/allinbits/emeris-libraries/issues"
   },
-  "resolutions": {
-    "acorn": "8.7.0"
-  },
   "lint-staged": {
     "*.{js,jsx,vue,ts,tsx}": [
       "vue-cli-service lint",
       "git add"
     ]
+	},
+	"resolutions": {
+		"image-webpack-loader": "^4.5"
   }
 }

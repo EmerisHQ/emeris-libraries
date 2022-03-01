@@ -1,12 +1,12 @@
 {
-  "compilerOptions": {    
-    "target": "esnext",
+  "compilerOptions": {
+    "target": "es2018",
     "module": "commonjs",
     "moduleResolution": "node",
     "declaration": true,
     "emitDeclarationOnly": true,
     "outDir": "./lib",
     "rootDir": "./src",
-    "allowSyntheticDefaultImports":true
+    "allowSyntheticDefaultImports": true
   }
 }

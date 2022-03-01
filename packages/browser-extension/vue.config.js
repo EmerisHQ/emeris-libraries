@@ -51,9 +51,8 @@ module.exports = {
     config.entry('inject-emeris').add('./src/content-scripts/inject-emeris.ts').end();
     config.resolve.alias.set('@', path.resolve(__dirname, 'demeris/src')).set('@@', path.resolve(__dirname, 'src'));
 
-    config.resolve.symlinks(false);
-    config.resolve.alias.set('vue', path.resolve('./node_modules/vue'));
-    config.plugins.delete('fork-ts-checker');
+    config.resolve.symlinks(false)
+    config.resolve.alias.set('vue', path.resolve('./node_modules/vue'))
   },
   transpileDependencies: [
     '@starport/tendermint-liquidity-js',
