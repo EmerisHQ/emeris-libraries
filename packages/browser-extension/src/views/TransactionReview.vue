@@ -22,6 +22,7 @@
       "
     >
       <component
+        style="flex: 1"
         :is="message.type"
         v-for="(message, index) in transaction.messages"
         :message="message"
@@ -104,6 +105,7 @@ import ibcTransfer from '@@/components/Transactions/ibcTransfer.vue';
 import swap from '@@/components/Transactions/swap.vue';
 import addliquidity from '@@/components/Transactions/addliquidity.vue';
 import withdrawliquidity from '@@/components/Transactions/withdrawliquidity.vue';
+import custom from '@@/components/Transactions/custom.vue';
 import Slideout from '@@/components/Slideout.vue';
 import TotalPrice from '@/components/common/TotalPrice.vue';
 import Input from '@/components/ui/Input.vue';
@@ -121,6 +123,7 @@ export default defineComponent({
     ibcTransfer,
     addliquidity,
     withdrawliquidity,
+    custom,
 
     Slideout,
     Input,

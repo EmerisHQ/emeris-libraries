@@ -25,12 +25,13 @@
 </template>
 
 <script>
+import { EmerisTransactions } from '@emeris/types';
 import AmountDisplay from '@/components/common/AmountDisplay.vue';
 import CircleSymbol from '@/components/common/CircleSymbol.vue';
 import Address from '@@/components/Address.vue';
 export default {
   props: {
-    message: { type: TransferData, required: true },
+    message: { type: EmerisTransactions.TransferData, required: true },
     chainName: { type: String, required: true },
   },
   components: {
