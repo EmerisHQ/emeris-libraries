@@ -28,14 +28,15 @@ const Coin = Type.Strict(Type.Object({
 	amount: Type.String()
 }))
 
-export const FeesRequest = Type.Strict(Type.Object({
-	gasPriceLevel: Type.Enum(GasPriceLevel),
+export const FeesRequest = Type.Strict(Type.Array(Type.Object({
+	gasPriceLevel: Type.Optional(Type.Enum(GasPriceLevel)),
 	tx: Type.Any()
-}));
-export const FeesResponse = Type.Strict(Type.Object({
+})));
+
+export const FeesResponse = Type.Strict(Type.Array(Type.Object({
 	gasUsed: Type.String(),
 	fee: Type.Array(Coin),
 	totalUSD: Type.Number()
-}));
+})));
 export type FeesRequest = Static<typeof FeesRequest>
 export type FeesResponse = Static<typeof FeesResponse>
