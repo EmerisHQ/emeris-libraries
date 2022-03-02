@@ -77,25 +77,27 @@ import AmountDisplay from '@/components/common/AmountDisplay.vue';
 import CircleSymbol from '@/components/common/CircleSymbol.vue';
 import Icon from '@/components/ui/Icon.vue';
 import Address from '@@/components/Address.vue';
-import { getTicker } from '@/utils/actionHandler';
 import { GlobalDemerisGetterTypes } from '@/store';
+
+const getDisplayDenom = (store, denom) => {
+  const verifiedDenoms = store.getters[GlobalDemerisGetterTypes.API.getVerifiedDenoms] || [];
+  const verifiedDenom = verifiedDenoms.find(({ name }) => name === denom);
+  return verifiedDenom?.display_name || denom;
+};
 export default {
   props: {
     message: { type: EmerisTransactions.SwapData, required: true },
   },
-  watch: {
-    async message(message) {
-      this.toDenom = await getTicker(message.to.denom, this.$store.getters[GlobalDemerisGetterTypes.API.getDexChain]);
-      this.fromDenom = await getTicker(
-        message.from.denom,
-        this.$store.getters[GlobalDemerisGetterTypes.API.getDexChain],
-      );
+  computed: {
+    toDenom() {
+      return getDisplayDenom(this.$store, this.message.to.denom);
+    },
+    fromDenom() {
+      return getDisplayDenom(this.$store, this.message.from.denom);
     },
   },
   data: () => ({
     expand: false,
-    fromDenom: '-',
-    toDenom: '-',
   }),
   components: {
     AmountDisplay,

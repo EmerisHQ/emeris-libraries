@@ -11,6 +11,7 @@
       <Yaml :json="message.raw" />
     </div>
     <div
+      ref="innerSlideout"
       style="
         display: flex;
         flex-direction: column;

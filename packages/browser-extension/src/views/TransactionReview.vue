@@ -25,7 +25,7 @@
         margin-bottom: 16px;
       "
     >
-      <component style="flex: 1" :is="message.type" :message="message" :chainName="transaction.chainId" />
+      <Message style="flex: 1" :message="message" :chainId="transaction.chainId" />
     </div>
 
     <div
@@ -98,12 +98,7 @@
 import { defineComponent } from 'vue';
 import { GlobalGetterTypes } from '@@/store/extension/getter-types';
 import Button from '@/components/ui/Button.vue';
-import transfer from '@@/components/Transactions/transfer.vue';
-import ibcTransfer from '@@/components/Transactions/ibcTransfer.vue';
-import swap from '@@/components/Transactions/swap.vue';
-import addliquidity from '@@/components/Transactions/addliquidity.vue';
-import withdrawliquidity from '@@/components/Transactions/withdrawliquidity.vue';
-import custom from '@@/components/Transactions/custom.vue';
+import Message from '@@/components/Transactions/Message.vue';
 import Slideout from '@@/components/Slideout.vue';
 import TotalPrice from '@/components/common/TotalPrice.vue';
 import Input from '@/components/ui/Input.vue';
@@ -113,16 +108,7 @@ export default defineComponent({
   name: 'Transaction Review',
   components: {
     Button,
-
-    // transactions
-    // components need to have the same name as the transaction type to resolve the view
-    transfer,
-    swap,
-    ibcTransfer,
-    addliquidity,
-    withdrawliquidity,
-    custom,
-
+    Message,
     Slideout,
     Input,
     TotalPrice,
