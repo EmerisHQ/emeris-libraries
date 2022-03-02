@@ -18,13 +18,13 @@
 </template>
 
 <script>
-import { AddLiquidityData } from '@@/../../types/lib/EmerisTransactions';
+import { EmerisTransactions } from '@emeris/types';
 import AmountDisplay from '@/components/common/AmountDisplay.vue';
 import CircleSymbol from '@/components/common/CircleSymbol.vue';
 import Address from '@@/components/Address.vue';
 export default {
   props: {
-    message: { type: AddLiquidityData, required: true },
+    message: { type: EmerisTransactions.AddLiquidityData, required: true },
   },
   components: {
     AmountDisplay,

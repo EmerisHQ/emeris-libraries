@@ -27,13 +27,13 @@
 </template>
 
 <script>
-import { IBCData } from '@@/../../types/lib/EmerisTransactions';
+import { EmerisTransactions } from '@emeris/types';
 import AmountDisplay from '@/components/common/AmountDisplay.vue';
 import CircleSymbol from '@/components/common/CircleSymbol.vue';
 import Address from '@@/components/Address.vue';
 export default {
   props: {
-    message: { type: IBCData, required: true },
+    message: { type: EmerisTransactions.IBCData, required: true },
     chainName: { type: String, required: true },
   },
   components: {

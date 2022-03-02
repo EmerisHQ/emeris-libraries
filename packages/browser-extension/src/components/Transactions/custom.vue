@@ -33,7 +33,7 @@
 </template>
 
 <script>
-import { CustomData } from '@@/../../types/lib/EmerisTransactions';
+import { EmerisTransactions } from '@emeris/types';
 import AmountDisplay from '@/components/common/AmountDisplay.vue';
 import CircleSymbol from '@/components/common/CircleSymbol.vue';
 import Icon from '@/components/ui/Icon.vue';
@@ -41,7 +41,7 @@ import Address from '@@/components/Address.vue';
 import Yaml from '../Yaml.vue';
 export default {
   props: {
-    message: { type: CustomData, required: true },
+    message: { type: EmerisTransactions.CustomData, required: true },
   },
   data: () => ({
     expand: false,

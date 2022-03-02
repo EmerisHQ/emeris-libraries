@@ -15,13 +15,13 @@
 </template>
 
 <script>
-import { WithdrawLiquidityData } from '@@/../../types/lib/EmerisTransactions';
+import { EmerisTransactions } from '@emeris/types';
 import AmountDisplay from '@/components/common/AmountDisplay.vue';
 import CircleSymbol from '@/components/common/CircleSymbol.vue';
 import Address from '@@/components/Address.vue';
 export default {
   props: {
-    message: { type: WithdrawLiquidityData, required: true },
+    message: { type: EmerisTransactions.WithdrawLiquidityData, required: true },
   },
   components: {
     AmountDisplay,

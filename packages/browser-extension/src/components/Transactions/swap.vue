@@ -72,7 +72,7 @@
 </template>
 
 <script>
-import { SwapData } from '@@/../../types/lib/EmerisTransactions';
+import { EmerisTransactions } from '@emeris/types';
 import AmountDisplay from '@/components/common/AmountDisplay.vue';
 import CircleSymbol from '@/components/common/CircleSymbol.vue';
 import Icon from '@/components/ui/Icon.vue';
@@ -81,7 +81,7 @@ import { getTicker } from '@/utils/actionHandler';
 import { GlobalDemerisGetterTypes } from '@/store';
 export default {
   props: {
-    message: { type: SwapData, required: true },
+    message: { type: EmerisTransactions.SwapData, required: true },
   },
   watch: {
     async message(message) {
