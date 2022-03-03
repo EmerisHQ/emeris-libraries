@@ -13,21 +13,19 @@
     </div>
 
     <div
+      v-for="(message, index) in transaction.messages"
+      :key="index"
       style="
         display: flex;
+        flex-direction: column;
         padding: 16px;
 
         background: #171717;
         border-radius: 8px;
+        margin-bottom: 16px;
       "
     >
-      <component
-        :is="message.type"
-        v-for="(message, index) in transaction.messages"
-        :message="message"
-        :chainName="transaction.chainId"
-        :key="index"
-      />
+      <Message style="flex: 1" :message="message" :chainId="transaction.chainId" />
     </div>
 
     <div
@@ -39,6 +37,7 @@
         left: 0;
         padding: 0 16px 16px 16px;
         background: var(--bg);
+        z-index: 100;
       "
     >
       <div
@@ -99,7 +98,7 @@
 import { defineComponent } from 'vue';
 import { GlobalGetterTypes } from '@@/store/extension/getter-types';
 import Button from '@/components/ui/Button.vue';
-import transfer from '@@/components/Transactions/transfer.vue';
+import Message from '@@/components/Transactions/Message.vue';
 import Slideout from '@@/components/Slideout.vue';
 import TotalPrice from '@/components/common/TotalPrice.vue';
 import Input from '@/components/ui/Input.vue';
@@ -109,7 +108,7 @@ export default defineComponent({
   name: 'Transaction Review',
   components: {
     Button,
-    transfer,
+    Message,
     Slideout,
     Input,
     TotalPrice,

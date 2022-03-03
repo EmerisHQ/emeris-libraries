@@ -13,7 +13,6 @@ import {
   SignTransactionRequest,
   SupportedChainsRequest,
   ApproveOriginRequest,
-  SignAndBroadcastTransactionRequest,
   ExtensionRequest,
   ExtensionResponse,
   RoutedInternalRequest,
@@ -118,7 +117,6 @@ export class Emeris implements IEmeris {
     }
   }
   async popupHandler(message: RoutedInternalRequest): Promise<unknown> {
-    let request;
     this.reset();
     switch (message?.data.action) {
       case 'getPending':

@@ -3,7 +3,7 @@
 </template>
 
 <script>
-import YAML from 'json2yaml';
+import YAML from 'json-to-pretty-yaml';
 
 import { PrismEditor } from 'vue-prism-editor';
 import 'vue-prism-editor/dist/prismeditor.min.css'; // import the styles somewhere
