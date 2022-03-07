@@ -104,7 +104,7 @@ export default defineComponent({
         } else {
           nextRoute = '/backup?new=true';
         }
-        this.$store.dispatch(GlobalActionTypes.SET_NEW_ACCOUNT, undefined); // remove new account from flow
+        await this.$store.dispatch(GlobalActionTypes.SET_NEW_ACCOUNT, undefined); // remove new account from flow
         this.$router.push(nextRoute);
       } catch (err) {
         console.error(err);
