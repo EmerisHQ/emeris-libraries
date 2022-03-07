@@ -26,7 +26,7 @@ export interface Actions {
   [ActionTypes.REMOVE_ACCOUNT](
     { commit }: ActionContext<State, RootState>,
     { accountName }: { accountName: string },
-  ): Promise<EmerisWallet>;
+  ): Promise<void>;
   [ActionTypes.CREATE_WALLET](
     { commit }: ActionContext<State, RootState>,
     { password }: { password: string },
@@ -145,13 +145,12 @@ export const actions: ActionTree<State, RootState> & Actions = {
     commit(MutationTypes.SET_WALLET, response as EmerisWallet);
     return getters['getWallet'];
   },
-  async[ActionTypes.REMOVE_ACCOUNT]({ commit, getters }, { accountName }: { accountName: string }) {
-    const response = await browser.runtime.sendMessage({
+  async[ActionTypes.REMOVE_ACCOUNT]({ dispatch, getters }, { accountName }: { accountName: string }) {
+    await browser.runtime.sendMessage({
       type: 'fromPopup',
       data: { action: 'removeAccount', data: { accountName } },
     });
-    commit(MutationTypes.SET_WALLET, response as EmerisWallet);
-    return getters['getWallet'];
+    await dispatch(ActionTypes.GET_WALLET)
   },
   async[ActionTypes.UNLOCK_WALLET]({ commit, dispatch, getters }, { password }: { password: string }) {
     try {

@@ -98,12 +98,14 @@ export default defineComponent({
           },
         });
         // if the account is imported we don't need to show the backup seed screen
+        let nextRoute;
         if (this.newAccount.setupState === AccountCreateStates.COMPLETE) {
-          this.$router.push('/accountReady');
+          nextRoute = '/accountReady';
         } else {
-          this.$store.dispatch(GlobalActionTypes.SET_NEW_ACCOUNT, undefined); // remove new account from flow
-          this.$router.push('/backup?new=true');
+          nextRoute = '/backup?new=true';
         }
+        this.$store.dispatch(GlobalActionTypes.SET_NEW_ACCOUNT, undefined); // remove new account from flow
+        this.$router.push(nextRoute);
       } catch (err) {
         console.error(err);
       }
