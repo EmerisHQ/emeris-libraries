@@ -270,19 +270,14 @@ export class Emeris implements IEmeris {
           accountName: account.accountName,
           isLedger: account.isLedger,
           setupState: account.setupState,
-          keyHashes: []
-        }
-        if (account.isLedger) {
-          displayAccount.keyHashes = [account.keyHash]
-        } else {
-          displayAccount.keyHashes =
-            // wrapping in a Set to make all values unique
+          keyHashes: // wrapping in a Set to make all values unique
             [...new Set(await Promise.all(Object.values(chainConfig).map(async chain => {
               const address = await libs[chain.library].getAddress(account, chain)
               const keyHash = keyHashfromAddress(address);
               return keyHash
             })))]
         }
+
         return displayAccount
       }),
     );

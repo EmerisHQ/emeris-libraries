@@ -254,10 +254,13 @@ export const actions: ActionTree<State, RootState> & Actions = {
     await dispatch(ActionTypes.GET_WHITELISTED_WEBSITES);
   },
   async [ActionTypes.ACCEPT_TRANSACTION]({ }, { id, fees, memo }) {
-    await respond(id, { accept: true, fees, memo })
+    await respond(id, { data: { accept: true, fees, memo } })
   },
   async [ActionTypes.CANCEL_TRANSACTION]({ }, { id }) {
-    await respond(id, { accept: false })
+    await respond(id, { data: { accept: false } })
+  },
+  async [ActionTypes.SEND_LEDGER_SIGNATURE]({ }, { id, broadcastable }) {
+    await respond(id, { data: { broadcastable } })
   },
   async [ActionTypes.GET_RAW_TRANSACTION]({ }, {
     messages,

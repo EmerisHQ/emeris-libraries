@@ -22,9 +22,7 @@
         marginTop: 'auto',
       }"
     >
-      <router-link to="/ledger/connect">
-        <Button name="Connect Ledger" />
-      </router-link>
+      <Button name="Connect Ledger" @click="next()" />
     </div>
   </div>
 </template>
@@ -42,6 +40,12 @@ export default defineComponent({
   computed: {
     error() {
       return this.$route.query.error;
+    },
+  },
+  methods: {
+    next() {
+      // we use the same component for account gathering and signing
+      this.$router.push(this.$route.query.next);
     },
   },
 });
