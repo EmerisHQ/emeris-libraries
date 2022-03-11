@@ -337,7 +337,12 @@ export class Emeris implements IEmeris {
   }
   async signTransaction(request: SignTransactionRequest): Promise<any> {
     request.id = uuidv4();
-    const { accept, memo } = await this.forwardToPopup(request);
+    const { accept, memo, broadcastable } = await this.forwardToPopup(request);
+    // if we have a broadcastable, signing has already been done i.e. due to Ledger signing
+    if (broadcastable) {
+      return broadcastable
+    }
+    // else if sign via local key signing
     if (accept) {
       if (!this.wallet) {
         throw new Error('No wallet configured');
@@ -369,7 +374,7 @@ export class Emeris implements IEmeris {
   async enable(request: ApproveOriginRequest): Promise<boolean> {
     // TODO purge this queue and replace with a sensible data struct to we can check if a request is a dupe
     request.id = uuidv4();
-    const enabled = (await this.forwardToPopup(request)).data as boolean;
+    const enabled = (await this.forwardToPopup(request)).accept as boolean;
     if (enabled) {
       await this.storage.addWhitelistedWebsite(request.origin);
     }
