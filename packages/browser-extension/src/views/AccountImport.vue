@@ -9,22 +9,24 @@
         >Advanced</a
       >
     </Header>
-    <span style="margin-top: 16px; margin-bottom: 16px">Enter your recovery phrase</span>
-    <div style="margin-bottom: 16px">
-      <MnemonicInput v-model="mnemonic" placeholder="Your recovery phrase" />
-    </div>
-    <span class="form-info error" v-if="invalidChar">Invalid character used</span>
-    <span class="form-info error" v-if="unknownWords.length > 0"
-      >Unknown words found: {{ unknownWords.join(', ') }}</span
-    >
-    <a @click="infoOpen = true">What’s a recovery phrase?</a>
-    <div
-      :style="{
-        marginTop: 'auto',
-      }"
-    >
-      <Button name="Import" :disabled="!mnemonic" @click="submit" />
-    </div>
+    <form>
+      <span style="margin-top: 16px; margin-bottom: 16px">Enter your recovery phrase</span>
+      <div style="margin-bottom: 16px">
+        <MnemonicInput v-model="mnemonic" placeholder="Your recovery phrase" />
+      </div>
+      <span class="form-info error" v-if="invalidChar">Invalid character used</span>
+      <span class="form-info error" v-if="unknownWords.length > 0"
+        >Unknown words found: {{ unknownWords.join(', ') }}</span
+      >
+      <a @click="infoOpen = true">What’s a recovery phrase?</a>
+      <div
+        :style="{
+          marginTop: 'auto',
+        }"
+      >
+        <Button type="submit" name="Import" :disabled="!mnemonic" @click="submit" />
+      </div>
+    </form>
     <Modal
       title="Invalid recovery phrase"
       description="Check you have entered your recovery phrase correctly and try again."
