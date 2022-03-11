@@ -3,7 +3,7 @@
     <Header title="Import account">
       <a
         :style="{
-          opacity: invalidChar || unknownWords.length > 0 ? 0.6 : 1,
+          opacity: !mnemonic || invalidChar || unknownWords.length > 0 ? 0.6 : 1,
         }"
         @click="toHdPath"
         >Advanced</a
@@ -15,7 +15,7 @@
         <MnemonicInput v-model="mnemonic" placeholder="Your recovery phrase" />
       </div>
       <span class="form-info error" v-if="invalidChar">Invalid character used</span>
-      <span class="form-info error" v-if="unknownWords.length > 0"
+      <span class="form-info error" v-if="mnemonic && unknownWords.length > 0"
         >Unknown words found: {{ unknownWords.join(', ') }}</span
       >
       <a @click="infoOpen = true">What’s a recovery phrase?</a>
@@ -24,7 +24,7 @@
           marginTop: 'auto',
         }"
       >
-        <Button type="submit" name="Import" :disabled="!mnemonic" @click="submit" />
+        <Button type="submit" name="Import" :disabled="!mnemonic || unknownWords.length > 0" @click="submit" />
       </div>
     </form>
     <Modal
@@ -98,6 +98,7 @@ export default defineComponent({
       });
     },
     submit() {
+      // TODO handle invalid recovery phrase ?
       this.storeNewAccount();
       this.$router.push({ path: '/accountCreate' });
     },
