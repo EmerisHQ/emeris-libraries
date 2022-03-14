@@ -6,7 +6,7 @@
   },
   "scripts": {
     "setup": "npm i && git submodule init && git submodule update",
-    "bootstrap": "npm run setup && cd packages/browser-extension/demeris; npm i && npx lerna bootstrap",
+    "bootstrap": "npm run setup && npx lerna bootstrap",
     "serve": "npx lerna run serve --scope @emeris/browser-extension",
     "build": "npx lerna run build"
   },
