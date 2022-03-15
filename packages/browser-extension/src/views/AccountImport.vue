@@ -75,6 +75,8 @@ export default defineComponent({
 
       const wordList = mnemonicFormat(this.mnemonic).split(' ');
       this.unknownWords = wordList.filter((word) => !bip39.wordlists.english.includes(word));
+
+      this.storeNewAccount();
     },
   },
   async mounted() {
@@ -84,20 +86,24 @@ export default defineComponent({
       this.$router.push({ path: '/passwordCreate', query: { returnTo: this.$route.path } });
     }
 
-    this.$store.dispatch(GlobalActionTypes.SET_NEW_ACCOUNT, {
-      route: '/accountImport',
-    });
+    const newAccount = await this.$store.dispatch(GlobalActionTypes.GET_NEW_ACCOUNT);
+    this.mnemonic = newAccount.accountMnemonic;
+
+    this.storeNewAccount();
   },
   methods: {
     storeNewAccount() {
       this.$store.dispatch(GlobalActionTypes.SET_NEW_ACCOUNT, {
-        accountMnemonic: mnemonicFormat(this.mnemonic), // TODO does store the mnemonic in localstorage unencrypted
+        accountMnemonic: mnemonicFormat(this.mnemonic),
         setupState: AccountCreateStates.COMPLETE,
+        route: '/accountImport',
       });
     },
     submit() {
-      this.storeNewAccount();
-      this.$router.push({ path: '/accountCreate' });
+      if (!this.invalidChar && this.unknownWords.length === 0) {
+        this.storeNewAccount();
+        this.$router.push({ path: '/accountCreate' });
+      }
     },
     toHdPath() {
       if (!this.invalidChar && this.unknownWords.length === 0) {

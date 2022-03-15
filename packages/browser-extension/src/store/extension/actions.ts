@@ -284,20 +284,25 @@ export const actions: ActionTree<State, RootState> & Actions = {
       },
     });
   },
-  [ActionTypes.SET_NEW_ACCOUNT]({ commit }, account: EmerisAccount & { route: string }) {
+  async [ActionTypes.SET_NEW_ACCOUNT]({ commit }, account: EmerisAccount & { route: string }) {
     commit(MutationTypes.SET_NEW_ACCOUNT, account)
-    if (!account) {
-      localStorage.removeItem('new_account')
-    } else {
-      localStorage.setItem('new_account', JSON.stringify(account))
-    }
+    return await browser.runtime.sendMessage({
+      type: 'fromPopup',
+      data: {
+        action: 'setPartialAccountCreationStep', data: account
+      },
+    });
   },
-  [ActionTypes.GET_NEW_ACCOUNT]({ commit }) {
-    const newAccount = localStorage.getItem('new_account')
-    if (newAccount) {
-      const parsedAccount = JSON.parse(newAccount)
-      commit(MutationTypes.SET_NEW_ACCOUNT, parsedAccount)
-      return parsedAccount
+  async [ActionTypes.GET_NEW_ACCOUNT]({ commit }) {
+    const partialAccountCreationStep = await browser.runtime.sendMessage({
+      type: 'fromPopup',
+      data: {
+        action: 'getPartialAccountCreationStep'
+      },
+    });
+    if (partialAccountCreationStep) {
+      commit(MutationTypes.SET_NEW_ACCOUNT, partialAccountCreationStep)
+      return partialAccountCreationStep
     }
     return undefined
   },

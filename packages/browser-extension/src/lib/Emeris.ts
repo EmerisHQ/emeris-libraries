@@ -225,6 +225,10 @@ export class Emeris implements IEmeris {
         const whitelistedWebsites = await this.storage.getWhitelistedWebsites();
         if (whitelistedWebsites.find((whitelistedWebsite) => whitelistedWebsite.origin === message.data.data.website)) return true;
         return this.storage.addWhitelistedWebsite(message.data.data.website);
+      case 'setPartialAccountCreationStep':
+        return this.storage.setPartialAccountCreationStep(message.data.data, this.password);
+      case 'getPartialAccountCreationStep':
+        return this.storage.getPartialAccountCreationStep(this.password);
     }
   }
   async ensurePopup(): Promise<void> {
