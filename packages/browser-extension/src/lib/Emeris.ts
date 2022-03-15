@@ -331,7 +331,7 @@ export class Emeris implements IEmeris {
       throw new Error('The requested signing address is not active in the extension');
     }
 
-    const chainMessages = await TxMapper(request.data)
+    const chainMessages = await TxMapper({ ...request.data, chainName: request.data.chainId, txs: request.data.messages })
     const signable = await libs[chain.library].getRawSignable(selectedAccount, chain, chainMessages, request.data.fee, request.data.memo)
 
     return signable
@@ -360,7 +360,7 @@ export class Emeris implements IEmeris {
         throw new Error('The requested signing address is not active in the extension');
       }
 
-      const chainMessages = await TxMapper(request.data)
+      const chainMessages = await TxMapper({ ...request.data, chainName: request.data.chainId, txs: request.data.messages })
       // @ts-ignore
       const broadcastable = await libs[chain.library].sign(selectedAccount, chain, chainMessages, request.data.fee, <string>memo)
 
