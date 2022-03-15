@@ -11,6 +11,7 @@ import {
   GetAccountNameRequest,
   IsHWWalletRequest,
   SignTransactionRequest,
+  SignAndBroadcastTransactionRequest,
   SupportedChainsRequest,
   ApproveOriginRequest,
   ExtensionRequest,
@@ -360,10 +361,21 @@ export class Emeris implements IEmeris {
     }
     return undefined
   }
-  // async signAndBroadcastTransaction(request: SignAndBroadcastTransactionRequest): Promise<AbstractTxResult> {
-  //   request.id = uuidv4();
-  //   return (await this.forwardToPopup(request)).data as AbstractTxResult;
-  // }
+  async signAndBroadcastTransaction(request: SignAndBroadcastTransactionRequest): Promise<any> {
+    // @ts-ignore
+    request.id = uuidv4();
+
+    const broadcastable = await this.signTransaction(request)
+
+    // @ts-ignore
+    const chain = config[request.data.chainId];
+    if (!chain) {
+      // @ts-ignore
+      throw new Error('Chain not supported: ' + request.data.chainId);
+    }
+
+    return await libs[chain.library].broadcast(broadcastable, chain)
+  }
   async enable(request: ApproveOriginRequest): Promise<boolean> {
     // TODO purge this queue and replace with a sensible data struct to we can check if a request is a dupe
     request.id = uuidv4();

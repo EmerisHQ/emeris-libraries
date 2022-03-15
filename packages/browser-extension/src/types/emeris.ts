@@ -32,7 +32,14 @@ export interface IEmeris {
     };
     memo?: string;
   } | SignTransactionRequest) => Promise<Uint8Array>;
-  // signAndBroadcastTransaction?: (
-  //   arg: { tx: AbstractTx; chainId: string } | SignAndBroadcastTransactionRequest,
-  // ) => Promise<AbstractTxResult>;
+  signAndBroadcastTransaction?: (arg: {
+    signingAddress: string;
+    chainId: string;
+    messages: Transaction<TransactionData>[];
+    fee: {
+      gas: string,
+      amount: Base.Amount[]
+    };
+    memo?: string;
+  } | SignAndBroadcastTransactionRequest) => Promise<AbstractTxResult>;
 }

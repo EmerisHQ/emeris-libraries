@@ -56,16 +56,13 @@ const helpers = {
       return undefined
     }
   },
-  async signAndBroadcast(account: EmerisAccount, chainConfig: ChainDetails, messages, fee, memo) {
+  async broadcast(broadcastable, chainConfig: ChainDetails) {
     try {
       const client = await SigningStargateClient.connect(
         chainConfig.rpcEndpoint
       );
-
-      const broadcastable = await this.sign(account, chainConfig, messages, fee, memo)
-
       const response = await client.broadcastTx(broadcastable)
-      return response
+      return response // TODO this should be a standardized abstract result not the chain response but for now doesn't matter as we only deal with cosmos
     } catch (err) {
       console.error(err)
       return undefined

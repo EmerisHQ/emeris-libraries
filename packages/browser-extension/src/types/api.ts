@@ -25,11 +25,8 @@ export type SignTransactionRequest = Request & {
   action: 'signTransaction';
   data: TransactionSignRequest;
 };
-export type SignAndBroadcastTransactionRequest = Request & {
+export type SignAndBroadcastTransactionRequest = SignTransactionRequest & {
   action: 'signAndBroadcastTransaction';
-  data: {
-    tx: TransactionSignRequest;
-  };
 };
 export type GetAddressRequest = Request & {
   action: 'getAddress';
