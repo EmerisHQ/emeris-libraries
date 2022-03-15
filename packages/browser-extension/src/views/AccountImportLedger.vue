@@ -1,6 +1,6 @@
 <template>
   <div class="page">
-    <Header title="Import account">
+    <Header title="Import account" backTo="/">
       <!-- <router-link to="/accountImport/advanced">
         <a>Advanced</a>
       </router-link> -->
@@ -13,15 +13,16 @@
     </div>
     <ListCard :img="require(`@@/assets/Step1.svg`)" caption="Unlock & connect your Ledger device with your computer" />
     <ListCard :img="require(`@@/assets/Step2.svg`)" caption="Open the ‘Cosmos’ app on your Ledger device" />
+
+    <div v-if="error" style="color: #ff6072; margin-top: 16px; text-align: center">{{ error }}</div>
+
     <a class="secondary-text" style="margin-top: 24px">Having trouble connecting your Ledger?</a>
     <div
       :style="{
         marginTop: 'auto',
       }"
     >
-      <router-link to="/ledger/connect">
-        <Button name="Connect Ledger" />
-      </router-link>
+      <Button name="Connect Ledger" @click="next()" />
     </div>
   </div>
 </template>
@@ -36,5 +37,16 @@ import ListCard from '@@/components/ListCard.vue';
 export default defineComponent({
   name: 'Connect Ledger',
   components: { ListCard, Header, Button },
+  computed: {
+    error() {
+      return this.$route.query.error;
+    },
+  },
+  methods: {
+    next() {
+      // we use the same component for account gathering and signing
+      this.$router.push(this.$route.query.next);
+    },
+  },
 });
 </script>
