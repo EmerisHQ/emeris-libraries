@@ -102,7 +102,7 @@ export default defineComponent({
     toHdPath() {
       if (!this.invalidChar && this.unknownWords.length === 0) {
         this.storeNewAccount();
-        this.$router.push('/accountImportHdPath');
+        this.$router.push('/accountImportHdPath?previous=/accountImport');
       }
     },
   },

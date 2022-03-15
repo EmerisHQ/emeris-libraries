@@ -1,9 +1,7 @@
 <template>
   <div class="page">
-    <Header title="Import account">
-      <!-- <router-link to="/accountImport/advanced">
-        <a>Advanced</a>
-      </router-link> -->
+    <Header title="Import account" backTo="/">
+      <a @click="toHdPath">Advanced</a>
     </Header>
     <img :src="require(`@@/assets/ImportLedgerBG.png`)" class="background" />
     <div
@@ -32,9 +30,20 @@ import { defineComponent } from 'vue';
 import Button from '@/components/ui/Button.vue';
 import Header from '@@/components/Header.vue';
 import ListCard from '@@/components/ListCard.vue';
+import { GlobalActionTypes } from '@@/store/extension/action-types';
 
 export default defineComponent({
   name: 'Connect Ledger',
   components: { ListCard, Header, Button },
+  mounted() {
+    this.$store.dispatch(GlobalActionTypes.SET_NEW_ACCOUNT, {
+      route: '/accountImport',
+    });
+  },
+  methods: {
+    toHdPath() {
+      this.$router.push('/accountImportHdPath?previous=/ledger');
+    },
+  },
 });
 </script>

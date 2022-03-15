@@ -1,6 +1,6 @@
 <template>
   <div class="page">
-    <Header title="Advanced" />
+    <Header title="Advanced" :backTo="this.$route.query.previous" />
     <span style="margin-top: 16px; margin-bottom: 16px">HD derivation path</span>
     <div style="display: flex; margin-bottom: 16px">
       <span style="line-height: 48px; margin-right: 8px" class="secondary-text">m/44’/...’/</span>
@@ -18,13 +18,6 @@
       >Invalid derivation path</span
     >
     <a @click="infoOpen = true">What is an HD derivation path?</a>
-    <div
-      :style="{
-        marginTop: 'auto',
-      }"
-    >
-      <Button name="Import" :disabled="accountError || changeError || addressIndexError" @click="submit" />
-    </div>
     <Slideout v-bind:open="infoOpen" v-on:update:open="infoOpen = $event">
       <h1 style="margin-bottom: 16px">What does it mean HD derivation path?</h1>
       <div class="secondary-text" style="margin-bottom: 24px">
@@ -44,7 +37,6 @@ import Input from '@/components/ui/Input.vue';
 import Header from '@@/components/Header.vue';
 import Slideout from '@@/components/Slideout.vue';
 
-import { MutationTypes } from '@@/store/extension/mutation-types';
 import { GlobalActionTypes } from '@@/store/extension/action-types';
 
 export default defineComponent({
@@ -104,17 +96,8 @@ export default defineComponent({
     this.$store.dispatch(GlobalActionTypes.SET_NEW_ACCOUNT, {
       ...this.newAccount,
       hdPath: this.newAccount?.hdPath || ["0'", '0', '0'],
-      route: '/accountImportHdPath',
+      route: '/accountImportHdPath?previous=' + this.$route.query.previous,
     });
-  },
-  methods: {
-    submit() {
-      this.$store.dispatch(MutationTypes.SET_NEW_ACCOUNT, {
-        ...this.newAccount,
-        hdPath: [this.account, this.change, this.addressIndex],
-      });
-      this.$router.push({ path: '/accountCreate' });
-    },
   },
 });
 </script>
