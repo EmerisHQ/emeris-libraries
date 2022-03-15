@@ -88,7 +88,6 @@
               editMemo = false;
             }
           "
-          :disabled="processing"
         />
       </div>
     </Slideout>
@@ -125,7 +124,6 @@ export default defineComponent({
       },
     ],
     gas: 200000,
-    processing: false,
   }),
   computed: {
     pending() {
@@ -141,23 +139,16 @@ export default defineComponent({
       this.$router.push('/');
     },
     async accept() {
-      this.processing = true;
-      try {
-        await this.$store.dispatch(GlobalActionTypes.ACCEPT_TRANSACTION, {
-          id: this.pending.id,
-          // TODO currently setting default fee until fee selection works
-          fees: {
-            gas: this.gas,
-            amount: this.fees,
-          },
-          memo: this.memo,
-        });
-        this.$router.push('/');
-      } catch (err) {
-        console.error(err); // TODO show error
-      } finally {
-        this.processing = false;
-      }
+      await this.$store.dispatch(GlobalActionTypes.ACCEPT_TRANSACTION, {
+        id: this.pending.id,
+        // TODO currently setting default fee until fee selection works
+        fees: {
+          gas: this.gas,
+          amount: this.fees,
+        },
+        memo: this.memo,
+      });
+      this.$router.push('/');
     },
   },
   mounted() {
