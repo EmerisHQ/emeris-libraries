@@ -362,9 +362,6 @@ export class Emeris implements IEmeris {
     return undefined
   }
   async signAndBroadcastTransaction(request: SignAndBroadcastTransactionRequest): Promise<any> {
-    // @ts-ignore
-    request.id = uuidv4();
-
     const broadcastable = await this.signTransaction(request)
 
     // @ts-ignore
