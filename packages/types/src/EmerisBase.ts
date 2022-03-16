@@ -93,6 +93,15 @@ export type WithdrawLiquidityEndBlockResponse = {
   withdrawer: string;
   success: string;
 };
+
+export type PriceQuote = {
+  dex: string;
+  amount: number;
+  denom: string;
+  numberOfTransactions: number;
+  usdAmount: number;
+  fee?: { amount: number; denom: string };
+};
 export enum ChainType {
   cosmos = "cosmos",
   ethereum = "ethereum",

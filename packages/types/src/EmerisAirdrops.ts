@@ -47,7 +47,7 @@ export type Airdrop = {
   airdropEndDate: Date;
   airdropStatus: string;
   eligibility: string;
-  dateStatus: string;
+  dateStatus: AirdropDateStatus;
   snapshotDate: string;
   snapshotBlockHeight: string;
   eligibilityCriteria: AirdropEligibilityCriteria[];
@@ -63,3 +63,10 @@ export type selectedAirdropReq = {
 export type GitAirdropsListReq = {
   airdropFileName: string;
 };
+
+export enum AirdropDateStatus {
+  NOT_ANNOUNCED = 'NOT_ANNOUNCED',
+  NOT_STARTED = 'NOT_STARTED',
+  ONGOING = 'ONGOING',
+  ENDED = 'ENDED',
+}

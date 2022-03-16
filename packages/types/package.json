@@ -1,6 +1,6 @@
 {
   "name": "@emeris/types",
-  "version": "0.0.26",
+  "version": "0.0.27",
   "description": "Emeris common types",
   "author": "Tendermint, Inc <hello@tendermint.com>",
   "main": "lib/index.js",
