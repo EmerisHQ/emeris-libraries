@@ -195,8 +195,8 @@ export class Emeris implements IEmeris {
       case 'createWallet':
       case 'unlockWallet':
         try {
-          this.wallet = await this.unlockWallet(message.data.data.password);
-          return this.wallet;
+          await this.unlockWallet(message.data.data.password);
+          return await this.getDisplayAccounts();
         } catch (e) {
           console.log(e);
         }
