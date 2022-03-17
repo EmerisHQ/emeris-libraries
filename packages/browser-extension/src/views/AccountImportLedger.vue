@@ -11,6 +11,9 @@
     </div>
     <ListCard :img="require(`@@/assets/Step1.svg`)" caption="Unlock & connect your Ledger device with your computer" />
     <ListCard :img="require(`@@/assets/Step2.svg`)" caption="Open the ‘Cosmos’ app on your Ledger device" />
+
+    <div v-if="error" style="color: #ff6072; margin-top: 16px; text-align: center">{{ error }}</div>
+
     <a class="secondary-text" style="margin-top: 24px">Having trouble connecting your Ledger?</a>
     <div
       :style="{
@@ -43,6 +46,11 @@ export default defineComponent({
   methods: {
     toHdPath() {
       this.$router.push('/accountImportHdPath?previous=/ledger');
+    },
+  },
+  computed: {
+    error() {
+      return this.$route.query.error;
     },
   },
 });

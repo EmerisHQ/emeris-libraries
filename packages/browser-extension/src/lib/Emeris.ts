@@ -195,8 +195,8 @@ export class Emeris implements IEmeris {
       case 'createWallet':
       case 'unlockWallet':
         try {
-          this.wallet = await this.unlockWallet(message.data.data.password);
-          return this.wallet;
+          await this.unlockWallet(message.data.data.password);
+          return await this.getDisplayAccounts();
         } catch (e) {
           console.log(e);
         }
@@ -266,17 +266,24 @@ export class Emeris implements IEmeris {
     if (!this.wallet) return undefined;
     return await Promise.all(
       this.wallet.map(async (account) => {
-        return {
+        const displayAccount = {
           accountName: account.accountName,
-          keyHashes:
+          isLedger: account.isLedger,
+          setupState: account.setupState,
+          keyHashes: []
+        }
+        if (account.isLedger) {
+          displayAccount.keyHashes = [account.keyHash]
+        } else {
+          displayAccount.keyHashes =
             // wrapping in a Set to make all values unique
             [...new Set(await Promise.all(Object.values(chainConfig).map(async chain => {
               const address = await libs[chain.library].getAddress(account, chain)
               const keyHash = keyHashfromAddress(address);
               return keyHash
-            })))],
-          setupState: account.setupState,
-        };
+            })))]
+        }
+        return displayAccount
       }),
     );
   }

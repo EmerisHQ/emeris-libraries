@@ -8,7 +8,6 @@
       <img :src="require('@@/assets/Avatar.svg')" style="width: 40px; height: 40px" />
       <div style="cursor: pointer">
         <h2 style="font-weight: 600">{{ account.accountName }}</h2>
-        <!-- TODO -->
         <span class="secondary-text" v-if="backedUp(account)"
           ><TotalPrice :balances="balances(account)" small-decimals
         /></span>
@@ -21,14 +20,42 @@
           /><span style="color: #ff6072; font-size: 13px"> · Not backed up</span></span
         >
       </div>
+      <div
+        style="display: flex; flex-direction: column; margin-left: auto; justify-content: center"
+        v-if="account.isLedger"
+      >
+        <span
+          style="
+            padding: 4px 12px 4px 12px;
+
+            background: #262626;
+            color: white;
+            border-radius: 16px;
+            font-size: 13px;
+          "
+        >
+          Ledger
+        </span>
+      </div>
       <Icon
         style="margin-left: auto; cursor: pointer"
+        :style="{
+          marginLeft: account.isLedger ? '12px' : 'auto',
+        }"
         name="ThreeDotsIcon"
         :icon-size="1.5"
         @click="editWallet = account"
         v-if="edit"
       />
-      <div style="margin-left: auto; line-height: 48px" v-else-if="account.accountName === lastAccount">✓</div>
+      <div
+        style="display: flex; flex-direction: column; justify-content: center"
+        :style="{
+          marginLeft: account.isLedger ? '12px' : 'auto',
+        }"
+        v-else-if="account.accountName === lastAccount"
+      >
+        <img :src="require('@@/assets/CheckmarkCircle.svg')" alt="Checkmark" style="height: 24px" />
+      </div>
     </div>
     <div style="margin-top: auto">
       <Button name="Add account" @click="addAccount" />
@@ -130,7 +157,7 @@ export default defineComponent({
   display: flex;
   margin-bottom: 24px;
 
-  img {
+  > img {
     height: 48px;
     width: 48px;
     margin-right: 16px;
