@@ -1,8 +1,8 @@
 name: Extension Build Dev
 on: 
   push:
-    branch:
-      - "develop"
+    branches:
+      - develop
 defaults:
   run:
     working-directory: ./packages/browser-extension/
