@@ -1303,6 +1303,13 @@
     enabled "2.0.x"
     kuler "^2.0.0"
 
+"@emeris/types@^0.0.12":
+  version "0.0.12"
+  resolved "https://registry.yarnpkg.com/@emeris/types/-/types-0.0.12.tgz#6964a01a099b1ff314ff4a43ad5252fc1ea9b8bb"
+  integrity sha512-KeLsyYOVFLqPeW4u8NkeC0DNX2Tuq2l2sD4iQb1Q3PFWgEm8zc6H6GsOCa+DeUgectlx54yNkxNtxIy15s0pQw==
+  dependencies:
+    "@sinclair/typebox" "^0.22.1"
+
 "@hapi/address@2.x.x":
   version "2.1.4"
   resolved "https://registry.yarnpkg.com/@hapi/address/-/address-2.1.4.tgz#5d67ed43f3fd41a69d4b9ff7b56e7c0d1d0a81e5"
@@ -1683,6 +1690,11 @@
   version "1.1.0"
   resolved "https://registry.yarnpkg.com/@protobufjs/utf8/-/utf8-1.1.0.tgz#a777360b5b39a1a2e5106f8e858f2fd2d060c570"
   integrity sha1-p3c2C1s5oaLlEG+OhY8v0tBgxXA=
+
+"@sinclair/typebox@^0.22.1":
+  version "0.22.1"
+  resolved "https://registry.yarnpkg.com/@sinclair/typebox/-/typebox-0.22.1.tgz#718162cb38d5cf732ea348821cce00d88a10d2b3"
+  integrity sha512-cYkZ5oYd/KrzwcocLtGI4QRi6oniV4eP8IEefEhZp8YjLhrsrHiiaeChs8a9T/YKIlIjHMoxoOCWOUkZ/vviNw==
 
 "@sindresorhus/is@^0.7.0":
   version "0.7.0"
