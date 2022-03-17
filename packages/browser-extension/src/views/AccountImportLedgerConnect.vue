@@ -23,7 +23,7 @@ import { GlobalActionTypes } from '@@/store/extension/action-types';
 import { AccountCreateStates } from '@@/types';
 import { keyHashfromAddress } from '@/utils/basic';
 import { getHdPath } from '@@/lib/libraries/cosmjs';
-const { stringToPath } = require('@cosmjs/crypto');
+import { stringToPath } from '@cosmjs/crypto';
 import chainConfigs from '../chain-config';
 
 const interactiveTimeout = 120_000;
