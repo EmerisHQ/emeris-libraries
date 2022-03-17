@@ -40,7 +40,7 @@ export default defineComponent({
   components: { ListCard, Header, Button },
   mounted() {
     this.$store.dispatch(GlobalActionTypes.SET_NEW_ACCOUNT, {
-      route: '/accountImport',
+      route: '/ledger',
     });
   },
   methods: {

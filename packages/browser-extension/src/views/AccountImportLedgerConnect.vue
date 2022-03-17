@@ -19,15 +19,14 @@ import { defineComponent } from 'vue';
 import { LedgerSigner } from '@cosmjs/ledger-amino';
 // eslint-disable-next-line @typescript-eslint/naming-convention
 import TransportWebUsb from '@ledgerhq/hw-transport-webusb';
-import { makeCosmoshubPath } from '@cosmjs/amino';
 import { GlobalActionTypes } from '@@/store/extension/action-types';
 import { AccountCreateStates } from '@@/types';
 import { keyHashfromAddress } from '@/utils/basic';
+import { getHdPath } from '@@/lib/libraries/cosmjs';
+const { stringToPath } = require('@cosmjs/crypto');
+import chainConfigs from '../chain-config';
 
 const interactiveTimeout = 120_000;
-// TODO add advanced tab
-const accountNumbers = [0];
-const paths = accountNumbers.map(makeCosmoshubPath);
 
 export default defineComponent({
   name: 'Import Ledger',
@@ -39,8 +38,18 @@ export default defineComponent({
         this.$router.push('/');
       }
 
+      const newAccount = await this.$store.dispatch(GlobalActionTypes.GET_NEW_ACCOUNT);
+
+      // TODO put all in cosmos library and handle different hd paths?
+      const chainConfig = chainConfigs['cosmos-hub'];
+      const path = stringToPath(
+        getHdPath(chainConfig, {
+          hdPath: newAccount.hdPath,
+        }),
+      );
+
       const ledgerTransport = await TransportWebUsb.create(interactiveTimeout, interactiveTimeout);
-      const signer = new LedgerSigner(ledgerTransport, { testModeAllowed: true, hdPaths: paths });
+      const signer = new LedgerSigner(ledgerTransport, { testModeAllowed: true, hdPaths: [path] });
 
       const accounts = await signer.getAccounts();
 
@@ -51,7 +60,7 @@ export default defineComponent({
       }
 
       await this.$store.dispatch(GlobalActionTypes.SET_NEW_ACCOUNT, {
-        accountName: this.name,
+        ...newAccount,
         isLedger: true,
         setupState: AccountCreateStates.COMPLETE,
         keyHash: keyHashfromAddress(accounts[0].address),
