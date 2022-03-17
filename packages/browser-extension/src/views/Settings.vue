@@ -1,8 +1,15 @@
 <template>
   <div class="page">
     <Header title="" backTo="/account" />
-    <div class="menu-item" @click="$router.push('/backup')">
+    <div
+      class="menu-item"
+      @click="!account.isLedger && $router.push('/backup')"
+      :style="{
+        opacity: account.isLedger ? 0.6 : 1,
+      }"
+    >
       Back Up
+      <span v-if="account.isLedger">(Not possible on Ledger devices)</span>
       <Icon v-if="!backedUp" name="WarningTriangleIcon" :icon-size="1" class="text-negative" />
     </div>
     <div class="menu-item" @click="$router.push('/whitelisted')">
