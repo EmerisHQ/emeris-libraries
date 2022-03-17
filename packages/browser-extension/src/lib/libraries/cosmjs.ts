@@ -4,7 +4,7 @@ import EmerisSigner from '@emeris/signer/lib/EmerisSigner';
 import { EncodeObject } from '@cosmjs/proto-signing';
 import { AminoMsg } from '@cosmjs/stargate/node_modules/@cosmjs/amino';
 
-const getHdPath = (chainConfig, account) => {
+export const getHdPath = (chainConfig, account) => {
   let hdPath = chainConfig.HDPath
   if (account.hdPath) {
     hdPath = chainConfig.HDPath.split('/').slice(0, 3).concat(account.hdPath).join('/')
