@@ -23,6 +23,8 @@ import TxMapper from '@emeris/mapper';
 
 import { keyHashfromAddress } from '@/utils/basic';
 import chainConfig from '../chain-config';
+import { AbstractTransactionMappingRequest } from '@emeris/types/lib/EmerisTransactions';
+import { EncodeObject } from '@cosmjs/proto-signing';
 export class Emeris implements IEmeris {
   public loaded: boolean;
   private storage: EmerisStorage;
@@ -344,7 +346,8 @@ export class Emeris implements IEmeris {
       throw new Error('The requested signing address is not active in the extension');
     }
 
-    const chainMessages = await TxMapper(request.data);
+    // TODO : fix the type hack (this is preventing PR builds)
+    const chainMessages = await TxMapper(request.data as unknown as AbstractTransactionMappingRequest);
     const signable = await libs[chain.library].getRawSignable(
       selectedAccount,
       chain,
@@ -374,12 +377,13 @@ export class Emeris implements IEmeris {
         throw new Error('The requested signing address is not active in the extension');
       }
 
-      const chainMessages = await TxMapper(request.data);
-      // @ts-ignore
+      // TODO : fix the type hack (this is preventing PR builds)
+      const chainMessages = await TxMapper(request.data as unknown as AbstractTransactionMappingRequest);
+
       const broadcastable = await libs[chain.library].sign(
         selectedAccount,
         chain,
-        chainMessages,
+        chainMessages as EncodeObject[], // TODO : fix the type hack (this is preventing PR builds)
         request.data.fee,
         <string>memo,
       );
