@@ -11,5 +11,5 @@ export class LocalStore extends Map {
   }
 }
 
-const localStore = new LocalStore();
-export { localStore };
+const memoryStore = new LocalStore();
+export { memoryStore };

@@ -52,6 +52,7 @@ import MnemonicInput from '@@/components/MnemonicInput.vue';
 import Header from '@@/components/Header.vue';
 import Modal from '@@/components/Modal.vue';
 import Slideout from '@@/components/Slideout.vue';
+import { memoryStore } from '@@/store/customStore';
 
 import { GlobalActionTypes } from '@@/store/extension/action-types';
 import { AccountCreateStates } from '@@/types';
@@ -78,21 +79,25 @@ export default defineComponent({
     },
   },
   async mounted() {
-    const hasPasswod = await this.$store.dispatch(GlobalActionTypes.HAS_WALLET);
+    const hasImsiPassword = memoryStore.get('EMERIS_TEMP_PASSWORD');
 
-    if (!hasPasswod) {
+    if (!hasImsiPassword) {
       this.$router.push({ path: '/passwordCreate', query: { returnTo: this.$route.path } });
     }
-
-    this.$store.dispatch(GlobalActionTypes.SET_NEW_ACCOUNT, {
-      route: '/accountImport',
-    });
   },
   methods: {
-    storeNewAccount() {
+    async storeNewAccount() {
       this.$store.dispatch(GlobalActionTypes.SET_NEW_ACCOUNT, {
         setupState: AccountCreateStates.COMPLETE,
-        accountMnemonic: this.mnemonic
+      });
+      this.$store.dispatch(GlobalActionTypes.CREATE_WALLET, {
+        password: memoryStore.get('EMERIS_TEMP_PASSWORD'),
+        account: {
+          accountName: 'EMERIS_PRIVATE_TEMP',
+          accountMnemonic: this.mnemonic,
+          isLedger: false,
+          setupState: AccountCreateStates.COMPLETE,
+        },
       });
     },
     submit() {

@@ -1,5 +1,5 @@
 import { IEmeris } from '@@/types/emeris';
-import {EmerisAccount, EmerisWallet} from '@@/types';
+import { EmerisAccount, EmerisWallet } from '@@/types';
 import { v4 as uuidv4 } from 'uuid';
 import EmerisStorage from './EmerisStorage';
 import config from '../chain-config';
@@ -133,15 +133,16 @@ export class Emeris implements IEmeris {
         }
         break;
       case 'createWallet':
+        this.password = message.data.data.password as string;
       case 'createAccount':
         console.log('createAccount / wallet', message.data);
         // eslint-disable-next-line no-case-declarations
-        const password = this.password ? this.password : message.data.data.password as string;
+        const password = this.password;
         // eslint-disable-next-line no-case-declarations
         const account = message.data.data.account as EmerisAccount;
         // guard
         if (!account.accountMnemonic) {
-          throw new Error("Account has no mnemonic")
+          throw new Error('Account has no mnemonic');
         }
         await this.storage.saveAccount(account, password);
         if (account.isLedger) {
@@ -191,8 +192,11 @@ export class Emeris implements IEmeris {
       case 'getMnemonic':
         try {
           const wallet = await this.unlockWallet(message.data.data.password);
+          console.log('getMnemonic', wallet, message.data);
           if (wallet) {
-            return wallet.find((x) => x.accountName == message.data.data.accountName);
+            const found = wallet.find((x) => x.accountName === message.data.data.accountName);
+            console.log('found', found);
+            return found;
           }
         } catch (e) {
           console.log(e);
@@ -216,7 +220,7 @@ export class Emeris implements IEmeris {
       case 'hasWallet':
         return await this.hasWallet();
       case 'setResponse':
-        return this.setResponse(message.data.data.id, message.data.data)
+        return this.setResponse(message.data.data.id, message.data.data);
       case 'extensionReset':
         this.storage.extensionReset();
         return;
@@ -228,7 +232,8 @@ export class Emeris implements IEmeris {
       case 'addWhitelistedWebsite':
         // eslint-disable-next-line no-case-declarations
         const whitelistedWebsites = await this.storage.getWhitelistedWebsites();
-        if (whitelistedWebsites.find((whitelistedWebsite) => whitelistedWebsite.origin === message.data.data.website)) return true;
+        if (whitelistedWebsites.find((whitelistedWebsite) => whitelistedWebsite.origin === message.data.data.website))
+          return true;
         return this.storage.addWhitelistedWebsite(message.data.data.website);
     }
   }
@@ -275,11 +280,17 @@ export class Emeris implements IEmeris {
           accountName: account.accountName,
           keyHashes:
             // wrapping in a Set to make all values unique
-            [...new Set(await Promise.all(Object.values(chainConfig).map(async chain => {
-              const address = await libs[chain.library].getAddress(account, chain)
-              const keyHash = keyHashfromAddress(address);
-              return keyHash
-            })))],
+            [
+              ...new Set(
+                await Promise.all(
+                  Object.values(chainConfig).map(async (chain) => {
+                    const address = await libs[chain.library].getAddress(account, chain);
+                    const keyHash = keyHashfromAddress(address);
+                    return keyHash;
+                  }),
+                ),
+              ),
+            ],
           setupState: account.setupState,
         };
       }),
@@ -326,17 +337,23 @@ export class Emeris implements IEmeris {
       throw new Error('Chain not supported: ' + request.data.chainId);
     }
 
-    const selectedAccount = this.wallet.find(({ accountName }) => accountName === this.selectedAccount)
-    const address = await libs[chain.library].getAddress(selectedAccount, chain)
+    const selectedAccount = this.wallet.find(({ accountName }) => accountName === this.selectedAccount);
+    const address = await libs[chain.library].getAddress(selectedAccount, chain);
 
     if (address !== request.data.signingAddress) {
       throw new Error('The requested signing address is not active in the extension');
     }
 
-    const chainMessages = await TxMapper(request.data)
-    const signable = await libs[chain.library].getRawSignable(selectedAccount, chain, chainMessages, request.data.fee, request.data.memo)
+    const chainMessages = await TxMapper(request.data);
+    const signable = await libs[chain.library].getRawSignable(
+      selectedAccount,
+      chain,
+      chainMessages,
+      request.data.fee,
+      request.data.memo,
+    );
 
-    return signable
+    return signable;
   }
   async signTransaction(request: SignTransactionRequest): Promise<any> {
     request.id = uuidv4();
@@ -350,20 +367,26 @@ export class Emeris implements IEmeris {
         throw new Error('Chain not supported: ' + request.data.chainId);
       }
 
-      const selectedAccount = this.wallet.find(({ accountName }) => accountName === this.selectedAccount)
-      const address = await libs[chain.library].getAddress(selectedAccount, chain)
+      const selectedAccount = this.wallet.find(({ accountName }) => accountName === this.selectedAccount);
+      const address = await libs[chain.library].getAddress(selectedAccount, chain);
 
       if (address !== request.data.signingAddress) {
         throw new Error('The requested signing address is not active in the extension');
       }
 
-      const chainMessages = await TxMapper(request.data)
+      const chainMessages = await TxMapper(request.data);
       // @ts-ignore
-      const broadcastable = await libs[chain.library].sign(selectedAccount, chain, chainMessages, request.data.fee, <string>memo)
+      const broadcastable = await libs[chain.library].sign(
+        selectedAccount,
+        chain,
+        chainMessages,
+        request.data.fee,
+        <string>memo,
+      );
 
-      return broadcastable
+      return broadcastable;
     }
-    return undefined
+    return undefined;
   }
   // async signAndBroadcastTransaction(request: SignAndBroadcastTransactionRequest): Promise<AbstractTxResult> {
   //   request.id = uuidv4();
