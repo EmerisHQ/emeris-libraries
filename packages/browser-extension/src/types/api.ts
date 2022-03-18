@@ -1,5 +1,5 @@
 import { EmerisAccount } from '.';
-import { TransactionSignRequest } from 'EmerisTransactions';
+import { TransactionSignRequest} from "@emeris/types/lib/EmerisTransactions";
 import * as Base from '@/types/base';
 
 export interface Request {
@@ -106,6 +106,7 @@ export type CreateWalletRequest = Request & {
   action: 'createWallet';
   data: {
     password: string;
+    account: EmerisAccount;
   };
 };
 export type SetPasswordRequest = Request & {

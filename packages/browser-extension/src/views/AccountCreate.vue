@@ -36,6 +36,7 @@
 <script lang="ts">
 import { defineComponent } from 'vue';
 import { mapState } from 'vuex';
+import { EmerisAccount } from '@@/types';
 import * as bip39 from 'bip39';
 
 import Input from '@/components/ui/Input.vue';
@@ -46,6 +47,7 @@ import Icon from '@/components/ui/Icon.vue';
 import { GlobalActionTypes } from '@@/store/extension/action-types';
 import { RootState } from '@@/store';
 import { AccountCreateStates } from '@@/types';
+import {localStore} from "@@/store/customStore";
 
 export default defineComponent({
   name: 'Create Account',
@@ -88,15 +90,33 @@ export default defineComponent({
       if (this.error) return;
 
       try {
+        let storedMnemonic;
+        try {
+          const pw = localStore.getAndDelete('EMERIS_TEMP_PASSWORD');
+          if(!pw) throw new Error('Password was not persisted');
+          const wallet = await this.$store.dispatch(GlobalActionTypes.GET_MNEMONIC, {
+            accountName: "EMERIS_PRIVATE_TEMP",
+            password: pw,
+          });
+          const account = wallet as EmerisAccount;
+          console.log('get stored new account',account);
+          storedMnemonic = account.accountMnemonic;
+        } catch (e) {
+          // TODO : Probably better to send the user back to the start than assigning a new mnemonic?
+          storedMnemonic = bip39.generateMnemonic(256);
+          console.error("Couldn't parse stored account");
+        }
         await this.$store.dispatch(GlobalActionTypes.CREATE_ACCOUNT, {
           account: {
             accountName: this.name,
-            accountMnemonic: bip39.generateMnemonic(256), // will be overwritten by existing new account
+            accountMnemonic: storedMnemonic, // will be overwritten by existing new account
             isLedger: false,
             setupState: this.newAccount.setupState || AccountCreateStates.CREATED, // if this is an import we don't need to check if the user backed up the mnemonic
             ...this.newAccount,
           },
         });
+        //  remove temp account
+        await this.$store.dispatch(GlobalActionTypes.REMOVE_ACCOUNT, { accountName: "EMERIS_PRIVATE_TEMP" });
         // if the account is imported we don't need to show the backup seed screen
         let nextRoute;
         if (this.newAccount.setupState === AccountCreateStates.COMPLETE) {

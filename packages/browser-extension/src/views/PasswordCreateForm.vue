@@ -61,6 +61,9 @@ import Icon from '@/components/ui/Icon.vue';
 import { GlobalActionTypes } from '@@/store/extension/action-types';
 import { mapState } from 'vuex';
 import { RootState } from '@@/store';
+import * as bip39 from "bip39";
+import {AccountCreateStates} from "@@/types";
+import {localStore} from "@@/store/customStore";
 
 export default defineComponent({
   name: 'Password Create Form',
@@ -86,14 +89,24 @@ export default defineComponent({
   },
   props: {
     onContinue: { type: Function, required: true },
+    isFirst: {type: Boolean, required: false, default: false},
   },
   methods: {
     async submit() {
+      console.log('password create form', this.isFirst);
       if (this.length && this.upperCaseChar && this.symbolChar && this.digitChar && this.match) {
-        if (this.wallet) {
+        if (!this.isFirst) {
           await this.$store.dispatch(GlobalActionTypes.CHANGE_PASSWORD, { password: this.password });
         } else {
-          await this.$store.dispatch(GlobalActionTypes.CREATE_WALLET, { password: this.password });
+          await this.$store.dispatch(GlobalActionTypes.CREATE_WALLET, { password: this.password,
+            account: {
+              accountName: 'EMERIS_PRIVATE_TEMP',
+              accountMnemonic: bip39.generateMnemonic(256),
+              isLedger: false,
+              setupState: AccountCreateStates.CREATED,
+            },
+          });
+          localStore.set('EMERIS_TEMP_PASSWORD', this.password);
         }
         this.onContinue();
       }

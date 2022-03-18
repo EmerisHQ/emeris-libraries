@@ -92,7 +92,13 @@ export default class EmerisStorage {
   }
   async saveAccount(account: EmerisAccount, password: string): Promise<boolean> {
     try {
-      const wallet = await this.unlockWallet(password);
+      let wallet: EmerisWallet;
+      try {
+        wallet = await this.unlockWallet(password);
+      } catch(e) {
+        //  when no wallet available
+        wallet = [];
+      }
       wallet.push(account);
       await this.saveWallet(wallet, password);
       await this.setLastAccount(account.accountName);
@@ -108,7 +114,7 @@ export default class EmerisStorage {
       await browser.storage[this.storageMode].set({ wallet: { walletData: encryptedWallet } });
       return true;
     } catch (e) {
-      console.log(e);
+      console.error(e);
       throw new SaveWalletError('Could not save wallet: ' + e);
     }
   }
@@ -126,11 +132,16 @@ export default class EmerisStorage {
     }
   }
   async changePassword(oldPassword: string, newPassword: string): Promise<void> {
+    let wallet;
     try {
-      const wallet = await this.unlockWallet(oldPassword);
-      this.saveWallet(wallet, newPassword);
+      wallet = await this.unlockWallet(oldPassword);
     } catch (e) {
       throw new UnlockWalletError('Could not unlock wallet: ' + e);
+    }
+    try {
+      this.saveWallet(wallet, newPassword);
+    } catch (e) {
+      throw new UnlockWalletError('Could not save wallet: ' + e);
     }
   }
   async extensionReset() {

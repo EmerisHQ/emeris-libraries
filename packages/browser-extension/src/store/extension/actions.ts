@@ -118,10 +118,10 @@ export const actions: ActionTree<State, RootState> & Actions = {
       throw new Error('Extension:HasWallet failed');
     }
   },
-  async[ActionTypes.CREATE_WALLET]({ commit, getters }, { password }: { password: string }) {
+  async[ActionTypes.CREATE_WALLET]({ commit, getters }, { password, account }: { password: string, account: EmerisAccount }) {
     const response = await browser.runtime.sendMessage({
       type: 'fromPopup',
-      data: { action: 'createWallet', data: { password } },
+      data: { action: 'createWallet', data: { password, account } },
     });
     commit(MutationTypes.SET_WALLET, response as EmerisWallet);
     return getters['getWallet'];

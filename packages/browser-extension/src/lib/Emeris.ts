@@ -1,5 +1,5 @@
 import { IEmeris } from '@@/types/emeris';
-import { EmerisWallet } from '@@/types';
+import {EmerisAccount, EmerisWallet} from '@@/types';
 import { v4 as uuidv4 } from 'uuid';
 import EmerisStorage from './EmerisStorage';
 import config from '../chain-config';
@@ -76,8 +76,8 @@ export class Emeris implements IEmeris {
   }
   async changePassword(password: string): Promise<void> {
     try {
-      this.storage.changePassword(this.password, password);
-      this.unlockWallet(password);
+      await this.storage.changePassword(this.password, password);
+      await this.unlockWallet(password);
     } catch (e) {
       throw new UnlockWalletError('Could not unlock wallet: ' + e);
     }
@@ -132,13 +132,19 @@ export class Emeris implements IEmeris {
           console.log(e);
         }
         break;
+      case 'createWallet':
       case 'createAccount':
+        console.log('createAccount / wallet', message.data);
+        // eslint-disable-next-line no-case-declarations
+        const password = this.password ? this.password : message.data.data.password as string;
+        // eslint-disable-next-line no-case-declarations
+        const account = message.data.data.account as EmerisAccount;
         // guard
-        if (!message.data.data.account.accountMnemonic) {
+        if (!account.accountMnemonic) {
           throw new Error("Account has no mnemonic")
         }
-        await this.storage.saveAccount(message.data.data.account, this.password);
-        if (message.data.data.account.isLedger) {
+        await this.storage.saveAccount(account, password);
+        if (account.isLedger) {
           try {
             await navigator['usb'].requestDevice({ filters: [] });
           } catch (e) {
@@ -147,8 +153,8 @@ export class Emeris implements IEmeris {
           }
         }
         try {
-          this.wallet = await this.unlockWallet(this.password);
-          this.setLastAccount(message.data.data.account.accountName);
+          this.wallet = await this.unlockWallet(password);
+          this.setLastAccount(account.accountName);
         } catch (e) {
           console.log(e);
         }
@@ -192,7 +198,6 @@ export class Emeris implements IEmeris {
           console.log(e);
         }
         return;
-      case 'createWallet':
       case 'unlockWallet':
         try {
           await this.unlockWallet(message.data.data.password);
@@ -221,7 +226,7 @@ export class Emeris implements IEmeris {
       case 'getWhitelistedWebsite':
         return this.storage.getWhitelistedWebsites();
       case 'addWhitelistedWebsite':
-        // prevent dupes
+        // eslint-disable-next-line no-case-declarations
         const whitelistedWebsites = await this.storage.getWhitelistedWebsites();
         if (whitelistedWebsites.find((whitelistedWebsite) => whitelistedWebsite.origin === message.data.data.website)) return true;
         return this.storage.addWhitelistedWebsite(message.data.data.website);
