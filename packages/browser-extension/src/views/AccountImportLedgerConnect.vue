@@ -18,13 +18,12 @@
 import { defineComponent } from 'vue';
 import { LedgerSigner } from '@cosmjs/ledger-amino';
 // eslint-disable-next-line @typescript-eslint/naming-convention
-import TransportWebUsb from '@ledgerhq/hw-transport-webusb';
+import TransportWebHID from '@ledgerhq/hw-transport-webhid';
 import { makeCosmoshubPath } from '@cosmjs/amino';
 import { GlobalActionTypes } from '@@/store/extension/action-types';
 import { AccountCreateStates } from '@@/types';
 import { keyHashfromAddress } from '@/utils/basic';
 
-const interactiveTimeout = 120_000;
 // TODO add advanced tab
 const accountNumbers = [0];
 const paths = accountNumbers.map(makeCosmoshubPath);
@@ -39,7 +38,7 @@ export default defineComponent({
         this.$router.push('/');
       }
 
-      const ledgerTransport = await TransportWebUsb.create(interactiveTimeout, interactiveTimeout);
+      const ledgerTransport = await TransportWebHID.create();
       const signer = new LedgerSigner(ledgerTransport, { testModeAllowed: true, hdPaths: paths });
 
       const accounts = await signer.getAccounts();
