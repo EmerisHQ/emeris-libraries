@@ -89,11 +89,11 @@ export default defineComponent({
 
       const wallet = await this.$store.dispatch(GlobalActionTypes.CREATE_ACCOUNT, {
         account: {
-          ...this.newAccount,
           accountName: this.name,
           accountMnemonic: bip39.generateMnemonic(256), // will be overwritten by existing new account
           isLedger: false,
           setupState: this.newAccount.setupState || AccountCreateStates.CREATED, // if this is an import we don't need to check if the user backed up the mnemonic
+          ...this.newAccount,
         },
       });
       if (wallet) {
