@@ -1,6 +1,7 @@
 import { IEmeris } from '@@/types/emeris';
 import { EmerisWallet } from '@@/types';
 import { v4 as uuidv4 } from 'uuid';
+import axios from 'axios';
 import EmerisStorage from './EmerisStorage';
 import config from '../chain-config';
 import libs from './libraries';
@@ -371,14 +372,12 @@ export class Emeris implements IEmeris {
   async signAndBroadcastTransaction(request: SignAndBroadcastTransactionRequest): Promise<any> {
     const broadcastable = await this.signTransaction(request)
 
-    // @ts-ignore
-    const chain = config[request.data.chainId];
-    if (!chain) {
-      // @ts-ignore
-      throw new Error('Chain not supported: ' + request.data.chainId);
-    }
+    const response = await axios.post((process.env.VUE_APP_EMERIS_PROD_ENDPOINT || 'https://api.emeris.com/v1') + '/tx/' + request.data.chainId, {
+      tx_bytes: Buffer.from(broadcastable).toString('base64'),
+      address: request.data.signingAddress,
+    });
 
-    return await libs[chain.library].broadcast(broadcastable, chain)
+    return response
   }
   async enable(request: ApproveOriginRequest): Promise<boolean> {
     // TODO purge this queue and replace with a sensible data struct to we can check if a request is a dupe
