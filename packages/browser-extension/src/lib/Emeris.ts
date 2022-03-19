@@ -372,8 +372,10 @@ export class Emeris implements IEmeris {
   async signAndBroadcastTransaction(request: SignAndBroadcastTransactionRequest): Promise<any> {
     const broadcastable = await this.signTransaction(request)
 
+    // @ts-ignore doesn't accept SignAndBroadcastTransactionRequest inheriting from SignTransactionRequest
     const response = await axios.post((process.env.VUE_APP_EMERIS_PROD_ENDPOINT || 'https://api.emeris.com/v1') + '/tx/' + request.data.chainId, {
       tx_bytes: Buffer.from(broadcastable).toString('base64'),
+      // @ts-ignore doesn't accept SignAndBroadcastTransactionRequest inheriting from SignTransactionRequest
       address: request.data.signingAddress,
     });
 
