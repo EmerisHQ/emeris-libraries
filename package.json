@@ -4,6 +4,12 @@
   "devDependencies": {
     "lerna": "^4.0.0"
   },
+  "scripts": {
+    "setup": "npm i && git submodule init && git submodule update",
+    "bootstrap": "npm run setup && npx lerna bootstrap",
+    "serve": "npx lerna run serve --scope @emeris/browser-extension",
+    "build": "npx lerna run build"
+  },
   "dependencies": {
   }
 }

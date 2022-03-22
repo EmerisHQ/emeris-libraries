@@ -87,23 +87,27 @@ export default defineComponent({
     async submit() {
       if (this.error) return;
 
-      const wallet = await this.$store.dispatch(GlobalActionTypes.CREATE_ACCOUNT, {
-        account: {
-          accountName: this.name,
-          accountMnemonic: bip39.generateMnemonic(256), // will be overwritten by existing new account
-          isLedger: false,
-          setupState: this.newAccount.setupState || AccountCreateStates.CREATED, // if this is an import we don't need to check if the user backed up the mnemonic
-          ...this.newAccount,
-        },
-      });
-      if (wallet) {
+      try {
+        await this.$store.dispatch(GlobalActionTypes.CREATE_ACCOUNT, {
+          account: {
+            accountName: this.name,
+            accountMnemonic: bip39.generateMnemonic(256), // will be overwritten by existing new account
+            isLedger: false,
+            setupState: this.newAccount.setupState || AccountCreateStates.CREATED, // if this is an import we don't need to check if the user backed up the mnemonic
+            ...this.newAccount,
+          },
+        });
         // if the account is imported we don't need to show the backup seed screen
+        let nextRoute;
         if (this.newAccount.setupState === AccountCreateStates.COMPLETE) {
-          this.$router.push('/accountReady');
+          nextRoute = '/accountReady';
         } else {
-          this.$store.dispatch(GlobalActionTypes.SET_NEW_ACCOUNT, undefined); // remove new account from flow
-          this.$router.push('/backup?new=true');
+          nextRoute = '/backup?new=true';
         }
+        await this.$store.dispatch(GlobalActionTypes.SET_NEW_ACCOUNT, undefined); // remove new account from flow
+        this.$router.push(nextRoute);
+      } catch (err) {
+        console.error(err);
       }
     },
     open(url) {
