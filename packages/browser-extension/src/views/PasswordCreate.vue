@@ -1,6 +1,6 @@
 <template>
   <div class="page">
-    <Header title="Choose Password" />
+    <Header title="Choose Password" backTo="/welcome" />
     <PasswordCreateForm :onContinue="() => $router.push(String($route.query.returnTo) || '/create')" />
   </div>
 </template>
