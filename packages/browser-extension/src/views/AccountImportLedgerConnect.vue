@@ -5,13 +5,6 @@
       <img :src="require('@@/assets/LedgerBox.svg')" style="width: 151px; margin-top: 32px" />
       <div style="text-align: center" class="secondary-text; margin-top: 16px">Connecting Ledger...</div>
     </div>
-    <div
-      :style="{
-        marginTop: 'auto',
-      }"
-    >
-      <Button name="Try again" @click="connect" />
-    </div>
   </div>
 </template>
 
@@ -41,9 +34,10 @@ export default defineComponent({
   methods: {
     async connect() {
       try {
+        const hasWallet = await this.$store.dispatch(GlobalActionTypes.HAS_WALLET); // checking if the password was set
         const wallet = await this.$store.dispatch(GlobalActionTypes.GET_WALLET); // never loaded before as root not hit
         // handle background locked
-        if (!wallet) {
+        if (hasWallet && !wallet) {
           this.$router.push('/');
         }
 
@@ -68,7 +62,9 @@ export default defineComponent({
 
         this.$router.push('/accountCreate');
       } catch (err) {
-        this.$router.push('/ledger/error?error=' + err.message + '&backto=/ledger');
+        this.$router.push(
+          '/ledger/error?error=' + err.message + '&backto=/ledger%26next%3D%2Fledger%2Fconnect&retry=/ledger/connect',
+        );
       }
     },
   },

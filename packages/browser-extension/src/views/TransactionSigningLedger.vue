@@ -77,7 +77,9 @@ export default defineComponent({
 
       this.$router.push('/');
     } catch (err) {
-      this.$router.push('/ledger?error=' + err.message + '&next=' + this.$route.path);
+      this.$router.push(
+        '/ledger/error?error=' + err.message + '&backto=/ledger%26next%3D%2Fledger%sign&retry=/ledger/sign',
+      );
     }
   },
 });
