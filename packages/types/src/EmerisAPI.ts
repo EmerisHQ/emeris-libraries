@@ -1,323 +1,95 @@
+import {
+  Amount,
+  Denom,
+  IbcInfo,
+  NodeInfo,
+  PrimaryChannel,
+  Trace,
+} from "./EmerisBase";
 
-import * as Base from './EmerisBase';
+/* Request Types */
 
-// REQUESTS
+// Chain-based request
 
-// Params object for actions requiring a BECH32 decoded address as param
+export type ChainReq = {
+  chain_name: string;
+};
+
+// Address-based request
+
 export type AddrReq = {
   address: string;
 };
-export type HeightReq = {
-	height: number;
-}
-export type ChainAddrReq = {
-  chain_name: string;
-  address: string;
+
+// Chain and Address - based request
+
+export type ChainAddrReq = ChainReq & AddrReq;
+
+// Chain and Counterparty request
+
+export type ChainCounterPartyReq = ChainReq & {
+  destination_chain_name: string;
 };
-// Params object for actions requiring a chain name (and optionally a target chain)
-export type ChainReq = {
-  chain_name: string;
-  destination_chain_name?: string;
+
+// Chain and Counterparty Tx request
+
+export type DestinationTXReq = ChainCounterPartyReq & {
+  tx_hash: string;
 };
-export type TicketReq = {
-  chain_name: string;
-  ticket: string;
-};
-// Params object for verifying a specific trace hash on a specific chain
-export type VerifyTraceReq = {
-  chain_name: string;
+
+// Trace Request
+
+export type VerifyTraceReq = ChainReq & {
   hash: string;
 };
 
-// GENERIC ERROR
+// Token Id Request
 
-export type APIError = {
-	cause: string;
-	id: string;
-	namespace: string;
-}
-
-// MODELS & RESPONSES
-
-
-// "/account/{address}/balance"
-// Takes AddrReq
-
-export type Balance = {
-  address: string;
-  amount: string;
-  base_denom: string;
-  ibc: Base.IbcInfo | Record<string, never>;
-  on_chain: string;
-  verified: boolean;
-};
-export type Balances = Array<Balance>;
-export type BalancesResponse = {
-  balances: Balances;
+export type TokenIdReq = {
+  token: string;
+  showSkeleton: boolean;
 };
 
-// "/account/{address}/delegatorrewards/{chain}"
-// Takes ChainAddrReq
+// Token Price Rquest
 
-export type DelegatorReward = {
-	reward: string;
-	validator_address: string;
-}
-export type DelegatorRewards = Array<DelegatorReward>;
-export type DelegatorRewardsResponse = {
-	rewards: DelegatorRewards;
-}
-
-// "/account/{address}/numbers"
-// Takes AddrReq
-
-export type SeqNumber = {
-  chain_name: string;
-  address: string;
-  sequence_number: number;
-  account_number: number;
-};
-export type Numbers = Array<SeqNumber>;
-export type NumbersResponse = {
-  numbers: Array<Numbers>;
+export type TokenPriceReq = {
+  token_id: string;
+  days: string;
+  currency: string;
+  showSkeleton: boolean;
 };
 
-// "/account/{address}/stakingbalance"
-// Takes AddrReq
+// Ticket (tx_hash) request
 
-export type StakingBalance = {
-  validator_address: string;
-  amount: string;
-  chain_name: string;
-};
-export type StakingBalances = Array<StakingBalance>;
-export type StakingBalancesResponse = {
-  staking_balances: StakingBalances;
+export type TicketReq = ChainReq & {
+  ticket: string;
 };
 
-// "/account/{address}/unbondingdelegations"
-// Takes AddrReq
+// Denom based request
 
-export type UnbondingDelegationEntry = {
-	balance: string;
-	completion_time: string;
-	creation_height: number;
-	initial_balance: string;
-}
-export type UnbondingDelegation = {
-	chain_name: string;
-	entries: Array<UnbondingDelegationEntry>;
-  validator_address: string;
-}
-export type UnbondingDelegations = Array<UnbondingDelegation>;
-export type UnbondingDelegationsResponse = {
-	unbonding_delegations: UnbondingDelegations;
-}
-// "/block_results?height={height}"
-// Takes HeightReq
-
-export type BlockHeightResponse = {
-	id: string;
-	jsonrpc: string;
-	result: Record<string,unknown> // TODO: Potentially replace with proper response typing of Tendermint RPC
-}
-
-// "/chain/{chainName}"
-// Takes ChainReq
-
-export type APIGasPrice = {
-	average: number;
-	high: number;
-	low: number;
-}
-export type APIDenom = {
-	display_name: string;
-	fee_token: boolean;
-	fetch_price: boolean;
-	gas_price_levels: APIGasPrice;
-	logo: string;
-	minimum_thresh_relayer_balance: number;
-	name: string;
-	precision: number;
-	price_id: string;
-	relayer_denom: boolean;
-	stakable: boolean;
-	ticker: string;
-	verified: boolean;
-}
-export type APIBech32Config = {
-  main_prefix: string;
-  prefix_account: string;
-  prefix_validator: string;
-  prefix_consensus: string;
-  prefix_public: string;
-  prefix_operator: string;	
-}
-export type APINodeInfo = {
-	endpoint: string;
-	chain_id: string;
-	bech32_config: APIBech32Config;
-}
-export type APIChain = {
-	block_explorer?: string;
-	chain_name: string;
-	demeris_addresses: Array<string>;
-	denoms: Array<APIDenom>;
-	derivation_path: string;
-	display_name: string;
-	enabled: boolean;
-	genesis_hash: string;
-	logo: string;
-	node_info: APINodeInfo;
-	primary_channel: Record<string, string>;
-	supported_wallets: Array<string>
-	valid_block_thresh: string;
-}
-export type ChainResponse = {
-	chain: APIChain;
-}
-
-// "/chain/{chainName}/denom/verify_trace/{hash}"
-// Takes VerifyTraceReq
-
-export type Trace = {
-  channel: string;
-  port: string;
-  client_id: string;
-  chain_name: string;
-  counterparty_name: string;
-};
-export type VerifyTrace = {
-  ibc_denom: string;
-	base_denom: string;
-	cause: string;
-  verified: boolean;
-  path: string;
-  trace: Array<Trace>;
-};
-export type VerifyTraceResponse = {
-  verify_trace: VerifyTrace;
-};
-
-// "/chain/{chainName}/mint/annual_provisions"
-// Takes ChainReq
-
-export type AnnualProvisionsResponse = {
-	annual_provisions: string;
-}
-
-// "/chain/{chainName}/mint/inflation"
-// Takes ChainReq
-
-export type InflationResponse = {
-	inflation: string;
-}
-
-// "/chain/{chainName}/mint/params"
-// Takes ChainReq
-
-export type MintParams = {
-	blocks_per_year: string;
-	goal_bonded: string;
-	inflation_max: string;
-	inflation_min: string;
-	inflation_rate_change: string;
-	mint_denom: string;
-}
-export type MintParamsResponse = {
-	params: MintParams;
-}
-
-// "/chain/{chainName}/primary_channels"
-// Takes ChainReq
-export type APIPrimaryChannel = {
-	counterparty: string;
-	channel_name: string;
-}
-export type PrimaryChannelsResponse = {
-	primary_channels: Array<APIPrimaryChannel>;
-}
-
-// "/chain/{chainName}/primary_channel/{counterparty}"
-// Takes ChainReq
-
-export type PrimaryChannelResponse = {
-	primary_channels: APIPrimaryChannel;
-}
-
-// "/chain/{chainName}/status"
-// Takes ChainReq
-
-export type ChainStatusResponse = {
-	online: boolean;
-}
-
-// "/chain/{chainName}/txs/{txhash}"
-// Takes TicketReq
-
-export type TxsResponse = {
-	tx: Record<string, unknown> // TODO
-	tx_response: Record<string,unknown> //TODO
-}
-
-// "/chains"
-// Takes <null>
-
-export type APISupportedChain = {
-	chain_name: string;
-	display_name: string;
-	logo: string;
-}
-export type ChainsResponse = {
-	chains: Array<APISupportedChain>;
-}
-
-// "/relayer/balance"
-// Takes <null>
-
-export type RelayerBalance = {
-  address: string;
-  chain_name: string;
-  enough_balance: boolean;
-};
-export type RelayerBalances = RelayerBalance[];
-
-export type RelayerBalancesResponse = {
-  balances: RelayerBalances;
-};
-
-// "/relayer/status"
-// Takes <null>
-
-export type RelayerStatusResponse = {
-  running: boolean;
-};
-
-// "/tx/ticket/{chainName}/{ticketId}"
-// Takes TicketReq
-
-export type TxHashEntry = {
-	chain: string;
-	status: string;
-	txHash: string;
-}
-export type TicketResponse = {
-  status: string;
-  height?: number;
-  newTicket?: string;
-	error?: string;
-	info?: string;
-	owner?: string;
-	tx_hashes?: Array<TxHashEntry>
+export type DenomReq = {
+  denom: string;
 };
 
 // "/verified_denoms"
 // Takes <null>
 
-export type VerifiedDenom = APIDenom & { chain_name: string };
+export type VerifiedDenom = Denom & { chain_name: string };
 export type VerifiedDenoms = Array<VerifiedDenom>;
 export type VerifiedDenomsResponse = {
   verified_denoms: VerifiedDenoms;
+};
+
+// "/chains"
+// Takes <null>
+
+export type SupportedChain = {
+  chain_name: string;
+  display_name: string;
+  logo: string;
+};
+export type ChainsResponse = {
+  chains: Array<SupportedChain>;
 };
 
 // "/prices"
@@ -333,6 +105,294 @@ export type Prices = {
 };
 export type PricesResponse = {
   data: Prices;
+  message: string | null;
+  status: number;
+};
+
+// "/chain/{chainName}"
+// Takes ChainReq
+
+export type Chain = SupportedChain & {
+  block_explorer?: string;
+  cosmos_sdk_version?: string;
+  demeris_addresses?: Array<string>;
+  denoms?: Array<Denom>;
+  derivation_path?: string;
+  enabled?: boolean;
+  genesis_hash?: string;
+  node_info?: NodeInfo;
+  primary_channel?: Record<string, string>;
+  public_node_endpoints?: {
+    tendermint_rpc?: string[];
+    cosmos_api?: string[];
+  };
+  status?: boolean;
+  supported_wallets?: string[];
+  valid_block_thresh?: string;
+};
+export type ChainResponse = {
+  chain: Chain;
+};
+
+// "/chain/{chainName}/status"
+// Takes ChainReq
+
+export type ChainStatusResponse = {
+  online: boolean;
+};
+
+// "/chain/{chainName}/mint/annual_provisions"
+// Takes ChainReq
+
+export type AnnualProvisionsResponse = {
+  annual_provisions: string;
+};
+
+// "/chain/{chainName}/mint/inflation"
+// Takes ChainReq
+
+export type InflationResponse = {
+  inflation: string;
+};
+
+// "/chain/{chainName}/mint/params"
+// Takes ChainReq
+
+export type MintParams = {
+  blocks_per_year: string;
+  goal_bonded: string;
+  inflation_max: string;
+  inflation_min: string;
+  inflation_rate_change: string;
+  mint_denom: string;
+};
+export type MintParamsResponse = {
+  params: MintParams;
+};
+
+// "/chain/{chainName}/staking/params"
+// Takes ChainReq
+
+export type StakingParams = {
+  chain_name: string;
+  unbonding_time: number;
+  max_validators: number;
+  max_entries: number;
+  historical_entries: number;
+  bond_denom: string;
+};
+export type StakingParamsResponse = {
+  params: StakingParams;
+};
+
+// "/chain/{chainName}/validators"
+// Takes ChainReq
+
+export type Validator = {
+  chain_name: string;
+  commission_rate: string;
+  consensus_pubkey_type: string;
+  consensus_pubkey_value: string;
+  delegator_shares: string;
+  details: string;
+  identity: string;
+  jailed: boolean;
+  max_change_rate: string;
+  max_rate: string;
+  min_self_delegation: string;
+  moniker: string;
+  operator_address: string;
+  status: number;
+  tokens: string;
+  unbonding_height: number;
+  unbonding_time: string;
+  update_time: string;
+  website: string;
+  avatar: string;
+  stakedAmount?: string;
+  
+};
+export type ValidatorsResponse = {
+  validators: Array<Validator>;
+};
+
+// "/chain/{chainName}/numbers/{address}"
+// Takes ChainAddrReq
+
+export type SeqNumber = {
+  chain_name: string;
+  address: string;
+  sequence_number: number;
+  account_number: number;
+};
+export type NumbersResponse = {
+  numbers: SeqNumber;
+};
+
+// "/chain/{chainName}/delegatorrewards/{address}""
+// Takes ChainAddrReq
+
+export type StakingReward = {
+  validator_address: string;
+  reward: string;
+};
+export type StakingRewardsResponse = {
+  rewards: StakingReward[];
+  total: string;
+};
+
+// "/chain/{chainName}/primary_channel/{counterparty}"
+// Takes ChainCounterPartyReq
+
+export type PrimaryChannelResponse = {
+  primary_channel: PrimaryChannel;
+};
+
+// "/tx/{chainName}/{destinationChainName/{txHash}}"
+// Takes DestinationTXReq
+
+export type DestinationTXResponse = {
+  dest_chain: string;
+  cause?: string;
+  tx_hash: string;
+};
+
+// "/chain/{chainName}/denom/verify_trace/{hash}"
+// Takes VerifyTraceReq
+
+export type VerifyTrace = {
+  ibc_denom: string;
+  base_denom: string;
+  cause?: string;
+  verified: boolean;
+  path: string;
+  trace: Array<Trace>;
+};
+export type VerifyTraceResponse = {
+  verify_trace: VerifyTrace;
+};
+
+// "/balances/{address}"
+// Takes AddrReq
+
+export type Balance = {
+  address: string;
+  base_denom: string;
+  verified: boolean;
+  amount: string;
+  on_chain: string;
+  ibc: IbcInfo | Record<string, never>;
+};
+export type Balances = Array<Balance>;
+export type BalancesResponse = {
+  balances: Balances;
+};
+
+// "/staking_balances/{address}"
+// Takes AddrReq
+
+export type StakingBalance = {
+  validator_address: string;
+  amount: string;
+  chain_name: string;
+};
+export type StakingBalances = Array<StakingBalance>;
+export type StakingBalancesResponse = {
+  staking_balances: StakingBalances;
+};
+
+// "/unbonding_delegations/{address}"
+// Takes AddrReq
+
+export type UnbondingDelegationEntry = {
+  balance: string;
+  completion_time: string;
+  creation_height: number;
+  initial_balance: string;
+};
+export type UnbondingDelegation = {
+  validator_address: string;
+  entries: UnbondingDelegationEntry[];
+  chain_name: string;
+};
+export type UnbondingDelegations = Array<UnbondingDelegation>;
+export type UnbondingDelegationsResponse = {
+  unbonding_delegations: UnbondingDelegations;
+};
+
+// "/tx/ticket/{chainName}/{ticket}"
+// Takes TicketReq
+
+export type TxHashEntry = {
+  Chain: string;
+  Status: string;
+  TxHash: string;
+};
+export type TicketResponse = {
+  status: string;
+  height?: number;
+  newTicket?: string;
+  error?: string;
+  info?: string;
+  owner?: string;
+  tx_hashes?: Array<TxHashEntry>;
+};
+
+// "/chain/{chainName}/txs/{txhash}"
+// Takes TicketReq
+
+export type TransactionDetailResponse = {
+  tx: {
+    body: {
+      messages: { "@type": string; [key: string]: any }[];
+      memo: string;
+    };
+    auth_info: {
+      fee: { amount: Amount[]; gas_limit: string };
+    };
+    signatures: string[];
+  };
+  tx_response: {
+    height: string;
+    txhash: string;
+    gas_wanted: string;
+    gas_used: string;
+    tx: {
+      "@type": string;
+      body: {
+        messages: { "@type": string; [key: string]: any }[];
+        memo: string;
+      };
+      auth_info: {
+        fee: { amount: Amount[]; gas_limit: string };
+      };
+      signatures: [];
+    };
+    timestamp: string;
+  };
+};
+
+// "/oracle/chart/{tokenId}?days={days}&vs_currency={currency}"
+// Takes TokenPriceReq
+
+export type TokenPriceResponse = {
+  data: {
+    id: string;
+    market_caps: Array<[number, number]>;
+    name: string;
+    prices: Array<[number, number]>;
+    symbol: string;
+    total_volumes: Array<[number, number]>;
+  };
+  message: string | null;
+  status: number;
+};
+
+// "/oracle/geckoid?names={token}"
+// Takes TokenIdReq
+
+export type TokenIdResponse = {
+  data: Record<string,string>;
   message: string | null;
   status: number;
 };

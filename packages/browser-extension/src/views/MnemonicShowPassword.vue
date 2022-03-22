@@ -1,24 +1,26 @@
 <template>
   <div class="page">
     <Header title="Back up account" />
-    <span class="secondary-text" style="margin-bottom: 36px"
-      >If your device is lost or stolen, you will be able to recover your wallet. Write down your sentence on a paper or
-      in a password manager</span
-    >
-    <Input v-model="password" placeholder="Password" type="password" />
-    <div v-if="error" style="color: #ff6072; margin-top: 16px; text-align: center">Incorrect word. Try again.</div>
+    <div @keyup.enter="submit" class="form">
+      <span class="secondary-text" style="margin-bottom: 36px"
+        >If your device is lost or stolen, you will be able to recover your wallet. Write down your sentence on a paper
+        or in a password manager</span
+      >
+      <Input v-model="password" placeholder="Password" type="password" />
+      <div v-if="error" style="color: #ff6072; margin-top: 16px; text-align: center">Incorrect word. Try again.</div>
 
-    <div
-      :style="{
-        marginTop: 'auto',
-      }"
-    >
-      <ListCard
-        :img="require(`@@/assets/Secure.png`)"
-        caption="Never share your recovery phrase with anyone, store it securily."
-      />
-      <Button name="Show Mnemonic" @click="submit" />
-      <Button name="Cancel" variant="link" @click="$router.go(-1)" />
+      <div
+        :style="{
+          marginTop: 'auto',
+        }"
+      >
+        <ListCard
+          :img="require(`@@/assets/Secure.png`)"
+          caption="Never share your recovery phrase with anyone, store it securily."
+        />
+        <Button type="submit" name="Show Mnemonic" @click="submit" />
+        <Button name="Cancel" variant="link" @click="$router.go(-1)" />
+      </div>
     </div>
   </div>
 </template>

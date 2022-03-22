@@ -34,6 +34,8 @@ import Button from '@/components/ui/Button.vue';
 import Header from '@@/components/Header.vue';
 import ListCard from '@@/components/ListCard.vue';
 
+import { GlobalActionTypes } from '@@/store/extension/action-types';
+
 export default defineComponent({
   name: 'Connect Ledger',
   components: { ListCard, Header, Button },
@@ -47,6 +49,12 @@ export default defineComponent({
       // we use the same component for account gathering and signing
       this.$router.push(this.$route.query.next);
     },
+  },
+  async mounted() {
+    const hasPasswod = await this.$store.dispatch(GlobalActionTypes.HAS_WALLET); // the wallet is encrypted with the password so the existence is equal
+    if (!hasPasswod) {
+      this.$router.push({ path: '/passwordCreate', query: { returnTo: this.$route.path } });
+    }
   },
 });
 </script>
