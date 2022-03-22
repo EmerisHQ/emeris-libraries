@@ -41,13 +41,8 @@ export default defineComponent({
       return this.wallet[this.index];
     },
   },
-  watch: {
-    account: {
-      handler(account) {
-        this.accountName = account.accountName;
-      },
-      immediate: true,
-    },
+  mounted() {
+    this.$data.accountName = this.account.accountName;
   },
   props: {
     index: { type: String, required: true },
@@ -55,6 +50,7 @@ export default defineComponent({
   methods: {
     async submit() {
       try {
+        console.log('submit >>>> ', this.account, this.accountName);
         await this.$store.dispatch(GlobalActionTypes.UPDATE_ACCOUNT, {
           oldAccountName: this.account.accountName,
           newAccountName: this.accountName,

@@ -23,6 +23,7 @@ import TxMapper from '@emeris/mapper';
 
 import { keyHashfromAddress } from '@/utils/basic';
 import chainConfig from '../chain-config';
+import { EncodeObject } from '@cosmjs/proto-signing';
 export class Emeris implements IEmeris {
   public loaded: boolean;
   private storage: EmerisStorage;
@@ -135,7 +136,7 @@ export class Emeris implements IEmeris {
       case 'createAccount':
         // guard
         if (!message.data.data.account.isLedger && !message.data.data.account.accountMnemonic) {
-          throw new Error("Account has no mnemonic")
+          throw new Error('Account has no mnemonic');
         }
         await this.storage.saveAccount(message.data.data.account, this.password);
         try {
@@ -147,9 +148,10 @@ export class Emeris implements IEmeris {
         return this.wallet;
       case 'updateAccount':
         try {
+          console.log('updateAccount >>>> ', message.data.data);
           await this.storage.updateAccount(
-            message.data.data.account,
-            message.data.data.account.accountName,
+            message.data.data.newAccountName as string,
+            message.data.data.oldAccountName,
             this.password,
           );
           this.wallet = await this.unlockWallet(this.password);
@@ -203,7 +205,7 @@ export class Emeris implements IEmeris {
       case 'hasWallet':
         return await this.hasWallet();
       case 'setResponse':
-        return this.setResponse(message.data.data.id, message.data.data)
+        return this.setResponse(message.data.data.id, message.data.data);
       case 'extensionReset':
         this.storage.extensionReset();
         return;
@@ -215,7 +217,8 @@ export class Emeris implements IEmeris {
       case 'addWhitelistedWebsite':
         // prevent dupes
         const whitelistedWebsites = await this.storage.getWhitelistedWebsites();
-        if (whitelistedWebsites.find((whitelistedWebsite) => whitelistedWebsite.origin === message.data.data.website)) return true;
+        if (whitelistedWebsites.find((whitelistedWebsite) => whitelistedWebsite.origin === message.data.data.website))
+          return true;
         return this.storage.addWhitelistedWebsite(message.data.data.website);
     }
   }
@@ -262,20 +265,26 @@ export class Emeris implements IEmeris {
           accountName: account.accountName,
           isLedger: account.isLedger,
           setupState: account.setupState,
-          keyHashes: []
-        }
+          keyHashes: [],
+        };
         if (account.isLedger) {
-          displayAccount.keyHashes = [account.keyHash]
+          displayAccount.keyHashes = [account.keyHash];
         } else {
           displayAccount.keyHashes =
             // wrapping in a Set to make all values unique
-            [...new Set(await Promise.all(Object.values(chainConfig).map(async chain => {
-              const address = await libs[chain.library].getAddress(account, chain)
-              const keyHash = keyHashfromAddress(address);
-              return keyHash
-            })))]
+            [
+              ...new Set(
+                await Promise.all(
+                  Object.values(chainConfig).map(async (chain) => {
+                    const address = await libs[chain.library].getAddress(account, chain);
+                    const keyHash = keyHashfromAddress(address);
+                    return keyHash;
+                  }),
+                ),
+              ),
+            ];
         }
-        return displayAccount
+        return displayAccount;
       }),
     );
   }
@@ -320,17 +329,23 @@ export class Emeris implements IEmeris {
       throw new Error('Chain not supported: ' + request.data.chainId);
     }
 
-    const selectedAccount = this.wallet.find(({ accountName }) => accountName === this.selectedAccount)
-    const address = await libs[chain.library].getAddress(selectedAccount, chain)
+    const selectedAccount = this.wallet.find(({ accountName }) => accountName === this.selectedAccount);
+    const address = await libs[chain.library].getAddress(selectedAccount, chain);
 
     if (address !== request.data.signingAddress) {
       throw new Error('The requested signing address is not active in the extension');
     }
 
-    const chainMessages = await TxMapper(request.data)
-    const signable = await libs[chain.library].getRawSignable(selectedAccount, chain, chainMessages, request.data.fee, request.data.memo)
+    const chainMessages = await TxMapper(request.data);
+    const signable = await libs[chain.library].getRawSignable(
+      selectedAccount,
+      chain,
+      chainMessages,
+      request.data.fee,
+      request.data.memo,
+    );
 
-    return signable
+    return signable;
   }
   async signTransaction(request: SignTransactionRequest): Promise<any> {
     request.id = uuidv4();
@@ -344,20 +359,26 @@ export class Emeris implements IEmeris {
         throw new Error('Chain not supported: ' + request.data.chainId);
       }
 
-      const selectedAccount = this.wallet.find(({ accountName }) => accountName === this.selectedAccount)
-      const address = await libs[chain.library].getAddress(selectedAccount, chain)
+      const selectedAccount = this.wallet.find(({ accountName }) => accountName === this.selectedAccount);
+      const address = await libs[chain.library].getAddress(selectedAccount, chain);
 
       if (address !== request.data.signingAddress) {
         throw new Error('The requested signing address is not active in the extension');
       }
 
-      const chainMessages = await TxMapper(request.data)
+      const chainMessages = await TxMapper(request.data);
       // @ts-ignore
-      const broadcastable = await libs[chain.library].sign(selectedAccount, chain, chainMessages, request.data.fee, <string>memo)
+      const broadcastable = await libs[chain.library].sign(
+        selectedAccount,
+        chain,
+        chainMessages as EncodeObject[],
+        request.data.fee,
+        <string>memo,
+      );
 
-      return broadcastable
+      return broadcastable;
     }
-    return undefined
+    return undefined;
   }
   // async signAndBroadcastTransaction(request: SignAndBroadcastTransactionRequest): Promise<AbstractTxResult> {
   //   request.id = uuidv4();

@@ -66,12 +66,12 @@ export default class EmerisStorage {
   async setLastAccount(accountName: string): Promise<void> {
     await browser.storage[this.storageMode].set({ lastAccount: accountName });
   }
-  async updateAccount(account: EmerisAccount, oldAccountName: string, password: string): Promise<boolean> {
+  async updateAccount(newAccountName: string, oldAccountName: string, password: string): Promise<boolean> {
     try {
       const wallet = await this.unlockWallet(password);
       const oldAccount = wallet.find((x) => x.accountName === oldAccountName);
       const accounts = wallet.filter((x) => x.accountName != oldAccountName);
-      accounts.push({ ...oldAccount, ...account });
+      accounts.push({ ...oldAccount, accountName: newAccountName });
       await this.saveWallet(accounts, password);
       return true;
     } catch (e) {
@@ -134,6 +134,11 @@ export default class EmerisStorage {
     }
   }
   async extensionReset() {
-    await browser.storage[this.storageMode].set({ password: null, wallet: null, lastAccount: null, whitelistedWebsites: null });
+    await browser.storage[this.storageMode].set({
+      password: null,
+      wallet: null,
+      lastAccount: null,
+      whitelistedWebsites: null,
+    });
   }
 }
