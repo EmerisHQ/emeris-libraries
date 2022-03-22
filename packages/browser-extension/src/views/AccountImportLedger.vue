@@ -1,7 +1,13 @@
 <template>
   <div class="page">
     <Header title="Import account" backTo="/">
+      <<<<<<< HEAD
       <a @click="toHdPath">Advanced</a>
+      =======
+      <!-- <router-link to="/accountImport/advanced">
+        <a>Advanced</a>
+      </router-link> -->
+      >>>>>>> origin/develop
     </Header>
     <img :src="require(`@@/assets/ImportLedgerBG.png`)" class="background" />
     <div
@@ -33,12 +39,15 @@ import Header from '@@/components/Header.vue';
 import ListCard from '@@/components/ListCard.vue';
 import { GlobalActionTypes } from '@@/store/extension/action-types';
 
-import { GlobalActionTypes } from '@@/store/extension/action-types';
-
 export default defineComponent({
   name: 'Connect Ledger',
   components: { ListCard, Header, Button },
-  mounted() {
+  async mounted() {
+    const hasPasswod = await this.$store.dispatch(GlobalActionTypes.HAS_WALLET); // the wallet is encrypted with the password so the existence is equal
+    if (!hasPasswod) {
+      this.$router.push({ path: '/passwordCreate', query: { returnTo: this.$route.path } });
+    }
+
     this.$store.dispatch(GlobalActionTypes.SET_NEW_ACCOUNT, {
       route: '/ledger',
     });
@@ -47,23 +56,15 @@ export default defineComponent({
     toHdPath() {
       this.$router.push('/accountImportHdPath?previous=/ledger');
     },
-  },
-  computed: {
-    error() {
-      return this.$route.query.error;
-    },
-  },
-  methods: {
     next() {
       // we use the same component for account gathering and signing
       this.$router.push(this.$route.query.next);
     },
   },
-  async mounted() {
-    const hasPasswod = await this.$store.dispatch(GlobalActionTypes.HAS_WALLET); // the wallet is encrypted with the password so the existence is equal
-    if (!hasPasswod) {
-      this.$router.push({ path: '/passwordCreate', query: { returnTo: this.$route.path } });
-    }
+  computed: {
+    error() {
+      return this.$route.query.error;
+    },
   },
 });
 </script>
