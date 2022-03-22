@@ -40,6 +40,12 @@ body,
   width: 100%;
 }
 
+form {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+}
+
 // buttons
 
 .button-secondary {
