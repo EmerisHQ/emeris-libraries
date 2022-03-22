@@ -63,7 +63,7 @@ export default defineComponent({
         this.$router.push('/accountCreate');
       } catch (err) {
         this.$router.push(
-          '/ledger/error?error=' + err.message + '&backto=/ledger%26next%3D%2Fledger%2Fconnect&retry=/ledger/connect',
+          '/ledger/error?error=' + err.message + '&backto=/ledger%3Fnext%3D%2Fledger%2Fconnect&retry=/ledger/connect',
         );
       }
     },

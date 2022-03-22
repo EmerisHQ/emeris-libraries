@@ -53,6 +53,7 @@ export default defineComponent({
       const signingKeyHash = keyHashfromAddress(transaction?.signingAddress);
       const signingWallet = wallet.find(({ keyHashes }) => keyHashes.includes(signingKeyHash));
       if (!signingWallet) throw new Error('No account stored that can sign the transaction.');
+      if (!signingWallet.isLedger) throw new Error('Stored account is not a Ledger account.');
 
       const chain = config[transaction.chainId];
       if (!chain) {
@@ -78,7 +79,7 @@ export default defineComponent({
       this.$router.push('/');
     } catch (err) {
       this.$router.push(
-        '/ledger/error?error=' + err.message + '&backto=/ledger%26next%3D%2Fledger%sign&retry=/ledger/sign',
+        '/ledger/error?error=' + err.message + '&backto=/ledger%3Fnext%3D%2Fledger%sign&retry=/ledger/sign',
       );
     }
   },
