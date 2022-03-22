@@ -9,7 +9,7 @@
         >Advanced</a
       >
     </Header>
-    <form>
+    <div @keyup.enter="submit">
       <span style="margin-top: 16px; margin-bottom: 16px">Enter your recovery phrase</span>
       <div style="margin-bottom: 16px">
         <MnemonicInput v-model="mnemonic" placeholder="Your recovery phrase" />
@@ -26,7 +26,7 @@
       >
         <Button type="submit" name="Import" :disabled="!mnemonic || unknownWords.length > 0" @click="submit" />
       </div>
-    </form>
+    </div>
     <Modal
       title="Invalid recovery phrase"
       description="Check you have entered your recovery phrase correctly and try again."

@@ -1,6 +1,6 @@
 <template>
   <ConfirmationScreen title="Welcome back" subtitle="Experience the power of cross-chain DeFi">
-    <form>
+    <div @keyup.enter="checkPassword">
       <div
         :style="{
           marginTop: 'auto',
@@ -16,7 +16,7 @@
           <Button name="Forgot Password" variant="link" />
         </router-link>
       </div>
-    </form>
+    </div>
   </ConfirmationScreen>
 </template>
 

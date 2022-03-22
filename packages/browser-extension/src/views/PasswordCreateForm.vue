@@ -1,5 +1,5 @@
 <template>
-  <form>
+  <div @keyup.enter="submit">
     <span class="secondary-text" style="margin-top: 16px; margin-bottom: 24px"
       >You will need this password to unlock the extension</span
     >
@@ -53,7 +53,7 @@
         @click="submit"
       />
     </div>
-  </form>
+  </div>
 </template>
 
 <script lang="ts">
