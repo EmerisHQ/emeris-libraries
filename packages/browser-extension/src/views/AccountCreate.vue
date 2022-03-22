@@ -92,7 +92,7 @@ export default defineComponent({
           account: {
             accountName: this.name,
             accountMnemonic: bip39.generateMnemonic(256), // will be overwritten by existing new account
-            isLedger: false,
+            isLedger: false, // will be overwritten by existing new account
             setupState: this.newAccount.setupState || AccountCreateStates.CREATED, // if this is an import we don't need to check if the user backed up the mnemonic
             ...this.newAccount,
           },

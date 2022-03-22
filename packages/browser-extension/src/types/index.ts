@@ -1,4 +1,4 @@
-import  EmerisMessageMapper  from '@emeris/mapper';
+import EmerisMessageMapper from '@emeris/mapper';
 import { ClientLibrary } from './libraries';
 
 export type EmerisEncryptedWallet = {
@@ -12,6 +12,7 @@ export enum AccountCreateStates {
 export type EmerisAccount = {
   accountName: string;
   accountMnemonic: string;
+  keyHash?: string; // Ledger
   isLedger: boolean;
   setupState: AccountCreateStates;
   hdPath?: [account: string, change: string, addressIndex: string] // TODO force setting or default later in code?
