@@ -1,6 +1,6 @@
 <template>
   <ConfirmationScreen title="Welcome back" subtitle="Experience the power of cross-chain DeFi">
-    <div @keyup.enter="checkPassword">
+    <div @keyup.enter="checkPassword" class="form">
       <div
         :style="{
           marginTop: 'auto',

@@ -1,5 +1,5 @@
 <template>
-  <div @keyup.enter="submit">
+  <div @keyup.enter="submit" class="form">
     <span class="secondary-text" style="margin-top: 16px; margin-bottom: 24px"
       >You will need this password to unlock the extension</span
     >

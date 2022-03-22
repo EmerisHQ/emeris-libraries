@@ -1,7 +1,7 @@
 <template>
   <div class="page">
     <Header title="Back up account" />
-    <div @keyup.enter="submit">
+    <div @keyup.enter="submit" class="form">
       <span class="secondary-text" style="margin-bottom: 36px"
         >If your device is lost or stolen, you will be able to recover your wallet. Write down your sentence on a paper
         or in a password manager</span

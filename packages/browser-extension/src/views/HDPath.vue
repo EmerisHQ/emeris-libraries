@@ -1,7 +1,7 @@
 <template>
   <div class="page">
     <Header title="Advanced" />
-    <div @keyup.enter="submit">
+    <div @keyup.enter="submit" class="form">
       <span style="margin-top: 16px; margin-bottom: 16px">HD derivation path</span>
       <div style="display: flex; margin-bottom: 16px">
         <span style="line-height: 48px; margin-right: 8px" class="secondary-text">m/44’/...’/</span>
