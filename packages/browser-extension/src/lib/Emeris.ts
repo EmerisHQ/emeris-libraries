@@ -134,18 +134,10 @@ export class Emeris implements IEmeris {
         break;
       case 'createAccount':
         // guard
-        if (!message.data.data.account.accountMnemonic) {
+        if (!message.data.data.account.isLedger && !message.data.data.account.accountMnemonic) {
           throw new Error("Account has no mnemonic")
         }
         await this.storage.saveAccount(message.data.data.account, this.password);
-        if (message.data.data.account.isLedger) {
-          try {
-            await navigator['usb'].requestDevice({ filters: [] });
-          } catch (e) {
-            console.log(e);
-            break;
-          }
-        }
         try {
           this.wallet = await this.unlockWallet(this.password);
           this.setLastAccount(message.data.data.account.accountName);
