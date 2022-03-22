@@ -1,21 +1,9 @@
 <template>
   <div class="page">
-    <Header v-if="error" title="Import account" backTo="/" />
     <div style="margin-bottom: 56px; margin-top: 150px; display: flex; flex-direction: column; align-items: center">
-      <img v-if="!error" class="loader" :src="require('@@/assets/EphemerisLoader.svg')" />
+      <img class="loader" :src="require('@@/assets/EphemerisLoader.svg')" />
       <img :src="require('@@/assets/LedgerBox.svg')" style="width: 151px; margin-top: 32px" />
-      <div v-if="!error" style="text-align: center" class="secondary-text; margin-top: 16px">Connecting Ledger...</div>
-      <div v-if="error" style="text-align: center; margin-top: 32px">
-        <span>{{ error }}</span>
-        <br />
-        <span class="secondary-text">Please try again or contact our Emeris support</span>
-        <br />
-        <a
-          href=""
-          @click="$router.push({ path: '/support', query: { url: 'https://emeris.com/support', caption: 'Support' } })"
-          >Visit Emeris Support ↗️</a
-        >
-      </div>
+      <div style="text-align: center" class="secondary-text; margin-top: 16px">Connecting Ledger...</div>
     </div>
     <div
       :style="{
@@ -50,12 +38,8 @@ export default defineComponent({
     Header,
     Button,
   },
-  data: () => ({
-    error: undefined,
-  }),
   methods: {
     async connect() {
-      this.error = undefined;
       try {
         const wallet = await this.$store.dispatch(GlobalActionTypes.GET_WALLET); // never loaded before as root not hit
         // handle background locked
@@ -84,7 +68,7 @@ export default defineComponent({
 
         this.$router.push('/accountCreate');
       } catch (err) {
-        this.error = err.message;
+        this.$router.push('/ledger/error?error=' + err.message + '&backto=/ledger');
       }
     },
   },

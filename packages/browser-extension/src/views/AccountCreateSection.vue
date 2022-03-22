@@ -25,7 +25,7 @@ export default defineComponent({
   methods: {
     // to access USB we need to open a tab, the popup can't access USB
     openLedgerScreen() {
-      window.open('popup.html/#/ledger', '_blank');
+      window.open('popup.html/#/ledger?next=/ledger/connect', '_blank');
     },
   },
 });

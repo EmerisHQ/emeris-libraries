@@ -250,7 +250,7 @@ export const actions: ActionTree<State, RootState> & Actions = {
     await dispatch(ActionTypes.GET_WHITELISTED_WEBSITES);
   },
   async [ActionTypes.WHITELIST_WEBSITE]({ dispatch }, { id, accept }) {
-    await respond(id, { data: accept })
+    await respond(id, { accept })
     await dispatch(ActionTypes.GET_WHITELISTED_WEBSITES);
   },
   async [ActionTypes.ACCEPT_TRANSACTION]({ }, { id, fees, memo }) {
@@ -258,6 +258,9 @@ export const actions: ActionTree<State, RootState> & Actions = {
   },
   async [ActionTypes.CANCEL_TRANSACTION]({ }, { id }) {
     await respond(id, { accept: false })
+  },
+  async [ActionTypes.SEND_LEDGER_SIGNATURE]({ }, { id, broadcastable }) {
+    await respond(id, { broadcastable })
   },
   async [ActionTypes.GET_RAW_TRANSACTION]({ }, {
     messages,
