@@ -2,27 +2,31 @@
   <div class="page">
     <Header title="Advanced" :backTo="this.$route.query.previous" />
     <form>
-    <span style="margin-top: 16px; margin-bottom: 16px">HD derivation path</span>
-    <div style="display: flex; margin-bottom: 16px">
-      <span style="line-height: 48px; margin-right: 8px" class="secondary-text">m/44’/...’/</span>
-      <div style="margin-right: 8px" :class="{ error: accountError }">
-        <Input v-model="account" />
-      </div>
-      <span class="form-info error" style="margin-bottom: 16px" v-if="accountError || changeError || addressIndexError"
-        >Invalid derivation path</span
-      >
-      <a @click="infoOpen = true">What is an HD derivation path?</a>
-      <div
-        :style="{
-          marginTop: 'auto',
-        }"
-      >
-        <Button
-          type="submit"
-          name="Import"
-          :disabled="accountError || changeError || addressIndexError"
-          @click="submit"
-        />
+      <span style="margin-top: 16px; margin-bottom: 16px">HD derivation path</span>
+      <div style="display: flex; margin-bottom: 16px">
+        <span style="line-height: 48px; margin-right: 8px" class="secondary-text">m/44’/...’/</span>
+        <div style="margin-right: 8px" :class="{ error: accountError }">
+          <Input v-model="account" />
+        </div>
+        <span
+          class="form-info error"
+          style="margin-bottom: 16px"
+          v-if="accountError || changeError || addressIndexError"
+          >Invalid derivation path</span
+        >
+        <a @click="infoOpen = true">What is an HD derivation path?</a>
+        <div
+          :style="{
+            marginTop: 'auto',
+          }"
+        >
+          <Button
+            type="submit"
+            name="Import"
+            :disabled="accountError || changeError || addressIndexError"
+            @click="submit"
+          />
+        </div>
       </div>
     </form>
     <Slideout v-bind:open="infoOpen" v-on:update:open="infoOpen = $event">
