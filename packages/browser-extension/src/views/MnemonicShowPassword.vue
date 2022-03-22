@@ -1,7 +1,7 @@
 <template>
   <div class="page">
     <Header title="Back up account" />
-    <form>
+    <div @keyup.enter="submit" class="form">
       <span class="secondary-text" style="margin-bottom: 36px"
         >If your device is lost or stolen, you will be able to recover your wallet. Write down your sentence on a paper
         or in a password manager</span
@@ -21,7 +21,7 @@
         <Button type="submit" name="Show Mnemonic" @click="submit" />
         <Button name="Cancel" variant="link" @click="$router.go(-1)" />
       </div>
-    </form>
+    </div>
   </div>
 </template>
 

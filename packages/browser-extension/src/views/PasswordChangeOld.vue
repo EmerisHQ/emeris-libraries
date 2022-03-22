@@ -1,7 +1,7 @@
 <template>
   <div class="page">
     <Header title="Password" />
-    <form>
+    <div @keyup.enter="submit" class="form">
       <span class="secondary-text" style="margin-top: 16px; margin-bottom: 24px">Enter your password</span>
       <div style="margin-bottom: 16px">
         <Input v-model="password" placeholder="Password" type="password" />
@@ -14,7 +14,7 @@
       >
         <Button type="submit" name="Continue" @click="submit" />
       </div>
-    </form>
+    </div>
   </div>
 </template>
 

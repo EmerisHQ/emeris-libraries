@@ -1,7 +1,7 @@
 <template>
   <div class="page">
     <Header title="Advanced" />
-    <form>
+    <div @keyup.enter="submit" class="form">
       <span style="margin-top: 16px; margin-bottom: 16px">HD derivation path</span>
       <div style="display: flex; margin-bottom: 16px">
         <span style="line-height: 48px; margin-right: 8px" class="secondary-text">m/44’/...’/</span>
@@ -31,7 +31,7 @@
           @click="submit"
         />
       </div>
-    </form>
+    </div>
     <Slideout v-bind:open="infoOpen" v-on:update:open="infoOpen = $event">
       <h1 style="margin-bottom: 16px">What does it mean HD derivation path?</h1>
       <div class="secondary-text" style="margin-bottom: 24px">

@@ -62,7 +62,7 @@
       </div>
     </div>
     <Slideout v-bind:open="editMemo" v-on:update:open="editMemo = $event">
-      <form>
+      <div @keyup.enter="editMemo = false" class="form">
         <h1 style="margin-bottom: 16px">Reference</h1>
         <div class="secondary-text" style="margin-bottom: 32px">
           Add a reference for your transaction. This is often called a “memo” in other apps. If you’re sending to an
@@ -75,24 +75,13 @@
             variant="secondary"
             style="flex: 1; margin-right: 16px"
             @click="
-              () => {
-                editMemo = false;
-                memo = undefined;
-              }
+              editMemo = false;
+              memo = undefined;
             "
           />
-          <Button
-            type="submit"
-            name="Done"
-            style="flex: 1"
-            @click="
-              () => {
-                editMemo = false;
-              }
-            "
-          />
+          <Button type="submit" name="Done" style="flex: 1" @click="editMemo = false" />
         </div>
-      </form>
+      </div>
     </Slideout>
   </div>
 </template>
