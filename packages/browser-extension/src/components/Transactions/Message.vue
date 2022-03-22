@@ -1,6 +1,6 @@
 <template>
   <div>
-    <component :is="component" :message="message" :chainName="chainId" />
+    <component :is="component" :message="message.data" :chainName="chainId" />
   </div>
 </template>
 

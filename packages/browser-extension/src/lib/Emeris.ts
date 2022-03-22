@@ -134,18 +134,10 @@ export class Emeris implements IEmeris {
         break;
       case 'createAccount':
         // guard
-        if (!message.data.data.account.accountMnemonic) {
+        if (!message.data.data.account.isLedger && !message.data.data.account.accountMnemonic) {
           throw new Error("Account has no mnemonic")
         }
         await this.storage.saveAccount(message.data.data.account, this.password);
-        if (message.data.data.account.isLedger) {
-          try {
-            await navigator['usb'].requestDevice({ filters: [] });
-          } catch (e) {
-            console.log(e);
-            break;
-          }
-        }
         try {
           this.wallet = await this.unlockWallet(this.password);
           this.setLastAccount(message.data.data.account.accountName);
@@ -270,19 +262,14 @@ export class Emeris implements IEmeris {
           accountName: account.accountName,
           isLedger: account.isLedger,
           setupState: account.setupState,
-          keyHashes: []
-        }
-        if (account.isLedger) {
-          displayAccount.keyHashes = [account.keyHash]
-        } else {
-          displayAccount.keyHashes =
-            // wrapping in a Set to make all values unique
+          keyHashes: // wrapping in a Set to make all values unique
             [...new Set(await Promise.all(Object.values(chainConfig).map(async chain => {
               const address = await libs[chain.library].getAddress(account, chain)
               const keyHash = keyHashfromAddress(address);
               return keyHash
             })))]
         }
+
         return displayAccount
       }),
     );
@@ -342,7 +329,12 @@ export class Emeris implements IEmeris {
   }
   async signTransaction(request: SignTransactionRequest): Promise<any> {
     request.id = uuidv4();
-    const { accept, memo } = await this.forwardToPopup(request);
+    const { accept, memo, broadcastable } = await this.forwardToPopup(request);
+    // if we have a broadcastable, signing has already been done i.e. due to Ledger signing
+    if (broadcastable) {
+      return broadcastable
+    }
+    // else if sign via local key signing
     if (accept) {
       if (!this.wallet) {
         throw new Error('No wallet configured');
@@ -374,7 +366,7 @@ export class Emeris implements IEmeris {
   async enable(request: ApproveOriginRequest): Promise<boolean> {
     // TODO purge this queue and replace with a sensible data struct to we can check if a request is a dupe
     request.id = uuidv4();
-    const enabled = (await this.forwardToPopup(request)).data as boolean;
+    const enabled = (await this.forwardToPopup(request)).accept as boolean;
     if (enabled) {
       await this.storage.addWhitelistedWebsite(request.origin);
     }

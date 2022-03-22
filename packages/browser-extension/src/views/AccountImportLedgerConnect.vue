@@ -32,9 +32,10 @@ export default defineComponent({
   name: 'Import Ledger',
   async mounted() {
     try {
+      const hasWallet = await this.$store.dispatch(GlobalActionTypes.HAS_WALLET); // checking if the password was set
       const wallet = await this.$store.dispatch(GlobalActionTypes.GET_WALLET); // never loaded before as root not hit
       // handle background locked
-      if (!wallet) {
+      if (hasWallet && !wallet) {
         this.$router.push('/');
       }
 
@@ -69,7 +70,7 @@ export default defineComponent({
 
       this.$router.push('/accountCreate');
     } catch (err) {
-      this.$router.push('/ledger?error=' + err.message);
+      this.$router.push('/ledger?error=' + err.message + '&next=' + this.$route.path);
     }
   },
 });

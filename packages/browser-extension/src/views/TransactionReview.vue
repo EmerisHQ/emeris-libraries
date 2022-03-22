@@ -40,6 +40,7 @@
         z-index: 100;
       "
     >
+      <div v-if="error" style="color: #ff6072; margin-top: 16px; text-align: center">{{ error }}</div>
       <div
         style="display: flex; flex-direction: row; justify-content: space-between; margin-bottom: 8px; font-size: 13px"
       >
@@ -62,7 +63,7 @@
       </div>
     </div>
     <Slideout v-bind:open="editMemo" v-on:update:open="editMemo = $event">
-      <form>
+      <div @keyup.enter="editMemo = false" class="form">
         <h1 style="margin-bottom: 16px">Reference</h1>
         <div class="secondary-text" style="margin-bottom: 32px">
           Add a reference for your transaction. This is often called a “memo” in other apps. If you’re sending to an
@@ -75,24 +76,13 @@
             variant="secondary"
             style="flex: 1; margin-right: 16px"
             @click="
-              () => {
-                editMemo = false;
-                memo = undefined;
-              }
+              editMemo = false;
+              memo = undefined;
             "
           />
-          <Button
-            type="submit"
-            name="Done"
-            style="flex: 1"
-            @click="
-              () => {
-                editMemo = false;
-              }
-            "
-          />
+          <Button type="submit" name="Done" style="flex: 1" @click="editMemo = false" />
         </div>
-      </form>
+      </div>
     </Slideout>
   </div>
 </template>
@@ -106,6 +96,7 @@ import Slideout from '@@/components/Slideout.vue';
 import TotalPrice from '@/components/common/TotalPrice.vue';
 import Input from '@/components/ui/Input.vue';
 import { GlobalActionTypes } from '@@/store/extension/action-types';
+import { keyHashfromAddress } from '@/utils/basic';
 
 export default defineComponent({
   name: 'Transaction Review',
@@ -127,6 +118,7 @@ export default defineComponent({
       },
     ],
     gas: 200000,
+    error: undefined,
   }),
   computed: {
     pending() {
@@ -142,16 +134,37 @@ export default defineComponent({
       this.$router.push('/');
     },
     async accept() {
-      await this.$store.dispatch(GlobalActionTypes.ACCEPT_TRANSACTION, {
-        id: this.pending.id,
-        // TODO currently setting default fee until fee selection works
-        fees: {
-          gas: this.gas,
-          amount: this.fees,
-        },
-        memo: this.memo,
-      });
-      this.$router.push('/');
+      this.error = undefined;
+      try {
+        const hasWallet = await this.$store.dispatch(GlobalActionTypes.HAS_WALLET); // checking if the password was set
+        const wallet = await this.$store.dispatch(GlobalActionTypes.GET_WALLET); // never loaded before as root not hit
+        // handle background locked
+        if (hasWallet && !wallet) {
+          this.$router.push('/');
+        }
+
+        const signingKeyHash = keyHashfromAddress(this.transaction?.signingAddress);
+        const signingWallet = wallet.find(({ keyHashes }) => keyHashes.includes(signingKeyHash));
+        if (!signingWallet) throw new Error('No account stored that can sign the transaction.');
+        if (signingWallet.isLedger) {
+          window.open('popup.html/#/ledger?next=/ledger/sign', '_blank');
+          window.close();
+          return;
+        }
+
+        await this.$store.dispatch(GlobalActionTypes.ACCEPT_TRANSACTION, {
+          id: this.pending.id,
+          // TODO currently setting default fee until fee selection works
+          fees: {
+            gas: this.gas,
+            amount: this.fees,
+          },
+          memo: this.memo,
+        });
+        this.$router.push('/');
+      } catch (err) {
+        this.error = err.message;
+      }
     },
   },
   mounted() {
