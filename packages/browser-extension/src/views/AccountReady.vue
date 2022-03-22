@@ -8,7 +8,7 @@
     <div class="secondary-text" style="text-align: center; margin-bottom: 24px">
       You have successfully created and backed up your new wallet. Enjoy exploring the new era of DeFi with Emeris.
     </div>
-    <router-link to="/portfolio" style="margin-top: auto">
+    <router-link to="/" style="margin-top: auto">
       <Button name="Continue" />
     </router-link>
   </div>
