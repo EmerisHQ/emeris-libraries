@@ -1,13 +1,7 @@
 <template>
   <div class="page">
     <Header title="Import account" backTo="/">
-      <<<<<<< HEAD
       <a @click="toHdPath">Advanced</a>
-      =======
-      <!-- <router-link to="/accountImport/advanced">
-        <a>Advanced</a>
-      </router-link> -->
-      >>>>>>> origin/develop
     </Header>
     <img :src="require(`@@/assets/ImportLedgerBG.png`)" class="background" />
     <div
