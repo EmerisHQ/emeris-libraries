@@ -1,7 +1,7 @@
 import { EmerisSigningClient } from './emerisSigningClient'
 import { LedgerSigner } from '@cosmjs/ledger-amino'
 import { Secp256k1HdWallet } from '@cosmjs/amino'
-import TransportWebHID from '@ledgerhq/hw-transport-webhid'
+import TransportWebUSB from '@ledgerhq/hw-transport-webusb'
 import CosmosSigningClient from './cosmosSigningClient'
 import GravitySigningClient from './gravitySigningClient'
 import OsmosisSigningClient from './osmosisSigningClient'
@@ -18,7 +18,9 @@ export async function getCosmosClient(
 ): Promise<EmerisSigningClient> {
   let signer
   if (isLedger) {
-    signer = new LedgerSigner(await TransportWebHID.create(), { hdPaths: [stringToPath(HdPath)] })
+    const interactiveTimeout = 120_000;
+    // using web usb because webhid can reserve a device and then on a second access is blocked. we could store the transport somewhere but it becomes complicated
+    signer = new LedgerSigner(await TransportWebUSB.create(interactiveTimeout, interactiveTimeout), { hdPaths: [stringToPath(HdPath)] })
   } else {
     signer = await Secp256k1HdWallet.fromMnemonic(mnemonic, { hdPaths: [stringToPath(HdPath)] })
   }
