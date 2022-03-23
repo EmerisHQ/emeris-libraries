@@ -86,8 +86,8 @@ export type CreateAccountRequest = Request & {
 export type UpdateAccountRequest = Request & {
   action: 'updateAccount';
   data: {
-    oldAccountName: string;
-    account: EmerisAccount;
+    targetAccountName: string;
+    account: Partial<EmerisAccount>;
   };
 };
 export type RemoveAccountRequest = Request & {

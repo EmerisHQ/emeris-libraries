@@ -21,7 +21,7 @@ export interface Actions {
   ): Promise<void>;
   [ActionTypes.UPDATE_ACCOUNT](
     { commit }: ActionContext<State, RootState>,
-    { oldAccountName, newAccountName }: { oldAccountName: string; newAccountName: string },
+    { targetAccountName, newAccountName }: { targetAccountName: string; newAccountName: string },
   ): Promise<EmerisWallet>;
   [ActionTypes.REMOVE_ACCOUNT](
     { commit }: ActionContext<State, RootState>,
@@ -136,11 +136,11 @@ export const actions: ActionTree<State, RootState> & Actions = {
   },
   async[ActionTypes.UPDATE_ACCOUNT](
     { commit, getters },
-    { oldAccountName, newAccountName }: { oldAccountName: string; newAccountName: string },
+    { targetAccountName, newAccountName }: { targetAccountName: string; newAccountName: string,  },
   ) {
     const response = await browser.runtime.sendMessage({
       type: 'fromPopup',
-      data: { action: 'updateAccount', data: { oldAccountName, newAccountName } },
+      data: { action: 'updateAccount', data: { targetAccountName, account: {accountName: newAccountName} } },
     });
     commit(MutationTypes.SET_WALLET, response as EmerisWallet);
     return getters['getWallet'];
@@ -228,7 +228,7 @@ export const actions: ActionTree<State, RootState> & Actions = {
   async [ActionTypes.ACCOUNT_BACKED_UP]({ dispatch }, { accountName }: { accountName: string }) {
     await browser.runtime.sendMessage({
       type: 'fromPopup',
-      data: { action: 'updateAccount', data: { account: { accountName, setupState: AccountCreateStates.COMPLETE } } },
+      data: { action: 'updateAccount', data: { account: { setupState: AccountCreateStates.COMPLETE }, targetAccountName: accountName } },
     });
     dispatch(ActionTypes.LOAD_SESSION_DATA);
   },

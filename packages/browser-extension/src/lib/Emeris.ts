@@ -146,14 +146,15 @@ export class Emeris implements IEmeris {
         }
         return this.wallet;
       case 'updateAccount':
+        console.log('inside updateAccount >>> ', message.data.data);
         try {
           await this.storage.updateAccount(
             message.data.data.account,
-            message.data.data.account.accountName,
+            message.data.data.targetAccountName,
             this.password,
           );
           this.wallet = await this.unlockWallet(this.password);
-          this.setLastAccount(message.data.data.newAccountName);
+          this.setLastAccount(message.data.data.account.accountName);
           return this.wallet;
         } catch (e) {
           console.log(e);
