@@ -1,17 +1,19 @@
 <template>
   <div class="page">
     <Header title="Password" />
-    <span class="secondary-text" style="margin-top: 16px; margin-bottom: 24px">Enter your password</span>
-    <div style="margin-bottom: 16px">
-      <Input v-model="password" placeholder="Password" type="password" />
-      <span class="form-info error" v-if="error">The password is wrong</span>
-    </div>
-    <div
-      :style="{
-        marginTop: 'auto',
-      }"
-    >
-      <Button name="Continue" @click="submit" />
+    <div @keyup.enter="submit" class="form">
+      <span class="secondary-text" style="margin-top: 16px; margin-bottom: 24px">Enter your password</span>
+      <div style="margin-bottom: 16px">
+        <Input v-model="password" placeholder="Password" type="password" />
+        <span class="form-info error" v-if="error">The password is wrong</span>
+      </div>
+      <div
+        :style="{
+          marginTop: 'auto',
+        }"
+      >
+        <Button type="submit" name="Continue" @click="submit" />
+      </div>
     </div>
   </div>
 </template>
