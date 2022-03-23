@@ -79,7 +79,7 @@ export default defineComponent({
       this.$router.push('/');
     } catch (err) {
       this.$router.push(
-        '/ledger/error?error=' + err.message + '&backto=/ledger%3Fnext%3D%2Fledger%sign&retry=/ledger/sign',
+        '/ledger/error?error=' + err.message + '&backto=/ledger%3Fnext%3D%2Fledger%2Fsign&retry=/ledger/sign',
       );
     }
   },
