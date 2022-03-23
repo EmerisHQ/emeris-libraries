@@ -34,6 +34,7 @@ export default defineComponent({
         this.$router.push('/');
       }
 
+      // using web usb because webhid can reserve a device and then on a second access is blocked. we could store the transport somewhere but it becomes complicated
       const ledgerTransport = await TransportWebUsb.create(interactiveTimeout, interactiveTimeout);
       const signer = new LedgerSigner(ledgerTransport, { testModeAllowed: true, hdPaths: paths });
 
