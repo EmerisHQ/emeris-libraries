@@ -3,13 +3,7 @@
     <div style="margin-bottom: 56px; margin-top: 150px; display: flex; flex-direction: column; align-items: center">
       <img class="loader" :src="require('@@/assets/EphemerisLoader.svg')" />
       <img :src="require('@@/assets/LedgerBox.svg')" style="width: 151px; margin-top: 32px" />
-    </div>
-    <div
-      :style="{
-        marginTop: 'auto',
-      }"
-    >
-      <div style="text-align: center" class="secondary-text">Connecting Ledger...</div>
+      <div style="text-align: center" class="secondary-text; margin-top: 16px">Connecting Ledger...</div>
     </div>
   </div>
 </template>
@@ -33,12 +27,14 @@ export default defineComponent({
   name: 'Import Ledger',
   async mounted() {
     try {
+      const hasWallet = await this.$store.dispatch(GlobalActionTypes.HAS_WALLET); // checking if the password was set
       const wallet = await this.$store.dispatch(GlobalActionTypes.GET_WALLET); // never loaded before as root not hit
       // handle background locked
-      if (!wallet) {
+      if (hasWallet && !wallet) {
         this.$router.push('/');
       }
 
+      // using web usb because webhid can reserve a device and then on a second access is blocked. we could store the transport somewhere but it becomes complicated
       const ledgerTransport = await TransportWebUsb.create(interactiveTimeout, interactiveTimeout);
       const signer = new LedgerSigner(ledgerTransport, { testModeAllowed: true, hdPaths: paths });
 
@@ -60,7 +56,9 @@ export default defineComponent({
 
       this.$router.push('/accountCreate');
     } catch (err) {
-      this.$router.push('/ledger?error=' + err.message);
+      this.$router.push(
+        '/ledger/error?error=' + err.message + '&backto=/ledger%3Fnext%3D%2Fledger%2Fconnect&retry=/ledger/connect',
+      );
     }
   },
 });
