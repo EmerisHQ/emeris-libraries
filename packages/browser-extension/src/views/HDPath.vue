@@ -15,18 +15,6 @@
           >Invalid derivation path</span
         >
         <a @click="infoOpen = true">What is an HD derivation path?</a>
-        <div
-          :style="{
-            marginTop: 'auto',
-          }"
-        >
-          <Button
-            type="submit"
-            name="Import"
-            :disabled="accountError || changeError || addressIndexError"
-            @click="submit"
-          />
-        </div>
       </div>
     </div>
     <Slideout v-bind:open="infoOpen" v-on:update:open="infoOpen = $event">
