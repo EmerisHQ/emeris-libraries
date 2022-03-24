@@ -262,9 +262,6 @@ export const actions: ActionTree<State, RootState> & Actions = {
   async [ActionTypes.CANCEL_TRANSACTION]({ }, { id }) {
     await respond(id, { broadcastable: undefined })
   },
-  async [ActionTypes.SEND_LEDGER_SIGNATURE]({ }, { id, broadcastable }) {
-    await respond(id, { broadcastable })
-  },
   async [ActionTypes.GET_RAW_TRANSACTION]({ }, {
     messages,
     chainId,
