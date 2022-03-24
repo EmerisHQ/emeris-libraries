@@ -149,12 +149,11 @@ export class Emeris implements IEmeris {
         try {
           await this.storage.updateAccount(
             message.data.data.account,
-            message.data.data.account.accountName,
+            message.data.data.targetAccountName,
             this.password,
           );
           this.wallet = await this.unlockWallet(this.password);
-          this.setLastAccount(message.data.data.newAccountName);
-          return this.wallet;
+          await this.setLastAccount(message.data.data.account.accountName);
         } catch (e) {
           console.log(e);
         }
@@ -219,6 +218,10 @@ export class Emeris implements IEmeris {
         const whitelistedWebsites = await this.storage.getWhitelistedWebsites();
         if (whitelistedWebsites.find((whitelistedWebsite) => whitelistedWebsite.origin === message.data.data.website)) return true;
         return this.storage.addWhitelistedWebsite(message.data.data.website);
+      case 'setPartialAccountCreationStep':
+        return this.storage.setPartialAccountCreationStep(message.data.data, this.password);
+      case 'getPartialAccountCreationStep':
+        return this.storage.getPartialAccountCreationStep(this.password);
     }
   }
   async ensurePopup(): Promise<void> {

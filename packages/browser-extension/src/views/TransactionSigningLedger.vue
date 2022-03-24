@@ -17,6 +17,8 @@
 <script lang="ts">
 import { defineComponent } from 'vue';
 import { GlobalActionTypes } from '@@/store/extension/action-types';
+import { keyHashfromAddress } from '@/utils/basic';
+import config from '@@/chain-config';
 
 export default defineComponent({
   name: 'Transaction Signing Ledger',
@@ -30,6 +32,17 @@ export default defineComponent({
       if ((hasWallet && !wallet) || pendings.length === 0) {
         this.$router.push('/');
         return;
+      }
+
+      const transaction = pendings[0].data;
+      const signingKeyHash = keyHashfromAddress(transaction?.signingAddress);
+      const signingWallet = wallet.find(({ keyHashes }) => keyHashes.includes(signingKeyHash));
+      if (!signingWallet) throw new Error('The requested signing address is not active in the extension');
+      if (!signingWallet.isLedger) throw new Error('The requested signing address is not stored as a Ledger account.');
+
+      const chain = config[transaction.chainId];
+      if (!chain) {
+        throw new Error('Chain not supported: ' + transaction.chainId);
       }
 
       await this.$store.dispatch(GlobalActionTypes.ACCEPT_TRANSACTION, {
