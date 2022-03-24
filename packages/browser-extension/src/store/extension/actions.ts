@@ -18,7 +18,7 @@ export interface Actions {
   [ActionTypes.CREATE_ACCOUNT](
     { commit }: ActionContext<State, RootState>,
     { account }: { account: EmerisAccount },
-  ): Promise<EmerisWallet>;
+  ): Promise<void>;
   [ActionTypes.UPDATE_ACCOUNT](
     { commit }: ActionContext<State, RootState>,
     { oldAccountName, newAccountName }: { oldAccountName: string; newAccountName: string },
@@ -26,7 +26,7 @@ export interface Actions {
   [ActionTypes.REMOVE_ACCOUNT](
     { commit }: ActionContext<State, RootState>,
     { accountName }: { accountName: string },
-  ): Promise<EmerisWallet>;
+  ): Promise<void>;
   [ActionTypes.CREATE_WALLET](
     { commit }: ActionContext<State, RootState>,
     { password }: { password: string },
@@ -126,14 +126,13 @@ export const actions: ActionTree<State, RootState> & Actions = {
     commit(MutationTypes.SET_WALLET, response as EmerisWallet);
     return getters['getWallet'];
   },
-  async[ActionTypes.CREATE_ACCOUNT]({ commit, dispatch, getters }, { account }: { account: EmerisAccount }) {
-    const response = await browser.runtime.sendMessage({
+  async[ActionTypes.CREATE_ACCOUNT]({ dispatch }, { account }: { account: EmerisAccount }) {
+    await browser.runtime.sendMessage({
       type: 'fromPopup',
       data: { action: 'createAccount', data: { account } },
     });
-    commit(MutationTypes.SET_WALLET, response as EmerisWallet);
+    dispatch(ActionTypes.GET_WALLET)
     dispatch(ActionTypes.SET_LAST_ACCOUNT_USED, account)
-    return getters['getWallet'];
   },
   async[ActionTypes.UPDATE_ACCOUNT](
     { commit, getters },
@@ -146,13 +145,12 @@ export const actions: ActionTree<State, RootState> & Actions = {
     commit(MutationTypes.SET_WALLET, response as EmerisWallet);
     return getters['getWallet'];
   },
-  async[ActionTypes.REMOVE_ACCOUNT]({ commit, getters }, { accountName }: { accountName: string }) {
-    const response = await browser.runtime.sendMessage({
+  async[ActionTypes.REMOVE_ACCOUNT]({ dispatch, getters }, { accountName }: { accountName: string }) {
+    await browser.runtime.sendMessage({
       type: 'fromPopup',
       data: { action: 'removeAccount', data: { accountName } },
     });
-    commit(MutationTypes.SET_WALLET, response as EmerisWallet);
-    return getters['getWallet'];
+    await dispatch(ActionTypes.GET_WALLET)
   },
   async[ActionTypes.UNLOCK_WALLET]({ commit, dispatch, getters }, { password }: { password: string }) {
     try {
@@ -252,7 +250,7 @@ export const actions: ActionTree<State, RootState> & Actions = {
     await dispatch(ActionTypes.GET_WHITELISTED_WEBSITES);
   },
   async [ActionTypes.WHITELIST_WEBSITE]({ dispatch }, { id, accept }) {
-    await respond(id, { data: accept })
+    await respond(id, { accept })
     await dispatch(ActionTypes.GET_WHITELISTED_WEBSITES);
   },
   async [ActionTypes.ACCEPT_TRANSACTION]({ }, { id, fees, memo }) {
@@ -260,6 +258,9 @@ export const actions: ActionTree<State, RootState> & Actions = {
   },
   async [ActionTypes.CANCEL_TRANSACTION]({ }, { id }) {
     await respond(id, { accept: false })
+  },
+  async [ActionTypes.SEND_LEDGER_SIGNATURE]({ }, { id, broadcastable }) {
+    await respond(id, { broadcastable })
   },
   async [ActionTypes.GET_RAW_TRANSACTION]({ }, {
     messages,

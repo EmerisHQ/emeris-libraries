@@ -1,10 +1,8 @@
 import { EmerisDEXInfo } from '.';
-import * as API from './EmerisAPI';
 import * as Base from './EmerisBase';
-import { BaseFee } from './EmerisFees';
 
 export type FeeWDenom = {
-    amount: API.APIGasPrice;
+    amount: Base.GasPrice;
     denom: string;
     chain_name: string;
 };
