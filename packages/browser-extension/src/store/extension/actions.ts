@@ -136,11 +136,11 @@ export const actions: ActionTree<State, RootState> & Actions = {
   },
   async[ActionTypes.UPDATE_ACCOUNT](
     { dispatch, commit, getters },
-    { targetAccountName, newAccountName }: { targetAccountName: string; newAccountName: string,  },
+    { targetAccountName, newAccountName }: { targetAccountName: string; newAccountName: string, },
   ) {
     await browser.runtime.sendMessage({
       type: 'fromPopup',
-      data: { action: 'updateAccount', data: { targetAccountName, account: {accountName: newAccountName} } },
+      data: { action: 'updateAccount', data: { targetAccountName, account: { accountName: newAccountName } } },
     });
     return await dispatch(ActionTypes.GET_WALLET);
   },
@@ -261,12 +261,6 @@ export const actions: ActionTree<State, RootState> & Actions = {
   },
   async [ActionTypes.CANCEL_TRANSACTION]({ }, { id }) {
     await respond(id, { broadcastable: undefined })
-  },
-  async [ActionTypes.SEND_LEDGER_SIGNATURE]({ }, { id, broadcastable }) {
-    await respond(id, { broadcastable })
-  },
-  async [ActionTypes.SEND_LEDGER_SIGNATURE]({ }, { id, broadcastable }) {
-    await respond(id, { broadcastable })
   },
   async [ActionTypes.GET_RAW_TRANSACTION]({ }, {
     messages,
