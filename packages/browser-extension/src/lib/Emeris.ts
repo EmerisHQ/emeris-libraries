@@ -153,8 +153,7 @@ export class Emeris implements IEmeris {
             this.password,
           );
           this.wallet = await this.unlockWallet(this.password);
-          this.setLastAccount(message.data.data.account.accountName);
-          return this.wallet;
+          await this.setLastAccount(message.data.data.account.accountName);
         } catch (e) {
           console.log(e);
         }

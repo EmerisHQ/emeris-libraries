@@ -135,15 +135,14 @@ export const actions: ActionTree<State, RootState> & Actions = {
     dispatch(ActionTypes.SET_LAST_ACCOUNT_USED, account)
   },
   async[ActionTypes.UPDATE_ACCOUNT](
-    { commit, getters },
+    { dispatch, commit, getters },
     { targetAccountName, newAccountName }: { targetAccountName: string; newAccountName: string,  },
   ) {
-    const response = await browser.runtime.sendMessage({
+    await browser.runtime.sendMessage({
       type: 'fromPopup',
       data: { action: 'updateAccount', data: { targetAccountName, account: {accountName: newAccountName} } },
     });
-    commit(MutationTypes.SET_WALLET, response as EmerisWallet);
-    return getters['getWallet'];
+    return await dispatch(ActionTypes.GET_WALLET);
   },
   async[ActionTypes.REMOVE_ACCOUNT]({ dispatch, getters }, { accountName }: { accountName: string }) {
     await browser.runtime.sendMessage({
