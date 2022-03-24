@@ -27,7 +27,7 @@
     >
       <h2>Back up your wallet</h2>
       <span class="secondary-text" v-if="!backedUp">Your wallet is currently not secured</span>
-      <span class="secondary-text" v-if="account.isLedger">(Not possible on Ledger devices)</span>
+      <span class="secondary-text" v-if="account.isLedger">Not possible on Ledger devices</span>
       <Icon name="ChevronRightIcon" :icon-size="1" />
     </div>
     <div class="list-card-container" style="margin-bottom: 16px">
