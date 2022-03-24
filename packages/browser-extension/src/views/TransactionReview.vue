@@ -97,6 +97,7 @@ import TotalPrice from '@/components/common/TotalPrice.vue';
 import Input from '@/components/ui/Input.vue';
 import { GlobalActionTypes } from '@@/store/extension/action-types';
 import { keyHashfromAddress } from '@/utils/basic';
+import { MutationTypes } from '@@/store/extension/mutation-types';
 
 export default defineComponent({
   name: 'Transaction Review',
@@ -108,7 +109,7 @@ export default defineComponent({
     TotalPrice,
   },
   data: () => ({
-    memo: '',
+    memo: 'Sent with Emeris',
     editMemo: false,
     editFees: false,
     fees: [
@@ -122,7 +123,9 @@ export default defineComponent({
   }),
   computed: {
     pending() {
-      return this.$store.getters[GlobalGetterTypes.getPending][0];
+      const pending = this.$store.getters[GlobalGetterTypes.getPending][0];
+      this.error = pending?.error;
+      return pending;
     },
     transaction() {
       return this.pending?.data;
@@ -147,8 +150,15 @@ export default defineComponent({
         const signingWallet = wallet.find(({ keyHashes }) => keyHashes.includes(signingKeyHash));
         if (!signingWallet) throw new Error('No account stored that can sign the transaction.');
         if (signingWallet.isLedger) {
-          window.open('popup.html/#/ledger?next=/ledger/sign', '_blank');
-          window.close();
+          this.$store.commit('extension/' + MutationTypes.SET_LEDGER_SIGN_DATA, {
+            fees: {
+              gas: this.gas,
+              amount: this.fees,
+            },
+            memo: this.memo,
+          });
+          const ledgerSigningLink = encodeURI('/ledger/sign');
+          this.$router.push('/ledger?next=' + ledgerSigningLink);
           return;
         }
 
@@ -160,6 +170,7 @@ export default defineComponent({
             amount: this.fees,
           },
           memo: this.memo,
+          ...this.transaction,
         });
         this.$router.push('/');
       } catch (err) {
