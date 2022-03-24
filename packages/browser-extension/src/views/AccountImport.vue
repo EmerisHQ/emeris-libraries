@@ -82,9 +82,9 @@ export default defineComponent({
     },
   },
   async mounted() {
-    const hasPasswod = await this.$store.dispatch(GlobalActionTypes.HAS_WALLET);
+    const hasPassword = await this.$store.dispatch(GlobalActionTypes.HAS_WALLET);
 
-    if (!hasPasswod) {
+    if (!hasPassword) {
       this.$router.push({ path: '/passwordCreate', query: { returnTo: this.$route.fullPath } });
     }
 
