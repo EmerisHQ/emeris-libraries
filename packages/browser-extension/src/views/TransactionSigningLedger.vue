@@ -16,24 +16,12 @@
 
 <script lang="ts">
 import { defineComponent } from 'vue';
-import { LedgerSigner } from '@cosmjs/ledger-amino';
-// eslint-disable-next-line @typescript-eslint/naming-convention
-import TransportWebUsb from '@ledgerhq/hw-transport-webusb';
-import { AminoMsg, makeCosmoshubPath } from '@cosmjs/amino';
+import { AminoMsg } from '@cosmjs/amino';
 import { GlobalActionTypes } from '@@/store/extension/action-types';
-import { GlobalGetterTypes } from '@@/store/extension/getter-types';
-import { AccountCreateStates } from '@@/types';
 import { keyHashfromAddress } from '@/utils/basic';
 import TxMapper from '@emeris/mapper';
-import { SignTransactionRequest } from '@@/types/api';
-import EmerisSigner from '@emeris/signer/lib/EmerisSigner';
 import config from '@@/chain-config';
 import libs from '@@/lib/libraries';
-
-const interactiveTimeout = 120_000;
-// TODO add advanced tab
-const accountNumbers = [0];
-const paths = accountNumbers.map(makeCosmoshubPath);
 
 export default defineComponent({
   name: 'Transaction Signing Ledger',
