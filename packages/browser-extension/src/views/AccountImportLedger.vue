@@ -48,7 +48,7 @@ export default defineComponent({
   },
   methods: {
     toHdPath() {
-      this.$router.push('/accountImportHdPath?previous=/ledger');
+      this.$router.push('/accountImportHdPath?previous=' + encodeURI(this.$route.fullPath));
     },
     next() {
       // we use the same component for account gathering and signing
