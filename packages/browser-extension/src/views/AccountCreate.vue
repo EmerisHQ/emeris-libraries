@@ -73,7 +73,7 @@ export default defineComponent({
   async mounted() {
     const hasPasswod = await this.$store.dispatch(GlobalActionTypes.HAS_WALLET); // the wallet is encrypted with the password so the existence is equal
     if (!hasPasswod) {
-      this.$router.push({ path: '/passwordCreate', query: { returnTo: this.$route.path } });
+      this.$router.push({ path: '/passwordCreate', query: { returnTo: this.$route.fullPath } });
     }
 
     const accounts = (await this.$store.dispatch(GlobalActionTypes.GET_WALLET)) || [];

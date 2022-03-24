@@ -17,20 +17,13 @@
 <script lang="ts">
 import { defineComponent } from 'vue';
 import { GlobalActionTypes } from '@@/store/extension/action-types';
+import { keyHashfromAddress } from '@/utils/basic';
+import config from '@@/chain-config';
 
 export default defineComponent({
   name: 'Transaction Signing Ledger',
-  data: () => ({
-    fees: [
-      {
-        amount: 1,
-        denom: 'uatom',
-      },
-    ],
-    gas: 200000,
-  }),
   async mounted() {
-    const memo = decodeURI(this.$route.query.memo);
+    const ledgerSignData = this.$store.state.extension.ledgerSignData;
     try {
       const hasWallet = await this.$store.dispatch(GlobalActionTypes.HAS_WALLET); // checking if the password was set
       const wallet = await this.$store.dispatch(GlobalActionTypes.GET_WALLET); // never loaded before as root not hit
@@ -41,15 +34,21 @@ export default defineComponent({
         return;
       }
 
+      const transaction = pendings[0].data;
+      const signingKeyHash = keyHashfromAddress(transaction?.signingAddress);
+      const signingWallet = wallet.find(({ keyHashes }) => keyHashes.includes(signingKeyHash));
+      if (!signingWallet) throw new Error('The requested signing address is not active in the extension');
+      if (!signingWallet.isLedger) throw new Error('The requested signing address is not stored as a Ledger account.');
+
+      const chain = config[transaction.chainId];
+      if (!chain) {
+        throw new Error('Chain not supported: ' + transaction.chainId);
+      }
+
       await this.$store.dispatch(GlobalActionTypes.ACCEPT_TRANSACTION, {
         id: pendings[0].id,
-        // TODO currently setting default fee until fee selection works
-        fees: {
-          gas: this.gas,
-          amount: this.fees,
-        },
-        memo: this.memo,
         ...pendings[0].data,
+        ...ledgerSignData,
       });
 
       this.$router.push('/');
@@ -57,8 +56,10 @@ export default defineComponent({
       this.$router.push(
         '/ledger/error?error=' +
           err.message +
-          '&backto=/ledger%3Fnext%3D%2Fledger%2Fsign&retry=/ledger/sign&memo=' +
-          encodeURI(memo),
+          '&backto=' +
+          encodeURI('/ledger&next=/ledger/sign') +
+          '&retry=' +
+          encodeURI('/ledger/sign'),
       );
     }
   },

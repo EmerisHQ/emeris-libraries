@@ -77,30 +77,35 @@ export default defineComponent({
 
       const wordList = mnemonicFormat(this.mnemonic).split(' ');
       this.unknownWords = wordList.filter((word) => !bip39.wordlists.english.includes(word));
+
+      this.storeNewAccount();
     },
   },
   async mounted() {
     const hasPasswod = await this.$store.dispatch(GlobalActionTypes.HAS_WALLET);
 
     if (!hasPasswod) {
-      this.$router.push({ path: '/passwordCreate', query: { returnTo: this.$route.path } });
+      this.$router.push({ path: '/passwordCreate', query: { returnTo: this.$route.fullPath } });
     }
 
-    this.$store.dispatch(GlobalActionTypes.SET_NEW_ACCOUNT, {
-      route: '/accountImport',
-    });
+    const newAccount = await this.$store.dispatch(GlobalActionTypes.GET_NEW_ACCOUNT);
+    this.mnemonic = newAccount.accountMnemonic;
+
+    this.storeNewAccount();
   },
   methods: {
     storeNewAccount() {
       this.$store.dispatch(GlobalActionTypes.SET_NEW_ACCOUNT, {
+        accountMnemonic: mnemonicFormat(this.mnemonic),
         setupState: AccountCreateStates.COMPLETE,
-        accountMnemonic: this.mnemonic,
+        route: '/accountImport',
       });
     },
     submit() {
-      // TODO handle invalid recovery phrase ?
-      this.storeNewAccount();
-      this.$router.push({ path: '/accountCreate' });
+      if (!this.invalidChar && this.unknownWords.length === 0) {
+        this.storeNewAccount();
+        this.$router.push({ path: '/accountCreate' });
+      }
     },
     toHdPath() {
       if (!this.invalidChar && this.unknownWords.length === 0) {

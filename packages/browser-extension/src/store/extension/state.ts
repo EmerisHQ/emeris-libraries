@@ -1,4 +1,5 @@
 import { EmerisAccount, EmerisWallet, ExtensionRequest } from '@@/types';
+import { Coin } from '@cosmjs/proto-signing/build/codec/cosmos/base/v1beta1/coin';
 
 export type State = {
   pending: Array<ExtensionRequest>;
@@ -8,6 +9,13 @@ export type State = {
     route: string; // route user dropped off
   };
   whitelistedWebsites: { origin: string }[];
+  ledgerSignData: {
+    fees: {
+      gas: Number,
+      amount: Coin[],
+    },
+    memo: string,
+  }
 };
 export function getDefaultState(): State {
   return {
@@ -16,5 +24,6 @@ export function getDefaultState(): State {
     lastAccount: null,
     newAccount: null,
     whitelistedWebsites: [],
+    ledgerSignData: null
   };
 }
