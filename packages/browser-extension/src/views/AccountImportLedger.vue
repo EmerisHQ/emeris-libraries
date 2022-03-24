@@ -43,6 +43,7 @@ export default defineComponent({
     }
 
     this.$store.dispatch(GlobalActionTypes.SET_NEW_ACCOUNT, {
+      ...this.$store.state.extension.newAccount,
       route: '/ledger',
     });
   },

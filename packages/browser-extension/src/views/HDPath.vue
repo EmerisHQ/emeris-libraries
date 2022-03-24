@@ -39,13 +39,15 @@ import Slideout from '@@/components/Slideout.vue';
 
 import { GlobalActionTypes } from '@@/store/extension/action-types';
 
+const defaultHdPath = ["0'", '0', '0'];
+
 export default defineComponent({
   name: 'Create Account',
   components: { Header, Button, Slideout, Input },
   data: () => ({
-    account: "0'",
-    change: '0',
-    addressIndex: '0',
+    account: defaultHdPath[0],
+    change: defaultHdPath[1],
+    addressIndex: defaultHdPath[2],
 
     accountError: undefined,
     changeError: undefined,
@@ -59,44 +61,55 @@ export default defineComponent({
     },
   },
   watch: {
+    newAccount(account) {
+      if (account?.hdPath) {
+        this.account = account.hdPath[0];
+        this.change = account.hdPath[1];
+        this.addressIndex = account.hdPath[2];
+      }
+    },
     account(account) {
       this.accountError = !/^[0-9]+'?$/.test(account);
 
-      if (!this.accountError)
+      if (!this.accountError) {
+        const hdPath = new Array(...defaultHdPath);
+        hdPath[0] = account;
         this.$store.dispatch(GlobalActionTypes.SET_NEW_ACCOUNT, {
           ...this.newAccount,
-          hdPath: [account, this.newAccount.hdPath[1], this.newAccount.hdPath[2]],
+          hdPath,
         });
+      }
     },
     change(change) {
       this.changeError = !/^[0-9]+'?$/.test(change);
 
-      if (!this.changeError)
+      if (!this.changeError) {
+        const hdPath = new Array(...defaultHdPath);
+        hdPath[1] = change;
         this.$store.dispatch(GlobalActionTypes.SET_NEW_ACCOUNT, {
           ...this.newAccount,
-          hdPath: [this.newAccount.hdPath[0], change, this.newAccount.hdPath[2]],
+          hdPath,
         });
+      }
     },
     addressIndex(index) {
       this.addressIndexError = !/^[0-9]+'?$/.test(index);
 
-      if (!this.addressIndexError)
+      if (!this.addressIndexError) {
+        const hdPath = new Array(...defaultHdPath);
+        hdPath[2] = index;
         this.$store.dispatch(GlobalActionTypes.SET_NEW_ACCOUNT, {
           ...this.newAccount,
-          hdPath: [this.newAccount.hdPath[0], this.newAccount.hdPath[1], index],
+          hdPath,
         });
+      }
     },
   },
-  mounted() {
-    if (this.newAccount?.hdPath) {
-      this.account = this.newAccount.hdPath[0];
-      this.change = this.newAccount.hdPath[1];
-      this.addressIndex = this.newAccount.hdPath[2];
-    }
+  async mounted() {
+    await this.$store.dispatch(GlobalActionTypes.GET_NEW_ACCOUNT);
     this.$store.dispatch(GlobalActionTypes.SET_NEW_ACCOUNT, {
       ...this.newAccount,
-      hdPath: this.newAccount?.hdPath || ["0'", '0', '0'],
-      route: '/accountImportHdPath?previous=' + this.$route.query.previous,
+      route: '/accountImportHdPath?previous=' + encodeURI(this.$route.query.previous),
     });
   },
 });
