@@ -44,7 +44,7 @@
         }"
         name="ThreeDotsIcon"
         :icon-size="1.5"
-        @click="editWallet = account"
+        @click.native="() => (editWallet = account)"
         v-if="edit"
       />
       <div
@@ -60,11 +60,11 @@
     <div style="margin-top: auto">
       <Button name="Add account" @click="addAccount" />
     </div>
-    <Slideout v-bind:open="!!editWallet" v-on:update:open="editWallet = $event">
+    <Slideout v-bind:open="!!editWallet" v-on:update:open="() => (editWallet = null)">
       <Button name="Remove account" variant="link" @click="removeAccount" />
       <Button name="Edit wallet name" variant="link" @click="renameAccount" />
       <div style="font-weight: 600">
-        <Button name="Close" variant="link" @click="editWallet = null" />
+        <Button name="Close" variant="link" @click="() => (editWallet = null)" />
       </div>
     </Slideout>
   </div>
@@ -92,13 +92,11 @@ export default defineComponent({
       lastAccount: (state: RootState) => state.extension.lastAccount,
     }),
     editWalletIndex() {
-      return this.editWallet
-        ? this.wallet.findIndex((wallet) => wallet.walletName === this.editWallet.walletName)
-        : undefined;
+      return this.wallet.findIndex((wallet) => wallet.accountName === this.editWallet?.accountName);
     },
   },
   data: () => ({
-    editWallet: undefined,
+    editWallet: null,
     edit: false,
   }),
   components: {
