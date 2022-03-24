@@ -85,7 +85,7 @@ export default defineComponent({
     const hasPasswod = await this.$store.dispatch(GlobalActionTypes.HAS_WALLET);
 
     if (!hasPasswod) {
-      this.$router.push({ path: '/passwordCreate', query: { returnTo: this.$route.path } });
+      this.$router.push({ path: '/passwordCreate', query: { returnTo: this.$route.fullPath } });
     }
 
     const newAccount = await this.$store.dispatch(GlobalActionTypes.GET_NEW_ACCOUNT);
