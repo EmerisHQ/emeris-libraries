@@ -149,12 +149,11 @@ export class Emeris implements IEmeris {
         try {
           await this.storage.updateAccount(
             message.data.data.account,
-            message.data.data.account.accountName,
+            message.data.data.targetAccountName,
             this.password,
           );
           this.wallet = await this.unlockWallet(this.password);
-          this.setLastAccount(message.data.data.newAccountName);
-          return this.wallet;
+          await this.setLastAccount(message.data.data.account.accountName);
         } catch (e) {
           console.log(e);
         }

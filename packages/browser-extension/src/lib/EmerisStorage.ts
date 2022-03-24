@@ -66,11 +66,11 @@ export default class EmerisStorage {
   async setLastAccount(accountName: string): Promise<void> {
     await browser.storage[this.storageMode].set({ lastAccount: accountName });
   }
-  async updateAccount(account: EmerisAccount, oldAccountName: string, password: string): Promise<boolean> {
+  async updateAccount(account: Partial<EmerisAccount>, targetAccountName: string, password: string): Promise<boolean> {
     try {
       const wallet = await this.unlockWallet(password);
-      const oldAccount = wallet.find((x) => x.accountName === oldAccountName);
-      const accounts = wallet.filter((x) => x.accountName != oldAccountName);
+      const oldAccount = wallet.find((x) => x.accountName === targetAccountName);
+      const accounts = wallet.filter((x) => x.accountName != targetAccountName);
       accounts.push({ ...oldAccount, ...account });
       await this.saveWallet(accounts, password);
       return true;
