@@ -72,7 +72,6 @@ export default class EmerisStorage {
       const oldAccount = wallet.find((x) => x.accountName === targetAccountName);
       const accounts = wallet.filter((x) => x.accountName != targetAccountName);
       accounts.push({ ...oldAccount, ...account });
-      console.log('updateAccount >>>> ', targetAccountName, oldAccount, wallet, accounts);
       await this.saveWallet(accounts, password);
       return true;
     } catch (e) {

@@ -50,7 +50,6 @@ export default defineComponent({
   methods: {
     async submit() {
       try {
-        console.log('submit check >>>', this.account, this.accountName, this.account.accountName);
         await this.$store.dispatch(GlobalActionTypes.UPDATE_ACCOUNT, {
           targetAccountName: this.account.accountName,
           newAccountName: this.accountName,
