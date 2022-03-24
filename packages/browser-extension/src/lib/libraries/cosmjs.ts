@@ -57,22 +57,6 @@ const helpers = {
 
     return broadcastable
   },
-  async signLedger(
-    account: EmerisAccount, chainConfig: ChainDetails, messages: EncodeObject[] | AminoMsg[], fee: StdFee, memo: string) {
-    try {
-      const signer = EmerisSigner.withLedger(getHdPath(chainConfig, account))
-      const broadcastable = await signer.signTx({
-        msgs: messages,
-        fee,
-        memo,
-        chain_name: chainConfig.chainName
-      })
-      return broadcastable
-    } catch (err) {
-      console.error(err)
-      return undefined
-    }
-  },
   async getRawSignable(
     account: EmerisAccount, chainConfig: ChainDetails, messages, fee, memo): Promise<any> {
     try {
