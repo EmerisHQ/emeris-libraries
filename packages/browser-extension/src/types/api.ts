@@ -194,6 +194,7 @@ export type PopupRequest =
   | GetWalletRequest
   | GetLastAccountRequest
   | SetResponseRequest
+  | SignTransactionRequest
   | GetAddressRequest
   | ExtensionResetRequest
   | GetWhitelistedWebsiteRequest
