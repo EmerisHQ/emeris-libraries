@@ -342,15 +342,22 @@ export class Emeris implements IEmeris {
       throw new Error('Chain not supported: ' + request.data.chainId);
     }
 
-    const selectedAccount = this.wallet.find(async (account) => {
+    const accountsWithAddress = []
+    await Promise.all(this.wallet.map(async account => {
       const address = await libs[chain.library].getAddress(account, chain)
+      accountsWithAddress.push({
+        address,
+        account
+      })
+    }))
+    const selectedAccountPair = accountsWithAddress.find(({ address }) => {
       return address === request.data.signingAddress
     })
 
-    if (!selectedAccount) {
+    if (!selectedAccountPair) {
       throw new Error('The requested signing address is not available in the extension');
     }
-
+    const selectedAccount = selectedAccountPair.account
     const chainMessages = await TxMapper({ ...request.data, chainName: request.data.chainId, txs: request.data.messages }) // HACK need to adjust transported data model
     let broadcastable
     if (selectedAccount.isLedger) {
@@ -370,14 +377,16 @@ export class Emeris implements IEmeris {
   async signTransaction(request: SignTransactionRequest): Promise<any> {
     request.id = uuidv4();
     const { broadcastable } = await this.forwardToPopup(request);
-    return broadcastable
+    return broadcastable.toString().replaceAll(',', '')
   }
   async signAndBroadcastTransaction(request: SignAndBroadcastTransactionRequest): Promise<any> {
     const broadcastable = await this.signTransaction(request)
 
+    if (!broadcastable) throw new Error("User canceled the transactions")
+
     // @ts-ignore doesn't accept SignAndBroadcastTransactionRequest inheriting from SignTransactionRequest
     const response = await axios.post((process.env.VUE_APP_EMERIS_PROD_ENDPOINT || 'https://api.emeris.com/v1') + '/tx/' + request.data.chainId, {
-      tx_bytes: Buffer.from(broadcastable).toString('base64'),
+      tx_bytes: Buffer.from(Uint8Array.from(broadcastable)).toString('base64'),
       // @ts-ignore doesn't accept SignAndBroadcastTransactionRequest inheriting from SignTransactionRequest
       address: request.data.signingAddress,
     });
