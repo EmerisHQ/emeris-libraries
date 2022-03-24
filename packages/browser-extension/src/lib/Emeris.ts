@@ -340,11 +340,13 @@ export class Emeris implements IEmeris {
       throw new Error('Chain not supported: ' + request.data.chainId);
     }
 
-    const selectedAccount = this.wallet.find(({ accountName }) => accountName === this.selectedAccount)
-    const address = await libs[chain.library].getAddress(selectedAccount, chain)
+    const selectedAccount = this.wallet.find(async (account) => {
+      const address = await libs[chain.library].getAddress(account, chain)
+      return address === request.data.signingAddress
+    })
 
-    if (address !== request.data.signingAddress) {
-      throw new Error('The requested signing address is not active in the extension');
+    if (!selectedAccount) {
+      throw new Error('The requested signing address is not available in the extension');
     }
 
     const chainMessages = await TxMapper({ ...request.data, chainName: request.data.chainId, txs: request.data.messages }) // HACK need to adjust transported data model
