@@ -116,7 +116,7 @@ export default defineComponent({
   },
   methods: {
     submit() {
-      this.$store.dispatch(MutationTypes.SET_NEW_ACCOUNT, {
+      this.$store.dispatch('extension/' + MutationTypes.SET_NEW_ACCOUNT, {
         ...this.newAccount,
         hdPath: [this.account, this.change, this.addressIndex],
       });

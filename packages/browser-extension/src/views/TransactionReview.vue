@@ -97,6 +97,7 @@ import TotalPrice from '@/components/common/TotalPrice.vue';
 import Input from '@/components/ui/Input.vue';
 import { GlobalActionTypes } from '@@/store/extension/action-types';
 import { keyHashfromAddress } from '@/utils/basic';
+import { MutationTypes } from '@@/store/extension/mutation-types';
 
 export default defineComponent({
   name: 'Transaction Review',
@@ -108,7 +109,7 @@ export default defineComponent({
     TotalPrice,
   },
   data: () => ({
-    memo: '',
+    memo: 'Sent with Emeris',
     editMemo: false,
     editFees: false,
     fees: [
@@ -149,7 +150,15 @@ export default defineComponent({
         const signingWallet = wallet.find(({ keyHashes }) => keyHashes.includes(signingKeyHash));
         if (!signingWallet) throw new Error('No account stored that can sign the transaction.');
         if (signingWallet.isLedger) {
-          this.$router.push('/ledger?next=/ledger/sign&memo=' + encodeURI(this.memo));
+          this.$store.commit('extension/' + MutationTypes.SET_LEDGER_SIGN_DATA, {
+            fees: {
+              gas: this.gas,
+              amount: this.fees,
+            },
+            memo: this.memo,
+          });
+          const ledgerSigningLink = encodeURI('/ledger/sign');
+          this.$router.push('/ledger?next=' + ledgerSigningLink);
           return;
         }
 
