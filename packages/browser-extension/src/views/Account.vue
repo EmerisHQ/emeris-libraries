@@ -17,9 +17,17 @@
       @click="$router.push('/accounts')"
       >{{ account.accountName }} <Icon name="ChevronRightIcon" :icon-size="1"
     /></span>
-    <div class="list-card-container" style="margin-bottom: 16px" @click="$router.push('/backup')">
+    <div
+      class="list-card-container"
+      style="margin-bottom: 16px"
+      :style="{
+        opacity: account.isLedger ? 0.6 : 1,
+      }"
+      @click="!account.isLedger && $router.push('/backup')"
+    >
       <h2>Back up your wallet</h2>
       <span class="secondary-text" v-if="!backedUp">Your wallet is currently not secured</span>
+      <span class="secondary-text" v-if="account.isLedger">(Not possible on Ledger devices)</span>
       <Icon name="ChevronRightIcon" :icon-size="1" />
     </div>
     <div class="list-card-container" style="margin-bottom: 16px">
