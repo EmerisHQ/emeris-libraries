@@ -32,37 +32,30 @@ const helpers = {
     const signer = EmerisSigner.withMnemonic(getHdPath(chainConfig, account), account.accountMnemonic)
     return signer.getPubkey(chainConfig.chainName);
   },
+  // bubble exceptions to show users
   async sign(
     account: EmerisAccount, chainConfig: ChainDetails, messages: EncodeObject[] | AminoMsg[], fee: StdFee, memo: string) {
-    try {
-      const signer = EmerisSigner.withMnemonic(getHdPath(chainConfig, account), account.accountMnemonic)
-      const broadcastable = await signer.signTx({
-        msgs: messages,
-        fee,
-        memo,
-        chain_name: chainConfig.chainName
-      })
-      return broadcastable
-    } catch (err) {
-      console.error(err)
-      return undefined
-    }
+    const signer = EmerisSigner.withMnemonic(getHdPath(chainConfig, account), account.accountMnemonic)
+    const broadcastable = await signer.signTx({
+      msgs: messages,
+      fee,
+      memo,
+      chain_name: chainConfig.chainName
+    })
+    return broadcastable
   },
+  // bubble exceptions to show users
   async signLedger(
     account: EmerisAccount, chainConfig: ChainDetails, messages: EncodeObject[] | AminoMsg[], fee: StdFee, memo: string) {
-    try {
-      const signer = EmerisSigner.withLedger(getHdPath(chainConfig, account))
-      const broadcastable = await signer.signTx({
-        msgs: messages,
-        fee,
-        memo,
-        chain_name: chainConfig.chainName
-      })
-      return broadcastable
-    } catch (err) {
-      console.error(err)
-      return undefined
-    }
+    const signer = EmerisSigner.withLedger(getHdPath(chainConfig, account))
+    const broadcastable = await signer.signTx({
+      msgs: messages,
+      fee,
+      memo,
+      chain_name: chainConfig.chainName
+    })
+
+    return broadcastable
   },
   async getRawSignable(
     account: EmerisAccount, chainConfig: ChainDetails, messages, fee, memo): Promise<any> {

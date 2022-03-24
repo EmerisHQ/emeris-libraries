@@ -48,6 +48,7 @@ module.exports = {
         },
       },
     });
+    config.module.rules.delete('eslint');
     config.entry('inject-emeris').add('./src/content-scripts/inject-emeris.ts').end();
     config.resolve.alias.set('@', path.resolve(__dirname, 'demeris/src')).set('@@', path.resolve(__dirname, 'src'));
 
