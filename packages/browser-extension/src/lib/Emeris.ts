@@ -269,7 +269,6 @@ export class Emeris implements IEmeris {
               return keyHash
             })))]
         }
-
         return displayAccount
       }),
     );

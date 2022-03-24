@@ -94,6 +94,7 @@ export default defineComponent({
     storeNewAccount() {
       this.$store.dispatch(GlobalActionTypes.SET_NEW_ACCOUNT, {
         setupState: AccountCreateStates.COMPLETE,
+        accountMnemonic: this.mnemonic,
       });
     },
     submit() {
