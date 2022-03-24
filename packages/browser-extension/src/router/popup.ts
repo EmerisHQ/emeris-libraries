@@ -22,6 +22,7 @@ import AccountAddAdditional from '../views/AccountAddAdditional.vue';
 import AccountImportLedger from '../views/AccountImportLedger.vue';
 import AccountImportLedgerConnect from '../views/AccountImportLedgerConnect.vue';
 import TransactionSigningLedger from '../views/TransactionSigningLedger.vue';
+import LedgerError from '../views/LedgerError.vue';
 import Account from '../views/Account.vue';
 import Accounts from '../views/Accounts.vue';
 import Portfolio from '../views/Portfolio.vue';
@@ -160,6 +161,11 @@ const routes: Array<RouteRecordRaw> = [
     path: '/ledger/sign',
     name: 'Transaction Signing Ledger',
     component: TransactionSigningLedger,
+  },
+  {
+    path: '/ledger/error',
+    name: 'Ledger error',
+    component: LedgerError,
   },
   {
     path: '/account',

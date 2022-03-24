@@ -136,18 +136,10 @@ export class Emeris implements IEmeris {
         break;
       case 'createAccount':
         // guard
-        if (!message.data.data.account.accountMnemonic) {
+        if (!message.data.data.account.isLedger && !message.data.data.account.accountMnemonic) {
           throw new Error("Account has no mnemonic")
         }
         await this.storage.saveAccount(message.data.data.account, this.password);
-        if (message.data.data.account.isLedger) {
-          try {
-            await navigator['usb'].requestDevice({ filters: [] });
-          } catch (e) {
-            console.log(e);
-            break;
-          }
-        }
         try {
           this.wallet = await this.unlockWallet(this.password);
           this.setLastAccount(message.data.data.account.accountName);
@@ -159,12 +151,11 @@ export class Emeris implements IEmeris {
         try {
           await this.storage.updateAccount(
             message.data.data.account,
-            message.data.data.account.accountName,
+            message.data.data.targetAccountName,
             this.password,
           );
           this.wallet = await this.unlockWallet(this.password);
-          this.setLastAccount(message.data.data.newAccountName);
-          return this.wallet;
+          await this.setLastAccount(message.data.data.account.accountName);
         } catch (e) {
           console.log(e);
         }
@@ -227,6 +218,10 @@ export class Emeris implements IEmeris {
         const whitelistedWebsites = await this.storage.getWhitelistedWebsites();
         if (whitelistedWebsites.find((whitelistedWebsite) => whitelistedWebsite.origin === message.data.data.website)) return true;
         return this.storage.addWhitelistedWebsite(message.data.data.website);
+      case 'setPartialAccountCreationStep':
+        return this.storage.setPartialAccountCreationStep(message.data.data, this.password);
+      case 'getPartialAccountCreationStep':
+        return this.storage.getPartialAccountCreationStep(this.password);
     }
   }
   async ensurePopup(): Promise<void> {
@@ -279,7 +274,6 @@ export class Emeris implements IEmeris {
               return keyHash
             })))]
         }
-
         return displayAccount
       }),
     );

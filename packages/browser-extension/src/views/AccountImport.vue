@@ -3,27 +3,29 @@
     <Header title="Import account">
       <a
         :style="{
-          opacity: invalidChar || unknownWords.length > 0 ? 0.6 : 1,
+          opacity: !mnemonic || invalidChar || unknownWords.length > 0 ? 0.6 : 1,
         }"
         @click="toHdPath"
         >Advanced</a
       >
     </Header>
-    <span style="margin-top: 16px; margin-bottom: 16px">Enter your recovery phrase</span>
-    <div style="margin-bottom: 16px">
-      <MnemonicInput v-model="mnemonic" placeholder="Your recovery phrase" />
-    </div>
-    <span class="form-info error" v-if="invalidChar">Invalid character used</span>
-    <span class="form-info error" v-if="unknownWords.length > 0"
-      >Unknown words found: {{ unknownWords.join(', ') }}</span
-    >
-    <a @click="infoOpen = true">What’s a recovery phrase?</a>
-    <div
-      :style="{
-        marginTop: 'auto',
-      }"
-    >
-      <Button name="Import" :disabled="!mnemonic" @click="submit" />
+    <div @keyup.enter="submit" class="form">
+      <span style="margin-top: 16px; margin-bottom: 16px">Enter your recovery phrase</span>
+      <div style="margin-bottom: 16px">
+        <MnemonicInput v-model="mnemonic" placeholder="Your recovery phrase" />
+      </div>
+      <span class="form-info error" v-if="invalidChar">Invalid character used</span>
+      <span class="form-info error" v-if="mnemonic && unknownWords.length > 0"
+        >Unknown words found: {{ unknownWords.join(', ') }}</span
+      >
+      <a @click="infoOpen = true">What’s a recovery phrase?</a>
+      <div
+        :style="{
+          marginTop: 'auto',
+        }"
+      >
+        <Button type="submit" name="Import" :disabled="!mnemonic || unknownWords.length > 0" @click="submit" />
+      </div>
     </div>
     <Modal
       title="Invalid recovery phrase"
@@ -75,6 +77,8 @@ export default defineComponent({
 
       const wordList = mnemonicFormat(this.mnemonic).split(' ');
       this.unknownWords = wordList.filter((word) => !bip39.wordlists.english.includes(word));
+
+      this.storeNewAccount();
     },
   },
   async mounted() {
@@ -84,19 +88,24 @@ export default defineComponent({
       this.$router.push({ path: '/passwordCreate', query: { returnTo: this.$route.path } });
     }
 
-    this.$store.dispatch(GlobalActionTypes.SET_NEW_ACCOUNT, {
-      route: '/accountImport',
-    });
+    const newAccount = await this.$store.dispatch(GlobalActionTypes.GET_NEW_ACCOUNT);
+    this.mnemonic = newAccount.accountMnemonic;
+
+    this.storeNewAccount();
   },
   methods: {
     storeNewAccount() {
       this.$store.dispatch(GlobalActionTypes.SET_NEW_ACCOUNT, {
+        accountMnemonic: mnemonicFormat(this.mnemonic),
         setupState: AccountCreateStates.COMPLETE,
+        route: '/accountImport',
       });
     },
     submit() {
-      this.storeNewAccount();
-      this.$router.push({ path: '/accountCreate' });
+      if (!this.invalidChar && this.unknownWords.length === 0) {
+        this.storeNewAccount();
+        this.$router.push({ path: '/accountCreate' });
+      }
     },
     toHdPath() {
       if (!this.invalidChar && this.unknownWords.length === 0) {

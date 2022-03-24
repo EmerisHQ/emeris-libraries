@@ -1,19 +1,21 @@
 <template>
   <ConfirmationScreen title="Welcome back" subtitle="Experience the power of cross-chain DeFi">
-    <div
-      :style="{
-        marginTop: 'auto',
-      }"
-      class="buttons"
-    >
-      <div :class="{ error: error }">
-        <Input type="password" v-model="password" placeholder="Enter Password" />
+    <div @keyup.enter="checkPassword" class="form">
+      <div
+        :style="{
+          marginTop: 'auto',
+        }"
+        class="buttons"
+      >
+        <div :class="{ error: error }">
+          <Input type="password" v-model="password" placeholder="Enter Password" />
+        </div>
+        <span class="form-info error" v-if="error">Wrong Password</span>
+        <Button type="submit" name="Unlock" @click="checkPassword" />
+        <router-link to="/extensionReset">
+          <Button name="Forgot Password" variant="link" />
+        </router-link>
       </div>
-      <span class="form-info error" v-if="error">Wrong Password</span>
-      <Button name="Unlock" @click="checkPassword" />
-      <router-link to="/extensionReset">
-        <Button name="Forgot Password" variant="link" />
-      </router-link>
     </div>
   </ConfirmationScreen>
 </template>

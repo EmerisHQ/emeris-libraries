@@ -83,8 +83,8 @@ export type CreateAccountRequest = Request & {
 export type UpdateAccountRequest = Request & {
   action: 'updateAccount';
   data: {
-    oldAccountName: string;
-    account: EmerisAccount;
+    targetAccountName: string;
+    account: Partial<EmerisAccount>;
   };
 };
 export type RemoveAccountRequest = Request & {
@@ -162,6 +162,15 @@ export type SetResponseRequest = Request & {
     id: string;
   };
 };
+export type SetPartialAccountCreationStepRequest = Request & {
+  action: 'setPartialAccountCreationStep';
+  data: EmerisAccount & {
+    path: string
+  };
+};
+export type GetPartialAccountCreationStepRequest = Request & {
+  action: 'getPartialAccountCreationStep';
+};
 export type ExtensionRequest =
   | ApproveOriginRequest
   | SignTransactionRequest
@@ -193,6 +202,8 @@ export type PopupRequest =
   | AcceptTransactionSignRequest
   | CancelTransactionSignRequest
   | GetRawTransactionRequest
+  | SetPartialAccountCreationStepRequest
+  | GetPartialAccountCreationStepRequest
   | HasWalletRequest;
 export type RoutedExternalRequest = {
   type: 'toEmerisExtension' | 'toPopup';
