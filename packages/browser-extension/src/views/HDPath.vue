@@ -40,6 +40,7 @@ import Slideout from '@@/components/Slideout.vue';
 import { GlobalActionTypes } from '@@/store/extension/action-types';
 
 const defaultHdPath = ["0'", '0', '0'];
+const hdPathRegex = /^[0-9]+'?$/;
 
 export default defineComponent({
   name: 'Create Account',
@@ -69,9 +70,9 @@ export default defineComponent({
       }
     },
     account(account) {
-      this.accountError = !/^[0-9]+'?$/.test(account);
+      this.accountError = !hdPathRegex.test(account);
 
-      if (!this.accountError) {
+      if (this.accountError) {
         const hdPath = new Array(...defaultHdPath);
         hdPath[0] = account;
         this.$store.dispatch(GlobalActionTypes.SET_NEW_ACCOUNT, {
@@ -81,9 +82,9 @@ export default defineComponent({
       }
     },
     change(change) {
-      this.changeError = !/^[0-9]+'?$/.test(change);
+      this.changeError = !hdPathRegex.test(change);
 
-      if (!this.changeError) {
+      if (this.changeError) {
         const hdPath = new Array(...defaultHdPath);
         hdPath[1] = change;
         this.$store.dispatch(GlobalActionTypes.SET_NEW_ACCOUNT, {
@@ -93,9 +94,9 @@ export default defineComponent({
       }
     },
     addressIndex(index) {
-      this.addressIndexError = !/^[0-9]+'?$/.test(index);
+      this.addressIndexError = !hdPathRegex.test(index);
 
-      if (!this.addressIndexError) {
+      if (this.addressIndexError) {
         const hdPath = new Array(...defaultHdPath);
         hdPath[2] = index;
         this.$store.dispatch(GlobalActionTypes.SET_NEW_ACCOUNT, {
