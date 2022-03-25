@@ -23,6 +23,26 @@ import {
 import { AbstractTxResult } from '@@/types/transactions'; // TODO
 import TxMapper from '@emeris/mapper';
 
+// HACK extension and mapper expect different formats, we need to decide and adjust the formats to one
+const convertObjectKeys = (obj, doX) => {
+  const newObj = {}
+  Object.keys(obj).forEach(key => {
+    if (typeof obj[key] === 'object' && obj[key] !== null) {
+      newObj[doX(key)] = convertObjectKeys(obj[key], doX)
+    }
+    else {
+      newObj[doX(key)] = obj[key]
+    }
+  })
+}
+const snakeToCamel = str =>
+  str.toLowerCase().replace(/([-_][a-z])/g, group =>
+    group
+      .toUpperCase()
+      .replace('-', '')
+      .replace('_', '')
+  );
+
 import { keyHashfromAddress } from '@/utils/basic';
 import chainConfig from '../chain-config';
 export class Emeris implements IEmeris {
@@ -328,12 +348,14 @@ export class Emeris implements IEmeris {
       throw new Error('The requested signing address is not active in the extension');
     }
 
+    const abstractTx = { ...request.data, chainName: request.data.chainId, txs: request.data.messages } // HACK need to adjust transported data model
+    convertObjectKeys(abstractTx, snakeToCamel)
     const chainMessages = await TxMapper({ ...request.data, chainName: request.data.chainId, txs: request.data.messages })
     const signable = await libs[chain.library].getRawSignable(selectedAccount, chain, chainMessages, request.data.fee, request.data.memo)
 
     return signable
   }
-  async getTransactionSignature(request: SignTransactionRequest, memo: string): Promise<any> {
+  async getTransactionSignature(request: SignTransactionRequest, memo: string): Promise<string> {
     if (!this.wallet) {
       throw new Error('No wallet configured');
     }
@@ -358,7 +380,10 @@ export class Emeris implements IEmeris {
       throw new Error('The requested signing address is not available in the extension');
     }
     const selectedAccount = selectedAccountPair.account
-    const chainMessages = await TxMapper({ ...request.data, chainName: request.data.chainId, txs: request.data.messages }) // HACK need to adjust transported data model
+
+    const abstractTx = { ...request.data, chainName: request.data.chainId, txs: request.data.messages } // HACK need to adjust transported data model
+    convertObjectKeys(abstractTx, snakeToCamel)
+    const chainMessages = await TxMapper(abstractTx)
     let broadcastable
     if (selectedAccount.isLedger) {
       broadcastable = await libs[chain.library].signLedger(
