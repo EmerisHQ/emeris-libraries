@@ -397,12 +397,14 @@ export class Emeris implements IEmeris {
       broadcastable = await libs[chain.library].sign(selectedAccount, chain, chainMessages as AminoMsg[], request.data.fee, memo)
     }
 
-    return broadcastable
+    // converting the broadcastable into a string that can be converted back to a unit8array
+    // might need to be adjusted if we have any other broadcastable
+    return Buffer.from(broadcastable).toString('hex')
   }
   async signTransaction(request: SignTransactionRequest): Promise<any> {
     request.id = uuidv4();
     const { broadcastable } = await this.forwardToPopup(request);
-    return broadcastable.toString().replaceAll(',', '')
+    return broadcastable
   }
   async signAndBroadcastTransaction(request: SignAndBroadcastTransactionRequest): Promise<any> {
     const broadcastable = await this.signTransaction(request)
@@ -411,7 +413,7 @@ export class Emeris implements IEmeris {
 
     // @ts-ignore doesn't accept SignAndBroadcastTransactionRequest inheriting from SignTransactionRequest
     const response = await axios.post((process.env.VUE_APP_EMERIS_PROD_ENDPOINT || 'https://api.emeris.com/v1') + '/tx/' + request.data.chainId, {
-      tx_bytes: Buffer.from(Uint8Array.from(broadcastable)).toString('base64'),
+      tx_bytes: Buffer.from(broadcastable, 'hex').toString('base64'),
       // @ts-ignore doesn't accept SignAndBroadcastTransactionRequest inheriting from SignTransactionRequest
       address: request.data.signingAddress,
     });
