@@ -53,9 +53,16 @@ import ListCard from '@@/components/ListCard.vue';
 import Slideout from '@@/components/Slideout.vue';
 import Header from '@@/components/Header.vue';
 import Checkbox from '@/components/ui/Checkbox.vue';
+import {GlobalGetterTypes} from "@@/store/extension/getter-types";
+import {AccountCreateStates} from "@@/types";
 
 export default defineComponent({
   name: 'Welcome',
+  computed: {
+    account() {
+      return this.$store.getters[GlobalGetterTypes.getAccount];
+    },
+  },
   data: () => ({
     backUpLater: false,
     checked: false,
@@ -68,6 +75,15 @@ export default defineComponent({
     Slideout,
   },
   methods: {
+    onContinue() {
+      if(this.account && this.account.setupState !== AccountCreateStates.COMPLETE) {
+        const localStorageKey = `nextBackupCheck-${this.account.accountName}`;
+        const nowInSeconds = Math.floor(Date.now() / 1000);
+        //  display next backup check in an hour
+        window.localStorage.setItem(localStorageKey, `${nowInSeconds + 60 * 60}`);
+      }
+      this.$router.push('/accountReady');
+    },
     goToShowMnemonic() {
       this.$router.push({
         // if this is a new account we don't force to reenter the password
