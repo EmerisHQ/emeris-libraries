@@ -1,37 +1,23 @@
 <template>
   <div class="page">
-    <Header title="Advanced" />
-    <div @keyup.enter="submit" class="form">
-      <span style="margin-top: 16px; margin-bottom: 16px">HD derivation path</span>
-      <div style="display: flex; margin-bottom: 16px">
-        <span style="line-height: 48px; margin-right: 8px" class="secondary-text">m/44’/...’/</span>
-        <div style="margin-right: 8px" :class="{ error: accountError }">
-          <Input v-model="account" />
-        </div>
-        <div style="margin-right: 8px" :class="{ error: changeError }">
-          <Input v-model="change" />
-        </div>
-        <div :class="{ error: addressIndexError }">
-          <Input v-model="addressIndex" />
-        </div>
+    <Header title="Advanced" :backTo="this.$route.query.previous" />
+    <span style="margin-top: 16px; margin-bottom: 16px">HD derivation path</span>
+    <div style="display: flex; flex-direction: row; margin-bottom: 16px">
+      <span style="line-height: 48px; margin-right: 8px" class="secondary-text">m/44’/...’/</span>
+      <div style="margin-right: 8px" :class="{ error: accountError }">
+        <Input v-model="account" />
       </div>
-      <span class="form-info error" style="margin-bottom: 16px" v-if="accountError || changeError || addressIndexError"
-        >Invalid derivation path</span
-      >
-      <a @click="infoOpen = true">What is an HD derivation path?</a>
-      <div
-        :style="{
-          marginTop: 'auto',
-        }"
-      >
-        <Button
-          type="submit"
-          name="Import"
-          :disabled="accountError || changeError || addressIndexError"
-          @click="submit"
-        />
+      <div style="margin-right: 8px" :class="{ error: changeError }">
+        <Input v-model="change" />
+      </div>
+      <div style="margin-right: 8px" :class="{ error: addressIndexError }">
+        <Input v-model="addressIndex" />
       </div>
     </div>
+    <span class="form-info error" style="margin-bottom: 16px" v-if="accountError || changeError || addressIndexError"
+      >Invalid derivation path</span
+    >
+    <a @click="infoOpen = true">What is an HD derivation path?</a>
     <Slideout v-bind:open="infoOpen" v-on:update:open="infoOpen = $event">
       <h1 style="margin-bottom: 16px">What does it mean HD derivation path?</h1>
       <div class="secondary-text" style="margin-bottom: 24px">
@@ -51,16 +37,28 @@ import Input from '@/components/ui/Input.vue';
 import Header from '@@/components/Header.vue';
 import Slideout from '@@/components/Slideout.vue';
 
-import { MutationTypes } from '@@/store/extension/mutation-types';
 import { GlobalActionTypes } from '@@/store/extension/action-types';
+
+const defaultHdPath = ["0'", '0', '0'];
+const hdPathRegex = /^[0-9]+'?$/;
+
+const updateHdPath = (position, value, store) => {
+  const newAccount = store.state.extension.newAccount;
+  const hdPath = newAccount?.hdPath || new Array(...defaultHdPath);
+  hdPath[position] = value;
+  store.dispatch(GlobalActionTypes.SET_NEW_ACCOUNT, {
+    ...newAccount,
+    hdPath,
+  });
+};
 
 export default defineComponent({
   name: 'Create Account',
   components: { Header, Button, Slideout, Input },
   data: () => ({
-    account: "0'",
-    change: '0',
-    addressIndex: '0',
+    account: defaultHdPath[0],
+    change: defaultHdPath[1],
+    addressIndex: defaultHdPath[2],
 
     accountError: undefined,
     changeError: undefined,
@@ -74,54 +72,41 @@ export default defineComponent({
     },
   },
   watch: {
+    newAccount(account) {
+      if (account?.hdPath) {
+        this.account = account.hdPath[0];
+        this.change = account.hdPath[1];
+        this.addressIndex = account.hdPath[2];
+      }
+    },
     account(account) {
-      this.accountError = !/^[0-9]+'?$/.test(account);
+      this.accountError = !hdPathRegex.test(account);
 
-      if (!this.accountError)
-        this.$store.dispatch(GlobalActionTypes.SET_NEW_ACCOUNT, {
-          ...this.newAccount,
-          hdPath: [account, this.newAccount.hdPath[1], this.newAccount.hdPath[2]],
-        });
+      if (!this.accountError) {
+        updateHdPath(0, account, this.$store);
+      }
     },
     change(change) {
-      this.changeError = !/^[0-9]+'?$/.test(change);
+      this.changeError = !hdPathRegex.test(change);
 
-      if (!this.changeError)
-        this.$store.dispatch(GlobalActionTypes.SET_NEW_ACCOUNT, {
-          ...this.newAccount,
-          hdPath: [this.newAccount.hdPath[0], change, this.newAccount.hdPath[2]],
-        });
+      if (!this.changeError) {
+        updateHdPath(1, change, this.$store);
+      }
     },
     addressIndex(index) {
-      this.addressIndexError = !/^[0-9]+'?$/.test(index);
+      this.addressIndexError = !hdPathRegex.test(index);
 
-      if (!this.addressIndexError)
-        this.$store.dispatch(GlobalActionTypes.SET_NEW_ACCOUNT, {
-          ...this.newAccount,
-          hdPath: [this.newAccount.hdPath[0], this.newAccount.hdPath[1], index],
-        });
+      if (!this.addressIndexError) {
+        updateHdPath(2, index, this.$store);
+      }
     },
   },
-  mounted() {
-    if (this.newAccount?.hdPath) {
-      this.account = this.newAccount.hdPath[0];
-      this.change = this.newAccount.hdPath[1];
-      this.addressIndex = this.newAccount.hdPath[2];
-    }
+  async mounted() {
+    await this.$store.dispatch(GlobalActionTypes.GET_NEW_ACCOUNT);
     this.$store.dispatch(GlobalActionTypes.SET_NEW_ACCOUNT, {
       ...this.newAccount,
-      hdPath: this.newAccount?.hdPath || ["0'", '0', '0'],
-      route: '/accountImportHdPath',
+      route: '/accountImportHdPath?previous=' + encodeURI(this.$route.query.previous),
     });
-  },
-  methods: {
-    submit() {
-      this.$store.dispatch(MutationTypes.SET_NEW_ACCOUNT, {
-        ...this.newAccount,
-        hdPath: [this.account, this.change, this.addressIndex],
-      });
-      this.$router.push({ path: '/accountCreate' });
-    },
   },
 });
 </script>

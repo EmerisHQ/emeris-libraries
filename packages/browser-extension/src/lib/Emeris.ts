@@ -2,9 +2,9 @@ import { IEmeris } from '@@/types/emeris';
 import { EmerisWallet } from '@@/types';
 import { v4 as uuidv4 } from 'uuid';
 import EmerisStorage from './EmerisStorage';
-import config from '../chain-config';
 import libs from './libraries';
 import { UnlockWalletError } from '@@/errors';
+import { AminoMsg } from '@cosmjs/amino';
 import {
   GetAddressRequest,
   GetPublicKeyRequest,
@@ -201,6 +201,8 @@ export class Emeris implements IEmeris {
         return;
       case 'hasWallet':
         return await this.hasWallet();
+      case 'signTransaction':
+        return await this.getTransactionSignature(message.data, message.data.data.memo);
       case 'setResponse':
         return this.setResponse(message.data.data.id, message.data.data)
       case 'extensionReset':
@@ -245,7 +247,7 @@ export class Emeris implements IEmeris {
     if (!this.wallet) {
       throw new Error('No wallet configured');
     }
-    const chain = config[req.data.chainId];
+    const chain = chainConfig[req.data.chainId];
     if (!chain) {
       throw new Error('Chain not supported: ' + req.data.chainId);
     }
@@ -281,7 +283,7 @@ export class Emeris implements IEmeris {
     if (!this.wallet) {
       throw new Error('No wallet configured');
     }
-    const chain = config[req.data.chainId];
+    const chain = chainConfig[req.data.chainId];
     if (!chain) {
       throw new Error('Chain not supported: ' + req.data.chainId);
     }
@@ -299,7 +301,7 @@ export class Emeris implements IEmeris {
     return false;
   }
   async supportedChains(_req: SupportedChainsRequest): Promise<string[]> {
-    return Object.keys(config);
+    return Object.keys(chainConfig);
   }
   async getAccountName(_req: GetAccountNameRequest): Promise<string> {
     return this.selectedAccount;
@@ -312,7 +314,7 @@ export class Emeris implements IEmeris {
     if (!this.wallet) {
       throw new Error('No wallet configured');
     }
-    const chain = config[request.data.chainId];
+    const chain = chainConfig[request.data.chainId];
     if (!chain) {
       throw new Error('Chain not supported: ' + request.data.chainId);
     }
@@ -329,37 +331,44 @@ export class Emeris implements IEmeris {
 
     return signable
   }
+  async getTransactionSignature(request: SignTransactionRequest, memo: string): Promise<any> {
+    if (!this.wallet) {
+      throw new Error('No wallet configured');
+    }
+    const chain = chainConfig[request.data.chainId];
+    if (!chain) {
+      throw new Error('Chain not supported: ' + request.data.chainId);
+    }
+
+    const selectedAccount = this.wallet.find(async (account) => {
+      const address = await libs[chain.library].getAddress(account, chain)
+      return address === request.data.signingAddress
+    })
+
+    if (!selectedAccount) {
+      throw new Error('The requested signing address is not available in the extension');
+    }
+
+    const chainMessages = await TxMapper({ ...request.data, chainName: request.data.chainId, txs: request.data.messages }) // HACK need to adjust transported data model
+    let broadcastable
+    if (selectedAccount.isLedger) {
+      broadcastable = await libs[chain.library].signLedger(
+        selectedAccount,
+        chain,
+        chainMessages as AminoMsg[],
+        request.data.fee,
+        memo,
+      );
+    } else {
+      broadcastable = await libs[chain.library].sign(selectedAccount, chain, chainMessages as AminoMsg[], request.data.fee, memo)
+    }
+
+    return broadcastable
+  }
   async signTransaction(request: SignTransactionRequest): Promise<any> {
     request.id = uuidv4();
-    const { accept, memo, broadcastable } = await this.forwardToPopup(request);
-    // if we have a broadcastable, signing has already been done i.e. due to Ledger signing
-    if (broadcastable) {
-      return broadcastable
-    }
-    // else if sign via local key signing
-    if (accept) {
-      if (!this.wallet) {
-        throw new Error('No wallet configured');
-      }
-      const chain = config[request.data.chainId];
-      if (!chain) {
-        throw new Error('Chain not supported: ' + request.data.chainId);
-      }
-
-      const selectedAccount = this.wallet.find(({ accountName }) => accountName === this.selectedAccount)
-      const address = await libs[chain.library].getAddress(selectedAccount, chain)
-
-      if (address !== request.data.signingAddress) {
-        throw new Error('The requested signing address is not active in the extension');
-      }
-
-      const chainMessages = await TxMapper(request.data)
-      // @ts-ignore
-      const broadcastable = await libs[chain.library].sign(selectedAccount, chain, chainMessages, request.data.fee, <string>memo)
-
-      return broadcastable
-    }
-    return undefined
+    const { broadcastable } = await this.forwardToPopup(request);
+    return broadcastable
   }
   // async signAndBroadcastTransaction(request: SignAndBroadcastTransactionRequest): Promise<AbstractTxResult> {
   //   request.id = uuidv4();

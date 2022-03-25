@@ -136,11 +136,11 @@ export const actions: ActionTree<State, RootState> & Actions = {
   },
   async[ActionTypes.UPDATE_ACCOUNT](
     { dispatch, commit, getters },
-    { targetAccountName, newAccountName }: { targetAccountName: string; newAccountName: string,  },
+    { targetAccountName, newAccountName }: { targetAccountName: string; newAccountName: string, },
   ) {
     await browser.runtime.sendMessage({
       type: 'fromPopup',
-      data: { action: 'updateAccount', data: { targetAccountName, account: {accountName: newAccountName} } },
+      data: { action: 'updateAccount', data: { targetAccountName, account: { accountName: newAccountName } } },
     });
     return await dispatch(ActionTypes.GET_WALLET);
   },
@@ -252,14 +252,15 @@ export const actions: ActionTree<State, RootState> & Actions = {
     await respond(id, { accept })
     await dispatch(ActionTypes.GET_WHITELISTED_WEBSITES);
   },
-  async [ActionTypes.ACCEPT_TRANSACTION]({ }, { id, fees, memo }) {
-    await respond(id, { accept: true, fees, memo })
+  async [ActionTypes.ACCEPT_TRANSACTION]({ }, { id, ...transaction }) {
+    const broadcastable = await browser.runtime.sendMessage({
+      type: 'fromPopup',
+      data: { action: 'signTransaction', data: { id, ...transaction } },
+    });
+    await respond(id, { broadcastable })
   },
   async [ActionTypes.CANCEL_TRANSACTION]({ }, { id }) {
-    await respond(id, { accept: false })
-  },
-  async [ActionTypes.SEND_LEDGER_SIGNATURE]({ }, { id, broadcastable }) {
-    await respond(id, { broadcastable })
+    await respond(id, { broadcastable: undefined })
   },
   async [ActionTypes.GET_RAW_TRANSACTION]({ }, {
     messages,
