@@ -40,6 +40,7 @@ import Slideout from '@@/components/Slideout.vue';
 import { GlobalActionTypes } from '@@/store/extension/action-types';
 
 const defaultHdPath = ["0'", '0', '0'];
+const hdPathRegex = /^[0-9]+'?$/;
 
 const updateHdPath = (position, value, store) => {
   const newAccount = store.state.extension.newAccount;
@@ -79,21 +80,21 @@ export default defineComponent({
       }
     },
     account(account) {
-      this.accountError = !/^[0-9]+'?$/.test(account);
+      this.accountError = !hdPathRegex.test(account);
 
       if (!this.accountError) {
         updateHdPath(0, account, this.$store);
       }
     },
     change(change) {
-      this.changeError = !/^[0-9]+'?$/.test(change);
+      this.changeError = !hdPathRegex.test(change);
 
       if (!this.changeError) {
         updateHdPath(1, change, this.$store);
       }
     },
     addressIndex(index) {
-      this.addressIndexError = !/^[0-9]+'?$/.test(index);
+      this.addressIndexError = !hdPathRegex.test(index);
 
       if (!this.addressIndexError) {
         updateHdPath(2, index, this.$store);
