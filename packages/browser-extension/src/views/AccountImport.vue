@@ -96,6 +96,7 @@ export default defineComponent({
   methods: {
     storeNewAccount() {
       this.$store.dispatch(GlobalActionTypes.SET_NEW_ACCOUNT, {
+        ...this.$store.state.extension.newAccount,
         accountMnemonic: mnemonicFormat(this.mnemonic),
         setupState: AccountCreateStates.COMPLETE,
         route: '/accountImport',
