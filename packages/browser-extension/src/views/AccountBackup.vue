@@ -24,7 +24,7 @@
       class="buttons"
     >
       <Button name="Back up now" @click="goToShowMnemonic" />
-      <Button name="Back up later" variant="link" @click="() => (backUpLater = true)" />
+      <Button name="Back up later" variant="link" @click="backUpLater = true" />
     </div>
 
     <Slideout v-bind:open="backUpLater" v-on:update:open="backUpLater = $event">
@@ -39,7 +39,7 @@
         label="I understand if I don’t back up my account, or if I lost my recovery phrase, I will lose access to my account."
       />
       <div class="buttons">
-        <Button name="Continue" :disabled="!checked" @click="() => $router.push('/accountReady')" />
+        <Button name="Continue" :disabled="!checked" @click="() => $router.push('/account')" />
         <Button name="Go back" variant="link" @click="() => (backUpLater = false)" />
       </div>
     </Slideout>
