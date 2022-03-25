@@ -41,6 +41,16 @@ import { GlobalActionTypes } from '@@/store/extension/action-types';
 
 const defaultHdPath = ["0'", '0', '0'];
 
+const updateHdPath = (position, value, store) => {
+  const newAccount = store.state.extension.newAccount;
+  const hdPath = newAccount?.hdPath || new Array(...defaultHdPath);
+  hdPath[position] = value;
+  store.dispatch(GlobalActionTypes.SET_NEW_ACCOUNT, {
+    ...newAccount,
+    hdPath,
+  });
+};
+
 export default defineComponent({
   name: 'Create Account',
   components: { Header, Button, Slideout, Input },
@@ -72,36 +82,21 @@ export default defineComponent({
       this.accountError = !/^[0-9]+'?$/.test(account);
 
       if (!this.accountError) {
-        const hdPath = new Array(...defaultHdPath);
-        hdPath[0] = account;
-        this.$store.dispatch(GlobalActionTypes.SET_NEW_ACCOUNT, {
-          ...this.newAccount,
-          hdPath,
-        });
+        updateHdPath(0, account, this.$store);
       }
     },
     change(change) {
       this.changeError = !/^[0-9]+'?$/.test(change);
 
       if (!this.changeError) {
-        const hdPath = new Array(...defaultHdPath);
-        hdPath[1] = change;
-        this.$store.dispatch(GlobalActionTypes.SET_NEW_ACCOUNT, {
-          ...this.newAccount,
-          hdPath,
-        });
+        updateHdPath(1, change, this.$store);
       }
     },
     addressIndex(index) {
       this.addressIndexError = !/^[0-9]+'?$/.test(index);
 
       if (!this.addressIndexError) {
-        const hdPath = new Array(...defaultHdPath);
-        hdPath[2] = index;
-        this.$store.dispatch(GlobalActionTypes.SET_NEW_ACCOUNT, {
-          ...this.newAccount,
-          hdPath,
-        });
+        updateHdPath(2, index, this.$store);
       }
     },
   },
