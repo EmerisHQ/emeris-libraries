@@ -36,6 +36,9 @@ const helpers = {
   async sign(
     account: EmerisAccount, chainConfig: ChainDetails, messages: EncodeObject[] | AminoMsg[], fee: StdFee, memo: string) {
     const signer = EmerisSigner.withMnemonic(getHdPath(chainConfig, account), account.accountMnemonic)
+    console.log(signer);
+    console.log(chainConfig.chainName);
+    console.log(messages);
     const broadcastable = await signer.signTx({
       msgs: messages,
       fee: {
