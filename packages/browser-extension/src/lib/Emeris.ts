@@ -25,7 +25,12 @@ import TxMapper from '@emeris/mapper';
 
 // HACK extension and mapper expect different formats, we need to decide and adjust the formats to one
 const convertObjectKeys = (obj, doX) => {
-  const newObj = {}
+  let newObj;
+  if (Array.isArray(obj)) {
+    newObj = [];
+  }else{
+    newObj= {};
+  }
   Object.keys(obj).forEach(key => {
     if (typeof obj[key] === 'object' && obj[key] !== null) {
       newObj[doX(key)] = convertObjectKeys(obj[key], doX)
@@ -34,9 +39,10 @@ const convertObjectKeys = (obj, doX) => {
       newObj[doX(key)] = obj[key]
     }
   })
+  return newObj;
 }
 const snakeToCamel = str =>
-  str.toLowerCase().replace(/([-_][a-z])/g, group =>
+  str.replace(/([-_][a-z])/g, group =>
     group
       .toUpperCase()
       .replace('-', '')
@@ -381,9 +387,12 @@ export class Emeris implements IEmeris {
     }
     const selectedAccount = selectedAccountPair.account
 
-    const abstractTx = { ...request.data, chainName: request.data.chainId, txs: request.data.messages } // HACK need to adjust transported data model
-    convertObjectKeys(abstractTx, snakeToCamel)
+    let abstractTx = { ...request.data, chainName: request.data.chainId, txs: request.data.messages } // HACK need to adjust transported data model
+    console.log(abstractTx);
+    abstractTx = convertObjectKeys(abstractTx, snakeToCamel)
+    console.log(abstractTx);
     const chainMessages = await TxMapper(abstractTx)
+    console.log(chainMessages);
     let broadcastable
     if (selectedAccount.isLedger) {
       broadcastable = await libs[chain.library].signLedger(
@@ -396,7 +405,7 @@ export class Emeris implements IEmeris {
     } else {
       broadcastable = await libs[chain.library].sign(selectedAccount, chain, chainMessages as AminoMsg[], request.data.fee, memo)
     }
-
+    console.log(Buffer.from(broadcastable).toString('base64'))
     // converting the broadcastable into a string that can be converted back to a unit8array
     // might need to be adjusted if we have any other broadcastable
     return Buffer.from(broadcastable).toString('hex')
