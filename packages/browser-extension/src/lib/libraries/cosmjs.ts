@@ -38,7 +38,10 @@ const helpers = {
     const signer = EmerisSigner.withMnemonic(getHdPath(chainConfig, account), account.accountMnemonic)
     const broadcastable = await signer.signTx({
       msgs: messages,
-      fee,
+      fee: {
+        amount: fee.amount.map(({ amount, denom }) => ({ amount: String(amount), denom })),
+        gas: String(fee.gas)
+      },
       memo,
       chain_name: chainConfig.chainName
     })
@@ -50,7 +53,10 @@ const helpers = {
     const signer = EmerisSigner.withLedger(getHdPath(chainConfig, account))
     const broadcastable = await signer.signTx({
       msgs: messages,
-      fee,
+      fee: {
+        amount: fee.amount.map(({ amount, denom }) => ({ amount: String(amount), denom })),
+        gas: String(fee.gas)
+      },
       memo,
       chain_name: chainConfig.chainName
     })
