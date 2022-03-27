@@ -5,7 +5,7 @@
       >If you have multiple accounts this will help you to find the right one</span
     >
     <div style="margin-bottom: 16px">
-      <Input v-model="name" />
+      <Input v-model="name" placeholder="Account Name" />
       <span class="form-info error" v-if="error">Name already in use</span>
     </div>
     <div
@@ -60,7 +60,7 @@ export default defineComponent({
     },
   },
   data: () => ({
-    name: 'Account X',
+    name: undefined,
   }),
   watch: {
     name(name) {
@@ -77,7 +77,15 @@ export default defineComponent({
     }
 
     const accounts = (await this.$store.dispatch(GlobalActionTypes.GET_WALLET)) || [];
-    this.name = this.newAccount?.accountName || 'Account ' + (accounts.length + 1);
+
+    // find an unused account name
+    let name;
+    do {
+      let i = 1;
+      name = 'Account ' + i++;
+    } while (accounts.find(({ accountName }) => accountName === name));
+
+    this.name = name;
     this.$store.dispatch(GlobalActionTypes.SET_NEW_ACCOUNT, {
       ...this.newAccount,
       route: '/accountCreate',
