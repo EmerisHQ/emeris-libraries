@@ -9,7 +9,7 @@ export function chainAddressfromKeyHash(prefix: string, keyHash: string) {
   return bech32.encode(prefix, bech32.toWords(Buffer.from(keyHash, 'hex')))
 }
 
-const getHdPath = (chainConfig, account) => {
+export const getHdPath = (chainConfig, account) => {
   let hdPath = chainConfig.HDPath
   if (account.hdPath) {
     hdPath = chainConfig.HDPath.split('/').slice(0, 3).concat(account.hdPath).join('/')

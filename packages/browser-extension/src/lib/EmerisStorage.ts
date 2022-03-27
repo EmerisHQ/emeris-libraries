@@ -93,6 +93,9 @@ export default class EmerisStorage {
   async saveAccount(account: EmerisAccount, password: string): Promise<boolean> {
     try {
       const wallet = await this.unlockWallet(password);
+      if (account.isLedger) {
+        delete account.accountMnemonic // just to avoid confusion
+      }
       wallet.push(account);
       await this.saveWallet(wallet, password);
       await this.setLastAccount(account.accountName);

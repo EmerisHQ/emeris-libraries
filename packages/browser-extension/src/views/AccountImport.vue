@@ -82,9 +82,9 @@ export default defineComponent({
     },
   },
   async mounted() {
-    const hasPasswod = await this.$store.dispatch(GlobalActionTypes.HAS_WALLET);
+    const hasPassword = await this.$store.dispatch(GlobalActionTypes.HAS_WALLET);
 
-    if (!hasPasswod) {
+    if (!hasPassword) {
       this.$router.push({ path: '/passwordCreate', query: { returnTo: this.$route.fullPath } });
     }
 
@@ -96,6 +96,7 @@ export default defineComponent({
   methods: {
     storeNewAccount() {
       this.$store.dispatch(GlobalActionTypes.SET_NEW_ACCOUNT, {
+        ...this.$store.state.extension.newAccount,
         accountMnemonic: mnemonicFormat(this.mnemonic),
         setupState: AccountCreateStates.COMPLETE,
         route: '/accountImport',
@@ -110,7 +111,7 @@ export default defineComponent({
     toHdPath() {
       if (!this.invalidChar && this.unknownWords.length === 0) {
         this.storeNewAccount();
-        this.$router.push('/accountImportHdPath');
+        this.$router.push('/accountImportHdPath?previous=/accountImport');
       }
     },
   },
