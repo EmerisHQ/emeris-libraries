@@ -53,7 +53,7 @@ export default defineComponent({
 
       const accounts = await signer.getAccounts();
 
-      if (!this._isMounted) return; // handle component being unmounted by clicking on Go Back
+      if (this._.isUnmounted) return; // handle component being unmounted by clicking on Go Back
 
       const keyHash = keyHashfromAddress(accounts[0].address);
       const existingAccount = wallet.find((account) => account.isLedger && account.keyHashes.includes(keyHash));
