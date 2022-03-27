@@ -11,7 +11,7 @@ export async function init(emeris: ProxyEmeris): Promise<void> {
     hasWallet,
     signTransaction,
     enable,
-    // signAndBroadcastTransaction,
+    signAndBroadcastTransaction,
   } = emeris;
   window.emeris = {
     loaded,
@@ -19,10 +19,10 @@ export async function init(emeris: ProxyEmeris): Promise<void> {
     getPublicKey: getPublicKey.bind(emeris),
     isHWWallet: isHWWallet.bind(emeris),
     supportedChains: supportedChains.bind(emeris),
+    signAndBroadcastTransaction: signAndBroadcastTransaction.bind(emeris),
     getAccountName: getAccountName.bind(emeris),
     hasWallet: hasWallet.bind(emeris),
     signTransaction: signTransaction.bind(emeris),
     enable: enable.bind(emeris),
-    // signAndBroadcastTransaction: signAndBroadcastTransaction.bind(emeris),
   };
 }

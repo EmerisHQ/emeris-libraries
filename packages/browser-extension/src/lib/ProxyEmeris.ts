@@ -1,5 +1,5 @@
 import { IEmeris } from '@@/types/emeris';
-import { EmerisBase as Base} from '@emeris/types';
+import { EmerisBase as Base } from '@emeris/types';
 import {
   ExtensionRequest,
   ExtensionResponse,
@@ -141,6 +141,31 @@ export class ProxyEmeris implements IEmeris {
     }
     return response.data as Uint8Array;
   }
+
+  async signAndBroadcastTransaction({
+    messages,
+    chainId,
+    signingAddress,
+    fee,
+    memo,
+  }: {
+    signingAddress: string;
+    chainId: string;
+    messages: EmerisTransactions.Transaction<EmerisTransactions.TransactionData>[];
+    fee: {
+      gas: string;
+      amount: Base.Amount[];
+    };
+    memo?: string;
+  }): Promise<AbstractTxResult> {
+    const request = {
+      action: 'signAndBroadcastTransaction',
+      data: { messages, chainId, signingAddress, fee, memo },
+    };
+    const response = await this.sendRequest(request as SignAndBroadcastTransactionRequest);
+    return response.data as AbstractTxResult;
+  }
+
   async enable(): Promise<boolean> {
     const request = {
       action: 'enable',
@@ -149,14 +174,4 @@ export class ProxyEmeris implements IEmeris {
     const response = await this.sendRequest(request as ApproveOriginRequest);
     return response.data as boolean;
   }
-
-  // TODO resolve type issues
-  // async signAndBroadcastTransaction({ tx, chainId }: { tx: AbstractTx; chainId: string }): Promise<AbstractTxResult> {
-  //   const request = {
-  //     action: 'signAndBroadcastTransaction',
-  //     data: { tx, chainId },
-  //   };
-  //   const response = await this.sendRequest(request as SignAndBroadcastTransactionRequest);
-  //   return response.data as AbstractTxResult;
-  // }
 }

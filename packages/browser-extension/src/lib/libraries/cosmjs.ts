@@ -38,7 +38,10 @@ const helpers = {
     const signer = EmerisSigner.withMnemonic(getHdPath(chainConfig, account), account.accountMnemonic)
     const broadcastable = await signer.signTx({
       msgs: messages,
-      fee,
+      fee: {
+        amount: fee.amount.map(({ amount, denom }) => ({ amount: String(amount), denom })),
+        gas: String(fee.gas)
+      },
       memo,
       chain_name: chainConfig.chainName
     })
@@ -50,7 +53,10 @@ const helpers = {
     const signer = EmerisSigner.withLedger(getHdPath(chainConfig, account))
     const broadcastable = await signer.signTx({
       msgs: messages,
-      fee,
+      fee: {
+        amount: fee.amount.map(({ amount, denom }) => ({ amount: String(amount), denom })),
+        gas: String(fee.gas)
+      },
       memo,
       chain_name: chainConfig.chainName
     })
@@ -74,16 +80,13 @@ const helpers = {
       return undefined
     }
   },
-  async signAndBroadcast(account: EmerisAccount, chainConfig: ChainDetails, messages, fee, memo) {
+  async broadcast(broadcastable, chainConfig: ChainDetails) {
     try {
       const client = await SigningStargateClient.connect(
         chainConfig.rpcEndpoint
       );
-
-      const broadcastable = await this.sign(account, chainConfig, messages, fee, memo)
-
       const response = await client.broadcastTx(broadcastable)
-      return response
+      return response // TODO this should be a standardized abstract result not the chain response but for now doesn't matter as we only deal with cosmos
     } catch (err) {
       console.error(err)
       return undefined

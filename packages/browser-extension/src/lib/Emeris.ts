@@ -1,6 +1,7 @@
 import { IEmeris } from '@@/types/emeris';
 import { EmerisWallet } from '@@/types';
 import { v4 as uuidv4 } from 'uuid';
+import axios from 'axios';
 import EmerisStorage from './EmerisStorage';
 import libs from './libraries';
 import { UnlockWalletError } from '@@/errors';
@@ -11,6 +12,7 @@ import {
   GetAccountNameRequest,
   IsHWWalletRequest,
   SignTransactionRequest,
+  SignAndBroadcastTransactionRequest,
   SupportedChainsRequest,
   ApproveOriginRequest,
   ExtensionRequest,
@@ -20,6 +22,32 @@ import {
 } from '@@/types/api';
 import { AbstractTxResult } from '@@/types/transactions'; // TODO
 import TxMapper from '@emeris/mapper';
+
+// HACK extension and mapper expect different formats, we need to decide and adjust the formats to one
+const convertObjectKeys = (obj, doX) => {
+  let newObj;
+  if (Array.isArray(obj)) {
+    newObj = [];
+  }else{
+    newObj= {};
+  }
+  Object.keys(obj).forEach(key => {
+    if (typeof obj[key] === 'object' && obj[key] !== null) {
+      newObj[doX(key)] = convertObjectKeys(obj[key], doX)
+    }
+    else {
+      newObj[doX(key)] = obj[key]
+    }
+  })
+  return newObj;
+}
+const snakeToCamel = str =>
+  str.replace(/([-_][a-z])/g, group =>
+    group
+      .toUpperCase()
+      .replace('-', '')
+      .replace('_', '')
+  );
 
 import { keyHashfromAddress } from '@/utils/basic';
 import chainConfig from '../chain-config';
@@ -326,12 +354,14 @@ export class Emeris implements IEmeris {
       throw new Error('The requested signing address is not active in the extension');
     }
 
-    const chainMessages = await TxMapper(request.data)
+    const abstractTx = { ...request.data, chainName: request.data.chainId, txs: request.data.messages } // HACK need to adjust transported data model
+    convertObjectKeys(abstractTx, snakeToCamel)
+    const chainMessages = await TxMapper({ ...request.data, chainName: request.data.chainId, txs: request.data.messages })
     const signable = await libs[chain.library].getRawSignable(selectedAccount, chain, chainMessages, request.data.fee, request.data.memo)
 
     return signable
   }
-  async getTransactionSignature(request: SignTransactionRequest, memo: string): Promise<any> {
+  async getTransactionSignature(request: SignTransactionRequest, memo: string): Promise<string> {
     if (!this.wallet) {
       throw new Error('No wallet configured');
     }
@@ -340,16 +370,29 @@ export class Emeris implements IEmeris {
       throw new Error('Chain not supported: ' + request.data.chainId);
     }
 
-    const selectedAccount = this.wallet.find(async (account) => {
+    const accountsWithAddress = []
+    await Promise.all(this.wallet.map(async account => {
       const address = await libs[chain.library].getAddress(account, chain)
+      accountsWithAddress.push({
+        address,
+        account
+      })
+    }))
+    const selectedAccountPair = accountsWithAddress.find(({ address }) => {
       return address === request.data.signingAddress
     })
 
-    if (!selectedAccount) {
+    if (!selectedAccountPair) {
       throw new Error('The requested signing address is not available in the extension');
     }
+    const selectedAccount = selectedAccountPair.account
 
-    const chainMessages = await TxMapper({ ...request.data, chainName: request.data.chainId, txs: request.data.messages }) // HACK need to adjust transported data model
+    let abstractTx = { ...request.data, chainName: request.data.chainId, txs: request.data.messages } // HACK need to adjust transported data model
+    console.log(abstractTx);
+    abstractTx = convertObjectKeys(abstractTx, snakeToCamel)
+    console.log(abstractTx);
+    const chainMessages = await TxMapper(abstractTx)
+    console.log(chainMessages);
     let broadcastable
     if (selectedAccount.isLedger) {
       broadcastable = await libs[chain.library].signLedger(
@@ -362,18 +405,30 @@ export class Emeris implements IEmeris {
     } else {
       broadcastable = await libs[chain.library].sign(selectedAccount, chain, chainMessages as AminoMsg[], request.data.fee, memo)
     }
-
-    return broadcastable
+    console.log(Buffer.from(broadcastable).toString('base64'))
+    // converting the broadcastable into a string that can be converted back to a unit8array
+    // might need to be adjusted if we have any other broadcastable
+    return Buffer.from(broadcastable).toString('hex')
   }
   async signTransaction(request: SignTransactionRequest): Promise<any> {
     request.id = uuidv4();
     const { broadcastable } = await this.forwardToPopup(request);
     return broadcastable
   }
-  // async signAndBroadcastTransaction(request: SignAndBroadcastTransactionRequest): Promise<AbstractTxResult> {
-  //   request.id = uuidv4();
-  //   return (await this.forwardToPopup(request)).data as AbstractTxResult;
-  // }
+  async signAndBroadcastTransaction(request: SignAndBroadcastTransactionRequest): Promise<any> {
+    const broadcastable = await this.signTransaction(request)
+
+    if (!broadcastable) throw new Error("User canceled the transactions")
+
+    // @ts-ignore doesn't accept SignAndBroadcastTransactionRequest inheriting from SignTransactionRequest
+    const response = await axios.post((process.env.VUE_APP_EMERIS_PROD_ENDPOINT || 'https://api.emeris.com/v1') + '/tx/' + request.data.chainId, {
+      tx_bytes: Buffer.from(broadcastable, 'hex').toString('base64'),
+      // @ts-ignore doesn't accept SignAndBroadcastTransactionRequest inheriting from SignTransactionRequest
+      address: request.data.signingAddress,
+    });
+
+    return response
+  }
   async enable(request: ApproveOriginRequest): Promise<boolean> {
     // TODO purge this queue and replace with a sensible data struct to we can check if a request is a dupe
     request.id = uuidv4();
