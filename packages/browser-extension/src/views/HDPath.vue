@@ -19,6 +19,7 @@
           <Input v-model="addressIndex" />
         </div>
       </div>
+      <a @click="infoOpen = true">What is an HD derivation path?</a>
       <Slideout v-bind:open="infoOpen" v-on:update:open="infoOpen = $event">
         <h1 style="margin-bottom: 16px">What does it mean HD derivation path?</h1>
         <div class="secondary-text" style="margin-bottom: 24px">
