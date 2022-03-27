@@ -39,7 +39,6 @@ import Input from '@/components/ui/Input.vue';
 import Header from '@@/components/Header.vue';
 import Slideout from '@@/components/Slideout.vue';
 
-import { MutationTypes } from '@@/store/extension/mutation-types';
 import { GlobalActionTypes } from '@@/store/extension/action-types';
 
 const defaultHdPath = ['0', '0', '0'];
@@ -75,6 +74,13 @@ export default defineComponent({
     },
   },
   watch: {
+    newAccount(account) {
+      if (account?.hdPath) {
+        this.account = account.hdPath[0];
+        this.change = account.hdPath[1];
+        this.addressIndex = account.hdPath[2];
+      }
+    },
     account(account) {
       this.accountError = !hdPathRegex.test(account);
 
@@ -97,26 +103,12 @@ export default defineComponent({
       }
     },
   },
-  mounted() {
-    if (this.newAccount?.hdPath) {
-      this.account = this.newAccount.hdPath[0];
-      this.change = this.newAccount.hdPath[1];
-      this.addressIndex = this.newAccount.hdPath[2];
-    }
+  async mounted() {
+    await this.$store.dispatch(GlobalActionTypes.GET_NEW_ACCOUNT);
     this.$store.dispatch(GlobalActionTypes.SET_NEW_ACCOUNT, {
       ...this.newAccount,
-      hdPath: this.newAccount?.hdPath || ["0'", '0', '0'],
-      route: '/accountImportHdPath',
+      route: '/accountImportHdPath?previous=' + encodeURI(this.$route.query.previous),
     });
-  },
-  methods: {
-    submit() {
-      this.$store.dispatch(MutationTypes.SET_NEW_ACCOUNT, {
-        ...this.newAccount,
-        hdPath: [this.account, this.change, this.addressIndex],
-      });
-      this.$router.push({ path: '/accountCreate' });
-    },
   },
 });
 </script>

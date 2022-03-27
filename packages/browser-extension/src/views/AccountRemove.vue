@@ -39,7 +39,7 @@ export default defineComponent({
     },
   },
   props: {
-    index: { type: String, required: true },
+    index: { type: Number, required: true },
   },
   components: {
     Button,

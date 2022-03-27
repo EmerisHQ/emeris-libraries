@@ -21,7 +21,7 @@ export interface Actions {
   ): Promise<void>;
   [ActionTypes.UPDATE_ACCOUNT](
     { commit }: ActionContext<State, RootState>,
-    { oldAccountName, newAccountName }: { oldAccountName: string; newAccountName: string },
+    { targetAccountName, newAccountName }: { targetAccountName: string; newAccountName: string },
   ): Promise<EmerisWallet>;
   [ActionTypes.REMOVE_ACCOUNT](
     { commit }: ActionContext<State, RootState>,
@@ -135,15 +135,14 @@ export const actions: ActionTree<State, RootState> & Actions = {
     dispatch(ActionTypes.SET_LAST_ACCOUNT_USED, account)
   },
   async[ActionTypes.UPDATE_ACCOUNT](
-    { commit, getters },
-    { oldAccountName, newAccountName }: { oldAccountName: string; newAccountName: string },
+    { dispatch, commit, getters },
+    { targetAccountName, newAccountName }: { targetAccountName: string; newAccountName: string, },
   ) {
-    const response = await browser.runtime.sendMessage({
+    await browser.runtime.sendMessage({
       type: 'fromPopup',
-      data: { action: 'updateAccount', data: { oldAccountName, newAccountName } },
+      data: { action: 'updateAccount', data: { targetAccountName, account: { accountName: newAccountName } } },
     });
-    commit(MutationTypes.SET_WALLET, response as EmerisWallet);
-    return getters['getWallet'];
+    return await dispatch(ActionTypes.GET_WALLET);
   },
   async[ActionTypes.REMOVE_ACCOUNT]({ dispatch, getters }, { accountName }: { accountName: string }) {
     await browser.runtime.sendMessage({
@@ -228,7 +227,7 @@ export const actions: ActionTree<State, RootState> & Actions = {
   async [ActionTypes.ACCOUNT_BACKED_UP]({ dispatch }, { accountName }: { accountName: string }) {
     await browser.runtime.sendMessage({
       type: 'fromPopup',
-      data: { action: 'updateAccount', data: { account: { accountName, setupState: AccountCreateStates.COMPLETE } } },
+      data: { action: 'updateAccount', data: { account: { setupState: AccountCreateStates.COMPLETE }, targetAccountName: accountName } },
     });
     dispatch(ActionTypes.LOAD_SESSION_DATA);
   },
@@ -253,14 +252,15 @@ export const actions: ActionTree<State, RootState> & Actions = {
     await respond(id, { accept })
     await dispatch(ActionTypes.GET_WHITELISTED_WEBSITES);
   },
-  async [ActionTypes.ACCEPT_TRANSACTION]({ }, { id, fees, memo }) {
-    await respond(id, { accept: true, fees, memo })
+  async [ActionTypes.ACCEPT_TRANSACTION]({ }, { id, ...transaction }) {
+    const broadcastable = await browser.runtime.sendMessage({
+      type: 'fromPopup',
+      data: { action: 'signTransaction', data: { id, ...transaction } },
+    });
+    await respond(id, { broadcastable })
   },
   async [ActionTypes.CANCEL_TRANSACTION]({ }, { id }) {
-    await respond(id, { accept: false })
-  },
-  async [ActionTypes.SEND_LEDGER_SIGNATURE]({ }, { id, broadcastable }) {
-    await respond(id, { broadcastable })
+    await respond(id, { broadcastable: undefined })
   },
   async [ActionTypes.GET_RAW_TRANSACTION]({ }, {
     messages,
