@@ -1,5 +1,6 @@
 <template>
   <div class="page">
+    <Header backTo="/ledger?next=/ledger/connect" />
     <div style="margin-bottom: 56px; margin-top: 150px; display: flex; flex-direction: column; align-items: center">
       <img class="loader" :src="require('@@/assets/EphemerisLoader.svg')" />
       <img :src="require('@@/assets/LedgerBox.svg')" style="width: 151px; margin-top: 32px" />
@@ -17,6 +18,7 @@ import { makeCosmoshubPath } from '@cosmjs/amino';
 import { GlobalActionTypes } from '@@/store/extension/action-types';
 import { AccountCreateStates } from '@@/types';
 import { keyHashfromAddress } from '@/utils/basic';
+import Header from '@@/components/Header.vue';
 
 const interactiveTimeout = 120_000;
 // TODO add advanced tab
@@ -25,6 +27,9 @@ const paths = accountNumbers.map(makeCosmoshubPath);
 
 export default defineComponent({
   name: 'Import Ledger',
+  components: {
+    Header,
+  },
   async mounted() {
     try {
       const hasWallet = await this.$store.dispatch(GlobalActionTypes.HAS_WALLET); // checking if the password was set
@@ -39,6 +44,8 @@ export default defineComponent({
       const signer = new LedgerSigner(ledgerTransport, { testModeAllowed: true, hdPaths: paths });
 
       const accounts = await signer.getAccounts();
+
+      if (!this._isMounted) return; // handle component being unmounted by clicking on Go Back
 
       const keyHash = keyHashfromAddress(accounts[0].address);
       const existingAccount = wallet.find((account) => account.isLedger && account.keyHashes.includes(keyHash));
