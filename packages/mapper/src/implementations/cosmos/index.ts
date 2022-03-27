@@ -13,7 +13,7 @@ export default class CosmosAminoMessageMapper extends EmerisMessageMapper {
                     denom: transaction.amount.denom
                 }],
                 // @ts-ignore
-                to_address: transaction.to_address,
+                to_address: transaction.toAddress,
                 from_address: signing_address,
             },
         };
@@ -27,7 +27,7 @@ export default class CosmosAminoMessageMapper extends EmerisMessageMapper {
                 source_channel: transaction.through,
                 sender: signing_address,
                 // @ts-ignore
-                receiver: transaction.to_address,
+                receiver: transaction.toAddress,
                 timeout_timestamp: Long.fromString(new Date().getTime() + 300000 + '000000'),
                 //timeoutHeight: { revisionHeight: "10000000000",revisionNumber:"0"},
                 token: { ...transaction.amount },
