@@ -52,7 +52,6 @@ export default defineComponent({
           .then(async (chains) => {
             await Promise.all(
               Object.values(chains).map(async (chain) => {
-                debugger;
                 await store.dispatch(GlobalDemerisActionTypes.GET_CHAIN, {
                   subscribe: true,
                   params: chain,
