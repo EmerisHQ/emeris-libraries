@@ -25,11 +25,8 @@ export type SignTransactionRequest = Request & {
   action: 'signTransaction';
   data: TransactionSignRequest;
 };
-export type SignAndBroadcastTransactionRequest = Request & {
+export type SignAndBroadcastTransactionRequest = SignTransactionRequest & {
   action: 'signAndBroadcastTransaction';
-  data: {
-    tx: TransactionSignRequest;
-  };
 };
 export type GetAddressRequest = Request & {
   action: 'getAddress';
@@ -86,8 +83,8 @@ export type CreateAccountRequest = Request & {
 export type UpdateAccountRequest = Request & {
   action: 'updateAccount';
   data: {
-    oldAccountName: string;
-    account: EmerisAccount;
+    targetAccountName: string;
+    account: Partial<EmerisAccount>;
   };
 };
 export type RemoveAccountRequest = Request & {
@@ -197,6 +194,7 @@ export type PopupRequest =
   | GetWalletRequest
   | GetLastAccountRequest
   | SetResponseRequest
+  | SignTransactionRequest
   | GetAddressRequest
   | ExtensionResetRequest
   | GetWhitelistedWebsiteRequest

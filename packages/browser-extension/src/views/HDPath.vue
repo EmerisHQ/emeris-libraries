@@ -1,45 +1,34 @@
 <template>
   <div class="page">
-    <Header title="Advanced" />
+    <Header title="Advanced" :backTo="this.$route.query.previous" />
     <div @keyup.enter="submit" class="form">
       <span style="margin-top: 16px; margin-bottom: 16px">HD derivation path</span>
-      <div style="display: flex; margin-bottom: 16px">
+      <div style="display: flex; flex-direction: row; margin-bottom: 16px">
         <span style="line-height: 48px; margin-right: 8px" class="secondary-text">m/44’/...’/</span>
-        <div style="margin-right: 8px" :class="{ error: accountError }">
-          <Input v-model="account" />
+        <div style="margin-right: 8px; width: 76px; position: relative" :class="{ error: accountError }">
+          <Input v-model="account" /><span style="position: absolute; right: 19px; top: 13px; z-index: 10">’</span>
         </div>
-        <div style="margin-right: 8px" :class="{ error: changeError }">
-          <Input v-model="change" />
+        <div
+          style="margin-right: 8px; width: 76px; display: flex; align-items: center; justify-content: center"
+          :class="{ error: changeError }"
+        >
+          <!-- We can not actually change the account change in ledger-cosmos-js -->
+          {{ change }}
         </div>
-        <div :class="{ error: addressIndexError }">
+        <div style="margin-right: 8px; width: 76px" :class="{ error: addressIndexError }">
           <Input v-model="addressIndex" />
         </div>
       </div>
-      <span class="form-info error" style="margin-bottom: 16px" v-if="accountError || changeError || addressIndexError"
-        >Invalid derivation path</span
-      >
       <a @click="infoOpen = true">What is an HD derivation path?</a>
-      <div
-        :style="{
-          marginTop: 'auto',
-        }"
-      >
-        <Button
-          type="submit"
-          name="Import"
-          :disabled="accountError || changeError || addressIndexError"
-          @click="submit"
-        />
-      </div>
+      <Slideout v-bind:open="infoOpen" v-on:update:open="infoOpen = $event">
+        <h1 style="margin-bottom: 16px">What does it mean HD derivation path?</h1>
+        <div class="secondary-text" style="margin-bottom: 24px">
+          Derivation path, help you to have multiple accounts under one recovery phrase, please make sure to understand
+          before to set it. What each number represents: m / purpose' / coin_type' / account' / change / address_index
+        </div>
+        <Button name="Ok" @click="() => (infoOpen = false)" />
+      </Slideout>
     </div>
-    <Slideout v-bind:open="infoOpen" v-on:update:open="infoOpen = $event">
-      <h1 style="margin-bottom: 16px">What does it mean HD derivation path?</h1>
-      <div class="secondary-text" style="margin-bottom: 24px">
-        Derivation path, help you to have multiple accounts under one recovery phrase, please make sure to understand
-        before to set it. What each number represents: m / purpose' / coin_type' / account' / change / address_index
-      </div>
-      <Button name="Ok" @click="() => (infoOpen = false)" />
-    </Slideout>
   </div>
 </template>
 
@@ -51,14 +40,26 @@ import Input from '@/components/ui/Input.vue';
 import Header from '@@/components/Header.vue';
 import Slideout from '@@/components/Slideout.vue';
 
-import { MutationTypes } from '@@/store/extension/mutation-types';
 import { GlobalActionTypes } from '@@/store/extension/action-types';
+
+const defaultHdPath = ['0', '0', '0'];
+const hdPathRegex = /^(0|(\d{1,2}|1([0-1]\d|2[0-7])))$/; // 0-127 harding is automatic on the first 3 positions of the hd path hardcoded in leder-cosmos-js
+
+const updateHdPath = (position, value, store) => {
+  const newAccount = store.state.extension.newAccount;
+  const hdPath = newAccount?.hdPath || new Array(...defaultHdPath);
+  hdPath[position] = value;
+  store.dispatch(GlobalActionTypes.SET_NEW_ACCOUNT, {
+    ...newAccount,
+    hdPath,
+  });
+};
 
 export default defineComponent({
   name: 'Create Account',
   components: { Header, Button, Slideout, Input },
   data: () => ({
-    account: "0'",
+    account: '0',
     change: '0',
     addressIndex: '0',
 
@@ -74,54 +75,41 @@ export default defineComponent({
     },
   },
   watch: {
+    newAccount(account) {
+      if (account?.hdPath) {
+        this.account = account.hdPath[0];
+        this.change = account.hdPath[1];
+        this.addressIndex = account.hdPath[2];
+      }
+    },
     account(account) {
-      this.accountError = !/^[0-9]+'?$/.test(account);
+      this.accountError = !hdPathRegex.test(account);
 
-      if (!this.accountError)
-        this.$store.dispatch(GlobalActionTypes.SET_NEW_ACCOUNT, {
-          ...this.newAccount,
-          hdPath: [account, this.newAccount.hdPath[1], this.newAccount.hdPath[2]],
-        });
+      if (!this.accountError) {
+        updateHdPath(0, String(account), this.$store);
+      }
     },
     change(change) {
-      this.changeError = !/^[0-9]+'?$/.test(change);
+      this.changeError = !hdPathRegex.test(change);
 
-      if (!this.changeError)
-        this.$store.dispatch(GlobalActionTypes.SET_NEW_ACCOUNT, {
-          ...this.newAccount,
-          hdPath: [this.newAccount.hdPath[0], change, this.newAccount.hdPath[2]],
-        });
+      if (!this.changeError) {
+        updateHdPath(1, String(change), this.$store);
+      }
     },
     addressIndex(index) {
-      this.addressIndexError = !/^[0-9]+'?$/.test(index);
+      this.addressIndexError = !hdPathRegex.test(index);
 
-      if (!this.addressIndexError)
-        this.$store.dispatch(GlobalActionTypes.SET_NEW_ACCOUNT, {
-          ...this.newAccount,
-          hdPath: [this.newAccount.hdPath[0], this.newAccount.hdPath[1], index],
-        });
+      if (!this.addressIndexError) {
+        updateHdPath(2, String(index), this.$store);
+      }
     },
   },
-  mounted() {
-    if (this.newAccount?.hdPath) {
-      this.account = this.newAccount.hdPath[0];
-      this.change = this.newAccount.hdPath[1];
-      this.addressIndex = this.newAccount.hdPath[2];
-    }
+  async mounted() {
+    await this.$store.dispatch(GlobalActionTypes.GET_NEW_ACCOUNT);
     this.$store.dispatch(GlobalActionTypes.SET_NEW_ACCOUNT, {
       ...this.newAccount,
-      hdPath: this.newAccount?.hdPath || ["0'", '0', '0'],
-      route: '/accountImportHdPath',
+      route: '/accountImportHdPath?previous=' + encodeURI(this.$route.query.previous),
     });
-  },
-  methods: {
-    submit() {
-      this.$store.dispatch(MutationTypes.SET_NEW_ACCOUNT, {
-        ...this.newAccount,
-        hdPath: [this.account, this.change, this.addressIndex],
-      });
-      this.$router.push({ path: '/accountCreate' });
-    },
   },
 });
 </script>
