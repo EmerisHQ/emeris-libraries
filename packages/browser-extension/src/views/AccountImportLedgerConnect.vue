@@ -14,6 +14,7 @@ import { defineComponent } from 'vue';
 import { LedgerSigner } from '@cosmjs/ledger-amino';
 // eslint-disable-next-line @typescript-eslint/naming-convention
 import TransportWebUsb from '@ledgerhq/hw-transport-webusb';
+import TransportWebHid from '@ledgerhq/hw-transport-webhid';
 import { GlobalActionTypes } from '@@/store/extension/action-types';
 import { AccountCreateStates } from '@@/types';
 import { keyHashfromAddress } from '@/utils/basic';
@@ -48,7 +49,7 @@ export default defineComponent({
         }),
       );
 
-      const ledgerTransport = await TransportWebUsb.create(interactiveTimeout, interactiveTimeout);
+      const ledgerTransport = await TransportWebHid.create();
       const signer = new LedgerSigner(ledgerTransport, { testModeAllowed: true, hdPaths: [path] });
 
       const accounts = await signer.getAccounts();
