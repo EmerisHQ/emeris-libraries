@@ -19,7 +19,22 @@ export default class CosmosAminoMessageMapper extends EmerisMessageMapper {
         };
     }
 
-    IBCtransfer(transaction: EmerisTransactions.AbstractIBCTransferTransactionData, signing_address: string) {
+    IBCtransferBackward(transaction: EmerisTransactions.AbstractIBCTransferTransactionData, signing_address: string) {
+        return {
+            type: "cosmos-sdk/MsgTransfer",
+            value: {
+                source_port: 'transfer',
+                source_channel: transaction.through,
+                sender: signing_address,
+                // @ts-ignore
+                receiver: transaction.toAddress,
+                timeout_timestamp: Long.fromString(new Date().getTime() + 300000 + '000000'),
+                //timeoutHeight: { revisionHeight: "10000000000",revisionNumber:"0"},
+                token: { ...transaction.amount },
+            }
+        }
+    }
+    IBCtransferForward(transaction: EmerisTransactions.AbstractIBCTransferTransactionData, signing_address: string) {
         return {
             type: "cosmos-sdk/MsgTransfer",
             value: {
