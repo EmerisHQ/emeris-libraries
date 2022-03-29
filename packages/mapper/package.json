@@ -1,6 +1,6 @@
 {
   "name": "@emeris/mapper",
-  "version": "0.0.7",
+  "version": "0.0.9",
   "description": "Emeris Tx-mapping Library",
   "author": "Tendermint, Inc <hello@tendermint.com>",
   "homepage": "https://github.com/allinbits/emeris-libraries#readme",
