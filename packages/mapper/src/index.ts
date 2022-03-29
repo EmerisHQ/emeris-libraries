@@ -11,7 +11,7 @@ export default async function map(req: EmerisTransactions.AbstractTransactionMap
         const mapped = await Promise.all(req.txs.map(async (tx: EmerisTransactions.AbstractTransaction) => {
             return (await EmerisMessageMapper.fromChainProtocol(chainType, tx.protocol)).map(tx, signingAddress);
         }));
-        return mapped;
+        return mapped.flat();
     } catch (e) {
         throw (new Error('Could not map txs: ' + e));
     }
