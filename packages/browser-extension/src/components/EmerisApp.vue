@@ -11,6 +11,8 @@ import { defineComponent, computed } from 'vue';
 import TransportWebUSB from '@ledgerhq/hw-transport-webusb';
 import Loader from '@@/components/Loader.vue';
 
+// TODO this component should be refactored into sth more speaking imo
+
 export default defineComponent({
   name: 'EmerisApp',
   components: {

@@ -36,7 +36,11 @@ export default defineComponent({
   methods: {
     async resume() {
       const newAccount = await this.$store.dispatch(GlobalActionTypes.GET_NEW_ACCOUNT);
-      this.$router.push(newAccount.route);
+      if (newAccount.route.startsWith('/ledger')) {
+        window.open('popup.html#' + newAccount.route);
+      } else {
+        this.$router.push(newAccount.route);
+      }
     },
     async abort() {
       this.$store.dispatch(GlobalActionTypes.SET_NEW_ACCOUNT, undefined);
