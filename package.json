@@ -10,6 +10,5 @@
     "serve": "npx lerna run serve --scope @emeris/browser-extension",
     "build": "npx lerna run build"
   },
-  "dependencies": {
-  }
+  "dependencies": {}
 }

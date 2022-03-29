@@ -7,7 +7,7 @@ export default class ChainConfig {
 	constructor(endpoint:string) {
 		this.endpoint = endpoint;
 	}
-	async getChains(): Promise<EmerisAPI.APIChain[]> {
+	async getChains(): Promise<EmerisAPI.Chain[]> {
 		try {			
 			const chainsResult:AxiosResponse<EmerisAPI.ChainsResponse> = await axios.get(this.endpoint+'/chains');
 			const chains = await Promise.all(chainsResult.data.chains.map(async (chain) => await this.getChain(chain.chain_name)));
@@ -16,7 +16,7 @@ export default class ChainConfig {
 			throw new Error("Could not get chains information: "+ e);
 		}
 	}
-	async getChain(chain_name:string):Promise<EmerisAPI.APIChain>  {
+	async getChain(chain_name:string):Promise<EmerisAPI.Chain>  {
 		try {			
 			const result:AxiosResponse<EmerisAPI.ChainResponse> = await axios.get(this.endpoint+'/chain/'+chain_name);
 			return result.data?.chain ?? null;
@@ -24,10 +24,10 @@ export default class ChainConfig {
 			throw new Error("Could not get chain information: "+ e);
 		}
 	}
-	async getChainId(chain_name: string): Promise<string> {
+	async getChainId(chain_name: string): Promise<string | null> {
 		try {
 			const chain = await this.getChain(chain_name);
-			return chain.node_info.chain_id;
+			return chain?.node_info?.chain_id ?? null;
 		}catch(e) {
 			throw new Error("Could not get chain information: "+ e);
 		}
@@ -54,6 +54,24 @@ export default class ChainConfig {
 			return EmerisBase.ChainLibraries.cosmjs;
 		}catch(e) {
 			throw new Error("Could not get chain information: "+ e);
+		}
+	}
+	async getNumbers(chain_name:string, key_hash: string): Promise<EmerisAPI.SeqNumber> {
+		try {
+			const result: AxiosResponse<{ numbers: EmerisAPI.SeqNumber }> = await axios.get(
+				this.endpoint+ '/chain/' + chain_name + '/numbers/' + key_hash,
+			)
+			return result.data?.numbers ?? null
+		} catch (e) {
+			throw new Error('Could not get account numbers' + e);
+		}
+	}
+	async getFee(tx: Uint8Array, chain_name: string): Promise<unknown> {
+		try {
+			const result: AxiosResponse<unknown> = await axios.post(this.endpoint+ '/tx/' + chain_name + '/simulate', { tx_bytes: Buffer.from(tx).toString('base64') });
+			return result.data ?? null;
+		} catch (e) {
+			throw "Could not get account numbers";
 		}
 	}
 }

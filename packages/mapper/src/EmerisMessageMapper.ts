@@ -14,7 +14,9 @@ export class EmerisMessageMapper  {
         switch (transaction.type) { // TS Ugliness to ensure data types are correctly inferred in mapping functions
             case 'transfer':       
             return this[transaction.type](transaction.data, signing_address)
-            case 'IBCtransfer':       
+            case 'IBCtransferBackward':       
+            return this[transaction.type](transaction.data, signing_address)
+            case 'IBCtransferForward':       
             return this[transaction.type](transaction.data, signing_address)
             case 'addLiquidity':       
             return this[transaction.type](transaction.data, signing_address)
@@ -34,7 +36,11 @@ export class EmerisMessageMapper  {
     }
 
     
-    IBCtransfer(_transaction: EmerisTransactions.AbstractIBCTransferTransactionData, _signing_address: string) {
+    IBCtransferBackward(_transaction: EmerisTransactions.AbstractIBCTransferTransactionData, _signing_address: string) {
+        throw new Error("This method is not implemented for " + this.chain_id)
+    }
+
+    IBCtransferForward(_transaction: EmerisTransactions.AbstractIBCTransferTransactionData, _signing_address: string) {
         throw new Error("This method is not implemented for " + this.chain_id)
     }
 

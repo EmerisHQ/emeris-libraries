@@ -1,6 +1,6 @@
 import { EmerisTransactions } from "@emeris/types";
 import { EmerisMessageMapper } from "../../EmerisMessageMapper";
-import * as Long from "long";
+import * as Long  from "long";
 
 export default class CosmosAminoMessageMapper extends EmerisMessageMapper {
 

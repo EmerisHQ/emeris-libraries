@@ -1,6 +1,6 @@
 {
   "name": "@emeris/signer",
-  "version": "0.0.23",
+  "version": "0.0.24",
   "description": "Emeris Signing Library",
   "author": "Tendermint, Inc <hello@tendermint.com>",
   "homepage": "https://github.com/allinbits/emeris-libraries#readme",
@@ -30,7 +30,8 @@
     "@babel/plugin-proposal-class-properties": "^7.14.5",
     "@babel/preset-env": "^7.15.8",
     "@babel/preset-typescript": "^7.15.0",
-    "@types/node": "^16.10.8",
+    "@emeris/types": "0.0.31",
+    "@types/node": "^16.11.26",
     "@types/reconnectingwebsocket": "^1.0.7",
     "@types/w3c-web-usb": "^1.0.6",
     "@typescript-eslint/eslint-plugin": "^5.0.0",
@@ -51,13 +52,12 @@
     "@cosmjs/ledger-amino": "^0.27.1",
     "@cosmjs/proto-signing": "^0.27.1",
     "@cosmjs/stargate": "^0.27.1",
-    "@emeris/types": "0.0.11",
+    "@emeris/chain-config": "^0.0.6",
     "@ledgerhq/hw-transport-webusb": "^6.20.0",
     "@starport/vuex": "^0.1.58",
     "@terra-money/terra.js": "^1.8.10",
     "@types/ledgerhq__hw-transport": "^4.21.4",
     "@types/w3c-web-hid": "^1.0.2",
-    "axios": "^0.23.0",
     "bech32": "^2.0.0"
   },
   "bugs": {

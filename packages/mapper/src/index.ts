@@ -1,5 +1,5 @@
 import { EmerisTransactions } from "@emeris/types";
-import ChainConfig from "./chainConfig";
+import ChainConfig from "@emeris/chain-config";
 import { EmerisMessageMapper } from "./EmerisMessageMapper";
 
 export default async function map(req: EmerisTransactions.AbstractTransactionMappingRequest): Promise<unknown> {

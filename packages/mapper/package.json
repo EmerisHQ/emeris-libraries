@@ -1,14 +1,13 @@
 {
   "name": "@emeris/mapper",
-  "version": "0.0.5",
+  "version": "0.0.7",
   "description": "Emeris Tx-mapping Library",
   "author": "Tendermint, Inc <hello@tendermint.com>",
   "homepage": "https://github.com/allinbits/emeris-libraries#readme",
   "license": "ISC",
   "main": "lib/index.js",
   "directories": {
-    "lib": "lib",
-    "test": "__tests__"
+    "lib": "lib"
   },
   "files": [
     "lib"
@@ -18,7 +17,6 @@
     "url": "git+https://github.com/allinbits/emeris-libraries.git"
   },
   "scripts": {
-    "test": "jest",
     "build": "tsc"
   },
   "bugs": {
@@ -28,23 +26,16 @@
     "access": "public"
   },
   "devDependencies": {
-    "@emeris/types": "^0.0.11",
-    "@types/jest": "^27.0.2",
+    "@emeris/types": "^0.0.31",
     "@types/long": "^4.0.1",
-    "babel-jest": "^27.3.1",
-    "jest": "^27.3.1",
     "long": "^4.0.0",
-    "ts-jest": "^27.0.7",
-    "ts-loader": "^9.2.6",
-    "typescript": "^4.4.4",
-    "webpack": "^5.63.0",
-    "webpack-cli": "^4.9.1"
+    "typescript": "^4.4.4"
   },
   "dependencies": {
     "@clockwork-projects/cosmos-gaia-js": "^6.0.0",
     "@clockwork-projects/osmosis-labs-osmosis-js": "^6.1.0",
-    "@cosmjs/amino": "^0.27.1",
-    "axios": "^0.26.0",
+    "@cosmjs/amino": "^0.28.0",
+    "@emeris/chain-config": "^0.0.6",
     "bignumber.js": "^9.0.2",
     "protobufjs": "^6.11.2"
   }
