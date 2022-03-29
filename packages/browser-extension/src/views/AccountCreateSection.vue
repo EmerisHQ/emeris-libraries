@@ -6,9 +6,9 @@
     <router-link :to="{ name: 'Account Import' }">
       <Button name="Import Account" variant="secondary" />
     </router-link>
-    <router-link to="/ledger?next=/ledger/connect">
-      <Button name="Import Ledger" variant="link" />
-    </router-link>
+    <!-- <router-link to="/ledger?next=/ledger/connect"> -->
+    <Button name="Import Ledger" variant="link" @click="toLedger" />
+    <!-- </router-link> -->
   </div>
 </template>
 
@@ -20,6 +20,11 @@ export default defineComponent({
   name: 'Account Create Section',
   components: {
     Button,
+  },
+  methods: {
+    toLedger() {
+      window.open('popup.html#/ledger?next=/ledger/connect');
+    },
   },
 });
 </script>
