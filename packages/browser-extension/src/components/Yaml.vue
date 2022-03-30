@@ -3,7 +3,7 @@
 </template>
 
 <script>
-import YAML from 'json-to-pretty-yaml';
+import yaml from 'js-yaml';
 
 import { PrismEditor } from 'vue-prism-editor';
 import 'vue-prism-editor/dist/prismeditor.min.css'; // import the styles somewhere
@@ -12,6 +12,10 @@ import 'vue-prism-editor/dist/prismeditor.min.css'; // import the styles somewhe
 import { highlight, languages } from 'prismjs/components/prism-core';
 import 'prismjs/components/prism-yaml';
 import 'prismjs/themes/prism-tomorrow.css'; // import syntax highlighting styles
+
+function yamlIze(jstruct) {
+  return yaml.dump(jstruct);
+}
 
 export default {
   name: 'Yaml',
@@ -26,7 +30,7 @@ export default {
   },
   computed: {
     yaml() {
-      return YAML.stringify(this.json);
+      return yamlIze(this.json);
     },
   },
   methods: {
