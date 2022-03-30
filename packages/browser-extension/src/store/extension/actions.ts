@@ -4,7 +4,7 @@ import { State } from './state';
 import { RootState } from '..';
 import { AccountCreateStates, EmerisAccount, EmerisWallet, ExtensionRequest } from '@@/types/index';
 import { MutationTypes } from './mutation-types';
-import { GlobalDemerisActionTypes } from '@/store';
+import { GlobalActionTypes as GlobalDemerisActionTypes } from '@/store';
 
 type Namespaced<T, N extends string> = {
   [P in keyof T & string as `${N}/${P}`]: T[P];
@@ -44,18 +44,18 @@ export interface Actions {
     { commit }: ActionContext<State, RootState>,
     { accountName, password }: { accountName: string; password: string },
   ): Promise<void>;
-  [ActionTypes.GET_ADDRESS]({ }: ActionContext<State, RootState>, { chainId }: { chainId: string }): Promise<string>;
+  [ActionTypes.GET_ADDRESS]({}: ActionContext<State, RootState>, { chainId }: { chainId: string }): Promise<string>;
   [ActionTypes.REMOVE_WHITELISTED_WEBSITE](
-    { }: ActionContext<State, RootState>,
+    {}: ActionContext<State, RootState>,
     { website }: { website: string },
   ): Promise<void>;
   [ActionTypes.SET_NEW_ACCOUNT](
     { commit }: ActionContext<State, RootState>,
-    account: EmerisAccount & { route: string }
+    account: EmerisAccount & { route: string },
   ): void;
-  [ActionTypes.GET_NEW_ACCOUNT](
-    { commit }: ActionContext<State, RootState>,
-  ): Promise<EmerisAccount & { route: string }>;
+  [ActionTypes.GET_NEW_ACCOUNT]({
+    commit,
+  }: ActionContext<State, RootState>): Promise<EmerisAccount & { route: string }>;
 }
 export type GlobalActions = Namespaced<Actions, 'extension'>;
 
@@ -64,7 +64,7 @@ const respond = async (id, data) => {
     type: 'fromPopup',
     data: { action: 'setResponse', data: { id, ...data } },
   });
-}
+};
 
 export const actions: ActionTree<State, RootState> & Actions = {
   async [ActionTypes.GET_PENDING]({ commit, getters }) {
@@ -87,14 +87,16 @@ export const actions: ActionTree<State, RootState> & Actions = {
   },
   async [ActionTypes.LOAD_SESSION_DATA]({ dispatch, getters }) {
     const lastAccountused = await dispatch(ActionTypes.GET_LAST_ACCOUNT_USED); // also loads the last account to the state
-    const account = getters['getWallet'].find(account => account.accountName === lastAccountused)
-    await Promise.all(account.keyHashes.map(keyHash =>
-      dispatch(
-        GlobalDemerisActionTypes.API.GET_BALANCES,
-        { subscribe: true, params: { address: keyHash } },
-        { root: true },
-      )
-    ))
+    const account = getters['getWallet'].find((account) => account.accountName === lastAccountused);
+    await Promise.all(
+      account.keyHashes.map((keyHash) =>
+        dispatch(
+          GlobalDemerisActionTypes.API.GET_BALANCES,
+          { subscribe: true, params: { address: keyHash } },
+          { root: true },
+        ),
+      ),
+    );
   },
   async [ActionTypes.GET_WALLET]({ commit, getters }) {
     try {
@@ -107,7 +109,7 @@ export const actions: ActionTree<State, RootState> & Actions = {
     }
     return getters['getWallet'];
   },
-  async[ActionTypes.HAS_WALLET]({ commit }) {
+  async [ActionTypes.HAS_WALLET]({ commit }) {
     try {
       const hasWallet = await browser.runtime.sendMessage({ type: 'fromPopup', data: { action: 'hasWallet' } });
       if (!hasWallet) {
@@ -118,7 +120,7 @@ export const actions: ActionTree<State, RootState> & Actions = {
       throw new Error('Extension:HasWallet failed');
     }
   },
-  async[ActionTypes.CREATE_WALLET]({ commit, getters }, { password }: { password: string }) {
+  async [ActionTypes.CREATE_WALLET]({ commit, getters }, { password }: { password: string }) {
     const response = await browser.runtime.sendMessage({
       type: 'fromPopup',
       data: { action: 'createWallet', data: { password } },
@@ -126,17 +128,17 @@ export const actions: ActionTree<State, RootState> & Actions = {
     commit(MutationTypes.SET_WALLET, response as EmerisWallet);
     return getters['getWallet'];
   },
-  async[ActionTypes.CREATE_ACCOUNT]({ dispatch }, { account }: { account: EmerisAccount }) {
+  async [ActionTypes.CREATE_ACCOUNT]({ dispatch }, { account }: { account: EmerisAccount }) {
     await browser.runtime.sendMessage({
       type: 'fromPopup',
       data: { action: 'createAccount', data: { account } },
     });
-    dispatch(ActionTypes.GET_WALLET)
-    dispatch(ActionTypes.SET_LAST_ACCOUNT_USED, account)
+    dispatch(ActionTypes.GET_WALLET);
+    dispatch(ActionTypes.SET_LAST_ACCOUNT_USED, account);
   },
-  async[ActionTypes.UPDATE_ACCOUNT](
+  async [ActionTypes.UPDATE_ACCOUNT](
     { dispatch, commit, getters },
-    { targetAccountName, newAccountName }: { targetAccountName: string; newAccountName: string, },
+    { targetAccountName, newAccountName }: { targetAccountName: string; newAccountName: string },
   ) {
     await browser.runtime.sendMessage({
       type: 'fromPopup',
@@ -144,14 +146,14 @@ export const actions: ActionTree<State, RootState> & Actions = {
     });
     return await dispatch(ActionTypes.GET_WALLET);
   },
-  async[ActionTypes.REMOVE_ACCOUNT]({ dispatch, getters }, { accountName }: { accountName: string }) {
+  async [ActionTypes.REMOVE_ACCOUNT]({ dispatch, getters }, { accountName }: { accountName: string }) {
     await browser.runtime.sendMessage({
       type: 'fromPopup',
       data: { action: 'removeAccount', data: { accountName } },
     });
-    await dispatch(ActionTypes.GET_WALLET)
+    await dispatch(ActionTypes.GET_WALLET);
   },
-  async[ActionTypes.UNLOCK_WALLET]({ commit, dispatch, getters }, { password }: { password: string }) {
+  async [ActionTypes.UNLOCK_WALLET]({ commit, dispatch, getters }, { password }: { password: string }) {
     try {
       const wallet = await browser.runtime.sendMessage({
         type: 'fromPopup',
@@ -167,13 +169,13 @@ export const actions: ActionTree<State, RootState> & Actions = {
       throw new Error('Extension:UnlockWallet failed');
     }
   },
-  async [ActionTypes.CHANGE_PASSWORD]({ }, { password }: { password: string }) {
+  async [ActionTypes.CHANGE_PASSWORD]({}, { password }: { password: string }) {
     await browser.runtime.sendMessage({
       type: 'fromPopup',
       data: { action: 'changePassword', data: { password } },
     });
   },
-  async[ActionTypes.GET_LAST_ACCOUNT_USED]({ commit, getters }) {
+  async [ActionTypes.GET_LAST_ACCOUNT_USED]({ commit, getters }) {
     try {
       const accountName = await browser.runtime.sendMessage({
         type: 'fromPopup',
@@ -187,7 +189,7 @@ export const actions: ActionTree<State, RootState> & Actions = {
     }
     return getters['getLastAccount'];
   },
-  async[ActionTypes.SET_LAST_ACCOUNT_USED]({ commit, getters }, { accountName }) {
+  async [ActionTypes.SET_LAST_ACCOUNT_USED]({ commit, getters }, { accountName }) {
     try {
       await browser.runtime.sendMessage({
         type: 'fromPopup',
@@ -212,7 +214,7 @@ export const actions: ActionTree<State, RootState> & Actions = {
       throw new Error('Extension:getMnemonic failed');
     }
   },
-  async [ActionTypes.GET_ADDRESS]({ }, { chainId }: { chainId: string }) {
+  async [ActionTypes.GET_ADDRESS]({}, { chainId }: { chainId: string }) {
     try {
       const address = await browser.runtime.sendMessage({
         type: 'fromPopup',
@@ -227,7 +229,10 @@ export const actions: ActionTree<State, RootState> & Actions = {
   async [ActionTypes.ACCOUNT_BACKED_UP]({ dispatch }, { accountName }: { accountName: string }) {
     await browser.runtime.sendMessage({
       type: 'fromPopup',
-      data: { action: 'updateAccount', data: { account: { setupState: AccountCreateStates.COMPLETE }, targetAccountName: accountName } },
+      data: {
+        action: 'updateAccount',
+        data: { account: { setupState: AccountCreateStates.COMPLETE }, targetAccountName: accountName },
+      },
     });
     dispatch(ActionTypes.LOAD_SESSION_DATA);
   },
@@ -249,48 +254,44 @@ export const actions: ActionTree<State, RootState> & Actions = {
     await dispatch(ActionTypes.GET_WHITELISTED_WEBSITES);
   },
   async [ActionTypes.WHITELIST_WEBSITE]({ dispatch }, { id, accept }) {
-    await respond(id, { accept })
+    await respond(id, { accept });
     await dispatch(ActionTypes.GET_WHITELISTED_WEBSITES);
   },
-  async [ActionTypes.ACCEPT_TRANSACTION]({ }, { id, ...transaction }) {
+  async [ActionTypes.ACCEPT_TRANSACTION]({}, { id, ...transaction }) {
     const broadcastable = await browser.runtime.sendMessage({
       type: 'fromPopup',
       data: { action: 'signTransaction', data: { id, ...transaction } },
     });
-    await respond(id, { broadcastable })
+    await respond(id, { broadcastable });
   },
-  async [ActionTypes.CANCEL_TRANSACTION]({ }, { id }) {
-    await respond(id, { broadcastable: undefined })
+  async [ActionTypes.CANCEL_TRANSACTION]({}, { id }) {
+    await respond(id, { broadcastable: undefined });
   },
-  async [ActionTypes.GET_RAW_TRANSACTION]({ }, {
-    messages,
-    chainId,
-    signingAddress,
-    gas,
-    fees,
-    memo }) {
+  async [ActionTypes.GET_RAW_TRANSACTION]({}, { messages, chainId, signingAddress, gas, fees, memo }) {
     return await browser.runtime.sendMessage({
       type: 'fromPopup',
       data: {
-        action: 'getRawTransaction', data: {
+        action: 'getRawTransaction',
+        data: {
           messages,
           chainId,
           signingAddress,
           fee: {
             gas,
-            amount: fees
+            amount: fees,
           },
-          memo
-        }
+          memo,
+        },
       },
     });
   },
   async [ActionTypes.SET_NEW_ACCOUNT]({ commit }, account: EmerisAccount & { route: string }) {
-    commit(MutationTypes.SET_NEW_ACCOUNT, account)
+    commit(MutationTypes.SET_NEW_ACCOUNT, account);
     return await browser.runtime.sendMessage({
       type: 'fromPopup',
       data: {
-        action: 'setPartialAccountCreationStep', data: account
+        action: 'setPartialAccountCreationStep',
+        data: account,
       },
     });
   },
@@ -298,13 +299,13 @@ export const actions: ActionTree<State, RootState> & Actions = {
     const partialAccountCreationStep = await browser.runtime.sendMessage({
       type: 'fromPopup',
       data: {
-        action: 'getPartialAccountCreationStep'
+        action: 'getPartialAccountCreationStep',
       },
     });
     if (partialAccountCreationStep) {
-      commit(MutationTypes.SET_NEW_ACCOUNT, partialAccountCreationStep)
-      return partialAccountCreationStep
+      commit(MutationTypes.SET_NEW_ACCOUNT, partialAccountCreationStep);
+      return partialAccountCreationStep;
     }
-    return undefined
+    return undefined;
   },
 };

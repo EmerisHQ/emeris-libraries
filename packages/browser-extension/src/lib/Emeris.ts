@@ -20,7 +20,7 @@ import {
   RoutedInternalRequest,
   GetRawTransactionRequest,
 } from '@@/types/api';
-import { AbstractTxResult } from '@@/types/transactions'; // TODO
+// import { AbstractTxResult } from '@@/types/transactions'; // TODO
 import TxMapper from '@emeris/mapper';
 
 // HACK extension and mapper expect different formats, we need to decide and adjust the formats to one
@@ -28,26 +28,20 @@ const convertObjectKeys = (obj, doX) => {
   let newObj;
   if (Array.isArray(obj)) {
     newObj = [];
-  }else{
-    newObj= {};
+  } else {
+    newObj = {};
   }
-  Object.keys(obj).forEach(key => {
+  Object.keys(obj).forEach((key) => {
     if (typeof obj[key] === 'object' && obj[key] !== null) {
-      newObj[doX(key)] = convertObjectKeys(obj[key], doX)
+      newObj[doX(key)] = convertObjectKeys(obj[key], doX);
+    } else {
+      newObj[doX(key)] = obj[key];
     }
-    else {
-      newObj[doX(key)] = obj[key]
-    }
-  })
+  });
   return newObj;
-}
-const snakeToCamel = str =>
-  str.replace(/([-_][a-z])/g, group =>
-    group
-      .toUpperCase()
-      .replace('-', '')
-      .replace('_', '')
-  );
+};
+const snakeToCamel = (str) =>
+  str.replace(/([-_][a-z])/g, (group) => group.toUpperCase().replace('-', '').replace('_', ''));
 
 import { keyHashfromAddress } from '@/utils/basic';
 import chainConfig from '../chain-config';
@@ -163,7 +157,7 @@ export class Emeris implements IEmeris {
       case 'createAccount':
         // guard
         if (!message.data.data.account.isLedger && !message.data.data.account.accountMnemonic) {
-          throw new Error("Account has no mnemonic")
+          throw new Error('Account has no mnemonic');
         }
         await this.storage.saveAccount(message.data.data.account, this.password);
         try {
@@ -232,7 +226,7 @@ export class Emeris implements IEmeris {
       case 'signTransaction':
         return await this.getTransactionSignature(message.data, message.data.data.memo);
       case 'setResponse':
-        return this.setResponse(message.data.data.id, message.data.data)
+        return this.setResponse(message.data.data.id, message.data.data);
       case 'extensionReset':
         this.storage.extensionReset();
         return;
@@ -241,11 +235,13 @@ export class Emeris implements IEmeris {
         return;
       case 'getWhitelistedWebsite':
         return this.storage.getWhitelistedWebsites();
-      case 'addWhitelistedWebsite':
+      case 'addWhitelistedWebsite': {
         // prevent dupes
         const whitelistedWebsites = await this.storage.getWhitelistedWebsites();
-        if (whitelistedWebsites.find((whitelistedWebsite) => whitelistedWebsite.origin === message.data.data.website)) return true;
+        if (whitelistedWebsites.find((whitelistedWebsite) => whitelistedWebsite.origin === message.data.data.website))
+          return true;
         return this.storage.addWhitelistedWebsite(message.data.data.website);
+      }
       case 'setPartialAccountCreationStep':
         return this.storage.setPartialAccountCreationStep(message.data.data, this.password);
       case 'getPartialAccountCreationStep':
@@ -295,14 +291,20 @@ export class Emeris implements IEmeris {
           accountName: account.accountName,
           isLedger: account.isLedger,
           setupState: account.setupState,
-          keyHashes: // wrapping in a Set to make all values unique
-            [...new Set(await Promise.all(Object.values(chainConfig).map(async chain => {
-              const address = await libs[chain.library].getAddress(account, chain)
-              const keyHash = keyHashfromAddress(address);
-              return keyHash
-            })))]
-        }
-        return displayAccount
+          // wrapping in a Set to make all values unique
+          keyHashes: [
+            ...new Set(
+              await Promise.all(
+                Object.values(chainConfig).map(async (chain) => {
+                  const address = await libs[chain.library].getAddress(account, chain);
+                  const keyHash = keyHashfromAddress(address);
+                  return keyHash;
+                }),
+              ),
+            ),
+          ],
+        };
+        return displayAccount;
       }),
     );
   }
@@ -347,19 +349,29 @@ export class Emeris implements IEmeris {
       throw new Error('Chain not supported: ' + request.data.chainId);
     }
 
-    const selectedAccount = this.wallet.find(({ accountName }) => accountName === this.selectedAccount)
-    const address = await libs[chain.library].getAddress(selectedAccount, chain)
+    const selectedAccount = this.wallet.find(({ accountName }) => accountName === this.selectedAccount);
+    const address = await libs[chain.library].getAddress(selectedAccount, chain);
 
     if (address !== request.data.signingAddress) {
       throw new Error('The requested signing address is not active in the extension');
     }
 
-    const abstractTx = { ...request.data, chainName: request.data.chainId, txs: request.data.messages } // HACK need to adjust transported data model
-    convertObjectKeys(abstractTx, snakeToCamel)
-    const chainMessages = await TxMapper({ ...request.data, chainName: request.data.chainId, txs: request.data.messages })
-    const signable = await libs[chain.library].getRawSignable(selectedAccount, chain, chainMessages, request.data.fee, request.data.memo)
+    const abstractTx = { ...request.data, chainName: request.data.chainId, txs: request.data.messages }; // HACK need to adjust transported data model
+    convertObjectKeys(abstractTx, snakeToCamel);
+    const chainMessages = await TxMapper({
+      ...request.data,
+      chainName: request.data.chainId,
+      txs: request.data.messages,
+    });
+    const signable = await libs[chain.library].getRawSignable(
+      selectedAccount,
+      chain,
+      chainMessages,
+      request.data.fee,
+      request.data.memo,
+    );
 
-    return signable
+    return signable;
   }
   async getTransactionSignature(request: SignTransactionRequest, memo: string): Promise<string> {
     if (!this.wallet) {
@@ -370,30 +382,32 @@ export class Emeris implements IEmeris {
       throw new Error('Chain not supported: ' + request.data.chainId);
     }
 
-    const accountsWithAddress = []
-    await Promise.all(this.wallet.map(async account => {
-      const address = await libs[chain.library].getAddress(account, chain)
-      accountsWithAddress.push({
-        address,
-        account
-      })
-    }))
+    const accountsWithAddress = [];
+    await Promise.all(
+      this.wallet.map(async (account) => {
+        const address = await libs[chain.library].getAddress(account, chain);
+        accountsWithAddress.push({
+          address,
+          account,
+        });
+      }),
+    );
     const selectedAccountPair = accountsWithAddress.find(({ address }) => {
-      return address === request.data.signingAddress
-    })
+      return address === request.data.signingAddress;
+    });
 
     if (!selectedAccountPair) {
       throw new Error('The requested signing address is not available in the extension');
     }
-    const selectedAccount = selectedAccountPair.account
+    const selectedAccount = selectedAccountPair.account;
 
-    let abstractTx = { ...request.data, chainName: request.data.chainId, txs: request.data.messages } // HACK need to adjust transported data model
+    let abstractTx = { ...request.data, chainName: request.data.chainId, txs: request.data.messages }; // HACK need to adjust transported data model
     console.log(abstractTx);
-    abstractTx = convertObjectKeys(abstractTx, snakeToCamel)
+    abstractTx = convertObjectKeys(abstractTx, snakeToCamel);
     console.log(abstractTx);
-    const chainMessages = await TxMapper(abstractTx)
+    const chainMessages = await TxMapper(abstractTx);
     console.log(chainMessages);
-    let broadcastable
+    let broadcastable;
     if (selectedAccount.isLedger) {
       broadcastable = await libs[chain.library].signLedger(
         selectedAccount,
@@ -403,31 +417,38 @@ export class Emeris implements IEmeris {
         memo,
       );
     } else {
-      broadcastable = await libs[chain.library].sign(selectedAccount, chain, chainMessages as AminoMsg[], request.data.fee, memo)
+      broadcastable = await libs[chain.library].sign(
+        selectedAccount,
+        chain,
+        chainMessages as AminoMsg[],
+        request.data.fee,
+        memo,
+      );
     }
-    console.log(Buffer.from(broadcastable).toString('base64'))
+    console.log(Buffer.from(broadcastable).toString('base64'));
     // converting the broadcastable into a string that can be converted back to a unit8array
     // might need to be adjusted if we have any other broadcastable
-    return Buffer.from(broadcastable).toString('hex')
+    return Buffer.from(broadcastable).toString('hex');
   }
   async signTransaction(request: SignTransactionRequest): Promise<any> {
     request.id = uuidv4();
     const { broadcastable } = await this.forwardToPopup(request);
-    return broadcastable
+    return broadcastable;
   }
   async signAndBroadcastTransaction(request: SignAndBroadcastTransactionRequest): Promise<any> {
-    const broadcastable = await this.signTransaction(request)
+    const broadcastable = await this.signTransaction(request);
 
-    if (!broadcastable) throw new Error("User canceled the transactions")
+    if (!broadcastable) throw new Error('User canceled the transactions');
 
-    // @ts-ignore doesn't accept SignAndBroadcastTransactionRequest inheriting from SignTransactionRequest
-    const response = await axios.post((process.env.VUE_APP_EMERIS_PROD_ENDPOINT || 'https://api.emeris.com/v1') + '/tx/' + request.data.chainId, {
-      tx_bytes: Buffer.from(broadcastable, 'hex').toString('base64'),
-      // @ts-ignore doesn't accept SignAndBroadcastTransactionRequest inheriting from SignTransactionRequest
-      address: request.data.signingAddress,
-    });
+    const response = await axios.post(
+      (process.env.VUE_APP_EMERIS_PROD_ENDPOINT || 'https://api.emeris.com/v1') + '/tx/' + request.data.chainId,
+      {
+        tx_bytes: Buffer.from(broadcastable, 'hex').toString('base64'),
+        address: request.data.signingAddress,
+      },
+    );
 
-    return response
+    return response;
   }
   async enable(request: ApproveOriginRequest): Promise<boolean> {
     // TODO purge this queue and replace with a sensible data struct to we can check if a request is a dupe

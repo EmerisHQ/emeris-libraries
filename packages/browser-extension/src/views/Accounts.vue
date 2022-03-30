@@ -82,7 +82,7 @@ import { RootState } from '@@/store';
 import { AccountCreateStates } from '@@/types';
 import { GlobalActionTypes } from '@@/store/extension/action-types';
 import { GlobalGetterTypes } from '@@/store/extension/getter-types';
-import { GlobalDemerisActionTypes } from '@/store';
+import { GlobalActionTypes as GlobalDemerisActionTypes } from '@/store';
 
 export default defineComponent({
   name: 'Accounts',

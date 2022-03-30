@@ -11,11 +11,11 @@ export type State = {
   whitelistedWebsites: { origin: string }[];
   ledgerSignData: {
     fees: {
-      gas: Number,
-      amount: Coin[],
-    },
-    memo: string,
-  }
+      gas: number;
+      amount: Coin[];
+    };
+    memo: string;
+  };
 };
 export function getDefaultState(): State {
   return {
@@ -24,6 +24,6 @@ export function getDefaultState(): State {
     lastAccount: null,
     newAccount: null,
     whitelistedWebsites: [],
-    ledgerSignData: null
+    ledgerSignData: null,
   };
 }

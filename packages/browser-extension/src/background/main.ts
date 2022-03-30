@@ -1,5 +1,13 @@
-import { Emeris } from './lib/Emeris';
-import EmerisStorage, { EmerisStorageMode } from './lib/EmerisStorage';
+// only on dev mode
+if (import.meta.hot) {
+  // @ts-expect-error for background HMR
+  import('/@vite/client');
+  // load latest content script
+  import('./contentScriptHMR');
+}
+
+import { Emeris } from '../lib/Emeris';
+import EmerisStorage, { EmerisStorageMode } from '../lib/EmerisStorage';
 
 const storage = new EmerisStorage(EmerisStorageMode.LOCAL);
 const emeris = new Emeris(storage);

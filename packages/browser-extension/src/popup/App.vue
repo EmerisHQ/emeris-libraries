@@ -3,19 +3,17 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, onMounted, watch } from 'vue';
+import { defineComponent, onMounted } from 'vue';
 import { GlobalActionTypes } from '@@/store/extension/action-types';
-import { useRouter } from 'vue-router';
 import { useStore } from 'vuex';
 import { setStore } from '@/utils/useStore';
-import { GlobalDemerisActionTypes } from '@/store/demeris-api/action-types';
-import { DemerisMutationTypes } from '@/store/demeris-api/mutation-types';
+import { GlobalActionTypes as GlobalDemerisActionTypes } from '@/store/demeris-api/action-types';
+import { MutationTypes as DemerisMutationTypes } from '@/store/demeris-api/mutation-types';
 
 export default defineComponent({
   name: 'App',
   setup() {
     const store = useStore();
-    const router = useRouter();
 
     setStore(store);
 

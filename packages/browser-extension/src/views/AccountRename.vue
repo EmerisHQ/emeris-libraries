@@ -41,7 +41,7 @@ export default defineComponent({
       return this.wallet[this.index];
     },
   },
-  mounted(){
+  mounted() {
     this.$data.accountName = this.account.accountName;
   },
   props: {

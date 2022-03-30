@@ -21,11 +21,11 @@ const validateMsg = (data) => {
 window.addEventListener('message', async (event: MessageEvent) => {
   // We only accept messages from ourselves
 
-  if (event.source != window) {
+  if (event.source !== window) {
     return;
   }
   // We only  deal with messages to the extension
-  if (event.data.type != 'toEmerisExtension') {
+  if (event.data.type !== 'toEmerisExtension') {
     return;
   }
   // Do some basic validation

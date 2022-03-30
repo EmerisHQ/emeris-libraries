@@ -7,3 +7,11 @@
 4. Open chrome / firefox etc.(instructions based on chrome), open `chrome://extensions/`
 5. Toggle the developer mode switch if not already turned on, click on Load unpacked and navigate to the `packages/browser-extension/dist` directory and load
 6. Enjoy your unstable hot-reloading dev env. It is recommended to `run npm serve` again and `remove` + `load unpacked` the extension on any changes to the code
+
+
+
+## Update submodules
+
+Emeris and other repos added here will sometimes have critical updates. To update submodules you can use the following command in you terminal:
+
+`git submodule update --recursive --remote`

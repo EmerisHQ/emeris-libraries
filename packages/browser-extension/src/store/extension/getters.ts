@@ -37,8 +37,12 @@ export const getters: GetterTree<State, RootState> & Getters = {
   },
   // accessing rootState doesn't allow for isolating each module, but this way we don't need to change the demeris module
   [GetterTypes.getAllBalances]: (state, getters, rootState, rootGetters) => (account) => {
-    return [].concat(...account.keyHashes.map(keyHash => {
-      return rootGetters[GlobalApiGetterTypes.getBalances]({ address: keyHash });
-    })).filter(x => !!x)
+    return []
+      .concat(
+        ...account.keyHashes.map((keyHash) => {
+          return rootGetters[GlobalApiGetterTypes.getBalances]({ address: keyHash });
+        }),
+      )
+      .filter((x) => !!x);
   },
 };

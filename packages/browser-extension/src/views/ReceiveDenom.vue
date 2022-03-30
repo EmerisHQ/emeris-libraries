@@ -27,7 +27,7 @@ import { useStore } from 'vuex';
 import Search from '@/components/common/Search.vue';
 import CoinList from '@/components/common/CoinList.vue';
 import Header from '@@/components/Header.vue';
-import { GlobalDemerisGetterTypes } from '@/store';
+import { GlobalGetterTypes as GlobalDemerisGetterTypes } from '@/store';
 
 export default {
   name: 'Receive Denom',

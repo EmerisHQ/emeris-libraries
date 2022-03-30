@@ -35,7 +35,7 @@ import { useStore } from 'vuex';
 import Header from '@@/components/Header.vue';
 import QrCode from '@/components/common/QrCode.vue';
 import Icon from '@/components/ui/Icon.vue';
-import { GlobalDemerisGetterTypes } from '@/store';
+import { GlobalGetterTypes as GlobalDemerisGetterTypes } from '@/store';
 import { GlobalActionTypes } from '@@/store/extension/action-types';
 import Loader from '@@/components/Loader.vue';
 

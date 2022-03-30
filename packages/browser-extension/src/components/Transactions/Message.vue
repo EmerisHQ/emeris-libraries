@@ -7,7 +7,7 @@
 <script>
 import { EmerisTransactions } from '@emeris/types';
 import { defineAsyncComponent } from '@vue/runtime-core';
-import Fallback from './fallback';
+import Fallback from './fallback.vue';
 
 // dynamically loads messages by message type
 // files nmaes in ./ need have the same name as the message type
@@ -19,9 +19,12 @@ export default {
   },
   computed: {
     component() {
-      return defineAsyncComponent({
-        loader: () => import(`./${this.message.type}`),
-        errorComponent: Fallback,
+      return defineAsyncComponent(() => {
+      console.log('this.message.type',this.message.type)
+        return {
+          loader: async () => await import( /* @vite-ignore */ `@@/components/Transactions/${this.message.type}.vue`),
+          errorComponent: Fallback,
+        }
       });
     },
   },

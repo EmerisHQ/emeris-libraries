@@ -1,23 +1,27 @@
 {
   "compilerOptions": {
+    "baseUrl": ".",
     "target": "esnext",
-    "module": "esnext",
+    "module": "ESNext",
     "strict": false,
     "jsx": "preserve",
     "importHelpers": true,
     "noImplicitAny": false,
     "moduleResolution": "node",
     "skipLibCheck": true,
-    "esModuleInterop": false,
+    "esModuleInterop": true,
+    "forceConsistentCasingInFileNames": true,
     "allowSyntheticDefaultImports": true,
     "allowJs": true,
+    "noUnusedLocals": true,
     "sourceMap": true,
     "resolveJsonModule": true,
-    "baseUrl": ".",
+    "types": ["webpack-env", "node", "long", "vite/client", "vitest/globals"],
     "typeRoots": [
       "./node_modules/@types",
     ],
     "paths": {
+      "~/*": ["src/*"],
       "@@/*": [
         "src/*"
       ],
@@ -40,6 +44,7 @@
     "tests/**/*.tsx"
   ],
   "exclude": [
-    "node_modules"
+    "node_modules",
+    "dist",
   ]
 }

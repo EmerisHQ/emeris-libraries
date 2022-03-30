@@ -31,5 +31,8 @@ const i18n = createI18n({
 
 const app = createApp(App);
 
-// @ts-ignore somehow here is a type incompatibility with demeris
-app.use(rootstore).use(i18n).use(router).use(VueTippy).mount('#app');
+app.use(rootstore)
+app.use(i18n)
+app.use(router)
+app.use(VueTippy)
+app.mount('#app');

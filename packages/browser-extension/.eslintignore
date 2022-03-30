@@ -1,6 +1,7 @@
 node_modules
 build
 dist
-vue.config.js
 **/*.js
 demeris
+extension/dist/
+__dist/

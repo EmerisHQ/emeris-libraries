@@ -53,8 +53,8 @@ import ListCard from '@@/components/ListCard.vue';
 import Slideout from '@@/components/Slideout.vue';
 import Header from '@@/components/Header.vue';
 import Checkbox from '@/components/ui/Checkbox.vue';
-import {GlobalGetterTypes} from "@@/store/extension/getter-types";
-import {AccountCreateStates} from "@@/types";
+import { GlobalGetterTypes } from '@@/store/extension/getter-types';
+import { AccountCreateStates } from '@@/types';
 
 export default defineComponent({
   name: 'Welcome',
@@ -76,7 +76,7 @@ export default defineComponent({
   },
   methods: {
     onContinue() {
-      if(this.account && this.account.setupState !== AccountCreateStates.COMPLETE) {
+      if (this.account && this.account.setupState !== AccountCreateStates.COMPLETE) {
         const localStorageKey = `nextBackupCheck-${this.account.accountName}`;
         const nowInSeconds = Math.floor(Date.now() / 1000);
         //  display next backup check in an hour
@@ -96,12 +96,12 @@ export default defineComponent({
 
 <style>
 /* overrides checkbox component label class */
-.leading-copy{
+.leading-copy {
   font-size: 13px;
 }
 /* overrides disabled button component background and text color */
-.text-inactive{
+.text-inactive {
   background-color: #333333;
-  color:#FFFFFF;
+  color: #ffffff;
 }
 </style>

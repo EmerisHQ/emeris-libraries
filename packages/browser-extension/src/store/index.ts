@@ -41,7 +41,7 @@ export type TypedTXStore = DemerisStoreTX<Pick<RootState, typeof namespaceTX>>;
 export type TypedExtensionStore = ExtensionStore<Pick<RootState, 'extension'>>;
 
 export const key: InjectionKey<Store<RootState>> = Symbol();
-export const rootstore = createStore<RootState>({
+export const rootstore = createStore({
   modules: {
     extension,
     [namespaceAPI]: moduleAPI,
