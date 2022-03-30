@@ -13,10 +13,6 @@ import { highlight, languages } from 'prismjs/components/prism-core';
 import 'prismjs/components/prism-yaml';
 import 'prismjs/themes/prism-tomorrow.css'; // import syntax highlighting styles
 
-function yamlIze(jstruct) {
-  return yaml.dump(jstruct);
-}
-
 export default {
   name: 'Yaml',
   components: {
@@ -30,7 +26,7 @@ export default {
   },
   computed: {
     yaml() {
-      return yamlIze(this.json);
+      return yaml.dump(this.json);
     },
   },
   methods: {
