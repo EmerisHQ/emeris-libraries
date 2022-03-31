@@ -2,36 +2,29 @@
 # yarn lockfile v1
 
 
-"@emeris/types@^0.0.31":
-  version "0.0.31"
-  resolved "https://registry.yarnpkg.com/@emeris/types/-/types-0.0.31.tgz#4449ff48fc025cf37bcce076de8c76d96c66eb36"
-  integrity sha512-qX86VxGZJX3gsPazbkaauS3X7Tj+0DJc0cW0WVilFRkDgnd9YuAUUdHtcg48QRyNLen67x8cmhlMsDfgg5gkPA==
-  dependencies:
-    "@sinclair/typebox" "^0.22.1"
-
-"@sinclair/typebox@^0.22.1":
-  version "0.22.1"
-  resolved "https://registry.yarnpkg.com/@sinclair/typebox/-/typebox-0.22.1.tgz#718162cb38d5cf732ea348821cce00d88a10d2b3"
-  integrity sha512-cYkZ5oYd/KrzwcocLtGI4QRi6oniV4eP8IEefEhZp8YjLhrsrHiiaeChs8a9T/YKIlIjHMoxoOCWOUkZ/vviNw==
-
 "@types/node@^17.0.23":
   version "17.0.23"
-  resolved "https://registry.yarnpkg.com/@types/node/-/node-17.0.23.tgz#3b41a6e643589ac6442bdbd7a4a3ded62f33f7da"
+  resolved "https://registry.npmjs.org/@types/node/-/node-17.0.23.tgz"
   integrity sha512-UxDxWn7dl97rKVeVS61vErvw086aCYhDLyvRQZ5Rk65rZKepaFdm53GeqXaKBuOhED4e9uWq34IC3TdSdJJ2Gw==
 
-axios@^0.26.1:
-  version "0.26.1"
-  resolved "https://registry.yarnpkg.com/axios/-/axios-0.26.1.tgz#1ede41c51fcf51bbbd6fd43669caaa4f0495aaa9"
-  integrity sha512-fPwcX4EvnSHuInCMItEhAGnaSEXRBjtzh9fOtsE6E1G6p7vl7edEeZe11QHf18+6+9gR5PbKV/sGKNaD8YaMeA==
-  dependencies:
-    follow-redirects "^1.14.8"
+"@vespaiach/axios-fetch-adapter@^0.2.0":
+  version "0.2.0"
+  resolved "https://registry.npmjs.org/@vespaiach/axios-fetch-adapter/-/axios-fetch-adapter-0.2.0.tgz"
+  integrity sha512-F9nCbK+bkRklf0/2kKX0sbNi7dxc04OGgQbYx0ExS6IB2GNS4U4/7ICzatlQIkg01MG9aB5H65lT6Xlzuut2dw==
 
-follow-redirects@^1.14.8:
+axios@^0.21.1:
+  version "0.21.1"
+  resolved "https://registry.npmjs.org/axios/-/axios-0.21.1.tgz"
+  integrity sha512-dKQiRHxGD9PPRIUNIWvZhPTPpl1rf/OxTYKsqKUDjBwYylTvV7SjSHJb9ratfyzM6wCdLCOYLzs73qpg5c4iGA==
+  dependencies:
+    follow-redirects "^1.10.0"
+
+follow-redirects@^1.10.0:
   version "1.14.9"
-  resolved "https://registry.yarnpkg.com/follow-redirects/-/follow-redirects-1.14.9.tgz#dd4ea157de7bfaf9ea9b3fbd85aa16951f78d8d7"
+  resolved "https://registry.npmjs.org/follow-redirects/-/follow-redirects-1.14.9.tgz"
   integrity sha512-MQDfihBQYMcyy5dhRDJUHcw7lb2Pv/TuE6xP1vyraLukNDHKbDxDNaOE3NbCAdKQApno+GPRyo1YAp89yCjK4w==
 
 typescript@^4.6.3:
   version "4.6.3"
-  resolved "https://registry.yarnpkg.com/typescript/-/typescript-4.6.3.tgz#eefeafa6afdd31d725584c67a0eaba80f6fc6c6c"
+  resolved "https://registry.npmjs.org/typescript/-/typescript-4.6.3.tgz"
   integrity sha512-yNIatDa5iaofVozS/uQJEl3JRWLKKGJKh6Yaiv0GLGSuhpFJe7P3SbHZ8/yjAHRQwKRoA6YZqlfjXWmVzoVSMw==

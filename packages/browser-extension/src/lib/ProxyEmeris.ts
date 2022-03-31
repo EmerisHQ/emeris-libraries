@@ -124,7 +124,7 @@ export class ProxyEmeris implements IEmeris {
   }: {
     signingAddress: string;
     chainId: string;
-    messages: EmerisTransactions.Transaction<EmerisTransactions.TransactionData>[];
+    messages: EmerisTransactions.AbstractTransaction[];
     fee: {
       gas: string;
       amount: Base.Amount[];
@@ -151,7 +151,7 @@ export class ProxyEmeris implements IEmeris {
   }: {
     signingAddress: string;
     chainId: string;
-    messages: EmerisTransactions.Transaction<EmerisTransactions.TransactionData>[];
+    messages: EmerisTransactions.AbstractTransaction[];
     fee: {
       gas: string;
       amount: Base.Amount[];
