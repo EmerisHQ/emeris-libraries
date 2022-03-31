@@ -28,7 +28,7 @@ export default class GravityAminoMessageMapper extends CosmosAminoMessageMapper 
         }
     }
 
-    addliquidity(transaction: EmerisTransactions.AddLiquidityData, signing_address: string) {
+    addLiquidity(transaction: EmerisTransactions.AbstractAddLiquidityTransactionData, signing_address: string) {
         let depositCoins;
         const pool = transaction.pool as unknown as Pool;
         if (transaction.coinA.denom > transaction.coinB.denom) {
@@ -47,7 +47,7 @@ export default class GravityAminoMessageMapper extends CosmosAminoMessageMapper 
         }
     }
 
-    withdrawliquidity(transaction: EmerisTransactions.WithdrawLiquidityData, signing_address: string) {
+    withdrawLiquidity(transaction: EmerisTransactions.AbstractWithdrawLiquidityTransactionData, signing_address: string) {
         const pool = transaction.pool as unknown as Pool;
         return {
             type: 'liquidity/MsgWithdrawWithinBatch',
@@ -59,7 +59,7 @@ export default class GravityAminoMessageMapper extends CosmosAminoMessageMapper 
         }
     }
 
-    createpool(transaction: EmerisTransactions.CreatePoolData, signing_address: string) {
+    createPool(transaction: EmerisTransactions.AbstractCreatePoolTransactionData, signing_address: string) {
         let depositCoins;
         if (transaction.coinA.denom > transaction.coinB.denom) {
             depositCoins = [transaction.coinB, transaction.coinA];

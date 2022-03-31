@@ -1,6 +1,8 @@
 import { IEmeris } from '@@/types/emeris';
 import { EmerisWallet } from '@@/types';
 
+// @ts-ignore
+import adapter from '@vespaiach/axios-fetch-adapter';
 import { v4 as uuidv4 } from 'uuid';
 import axios from 'axios';
 import EmerisStorage from './EmerisStorage';
@@ -455,7 +457,7 @@ export class Emeris implements IEmeris {
     return broadcastable;
   }
   async signAndBroadcastTransaction(request: SignAndBroadcastTransactionRequest): Promise<any> {
-    const broadcastable = await this.signTransaction(request);
+    const broadcastable = await this.signTransaction({ ...request, action: 'signTransaction'});
 
     if (!broadcastable) throw new Error('User canceled the transactions');
 
@@ -466,7 +468,7 @@ export class Emeris implements IEmeris {
         tx_bytes: Buffer.from(broadcastable, 'hex').toString('base64'),
         // @ts-ignore doesn't accept SignAndBroadcastTransactionRequest inheriting from SignTransactionRequest
         address: request.data.signingAddress,
-      },
+      }, { adapter }
     );
 
     return response;

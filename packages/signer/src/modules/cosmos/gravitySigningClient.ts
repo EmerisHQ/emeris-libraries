@@ -15,7 +15,7 @@ import { SigningStargateClient } from '@cosmjs/stargate'
 import { TxRaw } from 'cosmjs-types/cosmos/tx/v1beta1/tx'
 import { EmerisSigningClient } from './emerisSigningClient'
 import { liquidityTypes } from './liquidityTypes'
-import { getFee, getNumbers, getChain } from '../../api'
+import ChainConfig from '@emeris/chain-config'
 import { keyHash } from '../../utils'
 
 function isAmino(obj: unknown): obj is AminoMsg[] {
@@ -27,20 +27,26 @@ function isProto(obj: unknown): obj is EncodeObject[] {
 export default class GravitySigningClient extends SigningStargateClient implements EmerisSigningClient {
   exposedSigner: OfflineAminoSigner
   chain_name: string
+  chainConfig: ChainConfig
 
   constructor(...args) {
     super(args[0], args[1], args[2])
     this.exposedSigner = args[1]
     this.chain_name = args[3]
+    this.chainConfig = new ChainConfig(process.env.EMERIS_ENDPOINT || 'https://api.emeris.com/v1')
   }
+  
   private async setupSigner() {
     const accountFromSigner = (await this.exposedSigner.getAccounts())[0]
     const signerAddress = accountFromSigner.address
     const aminoTypes = new AminoTypes({ additions: liquidityTypes, prefix: null })
     const pubkey = encodePubkey(encodeSecp256k1Pubkey(accountFromSigner.pubkey))
     const signMode = SignMode.SIGN_MODE_LEGACY_AMINO_JSON
-    const chain_id = (await getChain(this.chain_name)).node_info.chain_id
-    const { sequence_number, account_number } = await getNumbers(this.chain_name, keyHash(signerAddress))
+    const chain_id = await this.chainConfig.getChainId(this.chain_name)
+    const { sequence_number, account_number } = await this.chainConfig.getNumbers(
+      this.chain_name,
+      keyHash(signerAddress),
+    )
     return { aminoTypes, signerAddress, pubkey, signMode, chain_id, sequence_number, account_number }
   }
   private mapMessages(messages: readonly AminoMsg[] | readonly EncodeObject[]): {
@@ -125,7 +131,7 @@ export default class GravitySigningClient extends SigningStargateClient implemen
     })
 
     const dec = this.finalizeTx(txRaw)
-    const stdfee = await getFee(dec, this.chain_name)
+    const stdfee = await this.chainConfig.getFee(dec, this.chain_name)
     return stdfee as StdFee
   }
 

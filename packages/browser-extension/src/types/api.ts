@@ -1,5 +1,5 @@
 import { EmerisAccount } from '.';
-import { TransactionSignRequest } from '@emeris/types/lib/EmerisTransactions';
+import { EmerisTransactions } from '@emeris/types';
 import * as Base from '@/types/base';
 
 export interface Request {
@@ -13,7 +13,7 @@ export type ApproveOriginRequest = Request & {
 };
 export type GetRawTransactionRequest = Request & {
   action: 'getRawTransaction';
-  data: TransactionSignRequest & {
+  data: EmerisTransactions.TransactionSignRequest & {
     fee: {
       gas: string,
       amount: Base.Amount[]
@@ -23,10 +23,11 @@ export type GetRawTransactionRequest = Request & {
 };
 export type SignTransactionRequest = Request & {
   action: 'signTransaction';
-  data: TransactionSignRequest;
+  data: EmerisTransactions.TransactionSignRequest;
 };
-export type SignAndBroadcastTransactionRequest = SignTransactionRequest & {
+export type SignAndBroadcastTransactionRequest = Request & {
   action: 'signAndBroadcastTransaction';
+  data: EmerisTransactions.TransactionSignRequest;
 };
 export type GetAddressRequest = Request & {
   action: 'getAddress';
