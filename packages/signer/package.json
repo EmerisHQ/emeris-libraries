@@ -1,6 +1,6 @@
 {
   "name": "@emeris/signer",
-  "version": "0.0.24",
+  "version": "0.0.26",
   "description": "Emeris Signing Library",
   "author": "Tendermint, Inc <hello@tendermint.com>",
   "homepage": "https://github.com/allinbits/emeris-libraries#readme",
@@ -52,7 +52,7 @@
     "@cosmjs/ledger-amino": "^0.27.1",
     "@cosmjs/proto-signing": "^0.27.1",
     "@cosmjs/stargate": "^0.27.1",
-    "@emeris/chain-config": "^0.0.6",
+    "@emeris/chain-config": "^0.0.7",
     "@ledgerhq/hw-transport-webusb": "^6.20.0",
     "@starport/vuex": "^0.1.58",
     "@terra-money/terra.js": "^1.8.10",

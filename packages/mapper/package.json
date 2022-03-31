@@ -1,6 +1,6 @@
 {
   "name": "@emeris/mapper",
-  "version": "0.0.9",
+  "version": "0.0.10",
   "description": "Emeris Tx-mapping Library",
   "author": "Tendermint, Inc <hello@tendermint.com>",
   "homepage": "https://github.com/allinbits/emeris-libraries#readme",
@@ -35,7 +35,7 @@
     "@clockwork-projects/cosmos-gaia-js": "^6.0.0",
     "@clockwork-projects/osmosis-labs-osmosis-js": "^6.1.0",
     "@cosmjs/amino": "^0.28.0",
-    "@emeris/chain-config": "^0.0.6",
+    "@emeris/chain-config": "^0.0.7",
     "bignumber.js": "^9.0.2",
     "protobufjs": "^6.11.2"
   }
