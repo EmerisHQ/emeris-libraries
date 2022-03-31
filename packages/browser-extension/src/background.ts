@@ -22,4 +22,4 @@ const messageHandler = async (request) => {
   }
   return await pageHandler(request);
 };
-browser.runtime.onMessage.addListener(messageHandler);
+chrome.runtime.onMessage.addListener(messageHandler);

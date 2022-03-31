@@ -28,6 +28,7 @@
     "@cosmjs/math": "^0.27.1",
     "@cosmjs/proto-signing": "^0.25.6",
     "@cosmjs/stargate": "^0.25.6",
+    "@emeris/chain-config": "^0.0.6",
     "@emeris/mapper": "0.0.5",
     "@emeris/signer": "^0.0.23",
     "@ledgerhq/hw-transport-webusb": "^6.11.2",
@@ -39,7 +40,7 @@
     "bip39": "^3.0.4",
     "core-js": "^3.18.3",
     "crypto-js": "^4.1.1",
-    "json-to-pretty-yaml": "^1.2.2",
+    "js-yaml": "^4.1.0",
     "lodash.groupby": "^4.6.0",
     "lodash.isequal": "^4.5.0",
     "lodash.orderby": "^4.6.0",
@@ -92,7 +93,6 @@
     "sass": "^1.43.2",
     "sass-loader": "^10.0.5",
     "typescript": "^4.3.5",
-    "vue-cli-plugin-browser-extension": "~0.25.2",
     "vue-jest": "^5.0.0-0"
   },
   "gitHooks": {

@@ -7,8 +7,6 @@
   "permissions": [
     "activeTab",
     "storage",
-    "<all_urls>",
-    "*://*/*",
     "notifications",
     "identity"
   ],
@@ -21,9 +19,9 @@
     "192": "icons/192.png",
     "256": "icons/256.png"
   },
+  "minimum_chrome_version": "93",
   "background": {
-    "service_worker": "background.js",
-    "type": "module"
+    "service_worker": "background.js"
   },
   "content_scripts": [
     {
@@ -37,7 +35,7 @@
   ],
   "content_security_policy": {
     "extension_pages": "script-src 'self'; object-src 'self'",
-    "sandbox": "sandbox allow-scripts; script-src 'self'"
+    "sandbox": "sandbox allow-scripts; script-src 'self' 'unsafe-eval'"
   },
   "web_accessible_resources": [
     {
@@ -57,10 +55,6 @@
       "16": "icons/16.png",
       "32": "icons/32.png"
     }
-  },
-  "options_ui": {
-    "page": "options.html",
-    "browser_style": true
   },
   "version": "0.1.0"
 }

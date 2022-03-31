@@ -103,7 +103,7 @@ export default defineComponent({
       };
       loadData();
 
-      browser.runtime.onMessage.addListener((message) => {
+      chrome.runtime.onMessage.addListener((message) => {
         if (message.type == 'toPopup' && message.data.action == 'update') {
           store.dispatch(GlobalActionTypes.GET_PENDING);
         }

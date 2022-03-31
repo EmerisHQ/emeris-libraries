@@ -79,7 +79,7 @@ export default defineComponent({
       return store.getters[GlobalGetterTypes.getWallet];
     });
     const respond = (id) => {
-      browser.runtime.sendMessage({
+      chrome.runtime.sendMessage({
         type: 'fromPopup',
         data: { action: 'setResponse', data: pending.value.find((item) => item.id == id) },
       });
