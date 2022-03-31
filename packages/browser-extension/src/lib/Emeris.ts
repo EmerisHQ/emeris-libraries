@@ -21,7 +21,7 @@ import {
   GetRawTransactionRequest,
 } from '@@/types/api';
 // import { AbstractTxResult } from '@@/types/transactions'; // TODO
-import TxMapper from '@emeris/mapper';
+import * as TxMapper from '@emeris/mapper';
 
 // HACK extension and mapper expect different formats, we need to decide and adjust the formats to one
 const convertObjectKeys = (obj, doX) => {

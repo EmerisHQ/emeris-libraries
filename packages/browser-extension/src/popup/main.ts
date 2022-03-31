@@ -31,8 +31,8 @@ const i18n = createI18n({
 
 const app = createApp(App);
 
-app.use(rootstore)
-app.use(i18n)
-app.use(router)
-app.use(VueTippy)
+app.use(rootstore);
+app.use(i18n);
+app.use(router);
+app.use(VueTippy);
 app.mount('#app');
