@@ -5,6 +5,8 @@ if (import.meta.hot) {
   // load latest content script
   import('./contentScriptHMR');
 }
+import crypto from 'crypto-browserify'
+import { Buffer } from 'buffer/' // <-- no typo here ("/")
 
 import { Emeris } from '../lib/Emeris';
 import EmerisStorage, { EmerisStorageMode } from '../lib/EmerisStorage';
