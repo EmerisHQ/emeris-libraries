@@ -60,7 +60,7 @@ export interface Actions {
 export type GlobalActions = Namespaced<Actions, 'extension'>;
 
 const respond = async (id, data) => {
-  await browser.runtime.sendMessage({
+  await chrome.runtime.sendMessage({
     type: 'fromPopup',
     data: { action: 'setResponse', data: { id, ...data } },
   });
@@ -69,7 +69,7 @@ const respond = async (id, data) => {
 export const actions: ActionTree<State, RootState> & Actions = {
   async [ActionTypes.GET_PENDING]({ commit, getters }) {
     try {
-      const latestPending = await browser.runtime.sendMessage({ type: 'fromPopup', data: { action: 'getPending' } });
+      const latestPending = await chrome.runtime.sendMessage({ type: 'fromPopup', data: { action: 'getPending' } });
 
       commit(MutationTypes.ADD_PENDING, latestPending);
     } catch (e) {
@@ -98,7 +98,7 @@ export const actions: ActionTree<State, RootState> & Actions = {
   },
   async [ActionTypes.GET_WALLET]({ commit, getters }) {
     try {
-      const wallet = await browser.runtime.sendMessage({ type: 'fromPopup', data: { action: 'getWallet' } });
+      const wallet = await chrome.runtime.sendMessage({ type: 'fromPopup', data: { action: 'getWallet' } });
       if (wallet) {
         commit(MutationTypes.SET_WALLET, wallet as EmerisWallet);
       }
@@ -109,7 +109,7 @@ export const actions: ActionTree<State, RootState> & Actions = {
   },
   async[ActionTypes.HAS_WALLET]({ commit }) {
     try {
-      const hasWallet = await browser.runtime.sendMessage({ type: 'fromPopup', data: { action: 'hasWallet' } });
+      const hasWallet = await chrome.runtime.sendMessage({ type: 'fromPopup', data: { action: 'hasWallet' } });
       if (!hasWallet) {
         commit(MutationTypes.SET_WALLET, [] as EmerisWallet);
       }
@@ -119,7 +119,7 @@ export const actions: ActionTree<State, RootState> & Actions = {
     }
   },
   async[ActionTypes.CREATE_WALLET]({ commit, getters }, { password }: { password: string }) {
-    const response = await browser.runtime.sendMessage({
+    const response = await chrome.runtime.sendMessage({
       type: 'fromPopup',
       data: { action: 'createWallet', data: { password } },
     });
@@ -127,7 +127,7 @@ export const actions: ActionTree<State, RootState> & Actions = {
     return getters['getWallet'];
   },
   async[ActionTypes.CREATE_ACCOUNT]({ dispatch }, { account }: { account: EmerisAccount }) {
-    await browser.runtime.sendMessage({
+    await chrome.runtime.sendMessage({
       type: 'fromPopup',
       data: { action: 'createAccount', data: { account } },
     });
@@ -138,14 +138,14 @@ export const actions: ActionTree<State, RootState> & Actions = {
     { dispatch, commit, getters },
     { targetAccountName, newAccountName }: { targetAccountName: string; newAccountName: string, },
   ) {
-    await browser.runtime.sendMessage({
+    await chrome.runtime.sendMessage({
       type: 'fromPopup',
       data: { action: 'updateAccount', data: { targetAccountName, account: { accountName: newAccountName } } },
     });
     return await dispatch(ActionTypes.GET_WALLET);
   },
   async[ActionTypes.REMOVE_ACCOUNT]({ dispatch, getters }, { accountName }: { accountName: string }) {
-    await browser.runtime.sendMessage({
+    await chrome.runtime.sendMessage({
       type: 'fromPopup',
       data: { action: 'removeAccount', data: { accountName } },
     });
@@ -153,7 +153,7 @@ export const actions: ActionTree<State, RootState> & Actions = {
   },
   async[ActionTypes.UNLOCK_WALLET]({ commit, dispatch, getters }, { password }: { password: string }) {
     try {
-      const wallet = await browser.runtime.sendMessage({
+      const wallet = await chrome.runtime.sendMessage({
         type: 'fromPopup',
         data: { action: 'unlockWallet', data: { password } },
       });
@@ -168,14 +168,14 @@ export const actions: ActionTree<State, RootState> & Actions = {
     }
   },
   async [ActionTypes.CHANGE_PASSWORD]({ }, { password }: { password: string }) {
-    await browser.runtime.sendMessage({
+    await chrome.runtime.sendMessage({
       type: 'fromPopup',
       data: { action: 'changePassword', data: { password } },
     });
   },
   async[ActionTypes.GET_LAST_ACCOUNT_USED]({ commit, getters }) {
     try {
-      const accountName = await browser.runtime.sendMessage({
+      const accountName = await chrome.runtime.sendMessage({
         type: 'fromPopup',
         data: { action: 'getLastAccount' },
       });
@@ -189,7 +189,7 @@ export const actions: ActionTree<State, RootState> & Actions = {
   },
   async[ActionTypes.SET_LAST_ACCOUNT_USED]({ commit, getters }, { accountName }) {
     try {
-      await browser.runtime.sendMessage({
+      await chrome.runtime.sendMessage({
         type: 'fromPopup',
         data: { action: 'setLastAccount', data: { accountName } },
       });
@@ -201,7 +201,7 @@ export const actions: ActionTree<State, RootState> & Actions = {
   },
   async [ActionTypes.GET_MNEMONIC]({ commit }, { accountName, password }: { accountName: string; password: string }) {
     try {
-      const account = await browser.runtime.sendMessage({
+      const account = await chrome.runtime.sendMessage({
         type: 'fromPopup',
         data: { action: 'getMnemonic', data: { accountName, password } },
       });
@@ -214,7 +214,7 @@ export const actions: ActionTree<State, RootState> & Actions = {
   },
   async [ActionTypes.GET_ADDRESS]({ }, { chainId }: { chainId: string }) {
     try {
-      const address = await browser.runtime.sendMessage({
+      const address = await chrome.runtime.sendMessage({
         type: 'fromPopup',
         data: { action: 'getAddress', data: { chainId } },
       });
@@ -225,24 +225,24 @@ export const actions: ActionTree<State, RootState> & Actions = {
     }
   },
   async [ActionTypes.ACCOUNT_BACKED_UP]({ dispatch }, { accountName }: { accountName: string }) {
-    await browser.runtime.sendMessage({
+    await chrome.runtime.sendMessage({
       type: 'fromPopup',
       data: { action: 'updateAccount', data: { account: { setupState: AccountCreateStates.COMPLETE }, targetAccountName: accountName } },
     });
     dispatch(ActionTypes.LOAD_SESSION_DATA);
   },
   async [ActionTypes.EXTENSION_RESET]() {
-    return await browser.runtime.sendMessage({ type: 'fromPopup', data: { action: 'extensionReset' } });
+    return await chrome.runtime.sendMessage({ type: 'fromPopup', data: { action: 'extensionReset' } });
   },
   async [ActionTypes.GET_WHITELISTED_WEBSITES]({ commit }) {
-    const whitelistWebsites = await browser.runtime.sendMessage({
+    const whitelistWebsites = await chrome.runtime.sendMessage({
       type: 'fromPopup',
       data: { action: 'getWhitelistedWebsite' },
     });
     commit(MutationTypes.SET_WHITELISTED_WEBSITES, whitelistWebsites);
   },
   async [ActionTypes.REMOVE_WHITELISTED_WEBSITE]({ dispatch }, { website }) {
-    await browser.runtime.sendMessage({
+    await chrome.runtime.sendMessage({
       type: 'fromPopup',
       data: { action: 'removeWhitelistedWebsite', data: { website } },
     });
@@ -253,7 +253,7 @@ export const actions: ActionTree<State, RootState> & Actions = {
     await dispatch(ActionTypes.GET_WHITELISTED_WEBSITES);
   },
   async [ActionTypes.ACCEPT_TRANSACTION]({ }, { id, ...transaction }) {
-    const broadcastable = await browser.runtime.sendMessage({
+    const broadcastable = await chrome.runtime.sendMessage({
       type: 'fromPopup',
       data: { action: 'signTransaction', data: { id, ...transaction } },
     });
@@ -269,7 +269,7 @@ export const actions: ActionTree<State, RootState> & Actions = {
     gas,
     fees,
     memo }) {
-    return await browser.runtime.sendMessage({
+    return await chrome.runtime.sendMessage({
       type: 'fromPopup',
       data: {
         action: 'getRawTransaction', data: {
@@ -287,7 +287,7 @@ export const actions: ActionTree<State, RootState> & Actions = {
   },
   async [ActionTypes.SET_NEW_ACCOUNT]({ commit }, account: EmerisAccount & { route: string }) {
     commit(MutationTypes.SET_NEW_ACCOUNT, account)
-    return await browser.runtime.sendMessage({
+    return await chrome.runtime.sendMessage({
       type: 'fromPopup',
       data: {
         action: 'setPartialAccountCreationStep', data: account
@@ -295,7 +295,7 @@ export const actions: ActionTree<State, RootState> & Actions = {
     });
   },
   async [ActionTypes.GET_NEW_ACCOUNT]({ commit }) {
-    const partialAccountCreationStep = await browser.runtime.sendMessage({
+    const partialAccountCreationStep = await chrome.runtime.sendMessage({
       type: 'fromPopup',
       data: {
         action: 'getPartialAccountCreationStep'

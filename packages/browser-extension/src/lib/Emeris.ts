@@ -28,8 +28,8 @@ const convertObjectKeys = (obj, doX) => {
   let newObj;
   if (Array.isArray(obj)) {
     newObj = [];
-  }else{
-    newObj= {};
+  } else {
+    newObj = {};
   }
   Object.keys(obj).forEach(key => {
     if (typeof obj[key] === 'object' && obj[key] !== null) {
@@ -66,25 +66,27 @@ export class Emeris implements IEmeris {
   private timeoutLock: ReturnType<typeof setTimeout>;
 
   constructor(storage: EmerisStorage) {
-    this.password = browser.storage['session'].get('session').password ?? null;
-    this.wallet =  browser.storage['session'].get('session').wallet ?? null;
-    this.pending = browser.storage['session'].get('session').pending ?? [];
-    this.selectedAccount = browser.storage['session'].get('session').selectedAccount ?? null;
+    this.password = chrome.storage['session'].get('session').password ?? null;
+    this.wallet = chrome.storage['session'].get('session').wallet ?? null;
+    this.pending = chrome.storage['session'].get('session').pending ?? [];
+    this.selectedAccount = chrome.storage['session'].get('session').selectedAccount ?? null;
     this.loaded = true;
     this.storage = storage;
-    this.popup = browser.storage['session'].get('session').popup ?? null;
-    this.queuedRequests = browser.storage['session'].get('session').queued ? this.restoreQueued(browser.storage['session'].get('session').queued) :  new Map();
+    this.popup = chrome.storage['session'].get('session').popup ?? null;
+    this.queuedRequests = chrome.storage['session'].get('session').queued ? this.restoreQueued(chrome.storage['session'].get('session').queued) : new Map();
     this.storeSession();
   }
   storeSession(): void {
-    browser.storage['session'].set({ session: {
-      wallet: this.wallet,
-      password: this.password,
-      selectedAccount: this.selectedAccount,
-      pending: this.pending,
-      queued: this.queuedToArray(this.queuedRequests),
-      popup: this.popup
-    }});
+    chrome.storage['session'].set({
+      session: {
+        wallet: this.wallet,
+        password: this.password,
+        selectedAccount: this.selectedAccount,
+        pending: this.pending,
+        queued: this.queuedToArray(this.queuedRequests),
+        popup: this.popup
+      }
+    });
   }
   queuedToArray(queued: Map<
     string,
@@ -93,16 +95,16 @@ export class Emeris implements IEmeris {
     return Array.from(queued.keys());
   }
   restoreQueued(storedQ: string[]) {
-    let q:Map<
-    string,
-    Record<'resolver', (value: ExtensionRequest | PromiseLike<ExtensionRequest>) => void>
-  >;
-    for(let i=0; i< storedQ.length; i++) {
+    let q: Map<
+      string,
+      Record<'resolver', (value: ExtensionRequest | PromiseLike<ExtensionRequest>) => void>
+    >;
+    for (let i = 0; i < storedQ.length; i++) {
       let resolver;
       const _response: Promise<ExtensionResponse> = new Promise((resolve) => {
         resolver = resolve;
       });
-      q.set(storedQ[i],{ resolver });
+      q.set(storedQ[i], { resolver });
     }
     return q;
   }
@@ -123,7 +125,7 @@ export class Emeris implements IEmeris {
   }
   async unlockWallet(password: string): Promise<EmerisWallet> {
     try {
-      this.wallet = await this.storage.unlockWallet(password);      
+      this.wallet = await this.storage.unlockWallet(password);
       this.password = password;
       this.selectedAccount = await this.storage.getLastAccount();
       if (this.wallet.length > 0 && !this.selectedAccount) {
@@ -148,11 +150,11 @@ export class Emeris implements IEmeris {
   }
   async launchPopup(): Promise<number> {
     return (
-      await browser.windows.create({
+      await chrome.windows.create({
         width: 375,
         height: 600,
         type: 'popup',
-        url: browser.runtime.getURL('/popup.html'),
+        url: chrome.runtime.getURL('/popup.html'),
       })
     ).id;
   }
@@ -233,7 +235,7 @@ export class Emeris implements IEmeris {
             this.selectedAccount === undefined;
           }
           this.storeSession();
-          return await this.unlockWallet(this.password);         
+          return await this.unlockWallet(this.password);
         } catch (e) {
           console.log(e);
         }
@@ -298,18 +300,18 @@ export class Emeris implements IEmeris {
   async ensurePopup(): Promise<void> {
     if (!this.popup) {
       this.popup = await this.launchPopup();
-      browser.windows.update(this.popup as number, {
+      chrome.windows.update(this.popup as number, {
         focused: true,
       });
     } else {
       try {
-        await browser.windows.get(this.popup as number);
-        browser.runtime.sendMessage({ type: 'toPopup', data: { action: 'update' } });
+        await chrome.windows.get(this.popup as number);
+        chrome.runtime.sendMessage({ type: 'toPopup', data: { action: 'update' } });
       } catch (e) {
         this.popup = await this.launchPopup();
       }
 
-      await browser.windows.update(this.popup as number, {
+      await chrome.windows.update(this.popup as number, {
         focused: true,
       });
     }
@@ -493,7 +495,7 @@ export class Emeris implements IEmeris {
       1,
     );
     this.storeSession();
-    browser.runtime.sendMessage({ type: 'toPopup', data: { action: 'update' } });
+    chrome.runtime.sendMessage({ type: 'toPopup', data: { action: 'update' } });
     return true;
   }
 }
