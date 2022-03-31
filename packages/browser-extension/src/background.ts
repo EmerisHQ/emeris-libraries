@@ -15,11 +15,12 @@ const pageHandler = async (request) => {
     return { id: request.id, data: await emeris[request.action](request) };
   }
 };
-const messageHandler = async (request) => {
+const messageHandler = (request, sender, sendResponse) => {
   if (request.type == 'fromPopup') {
-    const result = await emeris.popupHandler(request);
-    return result;
+    emeris.popupHandler(request).then(sendResponse)
+  } else {
+    pageHandler(request).then(sendResponse)
   }
-  return await pageHandler(request);
+  return true;
 };
 chrome.runtime.onMessage.addListener(messageHandler);
