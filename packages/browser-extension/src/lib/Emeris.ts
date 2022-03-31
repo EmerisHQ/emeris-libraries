@@ -66,10 +66,45 @@ export class Emeris implements IEmeris {
   private timeoutLock: ReturnType<typeof setTimeout>;
 
   constructor(storage: EmerisStorage) {
+    this.password = browser.storage['session'].get('session').password ?? null;
+    this.wallet =  browser.storage['session'].get('session').wallet ?? null;
+    this.pending = browser.storage['session'].get('session').pending ?? [];
+    this.selectedAccount = browser.storage['session'].get('session').selectedAccount ?? null;
     this.loaded = true;
     this.storage = storage;
-    this.popup = null;
-    this.queuedRequests = new Map();
+    this.popup = browser.storage['session'].get('session').popup ?? null;
+    this.queuedRequests = browser.storage['session'].get('session').queued ? this.restoreQueued(browser.storage['session'].get('session').queued) :  new Map();
+    this.storeSession();
+  }
+  storeSession(): void {
+    browser.storage['session'].set({ session: {
+      wallet: this.wallet,
+      password: this.password,
+      selectedAccount: this.selectedAccount,
+      pending: this.pending,
+      queued: this.queuedToArray(this.queuedRequests),
+      popup: this.popup
+    }});
+  }
+  queuedToArray(queued: Map<
+    string,
+    Record<'resolver', (value: ExtensionRequest | PromiseLike<ExtensionRequest>) => void>
+  >) {
+    return Array.from(queued.keys());
+  }
+  restoreQueued(storedQ: string[]) {
+    let q:Map<
+    string,
+    Record<'resolver', (value: ExtensionRequest | PromiseLike<ExtensionRequest>) => void>
+  >;
+    for(let i=0; i< storedQ.length; i++) {
+      let resolver;
+      const _response: Promise<ExtensionResponse> = new Promise((resolve) => {
+        resolver = resolve;
+      });
+      q.set(storedQ[i],{ resolver });
+    }
+    return q;
   }
   reset(): void {
     if (this.timeoutLock) {
@@ -88,12 +123,13 @@ export class Emeris implements IEmeris {
   }
   async unlockWallet(password: string): Promise<EmerisWallet> {
     try {
-      this.wallet = await this.storage.unlockWallet(password);
+      this.wallet = await this.storage.unlockWallet(password);      
       this.password = password;
       this.selectedAccount = await this.storage.getLastAccount();
       if (this.wallet.length > 0 && !this.selectedAccount) {
         this.setLastAccount(this.wallet[0].accountName);
       }
+      this.storeSession();
       this.timeoutLock = setTimeout(() => {
         this.lock();
       }, 120000);
@@ -128,6 +164,7 @@ export class Emeris implements IEmeris {
     this.queuedRequests.set(request.id, { resolver });
     this.pending.push(request);
     this.ensurePopup();
+    this.storeSession();
     const resp = await response;
     return resp;
   }
@@ -139,6 +176,7 @@ export class Emeris implements IEmeris {
       try {
         await this.storage.setLastAccount(accountName);
         this.selectedAccount = accountName;
+        this.storeSession();
       } catch (e) {
         console.log(e);
       }
@@ -148,7 +186,7 @@ export class Emeris implements IEmeris {
     this.reset();
     switch (message?.data.action) {
       case 'getPending':
-        return this.pending;
+        return this.pending ?? [];
       case 'setLastAccount':
         this.setLastAccount(message.data.data.accountName);
         break;
@@ -169,6 +207,7 @@ export class Emeris implements IEmeris {
         try {
           this.wallet = await this.unlockWallet(this.password);
           this.setLastAccount(message.data.data.account.accountName);
+          this.storeSession();
         } catch (e) {
           console.log(e);
         }
@@ -182,6 +221,7 @@ export class Emeris implements IEmeris {
           );
           this.wallet = await this.unlockWallet(this.password);
           await this.setLastAccount(message.data.data.account.accountName);
+          this.storeSession();
         } catch (e) {
           console.log(e);
         }
@@ -192,7 +232,8 @@ export class Emeris implements IEmeris {
           if (this.selectedAccount === message.data.data.accountName) {
             this.selectedAccount === undefined;
           }
-          return await this.unlockWallet(this.password);
+          this.storeSession();
+          return await this.unlockWallet(this.password);         
         } catch (e) {
           console.log(e);
         }
@@ -207,6 +248,7 @@ export class Emeris implements IEmeris {
           if (wallet) {
             return wallet.find((x) => x.accountName == message.data.data.accountName);
           }
+          this.storeSession();
         } catch (e) {
           console.log(e);
         }
@@ -215,6 +257,7 @@ export class Emeris implements IEmeris {
       case 'unlockWallet':
         try {
           await this.unlockWallet(message.data.data.password);
+          this.storeSession();
           return await this.getDisplayAccounts();
         } catch (e) {
           console.log(e);
@@ -449,6 +492,7 @@ export class Emeris implements IEmeris {
       this.pending.findIndex((req) => req.id == id),
       1,
     );
+    this.storeSession();
     browser.runtime.sendMessage({ type: 'toPopup', data: { action: 'update' } });
     return true;
   }
