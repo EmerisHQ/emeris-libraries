@@ -19,11 +19,16 @@ module.exports = {
     output: {
       filename: '[name].js',
     },
+    resolve: {
+      alias: {
+        'vue-i18n': 'vue-i18n/dist/vue-i18n.runtime.esm-bundler.js'
+      }
+    }
   },
   pluginOptions: {
     browserExtension: {
       components: {
-        background: true,
+        background: false,
         contentScripts: true,
       },
       componentOptions: {
