@@ -10,7 +10,7 @@ import { useStore } from 'vuex';
 import { setStore } from '@/utils/useStore';
 import { GlobalDemerisActionTypes } from '@/store/demeris-api/action-types';
 import { DemerisMutationTypes } from '@/store/demeris-api/mutation-types';
-
+import browser from 'webextension-polyfill';
 export default defineComponent({
   name: 'App',
   setup() {
@@ -103,7 +103,7 @@ export default defineComponent({
       };
       loadData();
 
-      chrome.runtime.onMessage.addListener((message) => {
+      browser.runtime.onMessage.addListener((message) => {
         if (message.type == 'toPopup' && message.data.action == 'update') {
           store.dispatch(GlobalActionTypes.GET_PENDING);
         }

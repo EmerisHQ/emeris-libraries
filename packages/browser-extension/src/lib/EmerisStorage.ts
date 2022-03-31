@@ -1,5 +1,5 @@
 import * as CryptoJS from 'crypto-js';
-
+import browser from 'webextension-polyfill';
 import { SaveWalletError, UnlockWalletError } from '@@/errors';
 import { EmerisEncryptedWallet, EmerisAccount, EmerisWallet } from '@@/types';
 export enum EmerisStorageMode {
@@ -13,11 +13,11 @@ export default class EmerisStorage {
     this.storageMode = storageMode;
   }
   async getWhitelistedWebsites(): Promise<{ origin: string }[]> {
-    const result = await chrome.storage[this.storageMode].get('whitelistedWebsites');
+    const result = await browser.storage[this.storageMode].get('whitelistedWebsites');
     return result.whitelistedWebsites;
   }
   async isWhitelistedWebsite(origin: string): Promise<boolean> {
-    const result = await chrome.storage[this.storageMode].get('whitelistedWebsites');
+    const result = await browser.storage[this.storageMode].get('whitelistedWebsites');
     if (!result.whitelistedWebsites) {
       return false;
     } else {
@@ -27,12 +27,12 @@ export default class EmerisStorage {
   }
   async addWhitelistedWebsite(origin: string): Promise<boolean> {
     try {
-      const result = await chrome.storage[this.storageMode].get('whitelistedWebsites');
+      const result = await browser.storage[this.storageMode].get('whitelistedWebsites');
       if (!result.whitelistedWebsites) {
         result.whitelistedWebsites = [];
       }
       result.whitelistedWebsites.push({ origin });
-      await chrome.storage[this.storageMode].set({ whitelistedWebsites: result.whitelistedWebsites });
+      await browser.storage[this.storageMode].set({ whitelistedWebsites: result.whitelistedWebsites });
       return true;
     } catch (e) {
       return false;
@@ -40,16 +40,16 @@ export default class EmerisStorage {
   }
   async deleteWhitelistedWebsite(origin: string): Promise<boolean> {
     try {
-      const result = await chrome.storage[this.storageMode].get('whitelistedWebsites');
+      const result = await browser.storage[this.storageMode].get('whitelistedWebsites');
       const newWhitelistedWebsites = result.whitelistedWebsites.filter((permission) => permission.origin != origin);
-      await chrome.storage[this.storageMode].set({ whitelistedWebsites: newWhitelistedWebsites });
+      await browser.storage[this.storageMode].set({ whitelistedWebsites: newWhitelistedWebsites });
       return true;
     } catch (e) {
       return false;
     }
   }
   private async getWallet(): Promise<EmerisEncryptedWallet> {
-    const result = await chrome.storage[this.storageMode].get('wallet');
+    const result = await browser.storage[this.storageMode].get('wallet');
     if (result.wallet) {
       return result.wallet;
     } else {
@@ -60,11 +60,11 @@ export default class EmerisStorage {
     return !!(await this.getWallet());
   }
   async getLastAccount(): Promise<string | null> {
-    const res = await chrome.storage[this.storageMode].get('lastAccount');
+    const res = await browser.storage[this.storageMode].get('lastAccount');
     return res.lastAccount ?? null;
   }
   async setLastAccount(accountName: string): Promise<void> {
-    await chrome.storage[this.storageMode].set({ lastAccount: accountName });
+    await browser.storage[this.storageMode].set({ lastAccount: accountName });
   }
   async updateAccount(account: Partial<EmerisAccount>, targetAccountName: string, password: string): Promise<boolean> {
     try {
@@ -108,7 +108,7 @@ export default class EmerisStorage {
   private async saveWallet(wallet: EmerisWallet, password: string): Promise<boolean> {
     try {
       const encryptedWallet = CryptoJS.AES.encrypt(JSON.stringify(wallet), password).toString();
-      await chrome.storage[this.storageMode].set({ wallet: { walletData: encryptedWallet } });
+      await browser.storage[this.storageMode].set({ wallet: { walletData: encryptedWallet } });
       return true;
     } catch (e) {
       console.log(e);
@@ -137,20 +137,20 @@ export default class EmerisStorage {
     }
   }
   async extensionReset() {
-    await chrome.storage[this.storageMode].set({ password: null, wallet: null, lastAccount: null, whitelistedWebsites: null, partialAccountCreationStep: null });
+    await browser.storage[this.storageMode].set({ password: null, wallet: null, lastAccount: null, whitelistedWebsites: null, partialAccountCreationStep: null });
   }
   async setPartialAccountCreationStep(partialAccountCreationStep, password) {
     const encryptedPartialAccountCreationStep = partialAccountCreationStep ? CryptoJS.AES.encrypt(JSON.stringify(partialAccountCreationStep), password).toString() : null;
-    await chrome.storage[this.storageMode].set({ partialAccountCreationStep: encryptedPartialAccountCreationStep });
+    await browser.storage[this.storageMode].set({ partialAccountCreationStep: encryptedPartialAccountCreationStep });
   }
   async getPartialAccountCreationStep(password) {
     try {
-      const { partialAccountCreationStep: encryptedPartialAccountCreationStep } = await chrome.storage[this.storageMode].get('partialAccountCreationStep');
+      const { partialAccountCreationStep: encryptedPartialAccountCreationStep } = await browser.storage[this.storageMode].get('partialAccountCreationStep');
       if (!encryptedPartialAccountCreationStep) return undefined
       const partialAccountCreationStep = JSON.parse(CryptoJS.AES.decrypt(encryptedPartialAccountCreationStep, password).toString(CryptoJS.enc.Utf8));
       return partialAccountCreationStep;
     } catch (e) {
-      await chrome.storage[this.storageMode].set({ partialAccountCreationStep: null }); // prevent a broken state and the information is not critical
+      await browser.storage[this.storageMode].set({ partialAccountCreationStep: null }); // prevent a broken state and the information is not critical
       throw new UnlockWalletError('Could not unlock partialAccountCreationStep: ' + e);
     }
   }

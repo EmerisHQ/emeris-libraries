@@ -1,3 +1,5 @@
+import browser from 'webextension-polyfill';
+
 function injectScript(file: string) {
   const container = document.head || document.documentElement;
   const scriptElement = document.createElement('script');
@@ -7,11 +9,11 @@ function injectScript(file: string) {
   container.insertBefore(scriptElement, container.children[0]);
   console.log('Emeris Extension loaded');
 }
-const injected = chrome.runtime.getURL('/inject-emeris.js');
+const injected = browser.runtime.getURL('/inject-emeris.js');
 injectScript(injected);
 
 const sendMessage = async (msg: unknown) => {
-  return await chrome.runtime.sendMessage(msg);
+  return await browser.runtime.sendMessage(msg);
 };
 
 const validateMsg = (data) => {

@@ -72,7 +72,7 @@ export type TransactionData =
 export type TransactionSignRequest = {
     signingAddress: string,
     chainId: string,
-    messages: Transaction<TransactionData>[],
+    messages: AbstractTransaction[],
     fee: {
         gas: string,
         amount: Base.Amount[]
