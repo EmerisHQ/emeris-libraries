@@ -1,4 +1,4 @@
-import { EmerisDEXInfo, EmerisTransactions } from "@emeris/types";
+import { EmerisBase, EmerisDEXInfo, EmerisTransactions } from "@emeris/types";
 
 export class EmerisMessageMapper  {
     public chain_id: string;
@@ -10,11 +10,16 @@ export class EmerisMessageMapper  {
         const { default: MappingClass }: {default: typeof EmerisMessageMapper} = await import('./implementations/' + chainName + '/'+ (protocol?protocol:''));        
         return new MappingClass(chainName);
     }
+    normalizeAmount(amount: EmerisTransactions.AbstractAmount): EmerisBase.Amount {
+        return { amount: amount.amount + '', denom: amount.denom };
+    }
     map(transaction: EmerisTransactions.AbstractTransaction, signing_address: string) {
         switch (transaction.type) { // TS Ugliness to ensure data types are correctly inferred in mapping functions
             case 'transfer':       
             return this[transaction.type](transaction.data, signing_address)
-            case 'IBCtransfer':       
+            case 'IBCtransferBackward':       
+            return this[transaction.type](transaction.data, signing_address)
+            case 'IBCtransferForward':       
             return this[transaction.type](transaction.data, signing_address)
             case 'addLiquidity':       
             return this[transaction.type](transaction.data, signing_address)
@@ -23,6 +28,14 @@ export class EmerisMessageMapper  {
             case 'withdrawLiquidity':       
             return this[transaction.type](transaction.data, signing_address)
             case 'swap':            
+            return this[transaction.type](transaction.data, signing_address)
+            case 'claim':            
+            return this[transaction.type](transaction.data, signing_address)
+            case 'stake':            
+            return this[transaction.type](transaction.data, signing_address)
+            case 'unstake':            
+            return this[transaction.type](transaction.data, signing_address)
+            case 'switch':            
             return this[transaction.type](transaction.data, signing_address)
             default:
         }
@@ -34,7 +47,11 @@ export class EmerisMessageMapper  {
     }
 
     
-    IBCtransfer(_transaction: EmerisTransactions.AbstractIBCTransferTransactionData, _signing_address: string) {
+    IBCtransferBackward(_transaction: EmerisTransactions.AbstractIBCTransferTransactionData, _signing_address: string) {
+        throw new Error("This method is not implemented for " + this.chain_id)
+    }
+
+    IBCtransferForward(_transaction: EmerisTransactions.AbstractIBCTransferTransactionData, _signing_address: string) {
         throw new Error("This method is not implemented for " + this.chain_id)
     }
 
@@ -51,6 +68,18 @@ export class EmerisMessageMapper  {
     }
 
     createPool(_transaction: EmerisTransactions.AbstractCreatePoolTransactionData, _signing_address: string) {
+        throw new Error("This method is not implemented for " + this.chain_id)
+    }
+    claim(_transaction: EmerisTransactions.AbstractClaimRewardsTransactionData, _signing_address: string) {
+        throw new Error("This method is not implemented for " + this.chain_id)
+    }
+    stake(_transaction: EmerisTransactions.AbstractStakeTransactionData[], _signing_address: string) {
+        throw new Error("This method is not implemented for " + this.chain_id)
+    }
+    unstake(_transaction: EmerisTransactions.AbstractUnstakeTransactionData, _signing_address: string) {
+        throw new Error("This method is not implemented for " + this.chain_id)
+    }
+    switch(_transaction: EmerisTransactions.AbstractRestakeTransactionData, _signing_address: string) {
         throw new Error("This method is not implemented for " + this.chain_id)
     }
     

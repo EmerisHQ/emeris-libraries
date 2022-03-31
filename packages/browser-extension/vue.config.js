@@ -79,5 +79,6 @@ module.exports = {
     '@clockwork-projects/cosmos-gaia-js',
     '@clockwork-projects/osmosis-labs-osmosis-js',
     '@emeris/signer',
+    '@emeris/mapper',
   ],
 };
