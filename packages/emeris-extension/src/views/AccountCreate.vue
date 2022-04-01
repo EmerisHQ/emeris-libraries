@@ -37,7 +37,7 @@
 import { defineComponent } from 'vue';
 import { mapState } from 'vuex';
 import * as bip39 from 'bip39';
-
+import wordlist from '@@/wordlists/english.json';
 import Input from '@/components/ui/Input.vue';
 import Header from '@@/components/Header.vue';
 import Button from '@/components/ui/Button.vue';
@@ -99,7 +99,7 @@ export default defineComponent({
         await this.$store.dispatch(GlobalActionTypes.CREATE_ACCOUNT, {
           account: {
             accountName: this.name,
-            accountMnemonic: bip39.generateMnemonic(256), // will be overwritten by existing new account
+            accountMnemonic: bip39.generateMnemonic(256,null,wordlist), // will be overwritten by existing new account
             isLedger: false, // will be overwritten by existing new account
             setupState: this.newAccount.setupState || AccountCreateStates.CREATED, // if this is an import we don't need to check if the user backed up the mnemonic
             ...this.newAccount,

@@ -1,4 +1,5 @@
 import { NodeGlobalsPolyfillPlugin } from '@esbuild-plugins/node-globals-polyfill';
+import { NodeModulesPolyfillPlugin } from '@esbuild-plugins/node-modules-polyfill';
 import { nodeResolve } from '@rollup/plugin-node-resolve';
 import vue from '@vitejs/plugin-vue';
 import * as path from 'path';
@@ -31,6 +32,7 @@ export default () => {
     resolve: {
       alias: {
         '@starport/vuex': path.resolve(__dirname, './demeris/src/utils/EmerisError.ts'),
+        stream: 'rollup-plugin-node-polyfills/polyfills/stream',
         '@': path.resolve(__dirname, './demeris/src'),
         '@@': path.resolve(__dirname, './src'),
       },
@@ -44,6 +46,7 @@ export default () => {
       port: 8080,
     },
     optimizeDeps: {
+      include: ['bip39'],
       esbuildOptions: {
         define: {
           global: 'globalThis',

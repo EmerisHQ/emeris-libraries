@@ -47,6 +47,7 @@
 
 <script lang="ts">
 import * as bip39 from 'bip39';
+import wordlist from '@@/wordlists/english.json';
 import { defineComponent } from 'vue';
 
 import Button from '@/components/ui/Button.vue';
@@ -76,7 +77,7 @@ export default defineComponent({
       this.invalidChar = !/^[a-z\s]*$/.test(mnemonic);
 
       const wordList = mnemonicFormat(this.mnemonic).split(' ');
-      this.unknownWords = wordList.filter((word) => !bip39.wordlists.english.includes(word));
+      this.unknownWords = wordList.filter((word) => !wordlist.includes(word));
 
       this.storeNewAccount();
     },

@@ -23,6 +23,7 @@
 <script lang="ts">
 import { defineComponent } from 'vue';
 import * as bip39 from 'bip39';
+import wordlist from '@@/wordlists/english.json';
 import Button from '@/components/ui/Button.vue';
 import Header from '@@/components/Header.vue';
 import { GlobalGetterTypes } from '@@/store/extension/getter-types';
@@ -84,9 +85,9 @@ export default defineComponent({
     showWords() {
       const possibleWords = [this.wordList[this.positions[this.step]]];
       while (possibleWords.length < 6) {
-        const wordIndex = Math.floor(Math.random() * bip39.wordlists.english.length);
-        if (possibleWords.includes(bip39.wordlists.english[wordIndex])) continue;
-        possibleWords.push(bip39.wordlists.english[wordIndex]);
+        const wordIndex = Math.floor(Math.random() * wordlist.length);
+        if (possibleWords.includes(wordlist[wordIndex])) continue;
+        possibleWords.push(wordlist[wordIndex]);
       }
       this.possibleWords = shuffleArray(possibleWords);
     },
