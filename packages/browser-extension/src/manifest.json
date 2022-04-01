@@ -1,5 +1,5 @@
 {
-  "manifest_version": 2,
+  "manifest_version": 3,
   "name": "__MSG_extName__",
   "homepage_url": "http://localhost:8080/",
   "description": "A Vue Browser Extension",
@@ -7,10 +7,11 @@
   "permissions": [
     "activeTab",
     "storage",
-    "<all_urls>",
-    "*://*/*",
     "notifications",
     "identity"
+  ],
+  "host_permissions": [
+    "*://*/*"
   ],
   "icons": {
     "16": "icons/16.png",
@@ -18,11 +19,9 @@
     "192": "icons/192.png",
     "256": "icons/256.png"
   },
+  "minimum_chrome_version": "93",
   "background": {
-    "scripts": [
-      "background.js"
-    ],
-    "persistent": true
+    "service_worker": "background.js"
   },
   "content_scripts": [
     {
@@ -34,11 +33,21 @@
       ]
     }
   ],
-  "content_security_policy": "script-src 'self' 'wasm-eval' 'unsafe-eval'; object-src 'self'",
+  "content_security_policy": {
+    "extension_pages": "script-src 'self'; object-src 'self'",
+    "sandbox": "sandbox allow-scripts; script-src 'self' 'unsafe-eval'"
+  },
   "web_accessible_resources": [
-    "/inject-emeris.js"
+    {
+      "resources": [
+        "/inject-emeris.js"
+      ],
+      "matches": [
+        "*://*/*"
+      ]
+    }
   ],
-  "browser_action": {
+  "action": {
     "browser_style": true,
     "default_popup": "popup.html?browser=true",
     "default_title": "Emeris Extension",
@@ -46,10 +55,6 @@
       "16": "icons/16.png",
       "32": "icons/32.png"
     }
-  },
-  "options_ui": {
-    "page": "options.html",
-    "browser_style": true
   },
   "version": "0.1.0"
 }

@@ -5,6 +5,7 @@ import { RootState } from '..';
 import { AccountCreateStates, EmerisAccount, EmerisWallet, ExtensionRequest } from '@@/types/index';
 import { MutationTypes } from './mutation-types';
 import { GlobalDemerisActionTypes } from '@/store';
+import browser from 'webextension-polyfill';
 
 type Namespaced<T, N extends string> = {
   [P in keyof T & string as `${N}/${P}`]: T[P];

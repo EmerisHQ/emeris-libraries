@@ -1,10 +1,13 @@
 import { Emeris } from './lib/Emeris';
 import EmerisStorage, { EmerisStorageMode } from './lib/EmerisStorage';
+import browser from 'webextension-polyfill';
+declare let self: ServiceWorkerGlobalScope;
 
 const storage = new EmerisStorage(EmerisStorageMode.LOCAL);
 const emeris = new Emeris(storage);
 
 const pageHandler = async (request) => {
+  await emeris.isInitialized();
   if (request.id) {
     if (!emeris.loaded) {
       return { id: request.id, data: false };
@@ -15,7 +18,9 @@ const pageHandler = async (request) => {
     return { id: request.id, data: await emeris[request.action](request) };
   }
 };
+
 const messageHandler = async (request) => {
+  await emeris.isInitialized();
   if (request.type == 'fromPopup') {
     const result = await emeris.popupHandler(request);
     return result;

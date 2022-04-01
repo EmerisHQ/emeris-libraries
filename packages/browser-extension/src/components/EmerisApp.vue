@@ -7,6 +7,7 @@ import { useExtensionStore } from '@@/store';
 import { GlobalActionTypes } from '@@/store/extension/action-types';
 import { GlobalGetterTypes } from '@@/store/extension/getter-types';
 import { AccountCreateStates, ExtensionRequest } from '@@/types';
+import browser from 'webextension-polyfill';
 import { defineComponent, computed } from 'vue';
 import TransportWebUSB from '@ledgerhq/hw-transport-webusb';
 import Loader from '@@/components/Loader.vue';

@@ -1,9 +1,13 @@
 import { IEmeris } from '@@/types/emeris';
 import { EmerisWallet } from '@@/types';
+
+// @ts-ignore
+import adapter from '@vespaiach/axios-fetch-adapter';
 import { v4 as uuidv4 } from 'uuid';
 import axios from 'axios';
 import EmerisStorage from './EmerisStorage';
 import libs from './libraries';
+import browser from 'webextension-polyfill';
 import { UnlockWalletError } from '@@/errors';
 import { AminoMsg } from '@cosmjs/amino';
 import {
@@ -28,8 +32,8 @@ const convertObjectKeys = (obj, doX) => {
   let newObj;
   if (Array.isArray(obj)) {
     newObj = [];
-  }else{
-    newObj= {};
+  } else {
+    newObj = {};
   }
   Object.keys(obj).forEach(key => {
     if (typeof obj[key] === 'object' && obj[key] !== null) {
@@ -64,27 +68,37 @@ export class Emeris implements IEmeris {
   >;
   private pending: ExtensionRequest[] = [];
   private timeoutLock: ReturnType<typeof setTimeout>;
+  private initialized;
+  private initPromise;
 
   constructor(storage: EmerisStorage) {
-    this.loaded = true;
+    
+    this.initialized = new Promise((resolve) => {
+      this.initPromise = resolve;
+    });
     this.storage = storage;
-    this.popup = null;
+    this.init();
+  }
+  isInitialized() {
+    return this.initialized;
+  }
+  async init() {
+    this.password = (await browser.storage['session'].get('password')).password ?? null;
+    this.wallet = (await browser.storage['session'].get('wallet')).wallet ?? null;
+    this.pending = [];
+    this.selectedAccount = (await browser.storage['session'].get('selectedAccount')).selectedAccount ?? null;
+    this.loaded = true;
+    this.popup = (await browser.storage['session'].get('popup')).popup ?? null;
     this.queuedRequests = new Map();
+    await this.storeSession();
+    this.initPromise();
   }
-  reset(): void {
-    if (this.timeoutLock) {
-      clearTimeout(this.timeoutLock);
-      this.timeoutLock = setTimeout(() => {
-        this.lock();
-      }, 120000);
-    }
-  }
-  lock(): void {
-    clearTimeout(this.timeoutLock);
-    this.timeoutLock = null;
-    this.wallet = null;
-    this.password = null;
-    this.selectedAccount = null;
+  async storeSession(): Promise<void> {
+    await browser.storage['session'].set({ wallet: this.wallet });
+    await browser.storage['session'].set({ password: this.password });
+    await browser.storage['session'].set({ selectedAccount: this.selectedAccount });
+    
+    await browser.storage['session'].set({ popup: this.popup });
   }
   async unlockWallet(password: string): Promise<EmerisWallet> {
     try {
@@ -94,9 +108,7 @@ export class Emeris implements IEmeris {
       if (this.wallet.length > 0 && !this.selectedAccount) {
         this.setLastAccount(this.wallet[0].accountName);
       }
-      this.timeoutLock = setTimeout(() => {
-        this.lock();
-      }, 120000);
+      await this.storeSession();
       return this.wallet;
     } catch (e) {
       throw new UnlockWalletError('Could not unlock wallet: ' + e);
@@ -128,6 +140,7 @@ export class Emeris implements IEmeris {
     this.queuedRequests.set(request.id, { resolver });
     this.pending.push(request);
     this.ensurePopup();
+    await this.storeSession();
     const resp = await response;
     return resp;
   }
@@ -139,16 +152,16 @@ export class Emeris implements IEmeris {
       try {
         await this.storage.setLastAccount(accountName);
         this.selectedAccount = accountName;
+        this.storeSession();
       } catch (e) {
         console.log(e);
       }
     }
   }
   async popupHandler(message: RoutedInternalRequest): Promise<unknown> {
-    this.reset();
     switch (message?.data.action) {
       case 'getPending':
-        return this.pending;
+        return this.pending ?? [];
       case 'setLastAccount':
         this.setLastAccount(message.data.data.accountName);
         break;
@@ -163,12 +176,13 @@ export class Emeris implements IEmeris {
       case 'createAccount':
         // guard
         if (!message.data.data.account.isLedger && !message.data.data.account.accountMnemonic) {
-          throw new Error("Account has no mnemonic")
+          throw new Error('Account has no mnemonic');
         }
         await this.storage.saveAccount(message.data.data.account, this.password);
         try {
           this.wallet = await this.unlockWallet(this.password);
           this.setLastAccount(message.data.data.account.accountName);
+          this.storeSession();
         } catch (e) {
           console.log(e);
         }
@@ -182,6 +196,7 @@ export class Emeris implements IEmeris {
           );
           this.wallet = await this.unlockWallet(this.password);
           await this.setLastAccount(message.data.data.account.accountName);
+          this.storeSession();
         } catch (e) {
           console.log(e);
         }
@@ -192,6 +207,7 @@ export class Emeris implements IEmeris {
           if (this.selectedAccount === message.data.data.accountName) {
             this.selectedAccount === undefined;
           }
+          this.storeSession();
           return await this.unlockWallet(this.password);
         } catch (e) {
           console.log(e);
@@ -232,7 +248,7 @@ export class Emeris implements IEmeris {
       case 'signTransaction':
         return await this.getTransactionSignature(message.data, message.data.data.memo);
       case 'setResponse':
-        return this.setResponse(message.data.data.id, message.data.data)
+        return this.setResponse(message.data.data.id, message.data.data);
       case 'extensionReset':
         this.storage.extensionReset();
         return;
@@ -244,7 +260,8 @@ export class Emeris implements IEmeris {
       case 'addWhitelistedWebsite':
         // prevent dupes
         const whitelistedWebsites = await this.storage.getWhitelistedWebsites();
-        if (whitelistedWebsites.find((whitelistedWebsite) => whitelistedWebsite.origin === message.data.data.website)) return true;
+        if (whitelistedWebsites.find((whitelistedWebsite) => whitelistedWebsite.origin === message.data.data.website))
+          return true;
         return this.storage.addWhitelistedWebsite(message.data.data.website);
       case 'setPartialAccountCreationStep':
         return this.storage.setPartialAccountCreationStep(message.data.data, this.password);
@@ -295,14 +312,20 @@ export class Emeris implements IEmeris {
           accountName: account.accountName,
           isLedger: account.isLedger,
           setupState: account.setupState,
-          keyHashes: // wrapping in a Set to make all values unique
-            [...new Set(await Promise.all(Object.values(chainConfig).map(async chain => {
-              const address = await libs[chain.library].getAddress(account, chain)
-              const keyHash = keyHashfromAddress(address);
-              return keyHash
-            })))]
-        }
-        return displayAccount
+          // wrapping in a Set to make all values unique
+          keyHashes: [
+            ...new Set(
+              await Promise.all(
+                Object.values(chainConfig).map(async (chain) => {
+                  const address = await libs[chain.library].getAddress(account, chain);
+                  const keyHash = keyHashfromAddress(address);
+                  return keyHash;
+                }),
+              ),
+            ),
+          ],
+        };
+        return displayAccount;
       }),
     );
   }
@@ -347,19 +370,29 @@ export class Emeris implements IEmeris {
       throw new Error('Chain not supported: ' + request.data.chainId);
     }
 
-    const selectedAccount = this.wallet.find(({ accountName }) => accountName === this.selectedAccount)
-    const address = await libs[chain.library].getAddress(selectedAccount, chain)
+    const selectedAccount = this.wallet.find(({ accountName }) => accountName === this.selectedAccount);
+    const address = await libs[chain.library].getAddress(selectedAccount, chain);
 
     if (address !== request.data.signingAddress) {
       throw new Error('The requested signing address is not active in the extension');
     }
 
-    const abstractTx = { ...request.data, chainName: request.data.chainId, txs: request.data.messages } // HACK need to adjust transported data model
-    convertObjectKeys(abstractTx, snakeToCamel)
-    const chainMessages = await TxMapper({ ...request.data, chainName: request.data.chainId, txs: request.data.messages })
-    const signable = await libs[chain.library].getRawSignable(selectedAccount, chain, chainMessages, request.data.fee, request.data.memo)
+    const abstractTx = { ...request.data, chainName: request.data.chainId, txs: request.data.messages }; // HACK need to adjust transported data model
+    convertObjectKeys(abstractTx, snakeToCamel);
+    const chainMessages = await TxMapper({
+      ...request.data,
+      chainName: request.data.chainId,
+      txs: request.data.messages,
+    });
+    const signable = await libs[chain.library].getRawSignable(
+      selectedAccount,
+      chain,
+      chainMessages,
+      request.data.fee,
+      request.data.memo,
+    );
 
-    return signable
+    return signable;
   }
   async getTransactionSignature(request: SignTransactionRequest, memo: string): Promise<string> {
     if (!this.wallet) {
@@ -370,30 +403,32 @@ export class Emeris implements IEmeris {
       throw new Error('Chain not supported: ' + request.data.chainId);
     }
 
-    const accountsWithAddress = []
-    await Promise.all(this.wallet.map(async account => {
-      const address = await libs[chain.library].getAddress(account, chain)
-      accountsWithAddress.push({
-        address,
-        account
-      })
-    }))
+    const accountsWithAddress = [];
+    await Promise.all(
+      this.wallet.map(async (account) => {
+        const address = await libs[chain.library].getAddress(account, chain);
+        accountsWithAddress.push({
+          address,
+          account,
+        });
+      }),
+    );
     const selectedAccountPair = accountsWithAddress.find(({ address }) => {
-      return address === request.data.signingAddress
-    })
+      return address === request.data.signingAddress;
+    });
 
     if (!selectedAccountPair) {
       throw new Error('The requested signing address is not available in the extension');
     }
-    const selectedAccount = selectedAccountPair.account
+    const selectedAccount = selectedAccountPair.account;
 
-    let abstractTx = { ...request.data, chainName: request.data.chainId, txs: request.data.messages } // HACK need to adjust transported data model
+    let abstractTx = { ...request.data, chainName: request.data.chainId, txs: request.data.messages }; // HACK need to adjust transported data model
     console.log(abstractTx);
-    abstractTx = convertObjectKeys(abstractTx, snakeToCamel)
+    abstractTx = convertObjectKeys(abstractTx, snakeToCamel);
     console.log(abstractTx);
-    const chainMessages = await TxMapper(abstractTx)
+    const chainMessages = await TxMapper(abstractTx);
     console.log(chainMessages);
-    let broadcastable
+    let broadcastable;
     if (selectedAccount.isLedger) {
       broadcastable = await libs[chain.library].signLedger(
         selectedAccount,
@@ -403,31 +438,40 @@ export class Emeris implements IEmeris {
         memo,
       );
     } else {
-      broadcastable = await libs[chain.library].sign(selectedAccount, chain, chainMessages as AminoMsg[], request.data.fee, memo)
+      broadcastable = await libs[chain.library].sign(
+        selectedAccount,
+        chain,
+        chainMessages as AminoMsg[],
+        request.data.fee,
+        memo,
+      );
     }
-    console.log(Buffer.from(broadcastable).toString('base64'))
+    console.log(Buffer.from(broadcastable).toString('base64'));
     // converting the broadcastable into a string that can be converted back to a unit8array
     // might need to be adjusted if we have any other broadcastable
-    return Buffer.from(broadcastable).toString('hex')
+    return Buffer.from(broadcastable).toString('hex');
   }
   async signTransaction(request: SignTransactionRequest): Promise<any> {
     request.id = uuidv4();
     const { broadcastable } = await this.forwardToPopup(request);
-    return broadcastable
+    return broadcastable;
   }
   async signAndBroadcastTransaction(request: SignAndBroadcastTransactionRequest): Promise<any> {
-    const broadcastable = await this.signTransaction(request)
+    const broadcastable = await this.signTransaction({ ...request, action: 'signTransaction'});
 
-    if (!broadcastable) throw new Error("User canceled the transactions")
+    if (!broadcastable) throw new Error('User canceled the transactions');
 
     // @ts-ignore doesn't accept SignAndBroadcastTransactionRequest inheriting from SignTransactionRequest
-    const response = await axios.post((process.env.VUE_APP_EMERIS_PROD_ENDPOINT || 'https://api.emeris.com/v1') + '/tx/' + request.data.chainId, {
-      tx_bytes: Buffer.from(broadcastable, 'hex').toString('base64'),
-      // @ts-ignore doesn't accept SignAndBroadcastTransactionRequest inheriting from SignTransactionRequest
-      address: request.data.signingAddress,
-    });
+    const response = await axios.post(
+      (process.env.VUE_APP_EMERIS_PROD_ENDPOINT || 'https://api.emeris.com/v1') + '/tx/' + request.data.chainId,
+      {
+        tx_bytes: Buffer.from(broadcastable, 'hex').toString('base64'),
+        // @ts-ignore doesn't accept SignAndBroadcastTransactionRequest inheriting from SignTransactionRequest
+        address: request.data.signingAddress,
+      }, { adapter }
+    );
 
-    return response
+    return response;
   }
   async enable(request: ApproveOriginRequest): Promise<boolean> {
     // TODO purge this queue and replace with a sensible data struct to we can check if a request is a dupe
@@ -449,6 +493,8 @@ export class Emeris implements IEmeris {
       this.pending.findIndex((req) => req.id == id),
       1,
     );
+    this.storeSession();
+
     browser.runtime.sendMessage({ type: 'toPopup', data: { action: 'update' } });
     return true;
   }

@@ -1,3 +1,5 @@
+import browser from 'webextension-polyfill';
+
 function injectScript(file: string) {
   const container = document.head || document.documentElement;
   const scriptElement = document.createElement('script');
