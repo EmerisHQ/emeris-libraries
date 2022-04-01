@@ -1,0 +1,27 @@
+{
+  "compilerOptions": {
+    "target": "esnext",
+    "module": "esnext",
+    "strict": false,
+    "jsx": "preserve",
+    "importHelpers": true,
+    "noImplicitAny": false,
+    "moduleResolution": "node",
+    "skipLibCheck": true,
+    "esModuleInterop": false,
+    "allowSyntheticDefaultImports": true,
+    "allowJs": true,
+    "sourceMap": true,
+    "resolveJsonModule": true,
+    "baseUrl": ".",
+    "typeRoots": ["./node_modules/@types"],
+    "types": ["webpack-env", "node", "long", "vite/client", "vitest/globals"],
+    "paths": {
+      "@/*": ["src/*"]
+    },
+    "lib": ["es2019", "dom", "dom.iterable", "scripthost"]
+  },
+  "include": ["src/**/*.ts", "src/**/*.tsx", "src/**/*.vue"],
+  "exclude": ["node_modules"],
+  "references": [{ "path": "./tsconfig.node.json" }]
+}

@@ -1,0 +1,165 @@
+// pages
+
+html {
+  // for the popup rendering in a tab
+  margin-left: auto;
+  margin-right: auto;
+}
+
+body,
+#app {
+  height: 100%;
+  width: 100%;
+  margin: 0;
+}
+
+#app {
+    padding: 24px;
+    color: #FFFFFF;
+    font-size: 16px;
+    overflow-y: scroll;
+}
+
+@font-face {
+  font-family: Inter;
+  src: url(~@@/fonts/Inter.ttf) format(font-truetype);
+}
+
+.page {
+  min-height: 100%;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
+.background {
+  position: fixed;
+  z-index: -1;
+  top: 0;
+  left: 0px;
+  width: 100%;
+}
+
+.form {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+}
+
+// buttons
+
+.button-secondary {
+    /* light/surface */
+    border: 2px solid #FFFFFF;
+    box-sizing: border-box;
+    border-radius: 10px;
+
+    color: #FFFFFF;
+    background: black;
+}
+
+.button-link {
+    color: #FFFFFF;
+    height: 48px;
+}
+
+button:disabled {
+  opacity: 0.44;
+}
+
+a {
+  color: #4EF2E4;
+  cursor: pointer;
+}
+
+.buttons > *:not(:last-child) {
+  margin-bottom: 16px;
+  display: block;
+}
+
+// inputs
+
+input:not(.checkbox__control) {
+  background: #262626 !important; // TODO
+
+  &:focus {
+    background: #171717 !important;
+  }
+}
+
+.error, .success {
+  .input {
+    .focus-border {
+      display: none;
+    }
+  }
+}
+
+.error {
+  .input {
+    input {
+      border: 1px solid #FF6072;
+    }
+  }
+}
+
+.success {
+  .input {
+    input {
+      border: 1px solid #42ED05;
+    }
+  }
+}
+
+
+.form-info {
+  font-size: 13px;
+}
+
+.form-info {
+  &.error {
+    color: #ff6072;
+  }
+  &.success {
+    color: #89ff9b;
+  }
+}
+
+.checkbox {
+  background: #212121;
+  border: none;
+}
+
+// typography
+
+h1 {
+  position: relative;
+  display: block;
+
+  /* 📕title/2 bold */
+
+  font-family: Inter;
+  font-style: normal;
+  font-weight: bold;
+  font-size: 28px;
+  line-height: 127%;
+  /* or 36px */
+
+  text-align: center;
+  letter-spacing: -0.02em;
+
+  /* dark/text */
+
+  color: #ffffff;
+
+  /* Inside Auto Layout */
+
+  flex: none;
+  align-self: stretch;
+  flex-grow: 0;
+  margin: 0px 0px;
+}
+
+.secondary-text {
+  opacity: 0.67;
+}
