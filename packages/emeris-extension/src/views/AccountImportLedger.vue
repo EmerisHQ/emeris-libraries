@@ -3,14 +3,14 @@
     <Header title="Import account" backTo="/">
       <a @click="toHdPath">Advanced</a>
     </Header>
-    <img :src="import(`@@/assets/ImportLedgerBG.png`)" class="background" />
+    <img :src="'/images/ImportLedgerBG.png'" class="background" />
     <div
       style="margin-bottom: 56px; margin-top: 72px; margin-left auto; margin-right: auto; display: block; margin-left: auto;"
     >
-      <img :src="import('@@/assets/LedgerBox.svg')" style="width: 151px" />
+      <img :src="'/images/LedgerBox.svg'" style="width: 151px" />
     </div>
-    <ListCard :img="import(`@@/assets/Step1.svg`)" caption="Unlock & connect your Ledger device with your computer" />
-    <ListCard :img="import(`@@/assets/Step2.svg`)" caption="Open the ‘Cosmos’ app on your Ledger device" />
+    <ListCard :img="'/images/Step1.svg'" caption="Unlock & connect your Ledger device with your computer" />
+    <ListCard :img="'/images/Step2.svg'" caption="Open the ‘Cosmos’ app on your Ledger device" />
 
     <div v-if="error" style="color: #ff6072; margin-top: 16px; text-align: center">{{ error }}</div>
 

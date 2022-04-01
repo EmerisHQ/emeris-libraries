@@ -15,7 +15,7 @@
         }"
       >
         <ListCard
-          :img="import(`@@/assets/Secure.png`)"
+          :img="'/images/Secure.png'"
           caption="Never share your recovery phrase with anyone, store it securily."
         />
         <Button type="submit" name="Show Mnemonic" @click="submit" />

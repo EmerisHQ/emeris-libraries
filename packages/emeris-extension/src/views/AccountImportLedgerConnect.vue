@@ -2,8 +2,8 @@
   <div class="page">
     <Header back-to="/ledger?next=/ledger/connect" />
     <div style="margin-bottom: 56px; margin-top: 150px; display: flex; flex-direction: column; align-items: center">
-      <img class="loader" :src="import('@@/assets/EphemerisLoader.svg')" />
-      <img :src="import('@@/assets/LedgerBox.svg')" style="width: 151px; margin-top: 32px" />
+      <img class="loader" :src="'/images/EphemerisLoader.svg'" />
+      <img :src="'/images/LedgerBox.svg'" style="width: 151px; margin-top: 32px" />
       <div style="text-align: center" class="secondary-text; margin-top: 16px">Connecting Ledger...</div>
     </div>
   </div>

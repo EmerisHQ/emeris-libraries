@@ -5,7 +5,7 @@
       <a @click="edit = false" v-else>Done</a>
     </Header>
     <div v-for="account in wallet" :key="account.accountName" class="wallet" @click="!edit && goToAccount(account)">
-      <img :src="import('@@/assets/Avatar.svg')" style="width: 40px; height: 40px" />
+      <img :src="'/images/Avatar.svg'" style="width: 40px; height: 40px" />
       <div style="cursor: pointer">
         <h2 style="font-weight: 600">{{ account.accountName }}</h2>
         <span class="secondary-text" v-if="backedUp(account)"
@@ -54,7 +54,7 @@
         }"
         v-else-if="account.accountName === lastAccount"
       >
-        <img :src="import('@@/assets/CheckmarkCircle.svg')" alt="Checkmark" style="height: 24px" />
+        <img :src="'/images/CheckmarkCircle.svg'" alt="Checkmark" style="height: 24px" />
       </div>
     </div>
     <div style="margin-top: auto">

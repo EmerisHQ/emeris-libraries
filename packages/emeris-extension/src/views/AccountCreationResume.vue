@@ -5,7 +5,7 @@
   >
     <template v-slot:icon>
       <img
-        :src="import('@@/assets/DotsIcon.svg')"
+        :src="'/images/DotsIcon.svg'"
         style="width: 46px; margin-left: auto; margin-right: auto; margin-bottom: 35px"
       />
     </template>

@@ -2,7 +2,7 @@
   <div class="page">
     <Header title="Import account" :backTo="$route.query.backto" />
     <div style="margin-bottom: 56px; margin-top: 150px; display: flex; flex-direction: column; align-items: center">
-      <img :src="import('@@/assets/LedgerBox.svg')" style="width: 151px; margin-top: 32px" />
+      <img :src="'/images/LedgerBox.svg'" style="width: 151px; margin-top: 32px" />
       <div style="text-align: center; margin-top: 32px">
         <span>{{ $route.query.error }}</span>
         <br />

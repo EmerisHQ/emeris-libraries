@@ -1,7 +1,7 @@
 <template>
   <div class="page">
-    <img :src="import(`@@/assets/WelcomeBG.png`)" class="background" />
-    <img class="wordmark" :src="import(`@@/assets/EmerisWordmark.svg`)" style="margin-top: 48px" />
+    <img :src="'/images/WelcomeBG.png'" class="background" />
+    <img class="wordmark" :src="'/images/EmerisWordmark.svg'" style="margin-top: 48px" />
 
     <div
       :style="{

@@ -2,11 +2,11 @@
   <Loader v-if="!account || balances === null" />
 
   <div class="page" v-else-if="balances.length === 0">
-    <img :src="import(`@@/assets/EmptyPortfolioBG.png`)" class="background" />
+    <img :src="'/images/EmptyPortfolioBG.png'" class="background" />
     <div style="display: flex; position: relative; margin-bottom: 36px">
       <img
         style="height: 24px; width: 24px; position: absolute"
-        :src="import('@@/assets/Avatar.svg')"
+        :src="'/images/Avatar.svg'"
         @click="$router.push('/account')"
       />
     </div>
@@ -20,14 +20,14 @@
   </div>
 
   <div class="page" v-else>
-    <img :src="import(`@@/assets/PortfolioBG.png`)" class="background" />
+    <img :src="'/images/PortfolioBG.png'" class="background" />
     <div style="display: flex; position: relative; margin-bottom: 36px">
       <img
         style="height: 24px; width: 24px; position: absolute"
-        :src="import('@@/assets/Avatar.svg')"
+        :src="'/images/Avatar.svg'"
         @click="$router.push('/account')"
       />
-      <img class="wordmark" :src="import(`@@/assets/EmerisWordmark.svg`)" />
+      <img class="wordmark" :src="'/images/EmerisWordmark.svg'" />
     </div>
 
     <span
@@ -58,7 +58,7 @@
   <Slideout v-bind:open="showMnemonicBackup" v-on:update:open="() => {}">
     <h1 style="margin-bottom: 16px">Back up your account</h1>
     <div style="margin-bottom: 24px" class="checkbox inline-flex items-start p-4 rounded-xl border border-solid border-border cursor-pointer">
-      <img class="mt-1 ml-0.5" :src="import(`@@/assets/BackupIcon.svg`)" />
+      <img class="mt-1 ml-0.5" :src="'/images/BackupIcon.svg'" />
       <p class="checkbox__label ml-4 -text-1 leading-copy">
         Your funds are not secured, please backup your wallet.
       </p>

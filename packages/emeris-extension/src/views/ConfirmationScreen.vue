@@ -1,6 +1,6 @@
 <template>
   <div class="page">
-    <img :src="'@@/assets/UnlockBG.png'" class="background" />
+    <img :src="'/images/UnlockBG.png'" class="background" />
 
     <h1 style="margin-top: 187px; margin-bottom: 16px">{{ title }}</h1>
     <span style="color: #ffffffaa" v-if="subtitle">{{ subtitle }}</span>

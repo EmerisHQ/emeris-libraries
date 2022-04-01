@@ -5,15 +5,15 @@
       >If your device is lost or stolen, you will be able to recover your wallet</span
     >
     <ListCard
-      :img="import(`@@/assets/NeverShare.png`)"
+      :img="'/images/NeverShare.png'"
       caption="Emeris wallet will never ask you to share your recovery phrase."
     />
     <ListCard
-      :img="import(`@@/assets/Secure.png`)"
+      :img="'/images/Secure.png'"
       caption="Never share your recovery phrase with anyone, store it securily."
     />
     <ListCard
-      :img="import(`@@/assets/Backup.png`)"
+      :img="'/images/Backup.png'"
       caption="If you don’t backup your wallet, or loose your recovery phrase, you will not able to recover your walle"
     />
 

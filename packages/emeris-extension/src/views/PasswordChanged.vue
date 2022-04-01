@@ -2,7 +2,7 @@
   <div class="page">
     <img
       style="margin-top: 156px; margin-bottom: 28px; margin-left: auto; margin-right: auto; width: 46px"
-      :src="import(`@@/assets/CheckIcon.svg`)"
+      :src="'/images/CheckIcon.svg'"
     />
     <h1 style="margin-bottom: 20px" name>Password changed</h1>
     <div class="secondary-text" style="text-align: center; margin-bottom: 24px">

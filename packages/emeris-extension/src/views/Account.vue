@@ -3,13 +3,13 @@
     <Header title="">
       <template v-slot:backButton>
         <!-- TODO add icon to Demeris -->
-        <img :src="import('@@/assets/CoqIcon.svg')" @click="$router.push('/settings')" />
+        <img :src="'/images/CoqIcon.svg'" @click="$router.push('/settings')" />
       </template>
       <Icon name="ChevronRightIcon" @click="$router.push('/portfolio')" />
     </Header>
     <img
       style="height: 72px; width: 72px; margin-top: 40px; margin-left: auto; margin-right: auto"
-      :src="import('@@/assets/Avatar.svg')"
+      :src="'/images/Avatar.svg'"
     />
     <span
       class="account-selector"
@@ -33,12 +33,12 @@
     <div class="list-card-container" style="margin-bottom: 16px">
       <h2>Swap</h2>
       <span class="secondary-text">Swap assets wih Emeris</span>
-      <img :src="import('@@/assets/SwapListItemGraphic.svg')" />
+      <img :src="'/images/SwapListItemGraphic.svg'" />
     </div>
     <div class="list-card-container">
       <h2>Add liquidity to a pool</h2>
       <span class="secondary-text">Browse our pool on Emeris</span>
-      <img :src="import('@@/assets/LiquidityListItemGraphic.svg')" />
+      <img :src="'/images/LiquidityListItemGraphic.svg'" />
     </div>
   </div>
 </template>
