@@ -1,6 +1,11 @@
 module.exports = {
   purge: false,
-  content: ['./public/index.html', './src/**/*.{vue,js,ts,jsx,tsx}'],
+  content: [
+    './public/index.html',
+    './src/**/*.{vue,js,ts,jsx,tsx}',
+    './demeris/public/index.html',
+    './demeris/src/**/*.{vue,js,ts,jsx,tsx}',
+  ],
   // mode: 'jit',
   darkMode: 'class', // or 'media' or 'class'
   theme: {
@@ -14,7 +19,7 @@ module.exports = {
       },
     },
     backgroundImage: {
-      grain: 'url(../../assets/images/texture-grain.png)',
+      grain: 'url(/images/texture-grain.png)',
     },
     boxShadow: {
       button: '3px 9px 32px -4px rgba(0, 0, 0, 0.07)',
