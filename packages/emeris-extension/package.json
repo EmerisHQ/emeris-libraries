@@ -13,7 +13,8 @@
     "coverage": "vitest run --coverage",
     "test:e2e": "playwright test",
     "prepare": "simple-git-hooks",
-    "typecheck": "vue-tsc --noEmit"
+    "typecheck": "vue-tsc --noEmit",
+    "postinstall": "git submodule init"
   },
   "dependencies": {
     "@cosmjs/amino": "0.28.0",
