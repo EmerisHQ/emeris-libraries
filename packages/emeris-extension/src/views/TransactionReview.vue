@@ -98,13 +98,13 @@
 
 <script lang="ts">
 import { defineComponent } from 'vue';
-import { GlobalGetterTypes } from '@@/store/extension/getter-types';
+import { GlobalEmerisGetterTypes } from '@@/store/extension/getter-types';
 import Button from '@/components/ui/Button.vue';
 import Message from '@@/components/Transactions/Message.vue';
 import Slideout from '@@/components/Slideout.vue';
 import TotalPrice from '@/components/common/TotalPrice.vue';
 import Input from '@/components/ui/Input.vue';
-import { GlobalActionTypes } from '@@/store/extension/action-types';
+import { GlobalEmerisActionTypes } from '@@/store/extension/action-types';
 import { keyHashfromAddress } from '@/utils/basic';
 import { MutationTypes } from '@@/store/extension/mutation-types';
 import Yaml from "@@/components/Yaml.vue";
@@ -145,7 +145,7 @@ export default defineComponent({
   }),
   computed: {
     pending() {
-      const pending = this.$store.getters[GlobalGetterTypes.getPending][0];
+      const pending = this.$store.getters[GlobalEmerisGetterTypes.getPending][0];
       this.error = pending?.error;
       return pending;
     },
@@ -158,14 +158,14 @@ export default defineComponent({
       this.tab = this.tab === 'Details' ? 'Data' : 'Details';
     },
     async cancel() {
-      await this.$store.dispatch(GlobalActionTypes.CANCEL_TRANSACTION, this.pending);
+      await this.$store.dispatch(GlobalEmerisActionTypes.CANCEL_TRANSACTION, this.pending);
       this.$router.push('/');
     },
     async accept() {
       this.error = undefined;
       try {
-        const hasWallet = await this.$store.dispatch(GlobalActionTypes.HAS_WALLET); // checking if the password was set
-        const wallet = await this.$store.dispatch(GlobalActionTypes.GET_WALLET); // never loaded before as root not hit
+        const hasWallet = await this.$store.dispatch(GlobalEmerisActionTypes.HAS_WALLET); // checking if the password was set
+        const wallet = await this.$store.dispatch(GlobalEmerisActionTypes.GET_WALLET); // never loaded before as root not hit
         // handle background locked
         if (hasWallet && !wallet) {
           this.$router.push('/');
@@ -187,7 +187,7 @@ export default defineComponent({
           return;
         }
 
-        await this.$store.dispatch(GlobalActionTypes.ACCEPT_TRANSACTION, {
+        await this.$store.dispatch(GlobalEmerisActionTypes.ACCEPT_TRANSACTION, {
           id: this.pending.id,
           // TODO currently setting default fee until fee selection works
           fees: {
@@ -204,7 +204,7 @@ export default defineComponent({
     },
   },
   mounted() {
-    this.$store.dispatch(GlobalActionTypes.GET_PENDING);
+    this.$store.dispatch(GlobalEmerisActionTypes.GET_PENDING);
   },
 });
 </script>

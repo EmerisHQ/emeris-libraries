@@ -17,7 +17,7 @@
 <script lang="ts">
 import { defineComponent } from 'vue';
 import Button from '@/components/ui/Button.vue';
-import { GlobalGetterTypes } from '@@/store/extension/getter-types';
+import { GlobalEmerisGetterTypes } from '@@/store/extension/getter-types';
 
 export default defineComponent({
   name: 'Account Ready',
@@ -26,7 +26,7 @@ export default defineComponent({
   },
   computed: {
     account() {
-      return this.$store.getters[GlobalGetterTypes.getAccount];
+      return this.$store.getters[GlobalEmerisGetterTypes.getAccount];
     },
   },
 });

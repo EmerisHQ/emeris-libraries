@@ -48,13 +48,13 @@ import { defineComponent } from 'vue';
 import Icon from '@/components/ui/Icon.vue';
 import Header from '@@/components/Header.vue';
 import { AccountCreateStates } from '@@/types';
-import { GlobalGetterTypes } from '@@/store/extension/getter-types';
+import { GlobalEmerisGetterTypes } from '@@/store/extension/getter-types';
 
 export default defineComponent({
   name: 'Account',
   computed: {
     account() {
-      return this.$store.getters[GlobalGetterTypes.getAccount] || {};
+      return this.$store.getters[GlobalEmerisGetterTypes.getAccount] || {};
     },
     backedUp() {
       return this.account.setupState === AccountCreateStates.COMPLETE;

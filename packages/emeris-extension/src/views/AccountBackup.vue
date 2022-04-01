@@ -53,14 +53,14 @@ import ListCard from '@@/components/ListCard.vue';
 import Slideout from '@@/components/Slideout.vue';
 import Header from '@@/components/Header.vue';
 import Checkbox from '@/components/ui/Checkbox.vue';
-import {GlobalGetterTypes} from "@@/store/extension/getter-types";
+import {GlobalEmerisGetterTypes} from "@@/store/extension/getter-types";
 import {AccountCreateStates} from "@@/types";
 
 export default defineComponent({
   name: 'Welcome',
   computed: {
     account() {
-      return this.$store.getters[GlobalGetterTypes.getAccount];
+      return this.$store.getters[GlobalEmerisGetterTypes.getAccount];
     },
   },
   data: () => ({

@@ -42,12 +42,12 @@ import Button from '@/components/ui/Button.vue';
 import Header from '@@/components/Header.vue';
 import Checkbox from '@/components/ui/Checkbox.vue';
 import Icon from '@/components/ui/Icon.vue';
-import { GlobalGetterTypes } from '@@/store/extension/getter-types';
+import { GlobalEmerisGetterTypes } from '@@/store/extension/getter-types';
 
 export default defineComponent({
   computed: {
     account() {
-      return this.$store.getters[GlobalGetterTypes.getAccount];
+      return this.$store.getters[GlobalEmerisGetterTypes.getAccount];
     },
   },
 

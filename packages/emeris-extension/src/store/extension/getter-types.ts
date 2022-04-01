@@ -5,7 +5,7 @@ export enum GetterTypes {
   getAccount = 'getAccount',
   getAllBalances = 'getAllBalances',
 }
-export enum GlobalGetterTypes {
+export enum GlobalEmerisGetterTypes {
   getPending = 'extension/getPending',
   getWallet = 'extension/getWallet',
   getLastAccount = 'extension/getLastAccount',

@@ -31,8 +31,8 @@ import Button from '@/components/ui/Button.vue';
 import Header from '@@/components/Header.vue';
 import Input from '@/components/ui/Input.vue';
 import ListCard from '@@/components/ListCard.vue';
-import { GlobalActionTypes } from '@@/store/extension/action-types';
-import { GlobalGetterTypes } from '@@/store/extension/getter-types';
+import { GlobalEmerisActionTypes } from '@@/store/extension/action-types';
+import { GlobalEmerisGetterTypes } from '@@/store/extension/getter-types';
 
 export default defineComponent({
   name: 'Mnemonic Show Password',
@@ -48,14 +48,14 @@ export default defineComponent({
   },
   computed: {
     account() {
-      return this.$store.getters[GlobalGetterTypes.getAccount];
+      return this.$store.getters[GlobalEmerisGetterTypes.getAccount];
     },
   },
   methods: {
     async submit() {
       this.error = false;
       try {
-        await this.$store.dispatch(GlobalActionTypes.GET_MNEMONIC, {
+        await this.$store.dispatch(GlobalEmerisActionTypes.GET_MNEMONIC, {
           accountName: this.account.accountName,
           password: this.password,
         });

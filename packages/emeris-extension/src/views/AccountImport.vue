@@ -56,7 +56,7 @@ import Header from '@@/components/Header.vue';
 import Modal from '@@/components/Modal.vue';
 import Slideout from '@@/components/Slideout.vue';
 
-import { GlobalActionTypes } from '@@/store/extension/action-types';
+import { GlobalEmerisActionTypes } from '@@/store/extension/action-types';
 import { AccountCreateStates } from '@@/types';
 
 // bring input in standard format
@@ -83,20 +83,20 @@ export default defineComponent({
     },
   },
   async mounted() {
-    const hasPassword = await this.$store.dispatch(GlobalActionTypes.HAS_WALLET);
+    const hasPassword = await this.$store.dispatch(GlobalEmerisActionTypes.HAS_WALLET);
 
     if (!hasPassword) {
       this.$router.push({ path: '/passwordCreate', query: { returnTo: this.$route.fullPath } });
     }
 
-    const newAccount = await this.$store.dispatch(GlobalActionTypes.GET_NEW_ACCOUNT);
+    const newAccount = await this.$store.dispatch(GlobalEmerisActionTypes.GET_NEW_ACCOUNT);
     this.mnemonic = newAccount.accountMnemonic;
 
     this.storeNewAccount();
   },
   methods: {
     storeNewAccount() {
-      this.$store.dispatch(GlobalActionTypes.SET_NEW_ACCOUNT, {
+      this.$store.dispatch(GlobalEmerisActionTypes.SET_NEW_ACCOUNT, {
         ...this.$store.state.extension.newAccount,
         accountMnemonic: mnemonicFormat(this.mnemonic),
         setupState: AccountCreateStates.COMPLETE,

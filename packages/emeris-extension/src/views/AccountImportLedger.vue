@@ -31,18 +31,18 @@ import { defineComponent } from 'vue';
 import Button from '@/components/ui/Button.vue';
 import Header from '@@/components/Header.vue';
 import ListCard from '@@/components/ListCard.vue';
-import { GlobalActionTypes } from '@@/store/extension/action-types';
+import { GlobalEmerisActionTypes } from '@@/store/extension/action-types';
 
 export default defineComponent({
   name: 'Connect Ledger',
   components: { ListCard, Header, Button },
   async mounted() {
-    const hasPassword = await this.$store.dispatch(GlobalActionTypes.HAS_WALLET); // the wallet is encrypted with the password so the existence is equal
+    const hasPassword = await this.$store.dispatch(GlobalEmerisActionTypes.HAS_WALLET); // the wallet is encrypted with the password so the existence is equal
     if (!hasPassword) {
       this.$router.push({ path: '/passwordCreate', query: { returnTo: this.$route.fullPath } });
     }
 
-    this.$store.dispatch(GlobalActionTypes.SET_NEW_ACCOUNT, {
+    this.$store.dispatch(GlobalEmerisActionTypes.SET_NEW_ACCOUNT, {
       ...this.$store.state.extension.newAccount,
       route: '/ledger',
     });

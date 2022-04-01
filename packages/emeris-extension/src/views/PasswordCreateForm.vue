@@ -61,7 +61,7 @@ import { defineComponent } from 'vue';
 import Button from '@/components/ui/Button.vue';
 import Input from '@/components/ui/Input.vue';
 import Icon from '@/components/ui/Icon.vue';
-import { GlobalActionTypes } from '@@/store/extension/action-types';
+import { GlobalEmerisActionTypes } from '@@/store/extension/action-types';
 import { mapState } from 'vuex';
 import { RootState } from '@@/store';
 
@@ -94,9 +94,9 @@ export default defineComponent({
     async submit() {
       if (this.length && this.upperCaseChar && this.symbolChar && this.digitChar && this.match) {
         if (this.wallet) {
-          await this.$store.dispatch(GlobalActionTypes.CHANGE_PASSWORD, { password: this.password });
+          await this.$store.dispatch(GlobalEmerisActionTypes.CHANGE_PASSWORD, { password: this.password });
         } else {
-          await this.$store.dispatch(GlobalActionTypes.CREATE_WALLET, { password: this.password });
+          await this.$store.dispatch(GlobalEmerisActionTypes.CREATE_WALLET, { password: this.password });
         }
         this.onContinue();
       }

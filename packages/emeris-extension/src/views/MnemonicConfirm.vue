@@ -26,15 +26,15 @@ import * as bip39 from 'bip39';
 import wordlist from '@@/wordlists/english.json';
 import Button from '@/components/ui/Button.vue';
 import Header from '@@/components/Header.vue';
-import { GlobalGetterTypes } from '@@/store/extension/getter-types';
-import { GlobalActionTypes } from '@@/store/extension/action-types';
+import { GlobalEmerisGetterTypes } from '@@/store/extension/getter-types';
+import { GlobalEmerisActionTypes } from '@@/store/extension/action-types';
 
 const shuffleArray = (array) => array.sort(() => 0.5 - Math.random());
 
 export default defineComponent({
   computed: {
     account() {
-      return this.$store.getters[GlobalGetterTypes.getAccount];
+      return this.$store.getters[GlobalEmerisGetterTypes.getAccount];
     },
     positionWord() {
       switch (this.positions[this.step] + 1) {
@@ -95,7 +95,7 @@ export default defineComponent({
       if (this.wordList[this.positions[this.step]] === word) {
         this.error = null;
         if (this.step === 2) {
-          this.$store.dispatch(GlobalActionTypes.ACCOUNT_BACKED_UP, { accountName: this.account.accountName });
+          this.$store.dispatch(GlobalEmerisActionTypes.ACCOUNT_BACKED_UP, { accountName: this.account.accountName });
           this.$router.push('/accountReady');
         }
         this.step++;

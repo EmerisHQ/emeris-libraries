@@ -79,7 +79,7 @@ import Loader from '@@/components/Loader.vue';
 import Slideout from '@@/components/Slideout.vue';
 import TotalPrice from '@/components/common/TotalPrice.vue';
 import { GlobalGetterTypes } from '@/store';
-import { GlobalGetterTypes } from '@@/store/extension/getter-types';
+import { GlobalEmerisGetterTypes } from '@@/store/extension/getter-types';
 import { AccountCreateStates } from '@@/types/index';
 
 const CHECK_INTERVAL_SECONDS = 60 * 60 * 24;  //  1 day
@@ -88,14 +88,14 @@ export default defineComponent({
   name: 'Portfolio',
   computed: {
     account() {
-      return this.$store.getters[GlobalGetterTypes.getAccount];
+      return this.$store.getters[GlobalEmerisGetterTypes.getAccount];
     },
     verifiedDenoms() {
       return this.$store.getters[GlobalGetterTypes.API.getVerifiedDenoms];
     },
     balances() {
       if (!this.account) return undefined;
-      return this.$store.getters[GlobalGetterTypes.getAllBalances](this.account);
+      return this.$store.getters[GlobalEmerisGetterTypes.getAllBalances](this.account);
     },
   },
   methods: {

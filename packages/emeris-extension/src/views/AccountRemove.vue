@@ -25,7 +25,7 @@ import Button from '@/components/ui/Button.vue';
 import ConfirmationScreen from '@@/views/ConfirmationScreen.vue';
 import { mapState } from 'vuex';
 import { RootState } from '@@/store';
-import { GlobalActionTypes } from '@@/store/extension/action-types';
+import { GlobalEmerisActionTypes } from '@@/store/extension/action-types';
 import Loader from '@@/components/Loader.vue';
 
 export default defineComponent({
@@ -48,7 +48,7 @@ export default defineComponent({
   },
   methods: {
     async removeWallet() {
-      await this.$store.dispatch(GlobalActionTypes.REMOVE_ACCOUNT, { accountName: this.account.accountName });
+      await this.$store.dispatch(GlobalEmerisActionTypes.REMOVE_ACCOUNT, { accountName: this.account.accountName });
       this.$router.push('/accounts');
     },
   },

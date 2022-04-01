@@ -25,7 +25,7 @@ import { defineComponent } from 'vue';
 import Button from '@/components/ui/Button.vue';
 import ConfirmationScreen from '@@/views/ConfirmationScreen.vue';
 import Input from '@/components/ui/Input.vue';
-import { GlobalActionTypes } from '@@/store/extension/action-types';
+import { GlobalEmerisActionTypes } from '@@/store/extension/action-types';
 
 export default defineComponent({
   name: 'Welcome Back',
@@ -40,7 +40,7 @@ export default defineComponent({
   },
   methods: {
     async checkPassword() {
-      const wallet = await this.$store.dispatch(GlobalActionTypes.UNLOCK_WALLET, { password: this.password });
+      const wallet = await this.$store.dispatch(GlobalEmerisActionTypes.UNLOCK_WALLET, { password: this.password });
       if (wallet) {
         this.$router.push('/');
       } else {

@@ -19,8 +19,8 @@
 <script>
 import Brandmark from '@/components/common/Brandmark.vue';
 import Button from '@/components/ui/Button.vue';
-import { GlobalActionTypes } from '@@/store/extension/action-types';
-import { GlobalGetterTypes } from '@@/store/extension/getter-types';
+import { GlobalEmerisActionTypes } from '@@/store/extension/action-types';
+import { GlobalEmerisGetterTypes } from '@@/store/extension/getter-types';
 export default {
   components: {
     Brandmark,
@@ -28,25 +28,25 @@ export default {
   },
   methods: {
     async close() {
-      await this.$store.dispatch(GlobalActionTypes.WHITELIST_WEBSITE, { id: this.pending.id, accept: false });
+      await this.$store.dispatch(GlobalEmerisActionTypes.WHITELIST_WEBSITE, { id: this.pending.id, accept: false });
       window.close();
     },
     async accept() {
-      await this.$store.dispatch(GlobalActionTypes.WHITELIST_WEBSITE, { id: this.pending.id, accept: true });
+      await this.$store.dispatch(GlobalEmerisActionTypes.WHITELIST_WEBSITE, { id: this.pending.id, accept: true });
       this.$router.push('/');
     },
   },
   computed: {
     pending() {
-      return this.$store.getters[GlobalGetterTypes.getPending][0];
+      return this.$store.getters[GlobalEmerisGetterTypes.getPending][0];
     },
     url() {
-      const pending = this.$store.getters[GlobalGetterTypes.getPending];
+      const pending = this.$store.getters[GlobalEmerisGetterTypes.getPending];
       return pending && pending.length > 0 ? pending[0].origin : undefined;
     },
   },
   mounted() {
-    this.$store.dispatch(GlobalActionTypes.GET_PENDING);
+    this.$store.dispatch(GlobalEmerisActionTypes.GET_PENDING);
   },
 };
 </script>

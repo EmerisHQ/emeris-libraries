@@ -4,7 +4,7 @@
 
 <script lang="ts">
 import { defineComponent, onMounted, watch } from 'vue';
-import { GlobalActionTypes } from '@@/store/extension/action-types';
+import { GlobalEmerisActionTypes } from '@@/store/extension/action-types';
 import { useRouter } from 'vue-router';
 import { useStore } from 'vuex';
 import { setStore } from '@/utils/useStore';
@@ -105,7 +105,7 @@ export default defineComponent({
 
       browser.runtime.onMessage.addListener((message) => {
         if (message.type == 'toPopup' && message.data.action == 'update') {
-          store.dispatch(GlobalActionTypes.GET_PENDING);
+          store.dispatch(GlobalEmerisActionTypes.GET_PENDING);
         }
       });
     });

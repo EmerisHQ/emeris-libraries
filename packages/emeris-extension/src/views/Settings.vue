@@ -50,14 +50,14 @@
 import { defineComponent } from 'vue';
 import Icon from '@/components/ui/Icon.vue';
 import Header from '@@/components/Header.vue';
-import { GlobalGetterTypes } from '@@/store/extension/getter-types';
+import { GlobalEmerisGetterTypes } from '@@/store/extension/getter-types';
 import { AccountCreateStates } from '@@/types';
 
 export default defineComponent({
   name: 'Settings',
   computed: {
     account() {
-      return this.$store.getters[GlobalGetterTypes.getAccount];
+      return this.$store.getters[GlobalEmerisGetterTypes.getAccount];
     },
     backedUp() {
       if (!this.account) return false;

@@ -25,7 +25,7 @@ export enum ActionTypes {
   SET_NEW_ACCOUNT = 'SET_NEW_ACCOUNT',
   GET_NEW_ACCOUNT = 'GET_NEW_ACCOUNT',
 }
-export enum GlobalActionTypes {
+export enum GlobalEmerisActionTypes {
   GET_PENDING = 'extension/GET_PENDING',
   COMPLETE_REQUEST = 'extension/COMPLETE_REQUEST',
   HAS_WALLET = 'extension/HAS_WALLET',

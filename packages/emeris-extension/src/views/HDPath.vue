@@ -40,7 +40,7 @@ import Input from '@/components/ui/Input.vue';
 import Header from '@@/components/Header.vue';
 import Slideout from '@@/components/Slideout.vue';
 
-import { GlobalActionTypes } from '@@/store/extension/action-types';
+import { GlobalEmerisActionTypes } from '@@/store/extension/action-types';
 
 const defaultHdPath = ['0', '0', '0'];
 const hdPathRegex = /^(0|(\d{1,2}|1([0-1]\d|2[0-7])))$/; // 0-127 harding is automatic on the first 3 positions of the hd path hardcoded in leder-cosmos-js
@@ -49,7 +49,7 @@ const updateHdPath = (position, value, store) => {
   const newAccount = store.state.extension.newAccount;
   const hdPath = newAccount?.hdPath || new Array(...defaultHdPath);
   hdPath[position] = value;
-  store.dispatch(GlobalActionTypes.SET_NEW_ACCOUNT, {
+  store.dispatch(GlobalEmerisActionTypes.SET_NEW_ACCOUNT, {
     ...newAccount,
     hdPath,
   });
@@ -105,8 +105,8 @@ export default defineComponent({
     },
   },
   async mounted() {
-    await this.$store.dispatch(GlobalActionTypes.GET_NEW_ACCOUNT);
-    this.$store.dispatch(GlobalActionTypes.SET_NEW_ACCOUNT, {
+    await this.$store.dispatch(GlobalEmerisActionTypes.GET_NEW_ACCOUNT);
+    this.$store.dispatch(GlobalEmerisActionTypes.SET_NEW_ACCOUNT, {
       ...this.newAccount,
       route: '/accountImportHdPath?previous=' + encodeURI(this.$route.query.previous),
     });

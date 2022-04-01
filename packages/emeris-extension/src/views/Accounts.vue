@@ -80,8 +80,8 @@ import TotalPrice from '@/components/common/TotalPrice.vue';
 import { mapState } from 'vuex';
 import { RootState } from '@@/store';
 import { AccountCreateStates } from '@@/types';
-import { GlobalActionTypes } from '@@/store/extension/action-types';
-import { GlobalGetterTypes } from '@@/store/extension/getter-types';
+import { GlobalEmerisActionTypes } from '@@/store/extension/action-types';
+import { GlobalEmerisGetterTypes } from '@@/store/extension/getter-types';
 import { GlobalActionTypes } from '@/store';
 
 export default defineComponent({
@@ -117,9 +117,9 @@ export default defineComponent({
       this.$router.push('/accountRename/' + this.editWalletIndex);
     },
     goToAccount(account) {
-      this.$store.dispatch(GlobalActionTypes.SET_LAST_ACCOUNT_USED, { accountName: account.accountName });
-      this.$store.dispatch(GlobalActionTypes.GET_WALLET);
-      this.$store.dispatch(GlobalActionTypes.LOAD_SESSION_DATA);
+      this.$store.dispatch(GlobalEmerisActionTypes.SET_LAST_ACCOUNT_USED, { accountName: account.accountName });
+      this.$store.dispatch(GlobalEmerisActionTypes.GET_WALLET);
+      this.$store.dispatch(GlobalEmerisActionTypes.LOAD_SESSION_DATA);
       this.$router.push('/portfolio');
     },
     backedUp(account) {
@@ -127,7 +127,7 @@ export default defineComponent({
     },
     loadBalances() {
       this.wallet.forEach((account) => {
-        if (!this.$store.getters[GlobalGetterTypes.getAllBalances](account)) {
+        if (!this.$store.getters[GlobalEmerisGetterTypes.getAllBalances](account)) {
           this.$store.dispatch(GlobalActionTypes.API.GET_BALANCES, {
             subscribe: true,
             params: { address: account.keyHash },
@@ -136,7 +136,7 @@ export default defineComponent({
       });
     },
     balances(account) {
-      return this.$store.getters[GlobalGetterTypes.getAllBalances](account) || [];
+      return this.$store.getters[GlobalEmerisGetterTypes.getAllBalances](account) || [];
     },
   },
   watch: {

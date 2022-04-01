@@ -16,7 +16,7 @@
 import { defineComponent } from 'vue';
 import Button from '@/components/ui/Button.vue';
 import ConfirmationScreen from '@@/views/ConfirmationScreen.vue';
-import { GlobalActionTypes } from '@@/store/extension/action-types';
+import { GlobalEmerisActionTypes } from '@@/store/extension/action-types';
 
 export default defineComponent({
   name: 'Whitelisted Page Remove',
@@ -34,7 +34,7 @@ export default defineComponent({
   },
   methods: {
     async remove() {
-      await this.$store.dispatch(GlobalActionTypes.REMOVE_WHITELISTED_WEBSITE, { website: this.url });
+      await this.$store.dispatch(GlobalEmerisActionTypes.REMOVE_WHITELISTED_WEBSITE, { website: this.url });
       this.$router.push('/whitelisted');
     },
   },

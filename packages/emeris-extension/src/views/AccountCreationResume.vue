@@ -25,7 +25,7 @@
 import { defineComponent } from 'vue';
 import Button from '@/components/ui/Button.vue';
 import ConfirmationScreen from '@@/views/ConfirmationScreen.vue';
-import { GlobalActionTypes } from '@@/store/extension/action-types';
+import { GlobalEmerisActionTypes } from '@@/store/extension/action-types';
 
 export default defineComponent({
   name: 'Account Creation Resume',
@@ -35,11 +35,11 @@ export default defineComponent({
   },
   methods: {
     async resume() {
-      const newAccount = await this.$store.dispatch(GlobalActionTypes.GET_NEW_ACCOUNT);
+      const newAccount = await this.$store.dispatch(GlobalEmerisActionTypes.GET_NEW_ACCOUNT);
       this.$router.push(newAccount.route);
     },
     async abort() {
-      this.$store.dispatch(GlobalActionTypes.SET_NEW_ACCOUNT, undefined);
+      this.$store.dispatch(GlobalEmerisActionTypes.SET_NEW_ACCOUNT, undefined);
       this.$router.push('/');
     },
   },

@@ -25,7 +25,7 @@ import Input from '@/components/ui/Input.vue';
 import Header from '@@/components/Header.vue';
 import Button from '@/components/ui/Button.vue';
 import { RootState } from '@@/store';
-import { GlobalActionTypes } from '@@/store/extension/action-types';
+import { GlobalEmerisActionTypes } from '@@/store/extension/action-types';
 
 export default defineComponent({
   name: 'Account Rename',
@@ -50,11 +50,11 @@ export default defineComponent({
   methods: {
     async submit() {
       try {
-        await this.$store.dispatch(GlobalActionTypes.UPDATE_ACCOUNT, {
+        await this.$store.dispatch(GlobalEmerisActionTypes.UPDATE_ACCOUNT, {
           targetAccountName: this.account.accountName,
           newAccountName: this.accountName,
         });
-        this.$store.dispatch(GlobalActionTypes.GET_WALLET);
+        this.$store.dispatch(GlobalEmerisActionTypes.GET_WALLET);
         this.$router.push('/accounts');
       } catch (err) {
         console.error(err);

@@ -16,7 +16,7 @@
 
 <script lang="ts">
 import { defineComponent } from 'vue';
-import { GlobalActionTypes } from '@@/store/extension/action-types';
+import { GlobalEmerisActionTypes } from '@@/store/extension/action-types';
 import { keyHashfromAddress } from '@/utils/basic';
 import config from '@@/chain-config';
 
@@ -25,9 +25,9 @@ export default defineComponent({
   async mounted() {
     const ledgerSignData = this.$store.state.extension.ledgerSignData;
     try {
-      const hasWallet = await this.$store.dispatch(GlobalActionTypes.HAS_WALLET); // checking if the password was set
-      const wallet = await this.$store.dispatch(GlobalActionTypes.GET_WALLET); // never loaded before as root not hit
-      const pendings = await this.$store.dispatch(GlobalActionTypes.GET_PENDING);
+      const hasWallet = await this.$store.dispatch(GlobalEmerisActionTypes.HAS_WALLET); // checking if the password was set
+      const wallet = await this.$store.dispatch(GlobalEmerisActionTypes.GET_WALLET); // never loaded before as root not hit
+      const pendings = await this.$store.dispatch(GlobalEmerisActionTypes.GET_PENDING);
       // handle background locked
       if ((hasWallet && !wallet) || pendings.length === 0) {
         this.$router.push('/');
@@ -45,7 +45,7 @@ export default defineComponent({
         throw new Error('Chain not supported: ' + transaction.chainId);
       }
 
-      await this.$store.dispatch(GlobalActionTypes.ACCEPT_TRANSACTION, {
+      await this.$store.dispatch(GlobalEmerisActionTypes.ACCEPT_TRANSACTION, {
         id: pendings[0].id,
         ...pendings[0].data,
         ...ledgerSignData,

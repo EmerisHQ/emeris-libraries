@@ -36,7 +36,7 @@ import Header from '@@/components/Header.vue';
 import QrCode from '@/components/common/QrCode.vue';
 import Icon from '@/components/ui/Icon.vue';
 import { GlobalGetterTypes } from '@/store';
-import { GlobalActionTypes } from '@@/store/extension/action-types';
+import { GlobalEmerisActionTypes } from '@@/store/extension/action-types';
 import Loader from '@@/components/Loader.vue';
 
 export default {
@@ -63,7 +63,7 @@ export default {
   watch: {
     async asset(asset) {
       if (!asset) return;
-      this.recipientAddress = await this.$store.dispatch(GlobalActionTypes.GET_ADDRESS, { chainId: asset.on_chain });
+      this.recipientAddress = await this.$store.dispatch(GlobalEmerisActionTypes.GET_ADDRESS, { chainId: asset.on_chain });
     },
     async assetsList(assetsList) {
       this.displayNameAddedList = await Promise.all(

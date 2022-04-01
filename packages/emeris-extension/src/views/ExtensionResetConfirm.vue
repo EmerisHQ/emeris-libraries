@@ -24,7 +24,7 @@ import Button from '@/components/ui/Button.vue';
 import Header from '@@/components/Header.vue';
 import Icon from '@/components/ui/Icon.vue';
 
-import { GlobalActionTypes } from '@@/store/extension/action-types';
+import { GlobalEmerisActionTypes } from '@@/store/extension/action-types';
 
 export default defineComponent({
   name: 'Extension Reset',
@@ -35,7 +35,7 @@ export default defineComponent({
   },
   methods: {
     async submit() {
-      await this.$store.dispatch(GlobalActionTypes.EXTENSION_RESET);
+      await this.$store.dispatch(GlobalEmerisActionTypes.EXTENSION_RESET);
       this.$router.push('/welcome');
     },
   },

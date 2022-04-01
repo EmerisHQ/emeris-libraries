@@ -43,7 +43,7 @@ import Header from '@@/components/Header.vue';
 import Button from '@/components/ui/Button.vue';
 import Icon from '@/components/ui/Icon.vue';
 
-import { GlobalActionTypes } from '@@/store/extension/action-types';
+import { GlobalEmerisActionTypes } from '@@/store/extension/action-types';
 import { RootState } from '@@/store';
 import { AccountCreateStates } from '@@/types';
 
@@ -64,19 +64,19 @@ export default defineComponent({
   }),
   watch: {
     name(name) {
-      this.$store.dispatch(GlobalActionTypes.SET_NEW_ACCOUNT, {
+      this.$store.dispatch(GlobalEmerisActionTypes.SET_NEW_ACCOUNT, {
         ...this.newAccount,
         accountName: name,
       });
     },
   },
   async mounted() {
-    const hasPassword = await this.$store.dispatch(GlobalActionTypes.HAS_WALLET); // the wallet is encrypted with the password so the existence is equal
+    const hasPassword = await this.$store.dispatch(GlobalEmerisActionTypes.HAS_WALLET); // the wallet is encrypted with the password so the existence is equal
     if (!hasPassword) {
       this.$router.push({ path: '/passwordCreate', query: { returnTo: this.$route.fullPath } });
     }
 
-    const accounts = (await this.$store.dispatch(GlobalActionTypes.GET_WALLET)) || [];
+    const accounts = (await this.$store.dispatch(GlobalEmerisActionTypes.GET_WALLET)) || [];
 
     // find an unused account name
     let name;
@@ -86,7 +86,7 @@ export default defineComponent({
     } while (accounts.find(({ accountName }) => accountName === name));
 
     this.name = name;
-    this.$store.dispatch(GlobalActionTypes.SET_NEW_ACCOUNT, {
+    this.$store.dispatch(GlobalEmerisActionTypes.SET_NEW_ACCOUNT, {
       ...this.newAccount,
       route: '/accountCreate',
     });
@@ -96,10 +96,12 @@ export default defineComponent({
       if (this.error) return;
 
       try {
-        await this.$store.dispatch(GlobalActionTypes.CREATE_ACCOUNT, {
+        const aMnemonic = bip39.generateMnemonic(256,null,wordlist)
+        console.log(aMnemonic);
+        await this.$store.dispatch(GlobalEmerisActionTypes.CREATE_ACCOUNT, {
           account: {
             accountName: this.name,
-            accountMnemonic: bip39.generateMnemonic(256,null,wordlist), // will be overwritten by existing new account
+            accountMnemonic: aMnemonic, // will be overwritten by existing new account
             isLedger: false, // will be overwritten by existing new account
             setupState: this.newAccount.setupState || AccountCreateStates.CREATED, // if this is an import we don't need to check if the user backed up the mnemonic
             ...this.newAccount,
@@ -112,7 +114,7 @@ export default defineComponent({
         } else {
           nextRoute = '/backup?new=true';
         }
-        await this.$store.dispatch(GlobalActionTypes.SET_NEW_ACCOUNT, undefined); // remove new account from flow
+        await this.$store.dispatch(GlobalEmerisActionTypes.SET_NEW_ACCOUNT, undefined); // remove new account from flow
         this.$router.push(nextRoute);
       } catch (err) {
         console.error(err);

@@ -24,7 +24,7 @@ import { defineComponent } from 'vue';
 import Input from '@/components/ui/Input.vue';
 import Header from '@@/components/Header.vue';
 import Button from '@/components/ui/Button.vue';
-import { GlobalActionTypes } from '@@/store/extension/action-types';
+import { GlobalEmerisActionTypes } from '@@/store/extension/action-types';
 
 export default defineComponent({
   name: 'Password Old',
@@ -36,7 +36,7 @@ export default defineComponent({
   methods: {
     async submit() {
       this.error = false;
-      const wallet = await this.$store.dispatch(GlobalActionTypes.UNLOCK_WALLET, { password: this.password });
+      const wallet = await this.$store.dispatch(GlobalEmerisActionTypes.UNLOCK_WALLET, { password: this.password });
       if (wallet) {
         this.$router.push('/passwordChange/new');
       } else {

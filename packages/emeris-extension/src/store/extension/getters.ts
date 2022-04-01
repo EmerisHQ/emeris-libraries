@@ -1,6 +1,6 @@
 import { EmerisWallet, ExtensionRequest } from '@@/types/index';
 import { GetterTree } from 'vuex';
-import { GetterTypes, GlobalGetterTypes } from './getter-types';
+import { GetterTypes, GlobalEmerisGetterTypes } from './getter-types';
 import { GlobalGetterTypes as GlobalApiGetterTypes } from '@/store/demeris-api/getter-types';
 import { State } from './state';
 import { RootState } from '..';
@@ -11,13 +11,13 @@ export interface Getters {
 }
 
 export interface GlobalGetters {
-  [GlobalGetterTypes.getPending](
+  [GlobalEmerisGetterTypes.getPending](
     ...args: Parameters<Getters[GetterTypes.getPending]>
   ): ReturnType<Getters[GetterTypes.getPending]>;
-  [GlobalGetterTypes.getWallet](
+  [GlobalEmerisGetterTypes.getWallet](
     ...args: Parameters<Getters[GetterTypes.getWallet]>
   ): ReturnType<Getters[GetterTypes.getWallet]>;
-  [GlobalGetterTypes.getLastAccount](
+  [GlobalEmerisGetterTypes.getLastAccount](
     ...args: Parameters<Getters[GetterTypes.getLastAccount]>
   ): ReturnType<Getters[GetterTypes.getLastAccount]>;
 }

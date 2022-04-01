@@ -4,8 +4,8 @@
 
 <script lang="ts">
 import { useExtensionStore } from '@@/store';
-import { GlobalActionTypes } from '@@/store/extension/action-types';
-import { GlobalGetterTypes } from '@@/store/extension/getter-types';
+import { GlobalEmerisActionTypes } from '@@/store/extension/action-types';
+import { GlobalEmerisGetterTypes } from '@@/store/extension/getter-types';
 import { AccountCreateStates, ExtensionRequest } from '@@/types';
 import browser from 'webextension-polyfill';
 import { defineComponent, computed } from 'vue';
@@ -19,9 +19,9 @@ export default defineComponent({
   },
   methods: {
     async route() {
-      const pending = await this.$store.dispatch(GlobalActionTypes.GET_PENDING);
-      const hasWallet = await this.$store.dispatch(GlobalActionTypes.HAS_WALLET); // checking if the password was set
-      const wallet = await this.$store.dispatch(GlobalActionTypes.GET_WALLET); // if able to load the wallet, the extension is unlocked
+      const pending = await this.$store.dispatch(GlobalEmerisActionTypes.GET_PENDING);
+      const hasWallet = await this.$store.dispatch(GlobalEmerisActionTypes.HAS_WALLET); // checking if the password was set
+      const wallet = await this.$store.dispatch(GlobalEmerisActionTypes.GET_WALLET); // if able to load the wallet, the extension is unlocked
 
       // if we are in a popup and there are no more pending requests, close
       if (pending.length === 0 && location.search !== '?browser=true') {
@@ -54,10 +54,10 @@ export default defineComponent({
         return;
       }
 
-      await this.$store.dispatch(GlobalActionTypes.LOAD_SESSION_DATA);
+      await this.$store.dispatch(GlobalEmerisActionTypes.LOAD_SESSION_DATA);
 
       // return to account creation
-      const newAccount = await this.$store.dispatch(GlobalActionTypes.GET_NEW_ACCOUNT);
+      const newAccount = await this.$store.dispatch(GlobalEmerisActionTypes.GET_NEW_ACCOUNT);
       if (newAccount) {
         this.$router.push('/accountCreationResume');
         return;
@@ -74,10 +74,10 @@ export default defineComponent({
     const store = useExtensionStore();
 
     const pending = computed<ExtensionRequest[]>(() => {
-      return store.getters[GlobalGetterTypes.getPending];
+      return store.getters[GlobalEmerisGetterTypes.getPending];
     });
     const wallet = computed<ExtensionRequest[]>(() => {
-      return store.getters[GlobalGetterTypes.getWallet];
+      return store.getters[GlobalEmerisGetterTypes.getWallet];
     });
     const respond = (id) => {
       browser.runtime.sendMessage({

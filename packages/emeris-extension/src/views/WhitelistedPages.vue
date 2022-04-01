@@ -19,7 +19,7 @@
 import { defineComponent } from 'vue';
 import Brandmark from '@/components/common/Brandmark.vue';
 import Header from '@@/components/Header.vue';
-import { GlobalActionTypes } from '@@/store/extension/action-types';
+import { GlobalEmerisActionTypes } from '@@/store/extension/action-types';
 
 export default defineComponent({
   name: 'Whitelisted Pages',
@@ -33,7 +33,7 @@ export default defineComponent({
     },
   },
   mounted() {
-    this.$store.dispatch(GlobalActionTypes.GET_WHITELISTED_WEBSITES);
+    this.$store.dispatch(GlobalEmerisActionTypes.GET_WHITELISTED_WEBSITES);
   },
 });
 </script>
