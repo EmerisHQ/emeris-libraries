@@ -39,7 +39,7 @@
     "bip39": "^3.0.4",
     "core-js": "^3.18.3",
     "crypto-js": "^4.1.1",
-    "json-to-pretty-yaml": "^1.2.2",
+    "js-yaml": "^4.1.0",
     "lodash.groupby": "^4.6.0",
     "lodash.isequal": "^4.5.0",
     "lodash.orderby": "^4.6.0",
