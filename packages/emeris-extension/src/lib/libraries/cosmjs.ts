@@ -1,6 +1,6 @@
 import { SigningStargateClient, StdFee } from '@cosmjs/stargate';
 import { ChainDetails, EmerisAccount } from '@@/types';
-import EmerisSigner from '@emeris/signer/lib/EmerisSigner';
+import EmerisSigner from '@emeris/signer';
 import { EncodeObject } from '@cosmjs/proto-signing';
 import { AminoMsg } from '@cosmjs/stargate/node_modules/@cosmjs/amino';
 import { bech32 } from 'bech32';

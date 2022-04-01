@@ -1,15 +1,16 @@
 <template>
   <div>
-    <component :is="component" :message="message.data" :chainName="chainId" />
+    <component :is="component" :message="message.data" :chain-name="chainId" />
   </div>
 </template>
 
 <script lang="ts">
 import { EmerisTransactions } from '@emeris/types';
 import { defineAsyncComponent } from '@vue/runtime-core';
-import Fallback from './fallback';
+
 import addliquidity from './addliquidity.vue';
 import custom from './custom.vue';
+import Fallback from './fallback';
 import ibcTransfer from './ibcTransfer.vue';
 import swap from './swap.vue';
 import transfer from './transfer.vue';
@@ -24,7 +25,7 @@ export default {
   computed: {
     component() {
       return defineAsyncComponent({
-        loader: () => {
+        loader: async () => {
           switch ((this.message as EmerisTransactions.AbstractTransaction).type) {
             case 'addLiquidity':
               return addliquidity;
@@ -49,5 +50,4 @@ export default {
 };
 </script>
 
-<style>
-</style>
+<style></style>

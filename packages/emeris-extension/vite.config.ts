@@ -35,6 +35,7 @@ export default () => {
     resolve: {
       alias: {
         '@starport/vuex': path.resolve(__dirname, './demeris/src/utils/EmerisError.ts'),
+        'vue-i18n': 'vue-i18n/dist/vue-i18n.runtime.esm-bundler.js',
         stream: 'rollup-plugin-node-polyfills/polyfills/stream',
         '@': path.resolve(__dirname, './demeris/src'),
         '@@': path.resolve(__dirname, './src'),
