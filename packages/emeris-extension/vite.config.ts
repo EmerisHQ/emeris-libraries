@@ -21,6 +21,9 @@ export default () => {
       chunkSizeWarningLimit: 1000,
       sourcemap: true,
       rollupOptions: {
+        input: {
+          popup: path.resolve(__dirname, './popup.html'),
+        },
         plugins: [
           inject({
             Buffer: ['buffer', 'Buffer'],
