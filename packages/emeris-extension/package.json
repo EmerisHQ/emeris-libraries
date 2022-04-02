@@ -5,8 +5,8 @@
   "author": "Tendermint, Inc <hello@tendermint.com>",
   "scripts": {
     "dev": "vite",
-    "build": "vite build --mode production",
-    "postbuild": "vite -c vite.scripts.config.js build",
+    "build": "NODE_OPTIONS='--max-old-space-size=8192' vite build --mode production",
+    "postbuild": "NODE_OPTIONS='--max-old-space-size=8192' vite -c vite.scripts.config.js build --mode production",
     "prepare": "simple-git-hooks",
     "typecheck": "vue-tsc --noEmit",
     "postinstall": "git submodule init"

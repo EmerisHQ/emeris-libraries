@@ -51,6 +51,7 @@ export default () => {
     },
     plugins: [vue(), nodeResolve(), dynamicImport(), envCompatible()],
     resolve: {
+      preserveSymlinks: true,
       alias: {
         '@starport/vuex': path.resolve(__dirname, './demeris/src/utils/EmerisError.ts'),
         'vue-i18n': 'vue-i18n/dist/vue-i18n.runtime.esm-bundler.js',
