@@ -6,7 +6,7 @@
   "scripts": {
     "dev": "vite",
     "build": "vite build --mode production",
-    "build:scripts": "vite -c vite.scripts.config.js build",
+    "postbuild": "vite -c vite.scripts.config.js build",
     "prepare": "simple-git-hooks",
     "typecheck": "vue-tsc --noEmit",
     "postinstall": "git submodule init"
@@ -25,7 +25,7 @@
     "@cosmjs/tendermint-rpc": "0.28.0",
     "@cosmjs/utils": "0.28.0",
     "@emeris/chain-config": "^0.0.7",
-    "@emeris/mapper": "0.0.10",
+    "@emeris/mapper": "^0.0.15",
     "@emeris/signer": "^0.0.27",
     "@ledgerhq/hw-transport-webhid": "^6.11.2",
     "@ledgerhq/hw-transport-webusb": "^6.11.2",

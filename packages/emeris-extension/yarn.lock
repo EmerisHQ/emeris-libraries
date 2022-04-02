@@ -1112,10 +1112,10 @@
     "@vespaiach/axios-fetch-adapter" "^0.2.0"
     axios "^0.21.1"
 
-"@emeris/mapper@0.0.10":
-  version "0.0.10"
-  resolved "https://registry.yarnpkg.com/@emeris/mapper/-/mapper-0.0.10.tgz#a4488c015726bf0567c7f531f08a33fea69f523c"
-  integrity sha512-6FeeSn7sbjZbjyzJpfROQLjx0hS4l4zgL3+gDdMIrPGDzcNu9DM+QyDwSSJ0cVM7usiWV7rlO1U27u7NXLppog==
+"@emeris/mapper@^0.0.15":
+  version "0.0.15"
+  resolved "https://registry.yarnpkg.com/@emeris/mapper/-/mapper-0.0.15.tgz#cc34b3026e415846459b9a083868d41f8880b427"
+  integrity sha512-dwDvGcVv3HnAuX8stZ8RIrj8OJFjSUplx9i/JAp/KSglMXExw6vXyBGYTY5XnEHISQSugB5LhHXweGNXC9Lkqg==
   dependencies:
     "@clockwork-projects/cosmos-gaia-js" "^6.0.0"
     "@clockwork-projects/osmosis-labs-osmosis-js" "^6.1.0"
