@@ -11,15 +11,16 @@
     "esModuleInterop": false,
     "allowSyntheticDefaultImports": true,
     "allowJs": true,
+    "rootDir": "./src/",
     "sourceMap": true,
     "resolveJsonModule": true,
     "baseUrl": ".",
     "typeRoots": ["./node_modules/@types"],
-    "types": ["webpack-env", "node", "long", "vite/client", "vitest/globals"],
+    "types": [ "node", "long", "vite/client", "vitest/globals"],
     "paths": {
       "@/*": ["src/*"]
     },
-    "lib": ["es2019", "dom", "dom.iterable", "scripthost"]
+    "lib": ["es2019", "dom", "dom.iterable", "scripthost", "WebWorker"]
   },
   "include": ["src/**/*.ts", "src/**/*.tsx", "src/**/*.vue"],
   "exclude": ["node_modules"],

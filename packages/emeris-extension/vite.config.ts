@@ -1,12 +1,10 @@
 import { NodeGlobalsPolyfillPlugin } from '@esbuild-plugins/node-globals-polyfill';
-import { NodeModulesPolyfillPlugin } from '@esbuild-plugins/node-modules-polyfill';
+import inject from '@rollup/plugin-inject';
 import { nodeResolve } from '@rollup/plugin-node-resolve';
 import vue from '@vitejs/plugin-vue';
 import * as path from 'path';
 import { dynamicImport } from 'vite-plugin-dynamic-import';
 import envCompatible from 'vite-plugin-env-compatible';
-import eslintPlugin from 'vite-plugin-eslint';
-import inject from '@rollup/plugin-inject';
 import { defineConfig } from 'vitest/config';
 
 import * as pkg from './package.json';

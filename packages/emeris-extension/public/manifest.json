@@ -21,7 +21,8 @@
   },
   "minimum_chrome_version": "93",
   "background": {
-    "service_worker": "background.js"
+    "service_worker": "background.js",
+    "type": "module"
   },
   "content_scripts": [
     {
@@ -40,7 +41,9 @@
   "web_accessible_resources": [
     {
       "resources": [
-        "/inject-emeris.js"
+        "/inject-emeris.js",
+        "/index.js",
+        "/browser-polyfill.js"
       ],
       "matches": [
         "*://*/*"
