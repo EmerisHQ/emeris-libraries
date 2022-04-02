@@ -1,4 +1,5 @@
 import { NodeGlobalsPolyfillPlugin } from '@esbuild-plugins/node-globals-polyfill';
+import vueI18n from '@intlify/vite-plugin-vue-i18n';
 import inject from '@rollup/plugin-inject';
 import { nodeResolve } from '@rollup/plugin-node-resolve';
 import vue from '@vitejs/plugin-vue';
@@ -29,7 +30,19 @@ export default () => {
         ],
       },
     },
-    plugins: [vue(), nodeResolve(), dynamicImport(), envCompatible()],
+    plugins: [
+      vue(),
+      vueI18n({
+        // if you want to use Vue I18n Legacy API, you need to set `compositionOnly: false`
+        compositionOnly: false,
+
+        // you need to set i18n resource including paths !
+        include: path.resolve(__dirname, './demeris/src/locales/**'),
+      }),
+      nodeResolve(),
+      dynamicImport(),
+      envCompatible(),
+    ],
     resolve: {
       preserveSymlinks: true,
       alias: {

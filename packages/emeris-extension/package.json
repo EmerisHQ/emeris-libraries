@@ -4,7 +4,8 @@
   "private": true,
   "author": "Tendermint, Inc <hello@tendermint.com>",
   "scripts": {
-    "dev": "vite",
+    "dev": "NODE_OPTIONS='--max-old-space-size=8192' vite build --mode development",
+    "postdev": "NODE_OPTIONS='--max-old-space-size=8192' vite -c vite.scripts.config.js build --mode development",
     "build": "NODE_OPTIONS='--max-old-space-size=8192' vite build --mode production",
     "postbuild": "NODE_OPTIONS='--max-old-space-size=8192' vite -c vite.scripts.config.js build --mode production",
     "prepare": "simple-git-hooks",

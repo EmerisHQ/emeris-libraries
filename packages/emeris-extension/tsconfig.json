@@ -18,7 +18,8 @@
     "typeRoots": ["./node_modules/@types"],
     "types": [ "node", "long", "vite/client", "vitest/globals"],
     "paths": {
-      "@/*": ["src/*"]
+      "@@/*": ["src/*"],
+      "@/*": ["demeris/src/*"]
     },
     "lib": ["es2019", "dom", "dom.iterable", "scripthost", "WebWorker"]
   },
