@@ -10,7 +10,6 @@ import { defineConfig } from 'vitest/config';
 
 import * as pkg from './package.json';
 
-process.env.NODE_ENV;
 // https://vitejs.dev/config/
 export default () => {
   // Do Node stuff here:
