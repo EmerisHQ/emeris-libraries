@@ -5,11 +5,20 @@
       pending.origin.replace(/http(s)?:\/\//, '')
     }}</span>
     <div style="display: flex; flex-direction: row; margin-bottom: 16px; font-size: 13px; line-height: 24px">
-      <div v-on:click="this.switchTab" :class="{'secondary-text': this.tab === 'Data'}" style="display: flex; flex-direction: row; cursor: pointer">
+      <div
+        v-on:click="this.switchTab"
+        :class="{ 'secondary-text': this.tab === 'Data' }"
+        style="display: flex; flex-direction: row; cursor: pointer"
+      >
         Details
         <div class="badge" style="margin-left: 8px">{{ transaction.messages.length }}</div>
       </div>
-      <span v-on:click="this.switchTab" :class="{'secondary-text': this.tab === 'Details'}" style="margin-left: 16px; cursor: pointer">Data</span>
+      <span
+        v-on:click="this.switchTab"
+        :class="{ 'secondary-text': this.tab === 'Details' }"
+        style="margin-left: 16px; cursor: pointer"
+        >Data</span
+      >
     </div>
 
     <template v-if="this.tab === 'Details'">
@@ -32,7 +41,9 @@
     <template v-else-if="this.tab === 'Data'">
       <div class="p-4 rounded-xl" style="background: #171717">
         <h4 class="text-0 mb-3">Custom transaction</h4>
-        <Yaml :json="this.transaction.messages?.length === 1 ? this.transaction.messages[0] : this.transaction.messages" />
+        <Yaml
+          :json="this.transaction.messages?.length === 1 ? this.transaction.messages[0] : this.transaction.messages"
+        />
       </div>
     </template>
 
@@ -49,10 +60,7 @@
       "
     >
       <div v-if="error" style="color: #ff6072; margin-top: 16px; text-align: center">{{ error }}</div>
-      <div
-        class="mt-6 mb-2 flex justify-between"
-        style="font-size: 13px"
-      >
+      <div class="mt-6 mb-2 flex justify-between" style="font-size: 13px">
         <span class="secondary-text">Reference (memo)</span>
         <a
           @click="editMemo = true"
@@ -107,15 +115,15 @@ import Input from '@/components/ui/Input.vue';
 import { GlobalEmerisActionTypes } from '@@/store/extension/action-types';
 import { keyHashfromAddress } from '@/utils/basic';
 import { MutationTypes } from '@@/store/extension/mutation-types';
-import Yaml from "@@/components/Yaml.vue";
+import Yaml from '@@/components/Yaml.vue';
 
 type TxTab = 'Details' | 'Data';
 interface TxReviewData {
-  tab: TxTab,
+  tab: TxTab;
   memo: string;
   editMemo: boolean;
   editFees: boolean;
-  fees: {amount: number, denom: string}[];
+  fees: { amount: number; denom: string }[];
   gas: number;
   error?: string;
 }
@@ -183,7 +191,8 @@ export default defineComponent({
             memo: this.memo,
           });
           const ledgerSigningLink = encodeURI('/ledger/sign');
-          this.$router.push('/ledger?next=' + ledgerSigningLink);
+          window.open('popup.html#/ledger?next=' + ledgerSigningLink);
+          window.close();
           return;
         }
 

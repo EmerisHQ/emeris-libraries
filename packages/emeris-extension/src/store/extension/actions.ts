@@ -88,7 +88,7 @@ export const actions: ActionTree<State, RootState> & Actions = {
   },
   async [ActionTypes.LOAD_SESSION_DATA]({ dispatch, getters }) {
     const lastAccountused = await dispatch(ActionTypes.GET_LAST_ACCOUNT_USED); // also loads the last account to the state
-    const account = getters['getWallet'].find(account => account.accountName === lastAccountused)
+    const account = getters['getWallet'].find(account => account.accountName === lastAccountused) || getters['getWallet'][0]
     await Promise.all(account.keyHashes.map(keyHash =>
       dispatch(
         GlobalActionTypes.API.GET_BALANCES,
