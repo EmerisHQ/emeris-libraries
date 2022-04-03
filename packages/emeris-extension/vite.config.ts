@@ -10,6 +10,7 @@ import { defineConfig } from 'vitest/config';
 
 import * as pkg from './package.json';
 
+process.env.NODE_ENV;
 // https://vitejs.dev/config/
 export default () => {
   // Do Node stuff here:
@@ -18,7 +19,7 @@ export default () => {
   return defineConfig({
     build: {
       chunkSizeWarningLimit: 1000,
-      sourcemap: true,
+      sourcemap: process.env.NODE_ENV == 'development',
       rollupOptions: {
         input: {
           popup: path.resolve(__dirname, './popup.html'),
@@ -53,7 +54,6 @@ export default () => {
         '@@': path.resolve(__dirname, './src'),
       },
       extensions: ['.ts', '.vue', '.js', '.json', '.tsx'],
-      dedupe: ['vue'],
     },
     define: {
       'process.env': process.env,
