@@ -35,7 +35,7 @@ jobs:
         run: |
           cd ../..
           npx lerna bootstrap
-          NODE_OPTIONS=--max_old_space_size=4096 npx lerna run build
+          NODE_OPTIONS=--max_old_space_size=8192 npx lerna run build
         env:
           # Put in secrets
           VUE_APP_EMERIS_PROD_ENDPOINT: https://api.emeris.com/v1
