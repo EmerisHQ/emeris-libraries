@@ -9,13 +9,6 @@ export type State = {
     route: string; // route user dropped off
   };
   whitelistedWebsites: { origin: string }[];
-  ledgerSignData: {
-    fees: {
-      gas: Number,
-      amount: Coin[],
-    },
-    memo: string,
-  }
 };
 export function getDefaultState(): State {
   return {

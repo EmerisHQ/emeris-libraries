@@ -19,11 +19,12 @@ import { defineComponent } from 'vue';
 import { GlobalEmerisActionTypes } from '@@/store/extension/action-types';
 import { keyHashfromAddress } from '@/utils/basic';
 import config from '@@/chain-config';
+import libs from '@@/lib/libraries';
 
 export default defineComponent({
   name: 'Transaction Signing Ledger',
   async mounted() {
-    const ledgerSignData = this.$store.state.extension.ledgerSignData;
+    const ledgerSignData = await this.$store.dispatch(GlobalEmerisActionTypes.GET_LEDGER_SIGN_DATA);
     try {
       const hasWallet = await this.$store.dispatch(GlobalEmerisActionTypes.HAS_WALLET); // checking if the password was set
       const wallet = await this.$store.dispatch(GlobalEmerisActionTypes.GET_WALLET); // never loaded before as root not hit
@@ -45,10 +46,11 @@ export default defineComponent({
         throw new Error('Chain not supported: ' + transaction.chainId);
       }
 
+      const broadcastable = await this.sign(signingWallet, ledgerSignData, chain);
+
       await this.$store.dispatch(GlobalEmerisActionTypes.ACCEPT_TRANSACTION, {
         id: pendings[0].id,
-        ...pendings[0].data,
-        ...ledgerSignData,
+        broadcastable,
       });
 
       this.$router.push('/');
@@ -62,6 +64,18 @@ export default defineComponent({
           encodeURI('/ledger/sign'),
       );
     }
+  },
+  methods: {
+    async sign(signingWallet, ledgerSignData, chainConfig) {
+      const broadcastable = await libs[chainConfig.library].signLedger(
+        signingWallet,
+        chainConfig,
+        ledgerSignData.rawTransaction.msgs, // rawTransaction is already the whole transaction, need to stitch again?
+        ledgerSignData.fees,
+        ledgerSignData.memo,
+      );
+      return broadcastable;
+    },
   },
 });
 </script>

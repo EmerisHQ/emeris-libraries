@@ -36,7 +36,7 @@ export default defineComponent({
   },
   methods: {
     async resume() {
-      const newAccount = await this.$store.dispatch(GlobalActionTypes.GET_NEW_ACCOUNT);
+      const newAccount = await this.$store.dispatch(GlobalEmerisActionTypes.GET_NEW_ACCOUNT);
       if (newAccount.route.startsWith('/ledger')) {
         window.open('popup.html#' + newAccount.route);
       } else {

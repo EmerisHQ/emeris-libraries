@@ -38,14 +38,5 @@ export const mutations: MutationTree<State> & Mutations = {
   },
   [MutationTypes.SET_WHITELISTED_WEBSITES](state: State, whitelistedWebsites: { origin: string }[]) {
     state.whitelistedWebsites = whitelistedWebsites;
-  },
-  [MutationTypes.SET_LEDGER_SIGN_DATA](state: State, ledgerSignData: {
-    fees: {
-      gas: Number,
-      amount: Coin[],
-    },
-    memo: string,
-  }) {
-    state.ledgerSignData = ledgerSignData;
-  },
+  }
 };

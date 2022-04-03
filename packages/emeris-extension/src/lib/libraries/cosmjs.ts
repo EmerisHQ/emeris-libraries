@@ -74,7 +74,12 @@ const helpers = {
   },
   async getRawSignable(account: EmerisAccount, chainConfig: ChainDetails, messages, fee, memo): Promise<any> {
     try {
-      const signer = EmerisSigner.withMnemonic(getHdPath(chainConfig, account), account.accountMnemonic);
+      const signer = account.isLedger
+        ? EmerisSigner.withMnemonic(
+          getHdPath(chainConfig, account),
+          "chunk grain pen dune horror better chase garden vital wet embark fever unlock churn exhaust jaguar owner radar hungry chronic core video milk alley" // rando key as withLedger breaks and we don't need it here
+        )
+        : EmerisSigner.withMnemonic(getHdPath(chainConfig, account), account.accountMnemonic);
       const rawTx = await signer.getRawTX({
         msgs: messages,
         fee,
