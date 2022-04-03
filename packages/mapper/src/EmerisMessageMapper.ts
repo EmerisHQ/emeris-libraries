@@ -1,14 +1,11 @@
-import { EmerisBase, EmerisDEXInfo, EmerisTransactions } from "@emeris/types";
+import { EmerisBase,  EmerisTransactions } from "@emeris/types";
+
 
 export class EmerisMessageMapper  {
     public chain_id: string;
     
     constructor(chain_id:string) {
         this.chain_id = chain_id
-    }
-    static async fromChainProtocol(chainName:string, protocol?:EmerisDEXInfo.DEX) {
-        const { default: MappingClass }: {default: typeof EmerisMessageMapper} = await import('./implementations/' + chainName + '/'+ (protocol?protocol:''));        
-        return new MappingClass(chainName);
     }
     normalizeAmount(amount: EmerisTransactions.AbstractAmount): EmerisBase.Amount {
         return { amount: amount.amount + '', denom: amount.denom };

@@ -10,18 +10,39 @@ import { fromBase64 } from '@cosmjs/encoding'
 import { Int53 } from '@cosmjs/math'
 import { EncodeObject, encodePubkey, makeAuthInfoBytes, TxBodyEncodeObject } from '@cosmjs/proto-signing'
 import { SignMode } from 'cosmjs-types/cosmos/tx/signing/v1beta1/signing'
-import { AminoTypes } from '@cosmjs/stargate'
+import { AminoConverters, AminoTypes } from '@cosmjs/stargate';
 import { SigningStargateClient } from '@cosmjs/stargate'
 import { TxRaw } from 'cosmjs-types/cosmos/tx/v1beta1/tx'
 import { EmerisSigningClient } from './emerisSigningClient'
 import ChainConfig from '@emeris/chain-config';
 import { keyHash } from '../../utils'
-
+import { bech32 } from 'bech32';
+import {
+  createAuthzAminoConverters,
+  createBankAminoConverters,
+  createDistributionAminoConverters,
+  createFreegrantAminoConverters,
+  createGovAminoConverters,
+  createIbcAminoConverters,
+  createStakingAminoConverters,
+} from '@cosmjs/stargate';
 function isAmino(obj: unknown): obj is AminoMsg[] {
   return obj[0].type !== undefined
 }
 function isProto(obj: unknown): obj is EncodeObject[] {
   return obj[0].typeUrl !== undefined
+}
+
+function createAminoTypes(prefix: string): AminoConverters {
+  return {
+    ...createAuthzAminoConverters(),
+    ...createBankAminoConverters(),
+    ...createDistributionAminoConverters(),
+    ...createGovAminoConverters(),
+    ...createStakingAminoConverters(prefix),
+    ...createIbcAminoConverters(),
+    ...createFreegrantAminoConverters(),
+  };
 }
 export default class CosmosSigningClient extends SigningStargateClient implements EmerisSigningClient {
   exposedSigner: OfflineAminoSigner
@@ -37,7 +58,7 @@ export default class CosmosSigningClient extends SigningStargateClient implement
   private async setupSigner() {
     const accountFromSigner = (await this.exposedSigner.getAccounts())[0]
     const signerAddress = accountFromSigner.address
-    const aminoTypes = new AminoTypes()
+    const aminoTypes = new AminoTypes({ ...createAminoTypes(bech32.decode(signerAddress).prefix) });
     const pubkey = encodePubkey(encodeSecp256k1Pubkey(accountFromSigner.pubkey))
     const signMode = SignMode.SIGN_MODE_LEGACY_AMINO_JSON
     const chain_id = await this.chainConfig.getChainId(this.chain_name);
@@ -47,14 +68,12 @@ export default class CosmosSigningClient extends SigningStargateClient implement
     )
     return { aminoTypes, signerAddress, pubkey, signMode, chain_id, sequence_number, account_number }
   }
-  private mapMessages(messages: readonly AminoMsg[] | readonly EncodeObject[]): {
+  private mapMessages(messages: readonly AminoMsg[] | readonly EncodeObject[], aminoTypes:AminoTypes): {
     aminomsgs: readonly AminoMsg[]
     protomsgs: readonly EncodeObject[]
   } {
     let protomsgs: EncodeObject[]
     let aminomsgs: AminoMsg[]
-
-    const aminoTypes = new AminoTypes()
     if (isAmino(messages)) {
       aminomsgs = messages
       protomsgs = messages.map((x) => aminoTypes.fromAmino(x))
@@ -78,7 +97,7 @@ export default class CosmosSigningClient extends SigningStargateClient implement
     const { aminoTypes, signerAddress, pubkey, signMode, chain_id, sequence_number, account_number } =
       await this.setupSigner()
 
-    const { aminomsgs } = this.mapMessages(messages)
+    const { aminomsgs } = this.mapMessages(messages, aminoTypes)
 
     const signDoc = makeSignDocAmino(aminomsgs, fee, chain_id, memo, account_number, sequence_number)
     const { signature, signed } = await this.exposedSigner.signAmino(signerAddress, signDoc)
@@ -104,8 +123,8 @@ export default class CosmosSigningClient extends SigningStargateClient implement
   }
 
   async getFees(messages: readonly AminoMsg[] | EncodeObject[], memo: string): Promise<StdFee> {
-    const { pubkey, signMode, sequence_number } = await this.setupSigner()
-    const { protomsgs } = this.mapMessages(messages)
+    const { pubkey, signMode, sequence_number, aminoTypes } = await this.setupSigner()
+    const { protomsgs } = this.mapMessages(messages, aminoTypes)
 
     const fee = { amount: [], gas: '1000000' }
 
@@ -134,8 +153,8 @@ export default class CosmosSigningClient extends SigningStargateClient implement
   }
 
   async getRawTX(messages: readonly AminoMsg[] | EncodeObject[], fee: StdFee, memo: string): Promise<StdSignDoc> {
-    const { chain_id, sequence_number, account_number } = await this.setupSigner()
-    const { aminomsgs } = this.mapMessages(messages)
+    const { chain_id, sequence_number, account_number, aminoTypes } = await this.setupSigner()
+    const { aminomsgs } = this.mapMessages(messages, aminoTypes)
     return makeSignDocAmino(aminomsgs, fee, chain_id, memo, account_number, sequence_number)
   }
 }

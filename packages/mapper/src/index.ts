@@ -1,7 +1,24 @@
-import { EmerisTransactions } from "@emeris/types";
 import ChainConfig from "@emeris/chain-config";
-import { EmerisMessageMapper } from "./EmerisMessageMapper";
+import { EmerisDEXInfo, EmerisTransactions } from "@emeris/types";
+import cosmos from './implementations/cosmos';
+import cosmosgravity from './implementations/cosmos/gravity';
+import cosmososmosis from './implementations/cosmos/osmosis';
 
+ async function MapperFromChainProtocol(chainName:string, protocol?:EmerisDEXInfo.DEX) {
+    switch (chainName) {
+        case 'cosmos':
+            switch (protocol) {
+                case 'gravity':
+                    return new cosmosgravity(chainName);
+                case 'osmosis':
+                    return new cosmososmosis(chainName);
+                default:
+                    return new cosmos(chainName);
+            }
+        default:
+            return new cosmos(chainName);            
+    }
+}
 export default async function map(req: EmerisTransactions.AbstractTransactionMappingRequest): Promise<unknown> {
     const chainName = req.chainName;
     const signingAddress = req.signingAddress;
@@ -9,7 +26,7 @@ export default async function map(req: EmerisTransactions.AbstractTransactionMap
     const chainType = await chainConfig.getChainType(chainName);
     try {
         const mapped = await Promise.all(req.txs.map(async (tx: EmerisTransactions.AbstractTransaction) => {
-            return (await EmerisMessageMapper.fromChainProtocol(chainType, tx.protocol)).map(tx, signingAddress);
+            return (await MapperFromChainProtocol(chainType, tx.protocol)).map(tx, signingAddress);
         }));
         return mapped.flat();
     } catch (e) {

@@ -1,1 +1,0 @@
-module.exports = require("./demeris/tailwind.config")

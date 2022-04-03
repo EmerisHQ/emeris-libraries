@@ -2,10 +2,10 @@ name: Extension Build
 on: 
   pull_request:
     paths:
-      - "packages/browser-extension/**"
+      - "packages/emeris-extension/**"
 defaults:
   run:
-    working-directory: ./packages/browser-extension/
+    working-directory: ./packages/emeris-extension/
 jobs:
   Extension-Build:
     runs-on: self-hosted
@@ -17,6 +17,7 @@ jobs:
         uses: webfactory/ssh-agent@v0.5.4
         with:
           ssh-private-key: ${{ secrets.DEMERIS_SSH_PRIVATE_KEY }}
+
       - run: git submodule init && git submodule update
           
       - uses: actions/setup-node@v2
@@ -24,17 +25,17 @@ jobs:
           node-version: '16'
           cache: 'yarn'
           cache-dependency-path: |
-            ./packages/browser-extension/yarn.lock
+            ./packages/emeris-extension/yarn.lock
             ./packages/signer/package-lock.json
             ./packages/mapper/package-lock.json
             ./packages/types/package-lock.json
-            ./packages/browser-extension/demeris/package-lock.json
+            ./packages/emeris-extension/demeris/package-lock.json
 
       - name: build artifacts
         run: |
           cd ../..
           npx lerna bootstrap
-          NODE_OPTIONS=--max_old_space_size=4096 npx lerna run build
+          NODE_OPTIONS="--max_old_space_size=8192" npx lerna run build
         env:
           # Put in secrets
           VUE_APP_EMERIS_PROD_ENDPOINT: https://api.emeris.com/v1
@@ -43,7 +44,7 @@ jobs:
       - uses: thedoctor0/zip-release@master
         with:
           type: 'zip'
-          directory: ./packages/browser-extension/dist
+          directory: ./packages/emeris-extension/dist
           filename: release.zip
       - name: Pull request artifacts
         if: ${{ github.event_name == 'pull_request' }}
@@ -53,4 +54,4 @@ jobs:
           repo-token: ${{ github.token }}
           artifacts-branch: artifacts
           artifacts: |
-            ./packages/browser-extension/dist/release.zip
+            ./packages/emeris-extension/dist/release.zip
