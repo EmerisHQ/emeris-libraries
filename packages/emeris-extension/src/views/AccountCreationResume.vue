@@ -3,7 +3,7 @@
     title="Continue creating your account?"
     subtitle="You closed the extension window before finishing your account creation. Do you wish to continue?"
   >
-    <template v-slot:icon>
+    <template #icon>
       <img
         :src="'/images/DotsIcon.svg'"
         style="width: 46px; margin-left: auto; margin-right: auto; margin-bottom: 35px"
@@ -23,9 +23,10 @@
 
 <script lang="ts">
 import { defineComponent } from 'vue';
+
 import Button from '@/components/ui/Button.vue';
-import ConfirmationScreen from '@@/views/ConfirmationScreen.vue';
 import { GlobalEmerisActionTypes } from '@@/store/extension/action-types';
+import ConfirmationScreen from '@@/views/ConfirmationScreen.vue';
 
 export default defineComponent({
   name: 'Account Creation Resume',
