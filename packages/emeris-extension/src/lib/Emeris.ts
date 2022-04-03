@@ -72,7 +72,7 @@ export class Emeris implements IEmeris {
   private initPromise;
 
   constructor(storage: EmerisStorage) {
-    
+
     this.initialized = new Promise((resolve) => {
       this.initPromise = resolve;
     });
@@ -97,7 +97,7 @@ export class Emeris implements IEmeris {
     await browser.storage['session'].set({ wallet: this.wallet });
     await browser.storage['session'].set({ password: this.password });
     await browser.storage['session'].set({ selectedAccount: this.selectedAccount });
-    
+
     await browser.storage['session'].set({ popup: this.popup });
   }
   async unlockWallet(password: string): Promise<EmerisWallet> {
@@ -245,6 +245,8 @@ export class Emeris implements IEmeris {
         return;
       case 'hasWallet':
         return await this.hasWallet();
+      case 'getRawTransaction':
+        return await this.getRawTransaction(message.data);
       case 'signTransaction':
         return await this.getTransactionSignature(message.data, message.data.data.memo);
       case 'setResponse':
@@ -377,13 +379,9 @@ export class Emeris implements IEmeris {
       throw new Error('The requested signing address is not active in the extension');
     }
 
-    const abstractTx = { ...request.data, chainName: request.data.chainId, txs: request.data.messages }; // HACK need to adjust transported data model
-    convertObjectKeys(abstractTx, snakeToCamel);
-    const chainMessages = await TxMapper({
-      ...request.data,
-      chainName: request.data.chainId,
-      txs: request.data.messages,
-    });
+    let abstractTx = { ...request.data, chainName: request.data.chainId, txs: request.data.messages }; // HACK need to adjust transported data model
+    abstractTx = convertObjectKeys(abstractTx, snakeToCamel);
+    const chainMessages = await TxMapper(abstractTx);
     const signable = await libs[chain.library].getRawSignable(
       selectedAccount,
       chain,
@@ -423,12 +421,10 @@ export class Emeris implements IEmeris {
     const selectedAccount = selectedAccountPair.account;
 
     let abstractTx = { ...request.data, chainName: request.data.chainId, txs: request.data.messages }; // HACK need to adjust transported data model
-    console.log(abstractTx);
     abstractTx = convertObjectKeys(abstractTx, snakeToCamel);
-    console.log(abstractTx);
     const chainMessages = await TxMapper(abstractTx);
-    console.log(chainMessages);
     let broadcastable;
+    // currently not used, as we need to sign in the view part of the app
     if (selectedAccount.isLedger) {
       broadcastable = await libs[chain.library].signLedger(
         selectedAccount,
@@ -446,7 +442,6 @@ export class Emeris implements IEmeris {
         memo,
       );
     }
-    console.log(Buffer.from(broadcastable).toString('base64'));
     // converting the broadcastable into a string that can be converted back to a unit8array
     // might need to be adjusted if we have any other broadcastable
     return Buffer.from(broadcastable).toString('hex');
@@ -457,7 +452,7 @@ export class Emeris implements IEmeris {
     return broadcastable;
   }
   async signAndBroadcastTransaction(request: SignAndBroadcastTransactionRequest): Promise<any> {
-    const broadcastable = await this.signTransaction({ ...request, action: 'signTransaction'});
+    const broadcastable = await this.signTransaction({ ...request, action: 'signTransaction' });
 
     if (!broadcastable) throw new Error('User canceled the transactions');
 

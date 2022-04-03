@@ -41,9 +41,7 @@
     <template v-else-if="this.tab === 'Data'">
       <div class="p-4 rounded-xl" style="background: #171717">
         <h4 class="text-0 mb-3">Custom transaction</h4>
-        <Yaml
-          :json="this.transaction.messages?.length === 1 ? this.transaction.messages[0] : this.transaction.messages"
-        />
+        <Yaml v-if="this.rawTransaction" :json="this.rawTransaction" />
       </div>
     </template>
 
@@ -126,6 +124,7 @@ interface TxReviewData {
   fees: { amount: number; denom: string }[];
   gas: number;
   error?: string;
+  rawTransaction?: string;
 }
 export default defineComponent({
   name: 'Transaction Review',
@@ -144,12 +143,13 @@ export default defineComponent({
     editFees: false,
     fees: [
       {
-        amount: 1,
+        amount: 1000,
         denom: 'uatom',
       },
     ],
     gas: 200000,
     error: undefined,
+    rawTransaction: undefined,
   }),
   computed: {
     pending() {
@@ -159,6 +159,23 @@ export default defineComponent({
     },
     transaction() {
       return this.pending?.data;
+    },
+  },
+  watch: {
+    transaction: {
+      immediate: true,
+      async handler(transaction) {
+        if (transaction) {
+          this.rawTransaction = await this.$store.dispatch(GlobalEmerisActionTypes.GET_RAW_TRANSACTION, {
+            fees: {
+              gas: this.gas,
+              amount: this.fees,
+            },
+            memo: this.memo,
+            ...this.transaction,
+          });
+        }
+      },
     },
   },
   methods: {
@@ -183,12 +200,13 @@ export default defineComponent({
         const signingWallet = wallet.find(({ keyHashes }) => keyHashes.includes(signingKeyHash));
         if (!signingWallet) throw new Error('No account stored that can sign the transaction.');
         if (signingWallet.isLedger) {
-          this.$store.commit('extension/' + MutationTypes.SET_LEDGER_SIGN_DATA, {
+          await this.$store.dispatch(GlobalEmerisActionTypes.SET_LEDGER_SIGN_DATA, {
             fees: {
               gas: this.gas,
               amount: this.fees,
             },
             memo: this.memo,
+            rawTransaction: this.rawTransaction,
           });
           const ledgerSigningLink = encodeURI('/ledger/sign');
           window.open('popup.html#/ledger?next=' + ledgerSigningLink);

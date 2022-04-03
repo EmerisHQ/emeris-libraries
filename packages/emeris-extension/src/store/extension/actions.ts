@@ -6,6 +6,7 @@ import { AccountCreateStates, EmerisAccount, EmerisWallet, ExtensionRequest } fr
 import { MutationTypes } from './mutation-types';
 import { GlobalActionTypes } from '@/store';
 import browser from 'webextension-polyfill';
+import { Coin } from '@cosmjs/amino';
 
 type Namespaced<T, N extends string> = {
   [P in keyof T & string as `${N}/${P}`]: T[P];
@@ -253,11 +254,18 @@ export const actions: ActionTree<State, RootState> & Actions = {
     await respond(id, { accept })
     await dispatch(ActionTypes.GET_WHITELISTED_WEBSITES);
   },
-  async [ActionTypes.ACCEPT_TRANSACTION]({ }, { id, ...transaction }) {
-    const broadcastable = await browser.runtime.sendMessage({
-      type: 'fromPopup',
-      data: { action: 'signTransaction', data: { id, ...transaction } },
-    });
+  // TODO potentially refactor and split signing with ledger from signing in the background
+  async [ActionTypes.ACCEPT_TRANSACTION]({ }, { id, broadcastable, ...transaction }) {
+    // when signing with ledger we get the signed message from the view, when signing with a key we get it signing in the background
+    if (!broadcastable) {
+      broadcastable = await browser.runtime.sendMessage({
+        type: 'fromPopup',
+        data: { action: 'signTransaction', data: { id, ...transaction } },
+      });
+    } else {
+      // we need to transport the buffer and it will be converted badly by native methods so we convert to hex
+      broadcastable = Buffer.from(broadcastable).toString('hex')
+    }
     await respond(id, { broadcastable })
   },
   async [ActionTypes.CANCEL_TRANSACTION]({ }, { id }) {
@@ -308,5 +316,26 @@ export const actions: ActionTree<State, RootState> & Actions = {
       return partialAccountCreationStep
     }
     return undefined
+  },
+  async [ActionTypes.SET_LEDGER_SIGN_DATA]({ }, ledgerSignData: {
+    fees: {
+      gas: Number,
+      amount: Coin[],
+    },
+    memo: string,
+    rawTransaction: string
+  }) {
+    localStorage.setItem('ledger_sign_data', JSON.stringify(ledgerSignData))
+  },
+
+  async [ActionTypes.GET_LEDGER_SIGN_DATA]({ }): Promise<{
+    fees: {
+      gas: Number,
+      amount: Coin[],
+    },
+    memo: string,
+    rawTransaction: string
+  }> {
+    return JSON.parse(localStorage.getItem('ledger_sign_data'))
   },
 };

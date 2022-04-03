@@ -20,7 +20,7 @@ import { keyHashfromAddress } from '@/utils/basic';
 import Header from '@@/components/Header.vue';
 import { getHdPath } from '@@/lib/libraries/cosmjs';
 import { stringToPath } from '@cosmjs/crypto';
-import chainConfigs from '../chain-config';
+import chainConfigs from '@@/chain-config';
 
 const interactiveTimeout = 120_000;
 
