@@ -74,7 +74,7 @@
       </div>
       <div style="display: flex; flex-direction: row">
         <Button name="Reject" variant="secondary" style="margin-right: 16px; flex: 1" @click="cancel" />
-        <Button name="Accept" style="flex: 1" @click="accept" />
+        <Button name="Accept" style="flex: 1" @click="accept" :disabled="!rawTransaction" />
       </div>
     </div>
     <Slideout v-bind:open="editMemo" v-on:update:open="editMemo = $event">
