@@ -53,6 +53,7 @@ export default () => {
         '@@': path.resolve(__dirname, './src'),
       },
       extensions: ['.ts', '.vue', '.js', '.json', '.tsx'],
+      dedupe: ['vue'],
     },
     define: {
       'process.env': process.env,
