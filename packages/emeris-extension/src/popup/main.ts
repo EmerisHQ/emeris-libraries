@@ -11,7 +11,7 @@ import router from '@@/router/popup';
 
 import { rootstore } from '../store/index';
 
-import { messages } from '@/locales/en';
+import messages from '@/locales/en.json';
 const i18n = createI18n({
   globalInjection: true,
   legacy: false,
