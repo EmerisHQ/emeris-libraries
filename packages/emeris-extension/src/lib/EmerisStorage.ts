@@ -1,7 +1,8 @@
 import * as CryptoJS from 'crypto-js';
 import browser from 'webextension-polyfill';
+
 import { SaveWalletError, UnlockWalletError } from '@@/errors';
-import { EmerisEncryptedWallet, EmerisAccount, EmerisWallet } from '@@/types';
+import { EmerisAccount, EmerisEncryptedWallet, EmerisWallet } from '@@/types';
 export enum EmerisStorageMode {
   SYNC = 'sync',
   LOCAL = 'local',
@@ -94,7 +95,7 @@ export default class EmerisStorage {
     try {
       const wallet = await this.unlockWallet(password);
       if (account.isLedger) {
-        delete account.accountMnemonic // just to avoid confusion
+        delete account.accountMnemonic; // just to avoid confusion
       }
       wallet.push(account);
       await this.saveWallet(wallet, password);
@@ -137,17 +138,33 @@ export default class EmerisStorage {
     }
   }
   async extensionReset() {
-    await browser.storage[this.storageMode].set({ password: null, wallet: null, lastAccount: null, whitelistedWebsites: null, partialAccountCreationStep: null });
+    await browser.storage[this.storageMode].set({
+      password: null,
+      wallet: null,
+      lastAccount: null,
+      whitelistedWebsites: null,
+      partialAccountCreationStep: null,
+    });
   }
   async setPartialAccountCreationStep(partialAccountCreationStep, password) {
-    const encryptedPartialAccountCreationStep = partialAccountCreationStep ? CryptoJS.AES.encrypt(JSON.stringify(partialAccountCreationStep), password).toString() : null;
-    await browser.storage[this.storageMode].set({ partialAccountCreationStep: encryptedPartialAccountCreationStep });
+    if (password) {
+      const encryptedPartialAccountCreationStep = partialAccountCreationStep
+        ? CryptoJS.AES.encrypt(JSON.stringify(partialAccountCreationStep), password).toString()
+        : null;
+      await browser.storage[this.storageMode].set({ partialAccountCreationStep: encryptedPartialAccountCreationStep });
+    } else {
+      return;
+    }
   }
   async getPartialAccountCreationStep(password) {
     try {
-      const { partialAccountCreationStep: encryptedPartialAccountCreationStep } = await browser.storage[this.storageMode].get('partialAccountCreationStep');
-      if (!encryptedPartialAccountCreationStep) return undefined
-      const partialAccountCreationStep = JSON.parse(CryptoJS.AES.decrypt(encryptedPartialAccountCreationStep, password).toString(CryptoJS.enc.Utf8));
+      const { partialAccountCreationStep: encryptedPartialAccountCreationStep } = await browser.storage[
+        this.storageMode
+      ].get('partialAccountCreationStep');
+      if (!encryptedPartialAccountCreationStep) return undefined;
+      const partialAccountCreationStep = JSON.parse(
+        CryptoJS.AES.decrypt(encryptedPartialAccountCreationStep, password).toString(CryptoJS.enc.Utf8),
+      );
       return partialAccountCreationStep;
     } catch (e) {
       await browser.storage[this.storageMode].set({ partialAccountCreationStep: null }); // prevent a broken state and the information is not critical

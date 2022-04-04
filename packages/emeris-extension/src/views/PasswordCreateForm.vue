@@ -1,5 +1,5 @@
 <template>
-  <div @keyup.enter="submit" class="form">
+  <div class="form" @keyup.enter="submit">
     <span class="secondary-text" style="margin-top: 16px; margin-bottom: 24px"
       >You will need this password to unlock the extension</span
     >
@@ -33,7 +33,7 @@
     <span class="form-info" :class="{ error: password && !digitChar, success: password && digitChar }"
       >At least one digit</span
     >
-    <span class="form-info error" v-if="passwordRepeated && !match">Passwords don’t match</span>
+    <span v-if="passwordRepeated && !match" class="form-info error">Passwords don’t match</span>
     <div
       :style="{
         marginTop: 'auto',
@@ -41,7 +41,7 @@
     >
       <div style="margin-bottom: 32px; font-size: 13px">
         <span class="secondary-text">By continuing you agree to </span
-        ><a href="/" @click.prevent="open('https://emeris.com/terms')" style="opacity: 1">Terms of Use</a
+        ><a href="/" style="opacity: 1" @click.prevent="open('https://emeris.com/terms')">Terms of Use</a
         ><span class="secondary-text"> & </span
         ><a href="" @click.prevent="open('https://emeris.com/privacy')">Privacy Policy</a
         ><span class="secondary-text"> of Emeris wallet</span>
@@ -50,7 +50,11 @@
         name="Continue"
         type="submit"
         :disabled="!length || !upperCaseChar || !symbolChar || !digitChar || !match"
-        @click="submit"
+        @click="
+          () => {
+            submit();
+          }
+        "
       />
     </div>
   </div>
@@ -58,12 +62,13 @@
 
 <script lang="ts">
 import { defineComponent } from 'vue';
-import Button from '@/components/ui/Button.vue';
-import Input from '@/components/ui/Input.vue';
-import Icon from '@/components/ui/Icon.vue';
-import { GlobalEmerisActionTypes } from '@@/store/extension/action-types';
 import { mapState } from 'vuex';
+
+import Button from '@/components/ui/Button.vue';
+import Icon from '@/components/ui/Icon.vue';
+import Input from '@/components/ui/Input.vue';
 import { RootState } from '@@/store';
+import { GlobalEmerisActionTypes } from '@@/store/extension/action-types';
 
 export default defineComponent({
   name: 'Password Create Form',
@@ -90,6 +95,17 @@ export default defineComponent({
   props: {
     onContinue: { type: Function, required: true },
   },
+  watch: {
+    password(password) {
+      this.length = password.length >= 8;
+      this.upperCaseChar = /[A-Z]/g.test(password);
+      this.symbolChar = /[$-/:-?{-~!"^_`[\]@]/g.test(password);
+      this.digitChar = /[0-9]/g.test(password);
+    },
+    passwordRepeated(password) {
+      this.match = password === this.password;
+    },
+  },
   methods: {
     async submit() {
       if (this.length && this.upperCaseChar && this.symbolChar && this.digitChar && this.match) {
@@ -103,17 +119,6 @@ export default defineComponent({
     },
     open(url) {
       window.open(url);
-    },
-  },
-  watch: {
-    password(password) {
-      this.length = password.length >= 8;
-      this.upperCaseChar = /[A-Z]/g.test(password);
-      this.symbolChar = /[$-/:-?{-~!"^_`[\]@]/g.test(password);
-      this.digitChar = /[0-9]/g.test(password);
-    },
-    passwordRepeated(password) {
-      this.match = password === this.password;
     },
   },
 });
