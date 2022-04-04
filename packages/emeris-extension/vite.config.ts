@@ -18,7 +18,7 @@ export default () => {
   return defineConfig({
     build: {
       chunkSizeWarningLimit: 1000,
-      sourcemap: process.env.NODE_ENV == 'development',
+      sourcemap: true,
       rollupOptions: {
         input: {
           popup: path.resolve(__dirname, './popup.html'),
