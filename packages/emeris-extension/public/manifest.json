@@ -43,11 +43,10 @@
       "resources": [
         "/inject-emeris.js",
         "/index.js",
-        "/browser-polyfill.js"
+        "/browser-polyfill.js",
+        "/v4.js"
       ],
-      "matches": [
-        "*://*/*"
-      ]
+      "matches": ["<all_urls>"]
     }
   ],
   "action": {
