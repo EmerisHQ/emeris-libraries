@@ -13,6 +13,7 @@
     "allowJs": true,
     "rootDir": "./src/",
     "sourceMap": true,
+    "inlineSourceMap": true,
     "resolveJsonModule": true,
     "baseUrl": ".",
     "typeRoots": ["./node_modules/@types"],

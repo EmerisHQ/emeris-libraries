@@ -15,6 +15,7 @@ export default () => {
   process.env.VITE_GIT_VERSION = pkg.version;
   process.env.VITE_VERSION = pkg.version;
   return defineConfig({
+    css: { preprocessorOptions: { scss: { charset: false } } },
     build: {
       chunkSizeWarningLimit: 1000,
       sourcemap: process.env.NODE_ENV != 'production' ? 'inline' : false,
@@ -71,6 +72,7 @@ export default () => {
     optimizeDeps: {
       include: ['bip39'],
       esbuildOptions: {
+        sourcemap: process.env.NODE_ENV != 'production' ? 'inline' : false,
         define: {
           global: 'globalThis',
         },
