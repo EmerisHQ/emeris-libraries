@@ -76,16 +76,16 @@ export default defineComponent({
       this.$router.push({ path: '/passwordCreate', query: { returnTo: this.$route.fullPath } });
     }
 
-    const accounts = (await this.$store.dispatch(GlobalEmerisActionTypes.GET_WALLET)) || [];
-
+    // TODO this causes the view to hang
+    // const accounts = (await this.$store.dispatch(GlobalEmerisActionTypes.GET_WALLET)) || [];
     // find an unused account name
-    let name;
-    let i = 1;
-    do {
-      name = 'Account ' + i++;
-    } while (accounts.find(({ accountName }) => accountName === name));
+    // let name;
+    // let i = 1;
+    // do {
+    //   name = 'Account ' + i++;
+    // } while (accounts.find(({ accountName }) => accountName === name));
 
-    this.name = name;
+    // this.name = name;
     this.$store.dispatch(GlobalEmerisActionTypes.SET_NEW_ACCOUNT, {
       ...this.newAccount,
       route: '/accountCreate',
