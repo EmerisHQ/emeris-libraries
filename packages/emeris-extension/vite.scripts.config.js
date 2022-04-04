@@ -17,7 +17,7 @@ export default () => {
   return defineConfig({
     build: {
       chunkSizeWarningLimit: 1000,
-      sourcemap: process.env.NODE_ENV != 'production',
+      sourcemap: process.env.NODE_ENV != 'production' ? 'inline' : false,
       emptyOutDir: false,
       lib: {
         entry: path.resolve(__dirname, 'src/background.ts'),
