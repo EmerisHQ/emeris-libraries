@@ -42,7 +42,6 @@
     {
       "resources": [
         "/inject-emeris.js",
-        "/index.js",
         "/browser-polyfill.js",
         "/v4.js"
       ],

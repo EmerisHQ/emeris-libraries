@@ -80,8 +80,8 @@ export default defineComponent({
 
     // find an unused account name
     let name;
+    let i = 1;
     do {
-      let i = 1;
       name = 'Account ' + i++;
     } while (accounts.find(({ accountName }) => accountName === name));
 
