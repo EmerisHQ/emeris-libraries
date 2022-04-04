@@ -1,5 +1,6 @@
 <template>
-  <div class="page">
+  <Loader v-if="!account.accountMnemonic" />
+  <div class="page" v-else>
     <Header title="Recovery phrase" />
     <span class="secondary-text" style="margin-bottom: 36px"
       >Please write down your {{ account.accountMnemonic.trim().split(' ').length }} words in a safe space manually on
@@ -42,7 +43,9 @@ import Button from '@/components/ui/Button.vue';
 import Header from '@@/components/Header.vue';
 import Checkbox from '@/components/ui/Checkbox.vue';
 import Icon from '@/components/ui/Icon.vue';
+import Loader from '@@/components/Loader.vue';
 import { GlobalEmerisGetterTypes } from '@@/store/extension/getter-types';
+import { GlobalEmerisActionTypes } from '@@/store/extension/action-types';
 
 export default defineComponent({
   computed: {
@@ -61,6 +64,7 @@ export default defineComponent({
     Header,
     Checkbox,
     Icon,
+    Loader,
   },
   methods: {
     submit() {

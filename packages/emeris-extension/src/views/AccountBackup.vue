@@ -8,10 +8,7 @@
       :img="'/images/NeverShare.png'"
       caption="Emeris wallet will never ask you to share your recovery phrase."
     />
-    <ListCard
-      :img="'/images/Secure.png'"
-      caption="Never share your recovery phrase with anyone, store it securily."
-    />
+    <ListCard :img="'/images/Secure.png'" caption="Never share your recovery phrase with anyone, store it securily." />
     <ListCard
       :img="'/images/Backup.png'"
       caption="If you don’t backup your wallet, or loose your recovery phrase, you will not able to recover your walle"
@@ -53,8 +50,8 @@ import ListCard from '@@/components/ListCard.vue';
 import Slideout from '@@/components/Slideout.vue';
 import Header from '@@/components/Header.vue';
 import Checkbox from '@/components/ui/Checkbox.vue';
-import {GlobalEmerisGetterTypes} from "@@/store/extension/getter-types";
-import {AccountCreateStates} from "@@/types";
+import { GlobalEmerisGetterTypes } from '@@/store/extension/getter-types';
+import { AccountCreateStates } from '@@/types';
 
 export default defineComponent({
   name: 'Welcome',
@@ -76,7 +73,7 @@ export default defineComponent({
   },
   methods: {
     onContinue() {
-      if(this.account && this.account.setupState !== AccountCreateStates.COMPLETE) {
+      if (this.account && this.account.setupState !== AccountCreateStates.COMPLETE) {
         const localStorageKey = `nextBackupCheck-${this.account.accountName}`;
         const nowInSeconds = Math.floor(Date.now() / 1000);
         //  display next backup check in an hour
@@ -86,8 +83,7 @@ export default defineComponent({
     },
     goToShowMnemonic() {
       this.$router.push({
-        // if this is a new account we don't force to reenter the password
-        path: this.$route.query.new ? '/backup/show' : '/backup/password',
+        path: '/backup/password',
       });
     },
   },
@@ -96,12 +92,12 @@ export default defineComponent({
 
 <style>
 /* overrides checkbox component label class */
-.leading-copy{
+.leading-copy {
   font-size: 13px;
 }
 /* overrides disabled button component background and text color */
-.text-inactive{
+.text-inactive {
   background-color: #333333;
-  color:#FFFFFF;
+  color: #ffffff;
 }
 </style>
