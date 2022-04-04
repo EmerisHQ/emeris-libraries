@@ -295,7 +295,6 @@ export const actions: ActionTree<State, RootState> & Actions = {
     });
   },
   async [ActionTypes.SET_NEW_ACCOUNT]({ commit }, account: EmerisAccount & { route: string }) {
-    console.log(account);
     commit(MutationTypes.SET_NEW_ACCOUNT, account)
     return await browser.runtime.sendMessage({
       type: 'fromPopup',

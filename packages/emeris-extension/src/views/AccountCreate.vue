@@ -6,7 +6,7 @@
     >
     <div style="margin-bottom: 16px">
       <Input v-model="name" placeholder="Account Name" />
-      <span class="form-info error" v-if="error">Name already in use</span>
+      <span v-if="error" class="form-info error">Name already in use</span>
     </div>
     <div
       :style="{
@@ -22,7 +22,7 @@
         />
         <div>
           <span class="secondary-text">By continuing you agree to </span
-          ><a href="/" @click.prevent="open('https://emeris.com/terms')" style="opacity: 1">Terms of Use</a
+          ><a href="/" style="opacity: 1" @click.prevent="open('https://emeris.com/terms')">Terms of Use</a
           ><span class="secondary-text"> & </span
           ><a href="" @click.prevent="open('https://emeris.com/privacy')">Privacy Policy</a
           ><span class="secondary-text"> of Emeris wallet</span>
@@ -34,18 +34,18 @@
 </template>
 
 <script lang="ts">
+import * as bip39 from 'bip39';
 import { defineComponent } from 'vue';
 import { mapState } from 'vuex';
-import * as bip39 from 'bip39';
-import wordlist from '@@/wordlists/english.json';
-import Input from '@/components/ui/Input.vue';
-import Header from '@@/components/Header.vue';
+
 import Button from '@/components/ui/Button.vue';
 import Icon from '@/components/ui/Icon.vue';
-
-import { GlobalEmerisActionTypes } from '@@/store/extension/action-types';
+import Input from '@/components/ui/Input.vue';
+import Header from '@@/components/Header.vue';
 import { RootState } from '@@/store';
+import { GlobalEmerisActionTypes } from '@@/store/extension/action-types';
 import { AccountCreateStates } from '@@/types';
+import wordlist from '@@/wordlists/english.json';
 
 export default defineComponent({
   name: 'Create Account',
@@ -96,8 +96,7 @@ export default defineComponent({
       if (this.error) return;
 
       try {
-        const aMnemonic = bip39.generateMnemonic(256,null,wordlist)
-        console.log(aMnemonic);
+        const aMnemonic = bip39.generateMnemonic(256, null, wordlist);
         await this.$store.dispatch(GlobalEmerisActionTypes.CREATE_ACCOUNT, {
           account: {
             accountName: this.name,
