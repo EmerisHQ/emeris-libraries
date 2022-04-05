@@ -79,7 +79,7 @@ export default class CosmosAminoMessageMapper extends EmerisMessageMapper {
     }
     claim(transaction: EmerisTransactions.AbstractClaimRewardsTransactionData, signing_address: string) {
         return transaction.rewards.map((transaction) => ({
-            type: "cosmos-sdk/MsgWithdrawDelegatorReward",
+            type: "cosmos-sdk/MsgWithdrawDelegationReward",
             value: {
                 delegator_address: signing_address,
                 validator_address: transaction.validator_address
