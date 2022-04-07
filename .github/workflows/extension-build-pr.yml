@@ -52,6 +52,7 @@ jobs:
         with:
           commit: ${{ github.event.pull_request.head.sha }}
           repo-token: ${{ github.token }}
-          artifacts-branch: artifacts
+          artifacts-token: ${{ secrets.EMERIS_EXTENSION_ARTIFACTS_DEPLOY_KEY }}
+          artifacts-repo: EmerisHQ/emeris-extension-artifacts
           artifacts: |
             ./packages/emeris-extension/dist/release.zip
