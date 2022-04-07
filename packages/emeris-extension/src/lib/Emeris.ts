@@ -1,31 +1,32 @@
-import { IEmeris } from '@@/types/emeris';
-import { EmerisWallet } from '@@/types';
-
+import { AminoMsg } from '@cosmjs/amino';
+import TxMapper from '@emeris/mapper';
 // @ts-ignore
 import adapter from '@vespaiach/axios-fetch-adapter';
-import { v4 as uuidv4 } from 'uuid';
 import axios from 'axios';
-import EmerisStorage from './EmerisStorage';
-import libs from './libraries';
+import { v4 as uuidv4 } from 'uuid';
 import browser from 'webextension-polyfill';
+
 import { UnlockWalletError } from '@@/errors';
-import { AminoMsg } from '@cosmjs/amino';
+import { EmerisWallet } from '@@/types';
 import {
-  GetAddressRequest,
-  GetPublicKeyRequest,
-  GetAccountNameRequest,
-  IsHWWalletRequest,
-  SignTransactionRequest,
-  SignAndBroadcastTransactionRequest,
-  SupportedChainsRequest,
   ApproveOriginRequest,
   ExtensionRequest,
   ExtensionResponse,
-  RoutedInternalRequest,
+  GetAccountNameRequest,
+  GetAddressRequest,
+  GetPublicKeyRequest,
   GetRawTransactionRequest,
+  IsHWWalletRequest,
+  RoutedInternalRequest,
+  SignAndBroadcastTransactionRequest,
+  SignTransactionRequest,
+  SupportedChainsRequest,
 } from '@@/types/api';
-import { AbstractTxResult } from '@@/types/transactions'; // TODO
-import TxMapper from '@emeris/mapper';
+import { IEmeris } from '@@/types/emeris';
+
+// TODO
+import EmerisStorage from './EmerisStorage';
+import libs from './libraries';
 
 // HACK extension and mapper expect different formats, we need to decide and adjust the formats to one
 const convertObjectKeys = (obj, doX) => {
@@ -35,25 +36,20 @@ const convertObjectKeys = (obj, doX) => {
   } else {
     newObj = {};
   }
-  Object.keys(obj).forEach(key => {
+  Object.keys(obj).forEach((key) => {
     if (typeof obj[key] === 'object' && obj[key] !== null) {
-      newObj[doX(key)] = convertObjectKeys(obj[key], doX)
+      newObj[doX(key)] = convertObjectKeys(obj[key], doX);
+    } else {
+      newObj[doX(key)] = obj[key];
     }
-    else {
-      newObj[doX(key)] = obj[key]
-    }
-  })
+  });
   return newObj;
-}
-const snakeToCamel = str =>
-  str.replace(/([-_][a-z])/g, group =>
-    group
-      .toUpperCase()
-      .replace('-', '')
-      .replace('_', '')
-  );
+};
+const snakeToCamel = (str) =>
+  str.replace(/([-_][a-z])/g, (group) => group.toUpperCase().replace('-', '').replace('_', ''));
 
 import { keyHashfromAddress } from '@/utils/basic';
+
 import chainConfig from '../chain-config';
 export class Emeris implements IEmeris {
   public loaded: boolean;
@@ -72,7 +68,6 @@ export class Emeris implements IEmeris {
   private initPromise;
 
   constructor(storage: EmerisStorage) {
-
     this.initialized = new Promise((resolve) => {
       this.initPromise = resolve;
     });
@@ -463,7 +458,8 @@ export class Emeris implements IEmeris {
         tx_bytes: Buffer.from(broadcastable, 'hex').toString('base64'),
         // @ts-ignore doesn't accept SignAndBroadcastTransactionRequest inheriting from SignTransactionRequest
         address: request.data.signingAddress,
-      }, { adapter }
+      },
+      { adapter },
     );
 
     return response;

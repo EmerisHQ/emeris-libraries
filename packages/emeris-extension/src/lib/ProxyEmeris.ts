@@ -1,23 +1,23 @@
-import { IEmeris } from '@@/types/emeris';
 import { EmerisBase as Base } from '@emeris/types';
+import { EmerisTransactions } from '@emeris/types';
+import { v4 as uuidv4 } from 'uuid';
+
 import {
+  ApproveOriginRequest,
   ExtensionRequest,
   ExtensionResponse,
+  GetAccountNameRequest,
   GetAddressRequest,
   GetPublicKeyRequest,
   HasWalletRequest,
   IsHWWalletRequest,
   RoutedExtensionRequest,
+  SignAndBroadcastTransactionRequest,
   SignTransactionRequest,
   SupportedChainsRequest,
-  ApproveOriginRequest,
-  SignAndBroadcastTransactionRequest,
-  GetAccountNameRequest,
-  GetRawTransactionRequest,
 } from '@@/types/api';
-import { v4 as uuidv4 } from 'uuid';
-import { AbstractTx, AbstractTxResult } from '@@/types/transactions';
-import { EmerisTransactions } from '@emeris/types';
+import { IEmeris } from '@@/types/emeris';
+import { AbstractTxResult } from '@@/types/transactions';
 
 export class ProxyEmeris implements IEmeris {
   loaded: boolean;
