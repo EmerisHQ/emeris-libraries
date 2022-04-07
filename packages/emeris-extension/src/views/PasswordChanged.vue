@@ -5,6 +5,7 @@
       :src="'/images/CheckIcon.svg'"
     />
     <h1 style="margin-bottom: 20px" name>Password changed
+
       
     </h1>
     <div class="secondary-text" style="text-align: center; margin-bottom: 24px">
