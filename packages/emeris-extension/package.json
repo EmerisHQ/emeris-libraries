@@ -10,7 +10,8 @@
     "postbuild": "NODE_OPTIONS='--max-old-space-size=8192' vite -c vite.scripts.config.js build --mode production",
     "prepare": "simple-git-hooks",
     "typecheck": "vue-tsc --noEmit",
-    "postinstall": "git submodule init"
+    "postinstall": "git submodule init",
+    "format": "eslint --fix src && prettier --write ."
   },
   "dependencies": {
     "@cosmjs/amino": "0.28.0",
