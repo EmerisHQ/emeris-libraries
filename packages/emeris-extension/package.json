@@ -11,6 +11,7 @@
     "prepare": "simple-git-hooks",
     "typecheck": "vue-tsc --noEmit",
     "postinstall": "git submodule init",
+    "lint-staged": "lint-staged"
   },
   "dependencies": {
     "@cosmjs/amino": "0.28.0",
@@ -138,10 +139,10 @@
   },
   "homepage": "https://github.com/tendermint/vue",
   "lint-staged": {
-    "*.{scss,css,html,json,md}": [
+    "*.{scss,css,html,json,md,vue}": [
       "prettier --write"
     ],
-    "*.{js,ts,tsx,vue}": [
+    "*.{js,ts,tsx}": [
       "eslint --fix"
     ]
   },
