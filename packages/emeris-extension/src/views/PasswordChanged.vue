@@ -15,7 +15,7 @@
       class="buttons"
     >
       <router-link to="/security">
-        <Button name="Ok" />
+        <Button name="Done" />
       </router-link>
     </div>
   </div>

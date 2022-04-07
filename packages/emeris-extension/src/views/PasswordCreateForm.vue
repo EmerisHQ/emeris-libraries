@@ -1,7 +1,7 @@
 <template>
   <div class="form" @keyup.enter="submit">
     <span class="secondary-text" style="margin-top: 16px; margin-bottom: 24px"
-      >You will need this password to unlock the extension</span
+      >You will need this password to unlock your wallet.</span
     >
     <div
       style="margin-bottom: 16px"
@@ -10,7 +10,11 @@
         success: password && length && upperCaseChar && symbolChar && digitChar,
       }"
     >
-      <Input v-model="password" placeholder="Enter a Password" type="password" />
+      <Input
+        v-model="password"
+        :placeholder="passwordChange ? 'Enter a new password' : 'Enter a password'"
+        type="password"
+      />
     </div>
     <div
       style="margin-bottom: 24px"
@@ -19,7 +23,11 @@
         success: passwordRepeated && match,
       }"
     >
-      <Input v-model="passwordRepeated" placeholder="Confirm Password" type="password" />
+      <Input
+        v-model="passwordRepeated"
+        :placeholder="passwordChange ? 'Confirm new password' : 'Confirm password'"
+        type="password"
+      />
     </div>
     <span class="form-info" :class="{ error: password && !length, success: password && length }"
       >Minimum 8 characters</span
@@ -47,7 +55,7 @@
         ><span class="secondary-text"> of Emeris wallet</span>
       </div>
       <Button
-        name="Continue"
+        :name="passwordChange ? 'Change password' : 'Continue'"
         type="submit"
         :disabled="!length || !upperCaseChar || !symbolChar || !digitChar || !match"
         @click="
@@ -94,6 +102,7 @@ export default defineComponent({
   },
   props: {
     onContinue: { type: Function, required: true },
+    passwordChange: { type: Boolean, required: false, default: false },
   },
   watch: {
     password(password) {

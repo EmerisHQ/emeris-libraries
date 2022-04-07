@@ -1,10 +1,12 @@
 <template>
   <div class="page">
-    <Header title="Password" />
+    <Header title="Current password" />
     <div @keyup.enter="submit" class="form">
-      <span class="secondary-text" style="margin-top: 16px; margin-bottom: 24px">Enter your password</span>
+      <span class="secondary-text" style="margin-top: 16px; margin-bottom: 24px"
+        >Enter your current password to proceed.</span
+      >
       <div style="margin-bottom: 16px">
-        <Input v-model="password" placeholder="Password" type="password" />
+        <Input v-model="password" placeholder="Enter current password" type="password" />
         <span class="form-info error" v-if="error">The password is wrong</span>
       </div>
       <div
