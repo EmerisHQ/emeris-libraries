@@ -4,9 +4,7 @@
       style="margin-top: 156px; margin-bottom: 28px; margin-left: auto; margin-right: auto; width: 46px"
       :src="'/images/CheckIcon.svg'"
     />
-    <h1 style="margin-bottom: 20px" name>Password changed
-      
-    </h1>
+    <h1 style="margin-bottom: 20px" name>Password changed</h1>
     <div class="secondary-text" style="text-align: center; margin-bottom: 24px">
       You have successfully changed your password.
     </div>
