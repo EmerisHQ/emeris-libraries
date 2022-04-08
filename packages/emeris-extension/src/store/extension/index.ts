@@ -1,11 +1,11 @@
 import { CommitOptions, DispatchOptions, Module, Store as VuexStore } from 'vuex';
 
-import { getDefaultState } from './state';
+import { RootState } from '..';
+import { actions, GlobalActions } from './actions';
 import { Getters, getters } from './getters';
 import { Mutations, mutations } from './mutations';
-import { actions, GlobalActions } from './actions';
-import { RootState } from '..';
 import type { State } from './state';
+import { getDefaultState } from './state';
 
 export { State };
 

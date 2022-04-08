@@ -1,8 +1,9 @@
+import { MutationTree } from 'vuex';
+
 import { EmerisAccount, EmerisWallet, ExtensionRequest } from '@@/types/index';
+
 import { MutationTypes } from './mutation-types';
 import { State } from './state';
-import { MutationTree } from 'vuex';
-import { Coin } from '@cosmjs/amino';
 
 export type Mutations<S = State> = {
   [MutationTypes.ADD_PENDING](state: S, payload: ExtensionRequest[]): void;
@@ -38,5 +39,5 @@ export const mutations: MutationTree<State> & Mutations = {
   },
   [MutationTypes.SET_WHITELISTED_WEBSITES](state: State, whitelistedWebsites: { origin: string }[]) {
     state.whitelistedWebsites = whitelistedWebsites;
-  }
+  },
 };
