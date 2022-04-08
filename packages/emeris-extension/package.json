@@ -27,8 +27,8 @@
     "@cosmjs/stream": "0.28.0",
     "@cosmjs/tendermint-rpc": "0.28.0",
     "@cosmjs/utils": "0.28.0",
-    "@emeris/chain-config": "^0.0.7",
-    "@emeris/mapper": "^0.0.15",
+    "@emeris/chain-config": "^0.0.11",
+    "@emeris/mapper": "^0.0.26",
     "@emeris/signer": "^0.0.27",
     "@ledgerhq/hw-transport-webhid": "^6.11.2",
     "@ledgerhq/hw-transport-webusb": "^6.11.2",
@@ -81,7 +81,8 @@
     "xstate": "^4.30.6"
   },
   "devDependencies": {
-    "@emeris/types": "^0.0.27",
+    "@esbuild-plugins/node-modules-polyfill": "^0.1.4",
+    "@emeris/types": "^0.0.33",
     "@esbuild-plugins/node-globals-polyfill": "^0.1.1",
     "@esbuild-plugins/node-modules-polyfill": "^0.1.4",
     "@intlify/vite-plugin-vue-i18n": "^3.3.1",
