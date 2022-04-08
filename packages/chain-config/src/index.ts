@@ -1,8 +1,6 @@
 import { EmerisAPI, EmerisBase } from "@emeris/types";
-import axios from 'axios';
-// @ts-ignore
-import adapter from '@vespaiach/axios-fetch-adapter';
-import { AxiosResponse } from 'axios';
+import 'isomorphic-fetch';
+
 
 export default class ChainConfig {
 	private endpoint:string;
@@ -11,8 +9,8 @@ export default class ChainConfig {
 	}
 	async getChains(): Promise<EmerisAPI.Chain[]> {
 		try {			
-			const chainsResult:AxiosResponse<EmerisAPI.ChainsResponse> = await axios.get(this.endpoint+'/chains', { adapter });
-			const chains = await Promise.all(chainsResult.data.chains.map(async (chain) => await this.getChain(chain.chain_name)));
+			const chainsResult:EmerisAPI.ChainsResponse = (await (await fetch(this.endpoint+'/chains')).json());
+			const chains = await Promise.all(chainsResult.chains.map(async (chain) => await this.getChain(chain.chain_name)));
 			return chains;
 		}catch(e) {
 			throw new Error("Could not get chains information: "+ e);
@@ -20,8 +18,8 @@ export default class ChainConfig {
 	}
 	async getChain(chain_name:string):Promise<EmerisAPI.Chain>  {
 		try {			
-			const result:AxiosResponse<EmerisAPI.ChainResponse> = await axios.get(this.endpoint+'/chain/'+chain_name, { adapter });
-			return result.data?.chain ?? null;
+			const result:EmerisAPI.ChainResponse = (await (await fetch(this.endpoint+'/chain/'+chain_name)).json());
+			return result.chain ?? null;
 		}catch(e) {
 			throw new Error("Could not get chain information: "+ e);
 		}
@@ -60,18 +58,25 @@ export default class ChainConfig {
 	}
 	async getNumbers(chain_name:string, key_hash: string): Promise<EmerisAPI.SeqNumber> {
 		try {
-			const result: AxiosResponse<{ numbers: EmerisAPI.SeqNumber }> = await axios.get(
-				this.endpoint+ '/chain/' + chain_name + '/numbers/' + key_hash, { adapter }
-			)
-			return result.data?.numbers ?? null
+			const result:{ numbers: EmerisAPI.SeqNumber } = (await (await fetch(
+				this.endpoint+ '/chain/' + chain_name + '/numbers/' + key_hash)).json());
+			return result.numbers ?? null
 		} catch (e) {
 			throw new Error('Could not get account numbers' + e);
 		}
 	}
 	async getFee(tx: Uint8Array, chain_name: string): Promise<unknown> {
 		try {
-			const result: AxiosResponse<unknown> = await axios.post(this.endpoint+ '/tx/' + chain_name + '/simulate', { tx_bytes: Buffer.from(tx).toString('base64') }, { adapter });
-			return result.data ?? null;
+			const result:unknown = (await (await fetch(this.endpoint+ '/tx/' + chain_name + '/simulate', 
+			{
+				method: 'POST',
+				headers: {
+					'Accept': 'application/json',
+					'Content-Type': 'application/json'
+				},
+				body: JSON.stringify({ tx_bytes: Buffer.from(tx).toString('base64') })
+			})).json());
+			return result ?? null;
 		} catch (e) {
 			throw "Could not get account numbers";
 		}
