@@ -52,7 +52,7 @@ jobs:
         uses: gavv/pull-request-artifacts@v1.0.0
         with:
           commit: ${{ github.event.pull_request.head.sha }}
-          repo-token: ${{ secrets.GITHUB_TOKEN }}
+          repo-token: ${{ secrets.EMERIS_LIBRARIES_DEPLOY_KEY }}
           artifacts-token: ${{ secrets.EMERIS_EXTENSION_ARTIFACTS_DEPLOY_KEY }}
           artifacts-repo: EmerisHQ/emeris-extension-artifacts
           artifacts: |
