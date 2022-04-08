@@ -10,7 +10,8 @@
     "postbuild": "NODE_OPTIONS='--max-old-space-size=8192' vite -c vite.scripts.config.js build --mode production",
     "prepare": "simple-git-hooks",
     "typecheck": "vue-tsc --noEmit",
-    "postinstall": "git submodule init"
+    "postinstall": "git submodule init",
+    "format": "eslint --fix src && prettier --write ."
   },
   "dependencies": {
     "@cosmjs/amino": "0.28.0",
@@ -82,6 +83,7 @@
     "@esbuild-plugins/node-modules-polyfill": "^0.1.4",
     "@emeris/types": "^0.0.33",
     "@esbuild-plugins/node-globals-polyfill": "^0.1.1",
+    "@esbuild-plugins/node-modules-polyfill": "^0.1.4",
     "@intlify/vite-plugin-vue-i18n": "^3.3.1",
     "@keplr-wallet/types": "0.8.8",
     "@pinia/testing": "^0.0.10",
@@ -130,6 +132,7 @@
     "vite-plugin-dynamic-import": "^0.1.1",
     "vite-plugin-env-compatible": "^1.1.1",
     "vite-plugin-eslint": "^1.3.0",
+    "vite-plugin-static-copy": "^0.4.2",
     "vitest": "^0.7.10",
     "vue-tsc": "^0.33.7"
   },

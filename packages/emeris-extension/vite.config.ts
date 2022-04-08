@@ -7,6 +7,7 @@ import * as path from 'path';
 import { dynamicImport } from 'vite-plugin-dynamic-import';
 import envCompatible from 'vite-plugin-env-compatible';
 import { defineConfig } from 'vitest/config';
+import { viteStaticCopy } from 'vite-plugin-static-copy'
 
 import * as pkg from './package.json';
 
@@ -43,6 +44,12 @@ export default () => {
       nodeResolve(),
       dynamicImport(),
       envCompatible(),
+      viteStaticCopy({
+        targets: [
+
+          { src: './demeris/public/assets/fonts', dest: 'assets' },
+        ]
+      })
     ],
     resolve: {
       preserveSymlinks: true,
