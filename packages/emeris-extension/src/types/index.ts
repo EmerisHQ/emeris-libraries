@@ -1,4 +1,5 @@
 import EmerisMessageMapper from '@emeris/mapper';
+
 import { ClientLibrary } from './libraries';
 
 export type EmerisEncryptedWallet = {
@@ -15,7 +16,7 @@ export type EmerisAccount = {
   keyHash?: string; // Ledger
   isLedger: boolean;
   setupState: AccountCreateStates;
-  hdPath?: [account: string, change: string, addressIndex: string] // TODO force setting or default later in code?
+  hdPath?: [account: string, change: string, addressIndex: string]; // TODO force setting or default later in code?
 };
 export type EmerisWallet = EmerisAccount[];
 

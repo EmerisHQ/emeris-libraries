@@ -1,6 +1,8 @@
-import { EmerisAccount } from '.';
 import { EmerisTransactions } from '@emeris/types';
+
 import * as Base from '@/types/base';
+
+import { EmerisAccount } from '.';
 
 export interface Request {
   id?: string;
@@ -15,10 +17,10 @@ export type GetRawTransactionRequest = Request & {
   action: 'getRawTransaction';
   data: EmerisTransactions.TransactionSignRequest & {
     fee: {
-      gas: string,
-      amount: Base.Amount[]
-    }
-    memo?: string
+      gas: string;
+      amount: Base.Amount[];
+    };
+    memo?: string;
   };
 };
 export type SignTransactionRequest = Request & {
@@ -166,7 +168,7 @@ export type SetResponseRequest = Request & {
 export type SetPartialAccountCreationStepRequest = Request & {
   action: 'setPartialAccountCreationStep';
   data: EmerisAccount & {
-    path: string
+    path: string;
   };
 };
 export type GetPartialAccountCreationStepRequest = Request & {

@@ -1,7 +1,7 @@
-import { createStore, Store } from 'vuex';
 import { InjectionKey } from 'vue';
+import { createStore, Store } from 'vuex';
 
-import { ExtensionStore, State as ExtensionState, store as extension } from '@@/store/extension';
+import init from '@/store/config';
 import {
   DemerisStore as DemerisStoreAPI,
   module as moduleAPI,
@@ -20,7 +20,7 @@ import {
   namespace as namespaceUSER,
   State as StateUSER,
 } from '@/store/demeris-user';
-import init from '@/store/config';
+import { ExtensionStore, State as ExtensionState, store as extension } from '@@/store/extension';
 
 export type RootState = {
   extension: ExtensionState;

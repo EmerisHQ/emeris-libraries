@@ -1,9 +1,6 @@
 <template>
   <div class="page">
-    <img
-      style="margin-top: 156px; margin-left: auto; margin-right: auto; width: 46px"
-      :src="'/images/CheckIcon.svg'"
-    />
+    <img style="margin-top: 156px; margin-left: auto; margin-right: auto; width: 46px" :src="'/images/CheckIcon.svg'" />
     <h1 style="margin-bottom: 20px" name>You’re all set</h1>
     <div class="secondary-text" style="text-align: center; margin-bottom: 24px">
       You have successfully created and backed up your new wallet. Enjoy exploring the new era of DeFi with Emeris.

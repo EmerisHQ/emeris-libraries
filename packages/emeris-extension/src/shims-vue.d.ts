@@ -14,5 +14,5 @@ export type EmerisWindow = {
 };
 declare global {
   // eslint-disable-next-line @typescript-eslint/no-empty-interface
-  interface Window extends EmerisWindow { }
+  interface Window extends EmerisWindow {}
 }

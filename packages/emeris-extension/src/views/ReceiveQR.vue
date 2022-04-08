@@ -63,7 +63,9 @@ export default {
   watch: {
     async asset(asset) {
       if (!asset) return;
-      this.recipientAddress = await this.$store.dispatch(GlobalEmerisActionTypes.GET_ADDRESS, { chainId: asset.on_chain });
+      this.recipientAddress = await this.$store.dispatch(GlobalEmerisActionTypes.GET_ADDRESS, {
+        chainId: asset.on_chain,
+      });
     },
     async assetsList(assetsList) {
       this.displayNameAddedList = await Promise.all(

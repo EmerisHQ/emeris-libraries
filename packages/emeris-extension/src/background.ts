@@ -2,7 +2,6 @@ import browser from 'webextension-polyfill';
 
 import { Emeris } from './lib/Emeris';
 import EmerisStorage, { EmerisStorageMode } from './lib/EmerisStorage';
-declare let self: ServiceWorkerGlobalScope;
 
 const storage = new EmerisStorage(EmerisStorageMode.LOCAL);
 const emeris = new Emeris(storage);

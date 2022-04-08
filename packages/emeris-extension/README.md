@@ -20,14 +20,14 @@ Replace the signing address with one you have in the extension.
 ```
 window.emeris.enable()
 window.emeris.signTransaction({
-    chainId: 'cosmos-hub', 
-    signingAddress: 'cosmos1n97vrj8t342jk5hn9ng0dyz352x94dt98x48ux', 
+    chainId: 'cosmos-hub',
+    signingAddress: 'cosmos1n97vrj8t342jk5hn9ng0dyz352x94dt98x48ux',
     messages: [
-        { 
-            type: 'transfer', 
+        {
+            type: 'transfer',
             data: {
-                amount: { denom: 'uatom', amount: 1 }, 
-                chain_name: 'cosmos-hub', 
+                amount: { denom: 'uatom', amount: 1 },
+                chain_name: 'cosmos-hub',
                 to_address: 'cosmos1n97vrj8t342jk5hn9ng0dyz352x94dt98x48ux',
                 from_address: 'cosmos1n97vrj8t342jk5hn9ng0dyz352x94dt98x48ux'
             }

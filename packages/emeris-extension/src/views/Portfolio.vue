@@ -57,11 +57,12 @@
   </div>
   <Slideout v-bind:open="showMnemonicBackup" v-on:update:open="() => {}">
     <h1 style="margin-bottom: 16px">Back up your account</h1>
-    <div style="margin-bottom: 24px" class="checkbox inline-flex items-start p-4 rounded-xl border border-solid border-border cursor-pointer">
+    <div
+      style="margin-bottom: 24px"
+      class="checkbox inline-flex items-start p-4 rounded-xl border border-solid border-border cursor-pointer"
+    >
       <img class="mt-1 ml-0.5" :src="'/images/BackupIcon.svg'" />
-      <p class="checkbox__label ml-4 -text-1 leading-copy">
-        Your funds are not secured, please backup your wallet.
-      </p>
+      <p class="checkbox__label ml-4 -text-1 leading-copy">Your funds are not secured, please backup your wallet.</p>
     </div>
     <div class="buttons">
       <Button name="Continue" @click="() => $router.push('/backup/password')" />
@@ -82,7 +83,7 @@ import { GlobalGetterTypes } from '@/store';
 import { GlobalEmerisGetterTypes } from '@@/store/extension/getter-types';
 import { AccountCreateStates } from '@@/types/index';
 
-const CHECK_INTERVAL_SECONDS = 60 * 60 * 24;  //  1 day
+const CHECK_INTERVAL_SECONDS = 60 * 60 * 24; //  1 day
 
 export default defineComponent({
   name: 'Portfolio',
@@ -104,7 +105,7 @@ export default defineComponent({
       const nowInSeconds = Math.floor(Date.now() / 1000);
       window.localStorage.setItem(localStorageKey, `${nowInSeconds + CHECK_INTERVAL_SECONDS}`);
       this.$data.showMnemonicBackup = false;
-    }
+    },
   },
   data: () => ({
     showMnemonicBackup: false,
@@ -112,18 +113,18 @@ export default defineComponent({
   watch: {
     account: {
       handler(account) {
-        if(account.setupState === AccountCreateStates.COMPLETE) {
+        if (account.setupState === AccountCreateStates.COMPLETE) {
           this.$data.showMnemonicBackup = false;
         }
-      }
-    }
+      },
+    },
   },
   mounted() {
-    if(this.account && this.account.setupState !== AccountCreateStates.COMPLETE) {
+    if (this.account && this.account.setupState !== AccountCreateStates.COMPLETE) {
       const localStorageKey = `nextBackupCheck-${this.account.accountName}`;
       const nextCheckTimestamp = Number(window.localStorage.getItem(localStorageKey));
       const nowInSeconds = Math.floor(Date.now() / 1000);
-      if(isNaN(nextCheckTimestamp) || nowInSeconds - nextCheckTimestamp > 0) {
+      if (isNaN(nextCheckTimestamp) || nowInSeconds - nextCheckTimestamp > 0) {
         this.$data.showMnemonicBackup = true;
       }
     }
@@ -134,7 +135,7 @@ export default defineComponent({
     AssetsTable,
     TotalPrice,
     Loader,
-    Slideout
+    Slideout,
   },
 });
 </script>
