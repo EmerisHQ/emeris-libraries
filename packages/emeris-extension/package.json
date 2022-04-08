@@ -11,7 +11,8 @@
     "prepare": "simple-git-hooks",
     "typecheck": "vue-tsc --noEmit",
     "postinstall": "git submodule init",
-    "format": "eslint --fix src && prettier --write ."
+    "lint-staged": "lint-staged",
+    "lint": "eslint -c .eslintrc.js --fix  'src/**/*.{ts,js,tsx,vue}'"
   },
   "dependencies": {
     "@cosmjs/amino": "0.28.0",
