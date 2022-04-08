@@ -8,7 +8,6 @@ export default class GravityAminoMessageMapper extends CosmosAminoMessageMapper 
     swap(transaction: EmerisTransactions.AbstractSwapTransactionData, signing_address: string) {
         const pool = transaction.pool as unknown as Pool;
         const offerCoinFee = (new BigNumber(transaction.from.amount)).multipliedBy(0.0015)
-        BigNumber.set({ DECIMAL_PLACES: 0 });
         const price = [transaction.from, transaction.to].sort((a, b) => {
             if (a.denom < b.denom) return -1;
             if (a.denom > b.denom) return 1;
@@ -18,11 +17,11 @@ export default class GravityAminoMessageMapper extends CosmosAminoMessageMapper 
             type: "liquidity/MsgSwapWithinBatch",
             value: {
                 swap_requester_address: signing_address,
-                pool_id: pool.id,
-                swap_type_id: pool.typeId,
+                pool_id: parseInt(pool.id as unknown as  string),
+                swap_type_id: (pool as any).type_id,
                 offer_coin: transaction.from,
                 demand_coin_denom: transaction.to.denom,
-                offer_coin_fee: {amount: offerCoinFee.toString(), denom: transaction.from.denom },
+                offer_coin_fee: {amount: offerCoinFee.integerValue(BigNumber.ROUND_CEIL).toString(), denom: transaction.from.denom },
                 order_price: (new BigNumber(price[0].amount)).dividedBy( new BigNumber(price[1].amount)).toString()
             }
         }
