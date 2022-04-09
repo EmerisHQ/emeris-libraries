@@ -46,13 +46,9 @@ jobs:
           type: 'zip'
           directory: ./packages/emeris-extension/dist
           filename: release.zip
-      - name: Pull request artifacts
-        if: ${{ github.event_name == 'pull_request' }}
-        uses: gavv/pull-request-artifacts@v1.0.0
+      - run: PR_NUMBER=$(echo $GITHUB_REF | awk 'BEGIN { FS = "/" } ; { print $3 }')
+      - uses: actions/upload-artifact@v3
         with:
-          commit: ${{ github.event.pull_request.head.sha }}
-          repo-token: ${{ github.token }}
-          artifacts-token: ${{ secrets.EMERIS_EXTENSION_ARTIFACTS_DEPLOY_KEY }}
-          artifacts-repo: EmerisHQ/emeris-extension-artifacts
-          artifacts: |
-            ./packages/emeris-extension/dist/release.zip
+          name: my-artifact
+          path: preview-${{ env.PR_NUMBER }}.zip
+          retention-days: 10
