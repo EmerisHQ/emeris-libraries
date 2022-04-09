@@ -1,7 +1,7 @@
 <template>
   <div class="page">
     <Header title="Confirm recovery phrase" />
-    <img :src="'/images/Stepper-'+step+'.svg'" style="margin-bottom: 34px" />
+    <img :src="'/images/Stepper-' + step + '.svg'" style="margin-bottom: 34px" />
     <span class="secondary-text" style="margin-bottom: 48px"
       >Select the <b>{{ positionWord }}</b> word in your recovery phrase</span
     >

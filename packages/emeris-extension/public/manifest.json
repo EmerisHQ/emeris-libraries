@@ -4,15 +4,8 @@
   "homepage_url": "http://localhost:8080/",
   "description": "A Vue Browser Extension",
   "default_locale": "en",
-  "permissions": [
-    "activeTab",
-    "storage",
-    "notifications",
-    "identity"
-  ],
-  "host_permissions": [
-    "*://*/*"
-  ],
+  "permissions": ["activeTab", "storage", "notifications", "identity"],
+  "host_permissions": ["*://*/*"],
   "icons": {
     "16": "icons/16.png",
     "32": "icons/32.png",
@@ -26,12 +19,8 @@
   },
   "content_scripts": [
     {
-      "js": [
-        "content-script.js"
-      ],
-      "matches": [
-        "*://*/*"
-      ]
+      "js": ["content-script.js"],
+      "matches": ["*://*/*"]
     }
   ],
   "content_security_policy": {
@@ -40,11 +29,7 @@
   },
   "web_accessible_resources": [
     {
-      "resources": [
-        "/inject-emeris.js",
-        "/browser-polyfill.js",
-        "/v4.js"
-      ],
+      "resources": ["/inject-emeris.js", "/browser-polyfill.js", "/v4.js"],
       "matches": ["<all_urls>"]
     }
   ],

@@ -90,7 +90,7 @@ export default defineComponent({
 });
 </script>
 
-<style>
+<style lang="scss" scoped>
 /* overrides checkbox component label class */
 .leading-copy {
   font-size: 13px;
