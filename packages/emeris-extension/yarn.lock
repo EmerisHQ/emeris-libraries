@@ -1119,10 +1119,10 @@
     "@vespaiach/axios-fetch-adapter" "^0.2.0"
     axios "^0.21.1"
 
-"@emeris/mapper@^0.0.23":
-  version "0.0.23"
-  resolved "https://registry.yarnpkg.com/@emeris/mapper/-/mapper-0.0.23.tgz#749227253ebf14c107144c99a8a28bd49be0c33f"
-  integrity sha512-/ozHa9EJqVw3DJT5tTWiIj6lWhm33/c3WaI8VXfaapEgK+TzAhFedMgfZpuWVVPkgTp9AFWEpL9llUI7iNlaXQ==
+"@emeris/mapper@^0.0.26":
+  version "0.0.26"
+  resolved "https://registry.yarnpkg.com/@emeris/mapper/-/mapper-0.0.26.tgz#f5e73c80f9eb8ffb88528c944abde7c2136623dc"
+  integrity sha512-9EPKaR1OWpgLrAqo+Mvnyqh86fnfHPZMYRXgDOOABzqRhgDtLep+Ll4ECMbdFasMZkT0FMJbdU0H4qog2/3ntg==
   dependencies:
     "@clockwork-projects/cosmos-gaia-js" "^6.0.0"
     "@clockwork-projects/osmosis-labs-osmosis-js" "^6.1.0"
@@ -1152,10 +1152,10 @@
     "@types/w3c-web-hid" "^1.0.2"
     bech32 "^2.0.0"
 
-"@emeris/types@^0.0.27":
-  version "0.0.27"
-  resolved "https://registry.yarnpkg.com/@emeris/types/-/types-0.0.27.tgz#f2e3947853a7e379f8eb241a96413cd85dbde860"
-  integrity sha512-+0DsN8RL9Z2nCTxJqpcb6G7xq+2esP5OqYZ45j7Et8ut0hvWmZa6viR29XbQcgt7RcuBZPZYJMu4Z9YMBGKG/Q==
+"@emeris/types@^0.0.33":
+  version "0.0.33"
+  resolved "https://registry.yarnpkg.com/@emeris/types/-/types-0.0.33.tgz#14c922698f32c3acf753c9f28fca2a99b5f606df"
+  integrity sha512-CzaoX5XiwQnAsitzZ3mJ3oGNu4MI+5WxIJxo3tyn0GTYmYYuG82C2gzfKwYdHz+wBmtlRbsdpMD4UZgTLmhkqA==
   dependencies:
     "@sinclair/typebox" "^0.22.1"
 
