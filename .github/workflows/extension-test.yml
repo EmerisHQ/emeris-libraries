@@ -1,4 +1,4 @@
-name: Extension Build
+name: Extension Test
 on: 
   pull_request:
     paths:
