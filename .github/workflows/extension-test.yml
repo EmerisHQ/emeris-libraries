@@ -44,4 +44,4 @@ jobs:
     needs: Extension-Build
     runs-on: self-hosted
     steps:
-      - run: npx lerna run test:e2e --scope @emeris/emeris-extension
+      - run: npm run test:e2e
