@@ -40,21 +40,8 @@ jobs:
           # Put in secrets
           VUE_APP_EMERIS_PROD_ENDPOINT: https://api.emeris.com/v1
           VUE_APP_EMERIS_PROD_LIQUIDITY_ENDPOINT: https://api.emeris.com/v1/liquidity
-
-      - uses: thedoctor0/zip-release@master
-        with:
-          type: 'zip'
-          directory: ./packages/emeris-extension/dist
-          filename: release.zip
-      - name: Pull request artifacts
-        if: ${{ github.event_name == 'pull_request' }}
-        uses: gavv/pull-request-artifacts@v1.0.0
-        with:
-          commit: ${{ github.event.pull_request.head.sha }}
-          repo-token: ${{ github.token }}
-          artifacts-branch: artifacts
-          artifacts: |
-            ./packages/emeris-extension/dist/release.zip
   Extension-Test-E2E:
     needs: Extension-Build
-    run: npx lerna run test:e2e --scope @emeris/emeris-extension
+    runs-on: self-hosted
+    steps:
+      run: npx lerna run test:e2e --scope @emeris/emeris-extension
