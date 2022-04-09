@@ -49,6 +49,6 @@ jobs:
           filename: preview-${{ env.PR_NUMBER }}.zip
       - uses: actions/upload-artifact@v3
         with:
-          name: my-artifact
+          name: preview-${{ env.PR_NUMBER }}.zip
           path: ./packages/emeris-extension/dist/preview-${{ env.PR_NUMBER }}.zip
           retention-days: 10
