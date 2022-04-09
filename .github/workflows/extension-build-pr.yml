@@ -41,7 +41,7 @@ jobs:
           VUE_APP_EMERIS_PROD_ENDPOINT: https://api.emeris.com/v1
           VUE_APP_EMERIS_PROD_LIQUIDITY_ENDPOINT: https://api.emeris.com/v1/liquidity
 
-      - run: echo $(echo $GITHUB_REF | awk 'BEGIN { FS = "/" } ; { print $3 }') >> $PR_NUMBER
+      - run: echo "PR_NUMBER=$(echo $GITHUB_REF | awk 'BEGIN { FS = "/" } ; { print $3 }')" >> $GITHUB_ENV
       - uses: thedoctor0/zip-release@master
         with:
           type: 'zip'
