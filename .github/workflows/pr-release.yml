@@ -32,6 +32,6 @@ jobs:
         run: npx lerna publish  prerelease --force-publish --canary --preid pr-${GITHUB_PR}-$(git rev-parse HEAD) --dist-tag pr-${GITHUB_PR} --yes --no-verify-access
         env:
           NODE_AUTH_TOKEN: ${{secrets.NPM_AUTH}}
-          PR: ${GITHUB_PR}
+          GITHUB_PR: ${{ github.event.number }}
 
       
