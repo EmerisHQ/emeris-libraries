@@ -20,8 +20,9 @@ jobs:
           registry-url: 'https://registry.npmjs.org'
           
       - name: Publish
-        run: npx lerna publish  prerelease --force-publish --canary --preid pr-{{ github.event.number }}-$(git rev-parse HEAD) --dist-tag pr-{{ github.event.number }} --yes --no-verify-access
+        run: npx lerna publish  prerelease --force-publish --canary --preid pr-${GITHUB_PR}-$(git rev-parse HEAD) --dist-tag pr-${GITHUB_PR} --yes --no-verify-access
         env:
           NODE_AUTH_TOKEN: ${{secrets.NPM_AUTH}}
+          PR: ${GITHUB_PR}
 
       
