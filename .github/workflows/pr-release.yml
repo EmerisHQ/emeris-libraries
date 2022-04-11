@@ -23,6 +23,7 @@ jobs:
             ./packages/mapper/package-lock.json
             ./packages/types/package-lock.json
             ./packages/chain-config/package-lock.json
+            
       - name: Setup & Build
         run: |
           npm run bootstrap
