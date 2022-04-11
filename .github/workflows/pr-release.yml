@@ -25,9 +25,9 @@ jobs:
             ./packages/chain-config/package-lock.json
       - name: Setup & Build
         run: |
-          npm run boostrap
+          npm run bootstrap
           npm run build
-          
+
       - name: Publish
         run: npx lerna publish  prerelease --force-publish --canary --preid pr-${GITHUB_PR}-$(git rev-parse HEAD) --dist-tag pr-${GITHUB_PR} --yes --no-verify-access
         env:
