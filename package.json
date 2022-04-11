@@ -2,19 +2,11 @@
   "name": "root",
   "private": true,
   "devDependencies": {
-    "husky": "^7.0.0",
-    "lerna": "^4.0.0",
-    "lint-staged": "^12.3.7"
+    "lerna": "^4.0.0"
   },
   "scripts": {
-    "prepare": "husky install",
-    "setup": "npm i && git submodule init && git submodule update",
+    "setup": "npm i",
     "bootstrap": "npm run setup && npx lerna bootstrap",
     "build": "NODE_OPTIONS='--max-old-space-size=8192' npx lerna run build"
-  },
-  "husky": {
-    "hooks": {
-      "pre-commit": "lerna run lint-staged"
-    }
   }
 }
