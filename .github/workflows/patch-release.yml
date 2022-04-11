@@ -22,10 +22,10 @@ jobs:
         run: git config --global user.email "hello@ignt.com" &&  git config --global user.name "Lerna CI"
 
       - name: Create Release
-        run: 'lerna version patch --yes -m "chore(release): publish %s"'
+        run: 'npx lerna version patch --yes -m "chore(release): publish %s"'
 
       - name: Publish
-        run: lerna publish from-git --yes --no-verify-access
+        run: npx lerna publish from-git --yes --no-verify-access
 
         env:
           NODE_AUTH_TOKEN: ${{secrets.NPM_AUTH}}
