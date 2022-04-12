@@ -1,6 +1,6 @@
-import { EmerisDEXInfo } from '.';
+import * as EmerisDEXInfo from './EmerisDEXInfo';
 import * as Base from './EmerisBase';
-import { Static, StaticArray,Type } from "@sinclair/typebox";
+import { Static, Type } from "@sinclair/typebox";
 
 export type FeeWDenom = {
   amount: Base.GasPrice;
