@@ -185,6 +185,13 @@ export type StakingParamsResponse = {
   params: StakingParams;
 };
 
+//  "/chain/{chainName}/apr"
+//  Takes ChainReq
+
+export type ChainAPR = {
+  apr: string;
+}
+
 // "/chain/{chainName}/validators"
 // Takes ChainReq
 
