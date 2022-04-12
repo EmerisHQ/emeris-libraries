@@ -2,7 +2,7 @@
   "name": "@emeris/chain-config",
   "version": "0.0.11",
   "description": "Emeris chain config api Library",
-  "author": "Tendermint, Inc <hello@tendermint.com>",
+  "author": "Ignite, Inc <hello@ignt.com>",
   "homepage": "https://github.com/emerishq/emeris-libraries#readme",
   "license": "ISC",
   "main": "lib/index.js",

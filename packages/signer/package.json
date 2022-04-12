@@ -2,7 +2,7 @@
   "name": "@emeris/signer",
   "version": "0.0.27",
   "description": "Emeris Signing Library",
-  "author": "Tendermint, Inc <hello@tendermint.com>",
+  "author": "Ignite, Inc <hello@ignt.com>",
   "homepage": "https://github.com/allinbits/emeris-libraries#readme",
   "license": "ISC",
   "main": "lib/EmerisSigner.js",

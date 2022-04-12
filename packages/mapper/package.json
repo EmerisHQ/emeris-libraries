@@ -2,7 +2,7 @@
   "name": "@emeris/mapper",
   "version": "0.0.26",
   "description": "Emeris Tx-mapping Library",
-  "author": "Tendermint, Inc <hello@tendermint.com>",
+  "author": "Ignite, Inc <hello@ignt.com>",
   "homepage": "https://github.com/allinbits/emeris-libraries#readme",
   "license": "ISC",
   "main": "lib/index.js",
