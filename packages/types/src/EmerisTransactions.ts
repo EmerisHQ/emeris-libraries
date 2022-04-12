@@ -228,7 +228,7 @@ export type AbstractUnstakeTransactionData = Static<typeof AbstractUnstakeTransa
 export const AbstractUnstakeTransaction = Type.Strict(Type.Object({
   type: Type.Literal('unstake'),
   protocol: Type.Optional(Type.Enum(EmerisDEXInfo.DEX)),
-  data: Type.Array(AbstractUnstakeTransactionData),
+  data: AbstractUnstakeTransactionData,
 }));
 export type AbstractUnstakeTransaction = Static<typeof AbstractUnstakeTransaction>;
 
@@ -243,7 +243,7 @@ export type AbstractRestakeTransactionData = Static<typeof AbstractRestakeTransa
 export const AbstractRestakeTransaction = Type.Strict(Type.Object({
   type: Type.Literal('switch'),
   protocol: Type.Optional(Type.Enum(EmerisDEXInfo.DEX)),
-  data: Type.Array(AbstractRestakeTransactionData),
+  data: AbstractRestakeTransactionData,
 }));
 export type AbstractRestakeTransaction = Static<typeof AbstractRestakeTransaction>;
 
