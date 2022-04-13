@@ -129,6 +129,7 @@ export type Chain = SupportedChain & {
   status?: boolean;
   supported_wallets?: string[];
   valid_block_thresh?: string;
+  apr?: string;
 };
 export type ChainResponse = {
   chain: Chain;
