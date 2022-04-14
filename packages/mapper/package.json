@@ -1,6 +1,6 @@
 {
   "name": "@emeris/mapper",
-  "version": "0.2.1",
+  "version": "0.2.2",
   "description": "Emeris Tx-mapping Library",
   "author": "Ignite, Inc <hello@ignt.com>",
   "homepage": "https://github.com/allinbits/emeris-libraries#readme",
@@ -26,7 +26,7 @@
     "access": "public"
   },
   "devDependencies": {
-    "@emeris/types": "^0.2.1",
+    "@emeris/types": "^0.2.2",
     "@types/long": "^4.0.1",
     "long": "^4.0.0",
     "typescript": "^4.4.4"
@@ -35,7 +35,7 @@
     "@clockwork-projects/cosmos-gaia-js": "^6.0.0",
     "@clockwork-projects/osmosis-labs-osmosis-js": "^6.1.0",
     "@cosmjs/amino": "^0.28.0",
-    "@emeris/chain-config": "^0.2.1",
+    "@emeris/chain-config": "^0.2.2",
     "bignumber.js": "^9.0.2",
     "protobufjs": "^6.11.2"
   }
