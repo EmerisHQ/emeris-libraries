@@ -8,5 +8,8 @@
     "setup": "npm i",
     "bootstrap": "npm run setup && npx lerna bootstrap",
     "build": "NODE_OPTIONS='--max-old-space-size=8192' npx lerna run build"
+  },
+  "dependencies": {
+    "@clockwork-projects/crescent-network-crescent-js": "^1.0.0"
   }
 }

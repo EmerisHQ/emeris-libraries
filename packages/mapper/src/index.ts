@@ -3,6 +3,7 @@ import { EmerisDEXInfo, EmerisTransactions } from "@emeris/types";
 import cosmos from './implementations/cosmos';
 import cosmosgravity from './implementations/cosmos/gravity';
 import cosmososmosis from './implementations/cosmos/osmosis';
+import cosmoscrescent from './implementations/cosmos/crescent';
 
  async function MapperFromChainProtocol(chainName:string, protocol?:EmerisDEXInfo.DEX) {
     switch (chainName) {
@@ -12,6 +13,8 @@ import cosmososmosis from './implementations/cosmos/osmosis';
                     return new cosmosgravity(chainName);
                 case 'osmosis':
                     return new cosmososmosis(chainName);
+                case 'crescent':
+                    return new cosmoscrescent(chainName);
                 default:
                     return new cosmos(chainName);
             }
