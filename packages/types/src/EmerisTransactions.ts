@@ -1,5 +1,6 @@
-import { EmerisDEXInfo } from '.';
+import * as EmerisDEXInfo from './EmerisDEXInfo';
 import * as Base from './EmerisBase';
+import { Static, Type } from "@sinclair/typebox";
 
 export type FeeWDenom = {
   amount: Base.GasPrice;
@@ -79,137 +80,181 @@ export type TransactionSignRequest = {
     },
     memo: string
 };
-export type AbstractAmount = {
-  denom: string;
-  base_denom?: string;
-  chain_name?: string;
-  amount: string;
-}
+export const AbstractAmount = Type.Strict(Type.Object({
+  denom: Type.String(),
+  base_denom: Type.Optional(Type.String()),
+  chain_name: Type.Optional(Type.String()),
+  amount: Type.String(),
+}));
+
+export type AbstractAmount = Static<typeof AbstractAmount>
 export type AbstractFee = {
   amount: AbstractAmount;
   gas: number;
 }
-export type AbstractTransferTransactionData = {
-  amount: AbstractAmount;
-  fromAddress: string;
-  toAddress: string;
-  chainName: string;
-}
-export type AbstractTransferTransaction = {
-  type: 'transfer';
-  protocol?: EmerisDEXInfo.DEX;
-  data: AbstractTransferTransactionData;
-}
-export type AbstractIBCTransferTransactionData = {
-  amount: AbstractAmount;
-  fromAddress: string;  
-  toAddress: string;
-  toChain: string;
-  through: string;
-  chainName: string;
-}
-export type AbstractIBCTransferBackwardTransaction = {
-  type: 'IBCtransferBackward';
-  protocol?: EmerisDEXInfo.DEX;
-  data: AbstractIBCTransferTransactionData;
-}
-export type AbstractIBCTransferForwardTransaction = {
-  type: 'IBCtransferForward';
-  protocol?: EmerisDEXInfo.DEX;
-  data: AbstractIBCTransferTransactionData;
-}
-export type AbstractSwapTransactionData = {
-  from: AbstractAmount;
-  to: AbstractAmount;
-  pool: Record<string, unknown>;
-  chainName: string;
-}
-export type AbstractSwapTransaction = {
-  type: 'swap';
-  protocol?: EmerisDEXInfo.DEX;
-  data: AbstractSwapTransactionData;
-}
-export type AbstractCreatePoolTransactionData = {
-  coinA: AbstractAmount;
-  coinB: AbstractAmount;
-  extensions?: Record<string, unknown>
-  chainName: string;
-}
-export type AbstractCreatePoolTransaction = {
-  type: 'createPool';
-  protocol?: EmerisDEXInfo.DEX;
-  data: AbstractCreatePoolTransactionData;
-}
-export type AbstractAddLiquidityTransactionData = {
-  coinA: AbstractAmount;
-  coinB: AbstractAmount;
-  pool: Record<string, unknown>;
-  chainName: string;
-}
-export type AbstractAddLiquidityTransaction = {
-  type: 'addLiquidity';
-  protocol?: EmerisDEXInfo.DEX;
-  data: AbstractAddLiquidityTransactionData;
-}
-export type AbstractWithdrawLiquidityTransactionData = {
-  poolCoin: AbstractAmount
-  pool: Record<string, unknown>;
-  chainName: string;
-}
-export type AbstractWithdrawLiquidityTransaction = {
-  type: 'withdrawLiquidity';
-  protocol?: EmerisDEXInfo.DEX;
-  data: AbstractWithdrawLiquidityTransactionData;
-}
-export type AbstractClaimRewardsTransactionData = {
-  total: string;
-  rewards: { reward: string; validator_address: string }[];
-  chainName: string;
-}
-export type AbstractClaimRewardsTransaction = {
-  type: 'claim';
-  protocol?: EmerisDEXInfo.DEX;
-  data: AbstractClaimRewardsTransactionData;
-}
+export const AbstractTransferTransactionData = Type.Strict(Type.Object({
+  amount: AbstractAmount,
+  fromAddress: Type.String(),
+  toAddress: Type.String(),
+  chainName: Type.String(),
+}));
+export type AbstractTransferTransactionData = Static<typeof AbstractTransferTransactionData>
+export const AbstractTransferTransaction = Type.Strict(Type.Object({
+  type: Type.Literal('transfer'),
+  protocol: Type.Optional(Type.Enum(EmerisDEXInfo.DEX)),
+  data: AbstractTransferTransactionData
+}));
+export type AbstractTransferTransaction = Static<typeof AbstractTransferTransaction>;
 
-export type AbstractStakeTransactionData = {
-  validatorAddress: string;
-  amount: AbstractAmount;
-  chainName: string;
-};
+export const AbstractIBCTransferTransactionData = Type.Strict(Type.Object({
+  amount: AbstractAmount,
+  fromAddress: Type.String(),
+  toAddress: Type.String(),
+  toChain: Type.String(),
+  through: Type.String(),
+  chainName: Type.String(),
+}));
+export type AbstractIBCTransferTransactionData = Static<typeof AbstractIBCTransferTransactionData>
 
-export type AbstractStakeTransaction = {
-  type: 'stake';
-  protocol?: EmerisDEXInfo.DEX;
-  data: AbstractStakeTransactionData[];
-}
-export type AbstractUnstakeTransactionData = {
-  validatorAddress: string;
-  amount: AbstractAmount;
-  chainName: string;
-};
-export type AbstractUnstakeTransaction = {
-  type: 'unstake';
-  protocol?: EmerisDEXInfo.DEX;
-  data: AbstractUnstakeTransactionData;
-}
+export const AbstractIBCTransferBackwardTransaction = Type.Strict(Type.Object({
+  type: Type.Literal('IBCtransferBackward'),
+  protocol: Type.Optional(Type.Enum(EmerisDEXInfo.DEX)),
+  data: AbstractIBCTransferTransactionData
+}));
+export type AbstractIBCTransferBackwardTransaction = Static<typeof AbstractIBCTransferBackwardTransaction>
+export const AbstractIBCTransferForwardTransaction = Type.Strict(Type.Object({
+  type: Type.Literal('IBCtransferForward'),
+  protocol: Type.Optional(Type.Enum(EmerisDEXInfo.DEX)),
+  data: AbstractIBCTransferTransactionData
+}));
+export type AbstractIBCTransferForwardTransaction = Static<typeof AbstractIBCTransferForwardTransaction>
+export const AbstractSwapTransactionData = Type.Strict(Type.Object({
+  from: AbstractAmount,
+  to:  AbstractAmount,
+  pool: Type.Record(Type.String(),Type.Unknown()),
+  chainName:  Type.String()
+}));
+export type AbstractSwapTransactionData = Static<typeof AbstractSwapTransactionData>
+export const AbstractSwapTransaction = Type.Strict(Type.Object({
+  type: Type.Literal('swap'),
+  protocol: Type.Optional(Type.Enum(EmerisDEXInfo.DEX)),
+  data: AbstractSwapTransactionData,
+}));
+export type AbstractSwapTransaction = Static<typeof AbstractSwapTransactionData>;
 
-export type AbstractRestakeTransactionData = {
-  validatorSrcAddress: string;
-  validatorDstAddress: string;
-  amount: AbstractAmount;
-  chainName: string;
-};
-export type AbstractRestakeTransaction = {
-  type: 'switch';
-  protocol?: EmerisDEXInfo.DEX;
-  data: AbstractRestakeTransactionData;
-};
-export type AbstractTransactionData = AbstractTransferTransactionData | AbstractIBCTransferTransactionData | AbstractSwapTransactionData | AbstractCreatePoolTransactionData | AbstractAddLiquidityTransactionData | AbstractWithdrawLiquidityTransactionData | AbstractClaimRewardsTransactionData | AbstractStakeTransactionData | AbstractUnstakeTransactionData | AbstractRestakeTransactionData;
-export type AbstractTransaction = AbstractTransferTransaction | AbstractIBCTransferBackwardTransaction | AbstractIBCTransferForwardTransaction | AbstractSwapTransaction | AbstractCreatePoolTransaction | AbstractAddLiquidityTransaction | AbstractWithdrawLiquidityTransaction | AbstractClaimRewardsTransaction | AbstractStakeTransaction | AbstractUnstakeTransaction | AbstractRestakeTransaction;
+export const AbstractCreatePoolTransactionData = Type.Strict(Type.Object({
+  coinA: AbstractAmount,
+  coinB: AbstractAmount,
+  extensions: Type.Optional(Type.Record(Type.String(), Type.Unknown())),
+  chainName: Type.String(),
+}));
 
-export type AbstractTransactionMappingRequest = {
-  chainName: string;
-  signingAddress: string;
-  txs: AbstractTransaction[];
-}
+export type AbstractCreatePoolTransactionData = Static<typeof AbstractCreatePoolTransactionData>;
+
+export const AbstractCreatePoolTransaction = Type.Strict(Type.Object({
+  type: Type.Literal('createPool'),
+  protocol: Type.Optional(Type.Enum(EmerisDEXInfo.DEX)),
+  data: AbstractCreatePoolTransactionData
+}));
+
+export type AbstractCreatePoolTransaction = Static<typeof AbstractCreatePoolTransaction>
+
+export const AbstractAddLiquidityTransactionData = Type.Strict(Type.Object({
+  coinA: AbstractAmount,
+  coinB: AbstractAmount,
+  pool: Type.Record(Type.String(), Type.Unknown()),
+  chainName: Type.String(),
+}));
+export type AbstractAddLiquidityTransactionData = Static<typeof AbstractAddLiquidityTransactionData>;
+
+export const AbstractAddLiquidityTransaction = Type.Strict(Type.Object({
+  type: Type.Literal('addLiquidity'),
+  protocol: Type.Optional(Type.Enum(EmerisDEXInfo.DEX)),
+  data: AbstractAddLiquidityTransactionData
+}));
+
+export type AbstractAddLiquidityTransaction = Static<typeof AbstractAddLiquidityTransaction>;
+
+export const AbstractWithdrawLiquidityTransactionData = Type.Strict(Type.Object({
+  poolCoin: AbstractAmount,
+  pool: Type.Record(Type.String(), Type.Unknown()),
+  chainName: Type.String(),
+}));
+export type AbstractWithdrawLiquidityTransactionData = Static<typeof AbstractWithdrawLiquidityTransactionData>;
+
+export const AbstractWithdrawLiquidityTransaction = Type.Strict(Type.Object({
+  type: Type.Literal('withdrawLiquidity'),
+  protocol: Type.Optional(Type.Enum(EmerisDEXInfo.DEX)),
+  data: AbstractWithdrawLiquidityTransactionData
+}));
+
+export type AbstractWithdrawLiquidityTransaction = Static<typeof AbstractWithdrawLiquidityTransaction>;
+const Rewards = Type.Strict(Type.Array(Type.Strict(Type.Object({ reward: Type.String(), validator_address: Type.String() }))));
+export const AbstractClaimRewardsTransactionData = Type.Strict(Type.Object({
+  total: Type.String(),
+  rewards: Rewards,
+  chainName: Type.String(),
+}));
+export type AbstractClaimRewardsTransactionData = Static<typeof AbstractClaimRewardsTransactionData>;
+
+export const AbstractClaimRewardsTransaction = Type.Strict(Type.Object({
+  type: Type.Literal('claim'),
+  protocol: Type.Optional(Type.Enum(EmerisDEXInfo.DEX)),
+  data: AbstractClaimRewardsTransactionData
+}));
+export type AbstractClaimRewardsTransaction = Static<typeof AbstractClaimRewardsTransaction>;
+
+export const AbstractStakeTransactionData = Type.Strict(Type.Object({
+  validatorAddress: Type.String(),
+  amount: AbstractAmount,
+  chainName: Type.String(),
+}));
+export type AbstractStakeTransactionData = Static<typeof AbstractStakeTransactionData>;
+
+export const AbstractStakeTransaction = Type.Strict(Type.Object({
+  type: Type.Literal('stake'),
+  protocol: Type.Optional(Type.Enum(EmerisDEXInfo.DEX)),
+  data: Type.Array(AbstractStakeTransactionData),
+}));
+export type AbstractStakeTransaction = Static<typeof AbstractStakeTransaction>;
+
+export const AbstractUnstakeTransactionData = Type.Strict(Type.Object({
+  validatorAddress: Type.String(),
+  amount: AbstractAmount,
+  chainName: Type.String(),
+}));
+export type AbstractUnstakeTransactionData = Static<typeof AbstractUnstakeTransactionData>;
+
+export const AbstractUnstakeTransaction = Type.Strict(Type.Object({
+  type: Type.Literal('unstake'),
+  protocol: Type.Optional(Type.Enum(EmerisDEXInfo.DEX)),
+  data: AbstractUnstakeTransactionData,
+}));
+export type AbstractUnstakeTransaction = Static<typeof AbstractUnstakeTransaction>;
+
+export const AbstractRestakeTransactionData = Type.Strict(Type.Object({
+  validatorSrcAddress: Type.String(),
+  validatorDstAddress: Type.String(),
+  amount: AbstractAmount,
+  chainName: Type.String(),
+}));
+export type AbstractRestakeTransactionData = Static<typeof AbstractRestakeTransactionData>;
+
+export const AbstractRestakeTransaction = Type.Strict(Type.Object({
+  type: Type.Literal('switch'),
+  protocol: Type.Optional(Type.Enum(EmerisDEXInfo.DEX)),
+  data: AbstractRestakeTransactionData,
+}));
+export type AbstractRestakeTransaction = Static<typeof AbstractRestakeTransaction>;
+
+export const AbstractTransactionData = Type.Union([AbstractTransferTransactionData , AbstractIBCTransferTransactionData , AbstractSwapTransactionData , AbstractCreatePoolTransactionData , AbstractAddLiquidityTransactionData , AbstractWithdrawLiquidityTransactionData , AbstractClaimRewardsTransactionData , AbstractStakeTransactionData , AbstractUnstakeTransactionData , AbstractRestakeTransactionData]);
+export type AbstractTransactionData = Static<typeof AbstractTransactionData>;
+export const AbstractTransaction = Type.Union([AbstractTransferTransaction, AbstractIBCTransferBackwardTransaction, AbstractIBCTransferForwardTransaction, AbstractSwapTransaction, AbstractCreatePoolTransaction, AbstractAddLiquidityTransaction, AbstractWithdrawLiquidityTransaction, AbstractClaimRewardsTransaction, AbstractStakeTransaction, AbstractUnstakeTransaction, AbstractRestakeTransaction]);
+export type AbstractTransaction = Static<typeof AbstractTransaction>;
+
+export const AbstractTransactionMappingRequest = Type.Strict(Type.Object({
+  chainName: Type.String(),
+  signingAddress: Type.String(),
+  txs: Type.Array(AbstractTransaction),
+}));
+export type AbstractTransactionMappingRequest = Static<typeof AbstractTransactionMappingRequest>;
