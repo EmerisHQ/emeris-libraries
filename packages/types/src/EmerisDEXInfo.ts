@@ -9,7 +9,8 @@ export  const Denom = Type.Strict(Type.Object({
 export enum DEX {
 	Gravity = 'gravity',
 	Osmosis = 'osmosis',
-	Sifchain = 'sifchain'
+	Sifchain = 'sifchain',
+	Crescent = 'crescent'
 }
 export enum SwapType {
 	Pool = 'pool',
