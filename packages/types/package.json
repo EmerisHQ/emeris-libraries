@@ -1,6 +1,6 @@
 {
   "name": "@emeris/types",
-  "version": "0.2.0",
+  "version": "0.2.1",
   "description": "Emeris common types",
   "author": "Ignite, Inc <hello@ignt.com>",
   "main": "lib/index.js",
