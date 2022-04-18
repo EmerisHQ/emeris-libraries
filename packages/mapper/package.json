@@ -33,6 +33,7 @@
   },
   "dependencies": {
     "@clockwork-projects/cosmos-gaia-js": "^6.0.0",
+    "@clockwork-projects/crescent-network-crescent-js": "^1.0.0",
     "@clockwork-projects/osmosis-labs-osmosis-js": "^6.1.0",
     "@cosmjs/amino": "^0.28.0",
     "@emeris/chain-config": "^0.2.2",
