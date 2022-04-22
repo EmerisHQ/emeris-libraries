@@ -5,9 +5,8 @@
     "lerna": "^4.0.0"
   },
   "scripts": {
-    "setup": "npm i && git submodule init && git submodule update",
-    "bootstrap": "npm run setup && npx lerna bootstrap",    
+    "setup": "npm i",
+    "bootstrap": "npm run setup && npx lerna bootstrap",
     "build": "NODE_OPTIONS='--max-old-space-size=8192' npx lerna run build"
-  },
-  "dependencies": {}
+  }
 }

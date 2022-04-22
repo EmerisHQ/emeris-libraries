@@ -1,0 +1,38 @@
+name: PR release & deploy
+
+# Controls when the action will run. 
+on:
+  pull_request:
+    types: [ready_for_review, synchronize, opened]
+
+jobs:
+  build:
+    # The type of runner that the job will run on
+    runs-on: self-hosted
+
+    # Steps represent a sequence of tasks that will be executed as part of the job
+    steps:
+      # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
+      - uses: actions/checkout@v2
+      - uses: actions/setup-node@v1
+        with:
+          node-version: 16
+          registry-url: 'https://registry.npmjs.org'
+          cache-dependency-path: |
+            ./packages/signer/package-lock.json
+            ./packages/mapper/package-lock.json
+            ./packages/types/package-lock.json
+            ./packages/chain-config/package-lock.json
+            
+      - name: Setup & Build
+        run: |
+          npm run bootstrap
+          npm run build
+
+      - name: Publish
+        run: npx lerna publish  prerelease --force-publish --canary --preid pr-${GITHUB_PR}-$(git rev-parse HEAD) --dist-tag pr-${GITHUB_PR} --yes --no-verify-access
+        env:
+          NODE_AUTH_TOKEN: ${{secrets.NPM_AUTH}}
+          GITHUB_PR: ${{ github.event.number }}
+
+      

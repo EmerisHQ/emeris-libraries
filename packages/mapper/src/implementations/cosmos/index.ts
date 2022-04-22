@@ -8,10 +8,10 @@ export default class CosmosAminoMessageMapper extends EmerisMessageMapper {
         return {
             type: "cosmos-sdk/MsgSend",
             value: {
-                amount: [this.normalizeAmount(transaction.amount)],
+                from_address: signing_address,
                 // @ts-ignore
                 to_address: transaction.toAddress,
-                from_address: signing_address,
+                amount: [this.normalizeAmount(transaction.amount)],
             },
         };
     }
@@ -25,8 +25,8 @@ export default class CosmosAminoMessageMapper extends EmerisMessageMapper {
                 sender: signing_address,
                 // @ts-ignore
                 receiver: transaction.toAddress,
-                timeout_timestamp: Long.fromString(new Date().getTime() + 300000 + '000000'),
-                //timeoutHeight: { revisionHeight: "10000000000",revisionNumber:"0"},
+                timeout_timestamp: new Date().getTime() + 300000 + '000000',
+                timeoutHeight: {},
                 token: this.normalizeAmount(transaction.amount),
             }
         }
@@ -40,8 +40,8 @@ export default class CosmosAminoMessageMapper extends EmerisMessageMapper {
                 sender: signing_address,
                 // @ts-ignore
                 receiver: transaction.toAddress,
-                timeout_timestamp: Long.fromString(new Date().getTime() + 300000 + '000000'),
-                //timeoutHeight: { revisionHeight: "10000000000",revisionNumber:"0"},
+                timeout_timestamp: new Date().getTime() + 300000 + '000000',
+                timeoutHeight: {},
                 token: this.normalizeAmount(transaction.amount),
             }
         }
@@ -79,7 +79,7 @@ export default class CosmosAminoMessageMapper extends EmerisMessageMapper {
     }
     claim(transaction: EmerisTransactions.AbstractClaimRewardsTransactionData, signing_address: string) {
         return transaction.rewards.map((transaction) => ({
-            type: "cosmos-sdk/MsgWithdrawDelegatorReward",
+            type: "cosmos-sdk/MsgWithdrawDelegationReward",
             value: {
                 delegator_address: signing_address,
                 validator_address: transaction.validator_address

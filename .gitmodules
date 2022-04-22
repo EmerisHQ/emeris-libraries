@@ -1,3 +1,0 @@
-[submodule "packages/emeris-extension/demeris"]
-	path = packages/emeris-extension/demeris
-	url = git@github.com:emerishq/demeris.git

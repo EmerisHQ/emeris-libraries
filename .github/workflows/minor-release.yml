@@ -1,0 +1,42 @@
+name: Publish new minor version
+
+# Controls when the action will run. 
+on:
+  workflow_dispatch:
+
+jobs:
+  build:
+    # The type of runner that the job will run on
+    runs-on: self-hosted
+
+    # Steps represent a sequence of tasks that will be executed as part of the job
+    steps:
+      # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
+      - uses: actions/checkout@v2
+      - uses: actions/setup-node@v1
+        with:
+          node-version: 16
+          registry-url: 'https://registry.npmjs.org'
+          cache-dependency-path: |
+            ./packages/signer/package-lock.json
+            ./packages/mapper/package-lock.json
+            ./packages/types/package-lock.json
+            ./packages/chain-config/package-lock.json
+            
+      - name: Setup & Build
+        run: |
+          npm run bootstrap
+          npm run build
+          
+      - name: Configure git
+        run: git config --global user.email "hello@ignt.com" &&  git config --global user.name "Lerna CI"
+
+      - name: Create Release
+        run: 'npx lerna version minor --yes -m "chore(release): publish %s"'
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Publish
+        run: npx lerna publish from-git --yes --no-verify-access
+        env:
+          NODE_AUTH_TOKEN: ${{secrets.NPM_AUTH}}
