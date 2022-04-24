@@ -13,6 +13,12 @@ export type AirdropClaimAction = {
   cosmosSDKMessageType: string;
   unlockPercentage: number;
 };
+
+export type AirdropCount = {
+  count: number;
+  totalAirdrops: number;
+};
+
 export type AirdropFile = {
   name: string;
   path: string;
@@ -29,7 +35,9 @@ export type AirdropFile = {
     html: string;
   };
 };
+
 export type AirdropList = Array<AirdropFile>;
+
 export type Airdrop = {
   project: string;
   projectWebsiteUrl: string;
@@ -63,11 +71,13 @@ export type selectedAirdropReq = {
 
 export type GitAirdropsListReq = {
   airdropFileName: string;
+  checkEligibility: boolean;
+  totalAirdrops: number;
 };
 
 export enum AirdropDateStatus {
-  NOT_ANNOUNCED = 'NOT_ANNOUNCED',
-  NOT_STARTED = 'NOT_STARTED',
-  ONGOING = 'ONGOING',
-  ENDED = 'ENDED',
+  NOT_ANNOUNCED = "NOT_ANNOUNCED",
+  NOT_STARTED = "NOT_STARTED",
+  ONGOING = "ONGOING",
+  ENDED = "ENDED",
 }
