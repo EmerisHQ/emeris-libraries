@@ -35,7 +35,7 @@ export class EmerisMessageMapper {
             case 'switch':
                 return this[transaction.type](transaction.data, signing_address)
             case 'custom':
-                return transaction.data
+                return transaction.data.raw
             default:
         }
 
