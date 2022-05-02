@@ -1,7 +1,6 @@
 import { AminoSignResponse } from '@cosmjs/amino'
 import { getCosmosClient } from './modules/cosmos'
 import { EmerisSigningClient } from './modules/cosmos/emerisSigningClient'
-import { isCosmos } from './type-guards'
 import { SignerRequest } from './types/requests'
 
 export default class EmerisSigner {
@@ -32,47 +31,36 @@ export default class EmerisSigner {
     return await client.getSignature(tx.msgs, tx.fee, tx.memo)
   }
   async signTx(tx: SignerRequest): Promise<Uint8Array> {
-    if (isCosmos(tx)) {
-      const client: EmerisSigningClient = await getCosmosClient(
-        tx.chain_name,
-        this.isLedger,
-        this.mnemonic,
-        this.HdPath,
-      )
-      return await client.signTx(tx.msgs, tx.fee, tx.memo)
-    }
+    const client: EmerisSigningClient = await getCosmosClient(
+      tx.chain_name,
+      this.isLedger,
+      this.mnemonic,
+      this.HdPath,
+    )
+    return await client.signTx(tx.msgs, tx.fee, tx.memo)
   }
   async getFees(tx: SignerRequest): Promise<unknown> {
-    if (isCosmos(tx)) {
-      const client: EmerisSigningClient = await getCosmosClient(
-        tx.chain_name,
-        this.isLedger,
-        this.mnemonic,
-        this.HdPath,
-      )
-      return await client.getFees(tx.msgs, tx.memo)
-    }
+    const client: EmerisSigningClient = await getCosmosClient(
+      tx.chain_name,
+      this.isLedger,
+      this.mnemonic,
+      this.HdPath,
+    )
+    return await client.getFees(tx.msgs, tx.memo)
   }
   async getRawTX(tx: SignerRequest): Promise<unknown> {
-    if (isCosmos(tx)) {
-      const client: EmerisSigningClient = await getCosmosClient(
-        tx.chain_name,
-        this.isLedger,
-        this.mnemonic,
-        this.HdPath,
-      )
-      return await client.getRawTX(tx.msgs, tx.fee, tx.memo)
-    }
+    const client: EmerisSigningClient = await getCosmosClient(
+      tx.chain_name,
+      this.isLedger,
+      this.mnemonic,
+      this.HdPath,
+    )
+    return await client.getRawTX(tx.msgs, tx.fee, tx.memo)
   }
   private async getSignerAccount(chain_name: string) {
-    // @ts-ignore
-    if (isCosmos({
-      chain_name
-    })) {
-      const client: EmerisSigningClient = await getCosmosClient(chain_name, false, this.mnemonic, this.HdPath);
-      const [signerAccount] = await client.exposedSigner.getAccounts()
-      return signerAccount;
-    }
+    const client: EmerisSigningClient = await getCosmosClient(chain_name, false, this.mnemonic, this.HdPath);
+    const [signerAccount] = await client.exposedSigner.getAccounts()
+    return signerAccount;
   }
   async getAddress(chain_name: string): Promise<string> {
     return (await this.getSignerAccount(chain_name)).address
