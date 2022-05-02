@@ -11,7 +11,7 @@ export default class CrescentAminoMessageMapper extends CosmosAminoMessageMapper
 			let direction = OrderDirection.ORDER_DIRECTION_UNSPECIFIED;
 			let price;
 			let amount;
-				if ( transaction.to.denom == pool.quote_coin_denom || transaction.to.denom == pool.quoteCoinDenom) {
+				if ( transaction.to.denom == pool.quoteCoinDenom || transaction.to.denom == pool.quoteCoinDenom) {
 					direction = OrderDirection.ORDER_DIRECTION_BUY;
 					price = (new BigNumber(transaction.from.amount)).dividedBy(new BigNumber(transaction.to.amount)).toString();
 					amount = transaction.from.amount;
