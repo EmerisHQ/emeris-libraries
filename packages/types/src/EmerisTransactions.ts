@@ -71,14 +71,14 @@ export type TransactionData =
   | CreatePoolData
   | CustomData
 export type TransactionSignRequest = {
-    signingAddress: string,
-    chainId: string,
-    messages: AbstractTransaction[],
-    fee: {
-        gas: string,
-        amount: Base.Amount[]
-    },
-    memo: string
+  signingAddress: string,
+  chainId: string,
+  messages: AbstractTransaction[],
+  fee: {
+    gas: string,
+    amount: Base.Amount[]
+  },
+  memo: string
 };
 export const AbstractAmount = Type.Strict(Type.Object({
   denom: Type.String(),
@@ -130,9 +130,9 @@ export const AbstractIBCTransferForwardTransaction = Type.Strict(Type.Object({
 export type AbstractIBCTransferForwardTransaction = Static<typeof AbstractIBCTransferForwardTransaction>
 export const AbstractSwapTransactionData = Type.Strict(Type.Object({
   from: AbstractAmount,
-  to:  AbstractAmount,
-  pool: Type.Record(Type.String(),Type.Unknown()),
-  chainName:  Type.String()
+  to: AbstractAmount,
+  pool: Type.Record(Type.String(), Type.Unknown()),
+  chainName: Type.String()
 }));
 export type AbstractSwapTransactionData = Static<typeof AbstractSwapTransactionData>
 export const AbstractSwapTransaction = Type.Strict(Type.Object({
@@ -247,9 +247,18 @@ export const AbstractRestakeTransaction = Type.Strict(Type.Object({
 }));
 export type AbstractRestakeTransaction = Static<typeof AbstractRestakeTransaction>;
 
-export const AbstractTransactionData = Type.Union([AbstractTransferTransactionData , AbstractIBCTransferTransactionData , AbstractSwapTransactionData , AbstractCreatePoolTransactionData , AbstractAddLiquidityTransactionData , AbstractWithdrawLiquidityTransactionData , AbstractClaimRewardsTransactionData , AbstractStakeTransactionData , AbstractUnstakeTransactionData , AbstractRestakeTransactionData]);
+export const AbstractCustomTransactionData = Type.Strict(Type.Object({
+  raw: Type.Object({})
+}));
+export const AbstractCustomTransaction = Type.Strict(Type.Object({
+  type: Type.Literal('custom'),
+  protocol: Type.Optional(Type.Enum(EmerisDEXInfo.DEX)),
+  data: AbstractCustomTransactionData,
+}));
+
+export const AbstractTransactionData = Type.Union([AbstractTransferTransactionData, AbstractIBCTransferTransactionData, AbstractSwapTransactionData, AbstractCreatePoolTransactionData, AbstractAddLiquidityTransactionData, AbstractWithdrawLiquidityTransactionData, AbstractClaimRewardsTransactionData, AbstractStakeTransactionData, AbstractUnstakeTransactionData, AbstractRestakeTransactionData, AbstractCustomTransactionData]);
 export type AbstractTransactionData = Static<typeof AbstractTransactionData>;
-export const AbstractTransaction = Type.Union([AbstractTransferTransaction, AbstractIBCTransferBackwardTransaction, AbstractIBCTransferForwardTransaction, AbstractSwapTransaction, AbstractCreatePoolTransaction, AbstractAddLiquidityTransaction, AbstractWithdrawLiquidityTransaction, AbstractClaimRewardsTransaction, AbstractStakeTransaction, AbstractUnstakeTransaction, AbstractRestakeTransaction]);
+export const AbstractTransaction = Type.Union([AbstractTransferTransaction, AbstractIBCTransferBackwardTransaction, AbstractIBCTransferForwardTransaction, AbstractSwapTransaction, AbstractCreatePoolTransaction, AbstractAddLiquidityTransaction, AbstractWithdrawLiquidityTransaction, AbstractClaimRewardsTransaction, AbstractStakeTransaction, AbstractUnstakeTransaction, AbstractRestakeTransaction, AbstractCustomTransaction]);
 export type AbstractTransaction = Static<typeof AbstractTransaction>;
 
 export const AbstractTransactionMappingRequest = Type.Strict(Type.Object({
