@@ -1,3 +1,4 @@
+import { AminoSignResponse } from '@cosmjs/amino'
 import { getCosmosClient } from './modules/cosmos'
 import { EmerisSigningClient } from './modules/cosmos/emerisSigningClient'
 import { isCosmos } from './type-guards'
@@ -20,6 +21,15 @@ export default class EmerisSigner {
   }
   public static withMnemonic(HdPath: string, mnemonic: string) {
     return new EmerisSigner(false, HdPath, mnemonic)
+  }
+  async getSignature(tx: SignerRequest): Promise<AminoSignResponse> {
+    const client: EmerisSigningClient = await getCosmosClient(
+      tx.chain_name,
+      this.isLedger,
+      this.mnemonic,
+      this.HdPath,
+    )
+    return await client.getSignature(tx.msgs, tx.fee, tx.memo)
   }
   async signTx(tx: SignerRequest): Promise<Uint8Array> {
     if (isCosmos(tx)) {

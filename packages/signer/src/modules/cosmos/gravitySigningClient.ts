@@ -57,7 +57,7 @@ export default class GravitySigningClient extends SigningStargateClient implemen
     this.chain_name = args[3]
     this.chainConfig = new ChainConfig(process.env.EMERIS_ENDPOINT || 'https://api.emeris.com/v1')
   }
-  
+
   private async setupSigner() {
     const accountFromSigner = (await this.exposedSigner.getAccounts())[0]
     const signerAddress = accountFromSigner.address
@@ -71,7 +71,7 @@ export default class GravitySigningClient extends SigningStargateClient implemen
     )
     return { aminoTypes, signerAddress, pubkey, signMode, chain_id, sequence_number, account_number }
   }
-  private mapMessages(messages: readonly AminoMsg[] | readonly EncodeObject[], aminoTypes:AminoTypes): {
+  private mapMessages(messages: readonly AminoMsg[] | readonly EncodeObject[], aminoTypes: AminoTypes): {
     aminomsgs: readonly AminoMsg[]
     protomsgs: readonly EncodeObject[]
   } {
@@ -93,18 +93,30 @@ export default class GravitySigningClient extends SigningStargateClient implemen
     return TxRaw.encode(TxRaw.decode(enc.finish())).finish()
   }
 
-  async signTx(
+  async getSignature(
     messages: readonly AminoMsg[] | readonly EncodeObject[],
     fee: StdFee,
-    memo: string,
-  ): Promise<Uint8Array> {
-    const { aminoTypes, signerAddress, pubkey, signMode, chain_id, sequence_number, account_number } =
+    memo: string,) {
+    const { aminoTypes, signerAddress, chain_id, sequence_number, account_number } =
       await this.setupSigner()
 
     const { aminomsgs } = this.mapMessages(messages, aminoTypes)
 
     const signDoc = makeSignDocAmino(aminomsgs, fee, chain_id, memo, account_number, sequence_number)
     const { signature, signed } = await this.exposedSigner.signAmino(signerAddress, signDoc)
+
+    return { signature, signed }
+  }
+
+  async signTx(
+    messages: readonly AminoMsg[] | readonly EncodeObject[],
+    fee: StdFee,
+    memo: string,
+  ): Promise<Uint8Array> {
+    const { aminoTypes, pubkey, signMode } =
+      await this.setupSigner()
+
+    const { signature, signed } = await this.getSignature(messages, fee, memo)
     const signedTxBody = {
       messages: signed.msgs.map((msg) => aminoTypes.fromAmino(msg)),
       memo: signed.memo,
