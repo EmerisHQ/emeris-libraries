@@ -6,7 +6,8 @@ import { OrderDirection } from "@clockwork-projects/crescent-network-crescent-js
 
 export default class CrescentAminoMessageMapper extends CosmosAminoMessageMapper {
 	
-    swap(transaction: EmerisTransactions.AbstractSwapTransactionData, signing_address: string) {
+	swap(transactions: EmerisTransactions.AbstractSwapTransactionData[], signing_address: string) {
+		const transaction = transactions[0];
 			const pool = transaction.pool as unknown as Pair;
 			let direction = OrderDirection.ORDER_DIRECTION_UNSPECIFIED;
 			let price;

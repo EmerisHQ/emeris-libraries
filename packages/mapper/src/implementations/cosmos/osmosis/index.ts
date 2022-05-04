@@ -4,15 +4,20 @@ import { Pool} from '@clockwork-projects/osmosis-labs-osmosis-js/osmosis-labs/os
 
 export default class OsmosisAminoMessageMapper extends CosmosAminoMessageMapper {
 	
-    swap(transaction: EmerisTransactions.AbstractSwapTransactionData, signing_address: string) {
-        const pool = transaction.pool as unknown as Pool;
+    swap(transactions: EmerisTransactions.AbstractSwapTransactionData[], signing_address: string) {
+        let routes = [];
+        for (let i = 0; i < transactions.length; i++) {
+            const transaction = transactions[i];
+            const pool = transaction.pool as unknown as Pool;
+            routes.push({ poolId: pool.id, tokenOutDenom: transaction.to.denom });
+        }
         return {
             type: "osmosis/gamm/swap-exact-amount-in",
             value: {
                 sender: signing_address,
-                tokenIn: transaction.from,
-                tokenOutMinAmount: transaction.to.amount,
-                routes: [{ poolId: pool.id, tokenOutDenom: transaction.to.denom}]
+                tokenIn: transactions[0].from,
+                tokenOutMinAmount: transactions[transactions.length-1].to.amount,
+                routes
             }
         }
     }

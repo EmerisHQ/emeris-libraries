@@ -138,7 +138,7 @@ export type AbstractSwapTransactionData = Static<typeof AbstractSwapTransactionD
 export const AbstractSwapTransaction = Type.Strict(Type.Object({
   type: Type.Literal('swap'),
   protocol: Type.Optional(Type.Enum(EmerisDEXInfo.DEX)),
-  data: AbstractSwapTransactionData,
+  data:  Type.Array(AbstractSwapTransactionData),
 }));
 export type AbstractSwapTransaction = Static<typeof AbstractSwapTransactionData>;
 
