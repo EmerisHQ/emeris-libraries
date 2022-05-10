@@ -126,6 +126,7 @@ export type Chain = SupportedChain & {
     tendermint_rpc?: string[];
     cosmos_api?: string[];
   };
+  online?: boolean;
   status?: boolean;
   supported_wallets?: string[];
   valid_block_thresh?: string;
