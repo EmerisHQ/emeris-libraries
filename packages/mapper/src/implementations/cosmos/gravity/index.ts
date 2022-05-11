@@ -4,8 +4,9 @@ import { BigNumber } from "bignumber.js";
 import { Pool } from '@clockwork-projects/cosmos-gaia-js/gravity-devs/liquidity/tendermint.liquidity.v1beta1/module/types/tendermint/liquidity/v1beta1/liquidity';
 
 export default class GravityAminoMessageMapper extends CosmosAminoMessageMapper {
-	
-    swap(transaction: EmerisTransactions.AbstractSwapTransactionData, signing_address: string) {
+
+    swap(transactions: EmerisTransactions.AbstractSwapTransactionData[], signing_address: string) {
+        const transaction = transactions[0];
         const pool = transaction.pool as unknown as Pool;
         const offerCoinFee = (new BigNumber(transaction.from.amount)).multipliedBy(0.0015)
         const price = [transaction.from, transaction.to].sort((a, b) => {

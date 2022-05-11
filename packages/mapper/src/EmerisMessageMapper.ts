@@ -54,7 +54,7 @@ export class EmerisMessageMapper {
         throw new Error("This method is not implemented for " + this.chain_id)
     }
 
-    swap(_transaction: EmerisTransactions.AbstractSwapTransactionData, _signing_address: string) {
+    swap(_transaction: EmerisTransactions.AbstractSwapTransactionData[], _signing_address: string) {
         throw new Error("This method is not implemented for " + this.chain_id)
     }
 
