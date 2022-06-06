@@ -190,11 +190,16 @@ export const AbstractWithdrawLiquidityTransaction = Type.Strict(Type.Object({
 
 export type AbstractWithdrawLiquidityTransaction = Static<typeof AbstractWithdrawLiquidityTransaction>;
 const Rewards = Type.Strict(Type.Array(Type.Strict(Type.Object({ reward: Type.String(), validator_address: Type.String() }))));
+
+/**
+ * @description Claim Rewards
+ */
 export const AbstractClaimRewardsTransactionData = Type.Strict(Type.Object({
   total: Type.String(),
   rewards: Rewards,
   chainName: Type.String(),
 }));
+
 export type AbstractClaimRewardsTransactionData = Static<typeof AbstractClaimRewardsTransactionData>;
 
 export const AbstractClaimRewardsTransaction = Type.Strict(Type.Object({
@@ -202,8 +207,32 @@ export const AbstractClaimRewardsTransaction = Type.Strict(Type.Object({
   protocol: Type.Optional(Type.Enum(EmerisDEXInfo.DEX)),
   data: AbstractClaimRewardsTransactionData
 }));
+
 export type AbstractClaimRewardsTransaction = Static<typeof AbstractClaimRewardsTransaction>;
 
+/**
+ * @description Reinvest Transaction (Claim + Reinvest)
+ */
+export const AbstractReinvestTransactionData = Type.Strict(Type.Object({
+  validatorAddress: Type.String(),
+  total: Type.String(),
+  rewards: Rewards,
+  chainName: Type.String(),
+}));
+
+export type AbstractReinvestTransactionData = Static<typeof AbstractReinvestTransactionData>;
+
+export const AbstractReinvestTransaction = Type.Strict(Type.Object({
+  type: Type.Literal('reinvest'),
+  protocol: Type.Optional(Type.Enum(EmerisDEXInfo.DEX)),
+  data: AbstractReinvestTransactionData
+}));
+
+export type AbstractReinvestTransaction = Static<typeof AbstractReinvestTransaction>;
+
+/**
+ * @description Stake Transaction
+ */
 export const AbstractStakeTransactionData = Type.Strict(Type.Object({
   validatorAddress: Type.String(),
   amount: AbstractAmount,
