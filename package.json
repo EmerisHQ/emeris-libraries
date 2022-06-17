@@ -5,8 +5,9 @@
     "lerna": "^4.0.0"
   },
   "scripts": {
-    "setup": "npm i",
-    "bootstrap": "npm run setup && npx lerna bootstrap",
+    "setup": "yarn",
+    "bootstrap": "yarn setup && npx lerna bootstrap",
     "build": "NODE_OPTIONS='--max-old-space-size=8192' npx lerna run build"
-  }
+  },
+  "workspaces": ["packages/*"]
 }

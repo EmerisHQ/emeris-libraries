@@ -17,16 +17,12 @@ jobs:
         with:
           node-version: 16
           registry-url: 'https://registry.npmjs.org'
-          cache-dependency-path: |
-            ./packages/signer/package-lock.json
-            ./packages/mapper/package-lock.json
-            ./packages/types/package-lock.json
-            ./packages/chain-config/package-lock.json
+          cache-dependency-path: ./yarn.lock
             
       - name: Setup & Build
         run: |
-          npm run bootstrap
-          npm run build
+          yarn bootstrap
+          yarn build
           
       - name: Configure git
         run: git config --global user.email "hello@ignt.com" &&  git config --global user.name "Lerna CI"
