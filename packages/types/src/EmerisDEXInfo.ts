@@ -10,7 +10,8 @@ export enum DEX {
 	Gravity = 'gravity',
 	Osmosis = 'osmosis',
 	Sifchain = 'sifchain',
-	Crescent = 'crescent'
+	Crescent = 'crescent',
+	Junoswap = 'junoswap',
 }
 export enum SwapType {
 	Pool = 'pool',
